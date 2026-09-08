@@ -408,20 +408,27 @@
 	}
 
 	.site-footer__container {
-		max-width: 20.9375rem;
+		max-width: 80rem;
 	}
 
 	.site-footer__content {
-		width: min(100%, 20.5rem);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
 		gap: 3rem;
-		margin-inline: auto;
+		margin-inline: 0;
 		padding: 2rem;
 	}
 
 	.site-footer__navigation,
-	.site-footer__newsletter,
-	.site-footer__partners {
+	.site-footer__newsletter {
 		width: 100%;
+	}
+
+	.site-footer__partners {
+		width: min(100%, 20rem);
+		align-self: center;
 	}
 
 	.site-footer__faq-link {
@@ -508,8 +515,25 @@
 }
 
 @media (max-width: 575.98px) {
+	.site-footer__container {
+		max-width: 20.9375rem;
+	}
+
 	.site-footer__content {
+		display: flex;
+		width: min(100%, 20.5rem);
+		flex-direction: column;
+		align-items: center;
+		gap: 3rem;
+		margin-inline: auto;
+		padding-block: 2rem;
 		padding-inline: clamp(0.75rem, 8.5vw, 1rem);
+	}
+
+	.site-footer__navigation,
+	.site-footer__newsletter,
+	.site-footer__partners {
+		width: 100%;
 	}
 
 	.site-footer__partner-row--primary {
