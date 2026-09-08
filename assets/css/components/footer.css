@@ -509,7 +509,7 @@
 
 @media (max-width: 575.98px) {
 	.site-footer__content {
-		padding-inline: clamp(0.75rem, 8.5vw, 2rem);
+		padding-inline: clamp(0.75rem, 8.5vw, 1rem);
 	}
 
 	.site-footer__partner-row--primary {
