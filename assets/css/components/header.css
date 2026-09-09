@@ -134,7 +134,7 @@
 .utility-navigation {
 	position: absolute;
 	top: 0.3125rem;
-	right: 7.75rem;
+	right: 6.25rem;
 }
 
 .utility-navigation__menu {
@@ -185,7 +185,7 @@
 	display: flex;
 	min-height: 1.75rem;
 	align-items: center;
-	gap: 0.4375rem;
+	gap: 0.125rem;
 	color: var(--header-text);
 	font-size: 0.875rem;
 	font-weight: 700;
@@ -198,9 +198,10 @@
 	color: var(--header-accent);
 }
 
-.site-header__weather img {
-	width: 1rem;
-	height: 1.0625rem;
+.site-header__weather-icon {
+	width: 1.75rem;
+	height: 1.75rem;
+	object-fit: contain;
 }
 
 .site-header__search {
@@ -334,7 +335,7 @@
 	}
 
 	.utility-navigation {
-		right: 7.25rem;
+		right: 6rem;
 	}
 
 	.utility-navigation__menu {

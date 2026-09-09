@@ -18,7 +18,7 @@ A PHP-based WordPress theme starter with reusable template parts and modern bloc
 5. Create and assign the Primary Menu, Top Header, Footer Navigation, and Footer Legal locations under **Appearance → Menus**.
 6. Set a homepage and posts page under **Settings → Reading** if desired.
 7. Configure the logo and footer text under **Appearance → Customize**.
-8. Configure the weather label and optional current-conditions link under **Appearance → Header Settings**.
+8. Configure the OpenWeather API key and optional current-conditions link under **Appearance → Header Settings**. The live Tahoe City temperature and condition icon are cached for 15 minutes, refreshed in the background, and the API key is never sent to the browser.
 9. Edit the front page to update the homepage title, video, poster, description, CTA links, and scroll label in the **LTT Dive In — Homepage Hero** field group.
 10. Configure the FAQ link, newsletter copy, and social URLs under **Appearance → Footer Settings**.
 11. Select the production Gravity Form under **Appearance → Footer Settings**. A widget or the `ltt_dive_in_footer_newsletter_form` hook remains available as a fallback for another provider.
@@ -89,6 +89,7 @@ Copy `templates/full-width.php`, change its `Template Name` header, and customiz
 - Use WordPress APIs for assets, menus, URLs, content, and translations.
 - Prefer native WordPress content fields where they fit. Use ACF Pro for structured design modules, and version every field group consumed by the theme.
 - Use Gravity Forms for visitor submissions. Keep its form configuration portable, never commit entries or secrets, and preserve its validation and accessible markup when styling it.
+- Review the attribution terms for the active OpenWeather plan before launch. Self-service plans may require visible OpenWeather text, a hyperlink, and the provider logo.
 - Use Alpine for small, markup-owned interaction states. Keep content and links in the server-rendered HTML, provide a useful pre-initialization state, and do not move substantial business logic into `x-data` expressions.
 - See `AGENTS.md` for the complete ACF, Gravity Forms, accessibility, CSS ownership, and implementation rules.
 
