@@ -238,6 +238,17 @@ Figma defines these control families:
 - Default, hover, pressed, and disabled states.
 - Category selectors with selected and hover states.
 - Form submission buttons and text “Read More” actions.
+
+### Homepage header search
+
+The homepage search-bar states were verified against Figma node `1:44668`:
+
+- Default design reference: `99px × 25px`, “Search” placeholder, white search icon. The browser implementation reserves `104px` at rest so the supplied webfont remains unclipped under text rendering and zoom differences.
+- Hover, keyboard focus, typing, or a populated query: `249px × 25px`, expanded placeholder, Peak Gold search icon.
+- Surface: `rgba(2, 22, 43, 0.1)` with a `1px` `rgba(199, 209, 216, 0.5)` border, `90px` radius, and `0 4px 4px rgba(0, 0, 0, 0.25)` shadow.
+- Typography: Gotham HTF, `12px`, `1.45` line height, white.
+
+The Figma rows are state examples, not four simultaneous search fields. Production uses one native WordPress GET search form that changes presentation while preserving its label, keyboard behavior, server-rendered markup, and normal search-results URL.
 - Carousel/slider navigation and pagination indicators.
 - Accordion toggles.
 - Search fields and search icons.

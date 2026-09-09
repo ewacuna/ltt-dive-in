@@ -18,4 +18,5 @@ require_once LTT_DIVE_IN_DIR . '/inc/enqueue.php';
 require_once LTT_DIVE_IN_DIR . '/inc/template-tags.php';
 require_once LTT_DIVE_IN_DIR . '/inc/template-functions.php';
 require_once LTT_DIVE_IN_DIR . '/inc/customizer.php';
+require_once LTT_DIVE_IN_DIR . '/inc/header-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/footer-settings.php';

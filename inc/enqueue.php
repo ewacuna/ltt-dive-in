@@ -13,9 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enqueue public assets.
  */
 function ltt_dive_in_enqueue_assets() {
-	$style_path        = LTT_DIVE_IN_DIR . '/assets/css/main.css';
-	$footer_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/footer.css';
-	$script_path       = LTT_DIVE_IN_DIR . '/assets/js/main.js';
+	$style_path             = LTT_DIVE_IN_DIR . '/assets/css/main.css';
+	$header_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/header.css';
+	$footer_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/footer.css';
+	$front_page_style_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/front-page.css';
+	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
 
 	wp_enqueue_style(
 		'ltt-dive-in-style',
@@ -25,18 +27,48 @@ function ltt_dive_in_enqueue_assets() {
 	);
 
 	wp_enqueue_style(
+		'ltt-dive-in-header',
+		LTT_DIVE_IN_URI . '/assets/css/components/header.css',
+		array( 'ltt-dive-in-style' ),
+		file_exists( $header_style_path ) ? (string) filemtime( $header_style_path ) : LTT_DIVE_IN_VERSION
+	);
+
+	wp_enqueue_style(
 		'ltt-dive-in-footer',
 		LTT_DIVE_IN_URI . '/assets/css/components/footer.css',
 		array( 'ltt-dive-in-style' ),
 		file_exists( $footer_style_path ) ? (string) filemtime( $footer_style_path ) : LTT_DIVE_IN_VERSION
 	);
 
+	if ( is_front_page() ) {
+		wp_enqueue_style(
+			'ltt-dive-in-front-page',
+			LTT_DIVE_IN_URI . '/assets/css/templates/front-page.css',
+			array( 'ltt-dive-in-style', 'ltt-dive-in-header' ),
+			file_exists( $front_page_style_path ) ? (string) filemtime( $front_page_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	wp_enqueue_script(
+		'ltt-dive-in-alpine',
+		LTT_DIVE_IN_URI . '/assets/js/vendor/alpine.min.js',
+		array(),
+		'3.17.2',
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => false,
+		)
+	);
+
 	wp_enqueue_script(
 		'ltt-dive-in-script',
 		LTT_DIVE_IN_URI . '/assets/js/main.js',
-		array(),
+		array( 'ltt-dive-in-alpine' ),
 		file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION,
-		true
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => true,
+		)
 	);
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

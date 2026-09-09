@@ -50,6 +50,7 @@ function ltt_dive_in_setup() {
 	register_nav_menus(
 		array(
 			'primary'           => __( 'Primary Menu', 'ltt-dive-in' ),
+			'header_utility'    => __( 'Top Header', 'ltt-dive-in' ),
 			'footer_navigation' => __( 'Footer Navigation', 'ltt-dive-in' ),
 			'footer'            => __( 'Footer Legal', 'ltt-dive-in' ),
 		)

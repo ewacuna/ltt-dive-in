@@ -7,7 +7,8 @@
 
 get_header();
 ?>
-<main id="primary" class="site-main">
+<main id="primary" class="site-main front-page-main">
+	<?php get_template_part( 'template-parts/sections/home', 'hero' ); ?>
 	<?php
 	while ( have_posts() ) :
 		the_post();

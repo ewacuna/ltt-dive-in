@@ -1,33 +1,4 @@
 /**
- * Mobile navigation behavior.
- */
-( function () {
-	'use strict';
-
-	const button = document.querySelector( '.menu-toggle' );
-	const navigation = document.querySelector( '.main-navigation' );
-
-	if ( ! button || ! navigation ) {
-		return;
-	}
-
-	button.addEventListener( 'click', function () {
-		const isOpen = button.getAttribute( 'aria-expanded' ) === 'true';
-
-		button.setAttribute( 'aria-expanded', String( ! isOpen ) );
-		navigation.classList.toggle( 'is-open', ! isOpen );
-	} );
-
-	document.addEventListener( 'keyup', function ( event ) {
-		if ( event.key === 'Escape' ) {
-			button.setAttribute( 'aria-expanded', 'false' );
-			navigation.classList.remove( 'is-open' );
-			button.focus();
-		}
-	} );
-}() );
-
-/**
  * Keep the footer's visual and reading order aligned at each breakpoint.
  */
 ( function () {

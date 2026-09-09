@@ -16,30 +16,137 @@
 <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'ltt-dive-in' ); ?></a>
 
 <div id="page" class="site">
-	<header id="masthead" class="site-header">
-		<div class="container site-header__inner">
-			<div class="site-branding">
-				<?php ltt_dive_in_branding(); ?>
-				<?php if ( get_bloginfo( 'description' ) ) : ?>
-					<p class="site-description"><?php bloginfo( 'description' ); ?></p>
+	<?php
+	$header_assets_uri = LTT_DIVE_IN_URI . '/assets/images/header';
+	$weather_label     = ltt_dive_in_get_header_option( 'ltt_dive_in_header_weather_label', '28°F' );
+	$weather_link      = ltt_dive_in_get_header_option( 'ltt_dive_in_header_weather_link', array() );
+	$header_classes    = is_front_page() ? 'site-header site-header--overlay' : 'site-header site-header--solid';
+	?>
+	<header
+		id="masthead"
+		class="<?php echo esc_attr( $header_classes ); ?>"
+		x-data="{ menuOpen: false, searchHovered: false, searchFocused: false, searchValue: '' }"
+		x-effect="document.body.classList.toggle('has-open-menu', menuOpen)"
+		@keydown.escape.window="if (menuOpen) { menuOpen = false; $nextTick(() => $refs.menuButton.focus()) }"
+		@resize.window="if (window.innerWidth >= 992) menuOpen = false"
+	>
+		<div class="site-header__inner">
+			<div class="site-header__branding">
+				<?php if ( has_custom_logo() ) : ?>
+					<?php echo get_custom_logo(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core-generated custom logo markup. ?>
+				<?php else : ?>
+					<a class="site-header__logo-link" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+						<img class="site-header__logo" src="<?php echo esc_url( $header_assets_uri . '/main-logo.svg' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="153" height="56">
+					</a>
 				<?php endif; ?>
 			</div>
 
-			<button class="menu-toggle" type="button" aria-controls="primary-menu" aria-expanded="false">
-				<span class="menu-toggle__label"><?php esc_html_e( 'Menu', 'ltt-dive-in' ); ?></span>
-			</button>
+			<div
+				id="header-navigation"
+				class="site-header__navigation"
+				x-ref="navigation"
+				x-bind:class="{ 'is-open': menuOpen }"
+				@click="if (window.innerWidth < 992 && $event.target.closest('a')) menuOpen = false"
+			>
+				<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'ltt-dive-in' ); ?>">
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'primary',
+							'menu_id'        => 'primary-menu',
+							'menu_class'     => 'main-navigation__menu',
+							'container'      => false,
+							'fallback_cb'    => false,
+							'depth'          => 1,
+						)
+					);
+					?>
+				</nav>
 
-			<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'ltt-dive-in' ); ?>">
-				<?php
-				wp_nav_menu(
-					array(
-						'theme_location' => 'primary',
-						'menu_id'        => 'primary-menu',
-						'container'      => false,
-						'fallback_cb'    => false,
-					)
-				);
-				?>
-			</nav>
+				<?php if ( has_nav_menu( 'header_utility' ) ) : ?>
+					<nav class="utility-navigation" aria-label="<?php esc_attr_e( 'Top header menu', 'ltt-dive-in' ); ?>">
+						<?php
+						wp_nav_menu(
+							array(
+								'theme_location' => 'header_utility',
+								'menu_id'        => 'header-utility-menu',
+								'menu_class'     => 'utility-navigation__menu',
+								'container'      => false,
+								'fallback_cb'    => false,
+								'depth'          => 1,
+							)
+						);
+						?>
+					</nav>
+				<?php endif; ?>
+			</div>
+
+			<?php if ( $weather_label ) : ?>
+				<div class="site-header__weather">
+					<?php if ( is_array( $weather_link ) && ! empty( $weather_link['url'] ) ) : ?>
+						<a href="<?php echo esc_url( $weather_link['url'] ); ?>"<?php echo ! empty( $weather_link['target'] ) ? ' target="' . esc_attr( $weather_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?> aria-label="<?php echo esc_attr( sprintf( __( 'Current conditions: %s', 'ltt-dive-in' ), $weather_label ) ); ?>">
+					<?php else : ?>
+						<span>
+					<?php endif; ?>
+						<img src="<?php echo esc_url( $header_assets_uri . '/weather-icon.svg' ); ?>" alt="" width="16" height="17">
+						<span class="site-header__weather-label"><?php echo esc_html( $weather_label ); ?></span>
+					<?php if ( is_array( $weather_link ) && ! empty( $weather_link['url'] ) ) : ?>
+						</a>
+					<?php else : ?>
+						</span>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
+
+			<form
+				role="search"
+				method="get"
+				class="site-header__search"
+				action="<?php echo esc_url( home_url( '/' ) ); ?>"
+				x-bind:class="{ 'is-active': searchHovered || searchFocused || searchValue.length > 0 }"
+				@mouseenter="searchHovered = true"
+				@mouseleave="searchHovered = false"
+				@focusin="searchFocused = true"
+				@focusout="searchFocused = false"
+			>
+				<label for="header-search-field" class="screen-reader-text"><?php esc_html_e( 'Search the site', 'ltt-dive-in' ); ?></label>
+				<input
+					id="header-search-field"
+					type="search"
+					name="s"
+					value="<?php echo esc_attr( get_search_query() ); ?>"
+					placeholder="<?php echo esc_attr_x( 'Search', 'header search placeholder', 'ltt-dive-in' ); ?>"
+					data-default-placeholder="<?php echo esc_attr_x( 'Search', 'header search placeholder', 'ltt-dive-in' ); ?>"
+					data-expanded-placeholder="<?php echo esc_attr_x( 'Type your search…', 'expanded header search placeholder', 'ltt-dive-in' ); ?>"
+					x-model="searchValue"
+					x-init="searchValue = $el.value"
+					x-bind:placeholder="searchHovered || searchFocused ? $el.dataset.expandedPlaceholder : $el.dataset.defaultPlaceholder"
+				>
+				<button type="submit">
+					<span class="screen-reader-text"><?php esc_html_e( 'Submit search', 'ltt-dive-in' ); ?></span>
+					<img class="site-header__search-icon site-header__search-icon--default" src="<?php echo esc_url( $header_assets_uri . '/search-icon.svg' ); ?>" alt="" width="22" height="17">
+					<img class="site-header__search-icon site-header__search-icon--active" src="<?php echo esc_url( $header_assets_uri . '/search-icon-active.svg' ); ?>" alt="" width="22" height="17">
+				</button>
+			</form>
+
+			<button
+				class="menu-toggle"
+				type="button"
+				x-ref="menuButton"
+				aria-controls="header-navigation"
+				aria-expanded="false"
+				x-bind:aria-expanded="menuOpen.toString()"
+				@click="menuOpen = !menuOpen; if (menuOpen) $nextTick(() => { const firstLink = $refs.navigation.querySelector('a'); if (firstLink) firstLink.focus() })"
+			>
+				<span
+					class="screen-reader-text"
+					data-menu-label
+					data-open-label="<?php esc_attr_e( 'Open menu', 'ltt-dive-in' ); ?>"
+					data-close-label="<?php esc_attr_e( 'Close menu', 'ltt-dive-in' ); ?>"
+					x-text="menuOpen ? $el.dataset.closeLabel : $el.dataset.openLabel"
+				><?php esc_html_e( 'Open menu', 'ltt-dive-in' ); ?></span>
+				<img class="menu-toggle__icon menu-toggle__icon--open" src="<?php echo esc_url( $header_assets_uri . '/mobile-menu-icon.svg' ); ?>" alt="" width="25" height="22">
+				<img class="menu-toggle__icon menu-toggle__icon--close" src="<?php echo esc_url( $header_assets_uri . '/close-icon.svg' ); ?>" alt="" width="25" height="25">
+			</button>
 		</div>
 	</header>
