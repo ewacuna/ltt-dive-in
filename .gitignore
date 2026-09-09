@@ -4,3 +4,6 @@
 .vscode/
 node_modules/
 vendor/
+
+# Alpine is intentionally vendored as a browser asset for production.
+!assets/js/vendor/
