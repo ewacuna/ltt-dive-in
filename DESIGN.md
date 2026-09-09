@@ -111,7 +111,7 @@ The following contrast ratios were calculated from the confirmed hex values:
 - **Gotham HTF:** H3, H4, body copy, navigation, links, labels, metadata, and controls.
 - **Inter:** specification labels inside the Figma style sheet. It is not the intended primary site typeface.
 
-The theme now includes self-hosted WOFF2 files for Gotham HTF Book (`400`) and Bold (`700`). Gotham Medium (`500`) and Big Caslon are not present. Do not silently substitute Inter, label Book as Medium, or map a missing weight to the wrong file. Confirm that the supplied Gotham files are licensed for web use; no license document was present alongside the source files.
+The theme now includes self-hosted WOFF2 files for Gotham HTF Book (`400`), Gotham HTF Bold (`700`), and Big Caslon Medium (`500`). Gotham Medium (`500`) is not present. Do not silently substitute Inter, label Book as Medium, or map a missing weight to the wrong file. Confirm that the supplied Gotham files are licensed for web use; no license document was present alongside the source files.
 
 ### Annotated implementation scale
 
@@ -401,7 +401,7 @@ The current `theme.json` and CSS palette are starter values and do not match the
 
 The following must be resolved before the related production work is considered complete:
 
-- Confirmation of the Gotham webfont license, acquisition of Gotham Medium and Big Caslon webfont files, and final fallback stacks.
+- Confirmation of the Gotham webfont license, acquisition of Gotham Medium, and final fallback stacks.
 - Confirmation of the annotated typography sizes versus raw Figma node sizes.
 - Canonical spacing, radius, shadow, glass-blur, and opacity token scales.
 - Container widths, layout grids, and gutters within the approved responsive breakpoint scale.

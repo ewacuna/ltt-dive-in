@@ -14,6 +14,14 @@
 	src: url("../fonts/gotham/Gotham-Bold.woff2") format("woff2");
 }
 
+@font-face {
+	font-family: "Big Caslon";
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url("../fonts/big-caslon/Big-Caslon-Medium.woff2") format("woff2");
+}
+
 :root {
 	--color-background: #f7f8fa;
 	--color-surface: #ffffff;

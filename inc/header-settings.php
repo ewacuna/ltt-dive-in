@@ -72,6 +72,15 @@ function ltt_dive_in_register_header_settings() {
 			'title'    => __( 'LTT Dive In — Homepage Hero', 'ltt-dive-in' ),
 			'fields'   => array(
 				array(
+					'key'           => 'field_ltt_dive_in_home_hero_title',
+					'label'         => __( 'Hero title', 'ltt-dive-in' ),
+					'name'          => 'ltt_dive_in_home_hero_title',
+					'type'          => 'text',
+					'instructions'  => __( 'Main homepage heading displayed over the hero video. Keep it short enough to fit on one line.', 'ltt-dive-in' ),
+					'required'      => 1,
+					'maxlength'     => 40,
+				),
+				array(
 					'key'           => 'field_ltt_dive_in_home_hero_video',
 					'label'         => __( 'Background video', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_home_hero_video',
@@ -121,7 +130,7 @@ function ltt_dive_in_register_header_settings() {
 					'label'         => __( 'Scroll link label', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_home_hero_scroll_label',
 					'type'          => 'text',
-					'default_value' => __( 'Scroll for more', 'ltt-dive-in' ),
+					'required'      => 1,
 					'maxlength'     => 40,
 				),
 			),

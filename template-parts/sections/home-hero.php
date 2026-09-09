@@ -11,10 +11,11 @@ $video_id        = absint( ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_he
 $poster_id       = absint( ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_poster' ) );
 $video_url       = $video_id ? wp_get_attachment_url( $video_id ) : LTT_DIVE_IN_URI . '/assets/video/home-hero.mp4';
 $poster_url      = $poster_id ? wp_get_attachment_image_url( $poster_id, 'full' ) : '';
+$title           = ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_title' );
 $description     = ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_description' );
 $primary_link    = ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_primary_link', array() );
 $secondary_link  = ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_secondary_link', array() );
-$scroll_label    = ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_scroll_label', __( 'Scroll for more', 'ltt-dive-in' ) );
+$scroll_label    = ltt_dive_in_get_home_hero_field( 'ltt_dive_in_home_hero_scroll_label' );
 
 if ( ! $video_url || ( $video_id && 'video/mp4' !== get_post_mime_type( $video_id ) ) ) {
 	$video_url = LTT_DIVE_IN_URI . '/assets/video/home-hero.mp4';
@@ -22,6 +23,14 @@ if ( ! $video_url || ( $video_id && 'video/mp4' !== get_post_mime_type( $video_i
 
 if ( ! $description && $front_page_id && has_excerpt( $front_page_id ) ) {
 	$description = get_the_excerpt( $front_page_id );
+}
+
+if ( ! $title && $front_page_id ) {
+	$title = get_the_title( $front_page_id );
+}
+
+if ( ! $title ) {
+	$title = get_bloginfo( 'name' );
 }
 
 $hero_links = array_filter(
@@ -63,10 +72,7 @@ $hero_links = array_filter(
 	</div>
 
 	<div class="home-hero__content">
-		<h1 id="home-hero-title" class="home-hero__title">
-			<span class="screen-reader-text"><?php esc_html_e( 'Dive in', 'ltt-dive-in' ); ?></span>
-			<img src="<?php echo esc_url( $hero_assets_uri . '/dive-in.svg' ); ?>" alt="" width="653" height="113">
-		</h1>
+		<h1 id="home-hero-title" class="home-hero__title"><?php echo esc_html( $title ); ?></h1>
 
 		<?php if ( $description ) : ?>
 			<p class="home-hero__description"><?php echo esc_html( $description ); ?></p>
@@ -81,8 +87,10 @@ $hero_links = array_filter(
 		<?php endif; ?>
 	</div>
 
-	<a class="home-hero__scroll" href="#front-page-content">
-		<span><?php echo esc_html( $scroll_label ); ?></span>
-		<img src="<?php echo esc_url( $hero_assets_uri . '/scroll-arrow.svg' ); ?>" alt="" width="14" height="12">
-	</a>
+	<?php if ( $scroll_label ) : ?>
+		<a class="home-hero__scroll" href="#front-page-content">
+			<span><?php echo esc_html( $scroll_label ); ?></span>
+			<img src="<?php echo esc_url( $hero_assets_uri . '/scroll-arrow.svg' ); ?>" alt="" width="14" height="12">
+		</a>
+	<?php endif; ?>
 </section>

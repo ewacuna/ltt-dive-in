@@ -52,14 +52,21 @@
 }
 
 .home-hero__title {
-	width: 100%;
 	margin: 0;
-}
-
-.home-hero__title img {
-	display: block;
-	width: 100%;
-	height: auto;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(153, 153, 153, 0.4) 32.6923%, rgba(153, 153, 153, 0.4) 66.3462%, rgba(224, 224, 224, 0.4) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+	font-size: clamp(7.5rem, 12vw, 9.75rem);
+	font-synthesis: none;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 0.8;
+	mix-blend-mode: color-dodge;
+	text-transform: uppercase;
+	-webkit-text-stroke-color: rgba(138, 181, 197, 0.2);
+	-webkit-text-stroke-width: 1px;
 }
 
 .home-hero__description {
@@ -179,6 +186,10 @@
 		width: min(calc(100% - 2.5rem), 20.9375rem);
 	}
 
+	.home-hero__title {
+		font-size: clamp(4rem, 20vw, 5rem);
+	}
+
 	.home-hero__description {
 		margin-top: 3rem;
 		font-weight: 700;
@@ -207,5 +218,14 @@
 
 	.home-hero__actions {
 		gap: 1rem;
+	}
+}
+
+@media (forced-colors: active) {
+	.home-hero__title {
+		background: none;
+		color: CanvasText;
+		mix-blend-mode: normal;
+		-webkit-text-stroke: 0;
 	}
 }

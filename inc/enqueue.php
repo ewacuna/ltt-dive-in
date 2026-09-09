@@ -78,10 +78,10 @@ function ltt_dive_in_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_enqueue_assets' );
 
 /**
- * Preload the regular body font used above the fold.
+ * Preload fonts used above the fold.
  *
- * Bold is intentionally left on demand to avoid competing with critical
- * resources on pages that do not need it immediately.
+ * Bold is intentionally left on demand. Big Caslon is limited to the front
+ * page, where the hero uses it immediately.
  *
  * @param array[] $preload_resources Resources and attributes to preload.
  * @return array[]
@@ -93,6 +93,15 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		'type'        => 'font/woff2',
 		'crossorigin' => 'anonymous',
 	);
+
+	if ( is_front_page() ) {
+		$preload_resources[] = array(
+			'href'        => LTT_DIVE_IN_URI . '/assets/fonts/big-caslon/Big-Caslon-Medium.woff2',
+			'as'          => 'font',
+			'type'        => 'font/woff2',
+			'crossorigin' => 'anonymous',
+		);
+	}
 
 	return $preload_resources;
 }
