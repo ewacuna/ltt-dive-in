@@ -205,6 +205,16 @@ The mobile map instance is named “Desktop” in Figma but is resized to the mo
 
 ## Imagery and glass treatment
 
+### Homepage display title — implementation reference
+
+The user-supplied homepage SVG export (`4028:433`, supplied 2026-09-09) is a visual reference only; the title remains editable HTML text in Big Caslon Medium. Its fill is a vertical white / `#999999` / `#999999` / `#E0E0E0` gradient at 40% opacity, with stops at 0%, 32.6923%, 66.3462%, and 100%. The subtle outline is `#8AB5C5` at 20% opacity, nominally 1px.
+
+The CSS gradient must follow the visible capital letters rather than the full font line box. With the supplied Big Caslon webfont and `line-height: 1`, the measured capital bounds are approximately `0.117em`–`0.845em` from the line top. Map the source stops into these bounds and repeat the gradient per line for longer editorial titles. Keep the full line box so `background-clip: text` does not clip glyphs. The SVG uses an inward masked stroke; CSS text stroke is centered, so small edge differences remain. Matching a line box to the SVG's 113px height does not establish matching glyph bounds.
+
+The exported image's fill is composited within the SVG. Applying `mix-blend-mode` to the whole heading against the video is not equivalent; `background-blend-mode` on a single transparent gradient does not reproduce that SVG composition either. The implementation uses the exported translucent gradient directly, verified against the export over the same video frame. This visual comparison does not establish text contrast compliance across every video frame.
+
+### General imagery guidance
+
 - Favor authentic Lake Tahoe landscape, activity, lodging, event, and community photography.
 - Use `object-fit: cover`-style cropping only when the focal subject remains visible at every breakpoint.
 - Image overlays use primary navy and, in selected components, cyan, gold, or danger-like tints. Exact opacity must be read from the target component rather than generalized.

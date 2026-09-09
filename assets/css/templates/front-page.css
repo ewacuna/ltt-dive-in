@@ -53,17 +53,29 @@
 
 .home-hero__title {
 	margin: 0;
-	background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(153, 153, 153, 0.4) 32.6923%, rgba(153, 153, 153, 0.4) 66.3462%, rgba(224, 224, 224, 0.4) 100%);
+	/* Map Figma's gradient to Big Caslon's visible capitals, not its line box.
+	 * At line-height: 1, capitals start at ~0.117em and end at ~0.845em.
+	 * The two inner stops preserve the source's 32.6923% and 66.3462% positions.
+	 */
+	background: linear-gradient(
+		180deg,
+		rgba(255, 255, 255, 0.4) 0.117em,
+		rgba(153, 153, 153, 0.4) 0.355em,
+		rgba(153, 153, 153, 0.4) 0.6em,
+		 rgba(224, 224, 224, 0.4) 0.845em
+	);
 	background-clip: text;
 	-webkit-background-clip: text;
+	background-size: 100% 1em;
 	color: transparent;
 	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
-	font-size: clamp(7.5rem, 12vw, 9.75rem);
+	font-size: 9.9rem;
 	font-synthesis: none;
 	font-weight: 500;
 	letter-spacing: 0;
-	line-height: 0.8;
-	mix-blend-mode: color-dodge;
+	/* Keep the glyphs inside the paint box: a cap-height-sized line clips the fill. */
+	line-height: 1;
+	overflow-wrap: anywhere;
 	text-transform: uppercase;
 	-webkit-text-stroke-color: rgba(138, 181, 197, 0.2);
 	-webkit-text-stroke-width: 1px;
@@ -175,6 +187,10 @@
 	.home-hero__content {
 		width: min(calc(100% - 3rem), 36rem);
 	}
+
+	.home-hero__title {
+		font-size: 8.75rem;
+	}
 }
 
 @media (max-width: 991.98px) {
@@ -187,7 +203,7 @@
 	}
 
 	.home-hero__title {
-		font-size: clamp(4rem, 20vw, 5rem);
+		font-size: clamp(3rem, 20vw, 5rem);
 	}
 
 	.home-hero__description {
@@ -225,7 +241,6 @@
 	.home-hero__title {
 		background: none;
 		color: CanvasText;
-		mix-blend-mode: normal;
 		-webkit-text-stroke: 0;
 	}
 }

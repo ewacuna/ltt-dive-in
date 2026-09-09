@@ -18,7 +18,7 @@
 <div id="page" class="site">
 	<?php
 	$header_assets_uri = LTT_DIVE_IN_URI . '/assets/images/header';
-	$weather_label     = ltt_dive_in_get_header_option( 'ltt_dive_in_header_weather_label', '28°F' );
+	$weather           = ltt_dive_in_get_header_weather();
 	$weather_link      = ltt_dive_in_get_header_option( 'ltt_dive_in_header_weather_link', array() );
 	$header_classes    = is_front_page() ? 'site-header site-header--overlay' : 'site-header site-header--solid';
 	?>
@@ -81,15 +81,18 @@
 				<?php endif; ?>
 			</div>
 
-			<?php if ( $weather_label ) : ?>
+			<?php if ( $weather['label'] ) : ?>
 				<div class="site-header__weather">
 					<?php if ( is_array( $weather_link ) && ! empty( $weather_link['url'] ) ) : ?>
-						<a href="<?php echo esc_url( $weather_link['url'] ); ?>"<?php echo ! empty( $weather_link['target'] ) ? ' target="' . esc_attr( $weather_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?> aria-label="<?php echo esc_attr( sprintf( __( 'Current conditions: %s', 'ltt-dive-in' ), $weather_label ) ); ?>">
+						<a href="<?php echo esc_url( $weather_link['url'] ); ?>"<?php echo ! empty( $weather_link['target'] ) ? ' target="' . esc_attr( $weather_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>>
 					<?php else : ?>
 						<span>
 					<?php endif; ?>
-						<img src="<?php echo esc_url( $header_assets_uri . '/weather-icon.svg' ); ?>" alt="" width="16" height="17">
-						<span class="site-header__weather-label"><?php echo esc_html( $weather_label ); ?></span>
+						<?php if ( $weather['icon_url'] ) : ?>
+							<img class="site-header__weather-icon" src="<?php echo esc_url( $weather['icon_url'] ); ?>" alt="" width="28" height="28">
+						<?php endif; ?>
+						<span class="site-header__weather-label" aria-hidden="true"><?php echo esc_html( $weather['label'] ); ?></span>
+						<span class="screen-reader-text"><?php echo esc_html( $weather['accessible_label'] ); ?></span>
 					<?php if ( is_array( $weather_link ) && ! empty( $weather_link['url'] ) ) : ?>
 						</a>
 					<?php else : ?>

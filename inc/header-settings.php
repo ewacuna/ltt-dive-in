@@ -34,13 +34,11 @@ function ltt_dive_in_register_header_settings() {
 			'title'    => __( 'LTT Dive In — Header Settings', 'ltt-dive-in' ),
 			'fields'   => array(
 				array(
-					'key'           => 'field_ltt_dive_in_header_weather_label',
-					'label'         => __( 'Weather label', 'ltt-dive-in' ),
-					'name'          => 'ltt_dive_in_header_weather_label',
-					'type'          => 'text',
-					'instructions'  => __( 'Short current-condition label displayed beside the weather icon, for example 28°F. Leave empty to hide it.', 'ltt-dive-in' ),
-					'default_value' => '28°F',
-					'maxlength'     => 12,
+					'key'          => 'field_ltt_dive_in_openweather_api_key',
+					'label'        => __( 'OpenWeather API key', 'ltt-dive-in' ),
+					'name'         => 'ltt_dive_in_openweather_api_key',
+					'type'         => 'password',
+					'instructions' => __( 'Used only by the server to load Tahoe City weather. The key is never included in front-end markup or JavaScript. Confirm and follow the attribution requirements for your OpenWeather plan.', 'ltt-dive-in' ),
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_header_weather_link',
