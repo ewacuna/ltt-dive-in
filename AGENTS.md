@@ -20,6 +20,20 @@ Use the Local URL for manual verification only. Never hard-code `lake-tahoe-trav
 
 The standalone shell PHP version may differ from the PHP runtime selected in Local. `php -l` is suitable for syntax checks, but use Local's Site Shell or inspect the Local runtime when exact WordPress/PHP parity matters. Do not assume WP-CLI is available in the regular theme shell.
 
+### Sharing the database
+
+```sh
+# Windows (PowerShell), run from the theme directory.
+.\scripts\db-backup.ps1
+.\scripts\db-restore.ps1 .\db-backups\ltt-db-YYYY-MM-DD-HHmmss.sql
+
+# macOS (Bash). Make executable once after cloning: chmod +x scripts/*.sh
+./scripts/db-backup.sh
+./scripts/db-restore.sh ./db-backups/ltt-db-YYYY-MM-DD-HHmmss.sql
+```
+
+Both scripts discover the MySQL connection from Local's `sites.json` (matched by domain) and the credentials from `wp-config.php` (located by walking up from the theme directory); the Local site must be running. The restore creates a timestamped safety backup before importing and asks for confirmation. Pass a different Local domain as the optional last argument if the site was created with another domain.
+
 ## Design source of truth
 
 [`DESIGN.md`](./DESIGN.md) translates the project's Figma source into implementation guidance. Read it before creating or changing a public-facing page, component, pattern, design token, or interaction.
@@ -48,6 +62,7 @@ The standalone shell PHP version may differ from the PHP runtime selected in Loc
 - `assets/js/main.js`: dependency-free browser behavior.
 - `style.css`: required WordPress theme metadata only; do not add application styles here.
 - `theme.json`: block-editor settings, layout sizes, palette, typography, and design tokens.
+- `scripts/`: cross-platform Local database backup/restore helpers; not loaded by WordPress. See “Sharing the database between developers”.
 
 ## Development principles
 
