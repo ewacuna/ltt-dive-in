@@ -112,10 +112,10 @@
 			menuLabel.textContent = menuLabel.dataset.closeLabel;
 		}
 
-		const searchField = navigation.querySelector( 'input[type="search"]' );
+		const firstMenuControl = primaryMenu.querySelector( 'a, button' );
 
-		if ( searchField ) {
-			searchField.focus();
+		if ( firstMenuControl ) {
+			firstMenuControl.focus();
 		}
 	};
 
