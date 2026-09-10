@@ -8,6 +8,7 @@
 	const navigation = document.querySelector( '#header-navigation' );
 	const primaryMenu = document.querySelector( '#primary-menu' );
 	const menuButton = document.querySelector( '[data-menu-button]' );
+	const themeColor = document.querySelector( 'meta[name="theme-color"][data-menu-theme-color]' );
 	const mobileQuery = window.matchMedia( '(max-width: 991.98px)' );
 
 	if ( ! header || ! navigation || ! primaryMenu || ! menuButton ) {
@@ -16,9 +17,15 @@
 
 	const menuLabel = menuButton.querySelector( '[data-menu-label]' );
 	const submenuToggles = Array.from( primaryMenu.querySelectorAll( '[data-menu-toggle]' ) );
+	const defaultThemeColor = themeColor ? themeColor.getAttribute( 'content' ) : '';
 	const pageSiblings = header.parentElement ? Array.from( header.parentElement.children ).filter( function ( element ) {
 		return element !== header;
 	} ) : [];
+	const setBrowserThemeColor = function ( color ) {
+		if ( themeColor && color ) {
+			themeColor.setAttribute( 'content', color );
+		}
+	};
 
 	const getControlledSubmenu = function ( toggle ) {
 		return document.getElementById( toggle.getAttribute( 'aria-controls' ) );
@@ -85,6 +92,7 @@
 		navigation.classList.remove( 'is-open' );
 		menuButton.setAttribute( 'aria-expanded', 'false' );
 		document.body.classList.remove( 'has-open-menu' );
+		setBrowserThemeColor( defaultThemeColor );
 		pageSiblings.forEach( function ( element ) {
 			element.removeAttribute( 'inert' );
 		} );
@@ -104,6 +112,7 @@
 		navigation.classList.add( 'is-open' );
 		menuButton.setAttribute( 'aria-expanded', 'true' );
 		document.body.classList.add( 'has-open-menu' );
+		setBrowserThemeColor( themeColor ? themeColor.dataset.menuThemeColor : '' );
 		pageSiblings.forEach( function ( element ) {
 			element.setAttribute( 'inert', '' );
 		} );

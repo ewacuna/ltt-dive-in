@@ -9,6 +9,11 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta
+		name="theme-color"
+		content="<?php echo esc_attr( is_front_page() ? '#02162b' : '#073959' ); ?>"
+		data-menu-theme-color="#073959"
+	>
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
