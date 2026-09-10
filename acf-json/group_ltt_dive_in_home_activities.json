@@ -1,0 +1,117 @@
+{
+    "key": "group_ltt_dive_in_home_activities",
+    "title": "LTT Dive In: Homepage Activities",
+    "fields": [
+        {
+            "key": "field_ltt_dive_in_activities_heading",
+            "label": "Heading",
+            "name": "ltt_dive_in_activities_heading",
+            "type": "text",
+            "instructions": "The section's primary heading.",
+            "required": 1
+        },
+        {
+            "key": "field_ltt_dive_in_activities_copy",
+            "label": "Introduction",
+            "name": "ltt_dive_in_activities_copy",
+            "type": "textarea",
+            "instructions": "A short introduction for the activities section.",
+            "required": 1,
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ltt_dive_in_activities_tag",
+            "label": "Category tag",
+            "name": "ltt_dive_in_activities_tag",
+            "type": "text",
+            "instructions": "Optional short category label displayed above the heading.",
+            "required": 0
+        },
+        {
+            "key": "field_ltt_dive_in_activities_ctas",
+            "label": "Section calls to action",
+            "name": "ltt_dive_in_activities_ctas",
+            "type": "repeater",
+            "required": 0,
+            "min": 0,
+            "max": 2,
+            "layout": "table",
+            "button_label": "Add call to action",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_activities_cta_link",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "required": 1,
+                    "return_format": "array"
+                }
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_activities_cards",
+            "label": "Activity cards",
+            "name": "ltt_dive_in_activities_cards",
+            "type": "repeater",
+            "required": 1,
+            "min": 4,
+            "max": 4,
+            "layout": "block",
+            "button_label": "Add activity card",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_activities_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_ltt_dive_in_activities_card_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "required": 0,
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_activities_card_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "required": 1,
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all"
+                },
+                {
+                    "key": "field_ltt_dive_in_activities_card_link",
+                    "label": "Call to action",
+                    "name": "link",
+                    "type": "link",
+                    "required": 0,
+                    "return_format": "array"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "description": "Editable content for the four-card activity driver on the homepage.",
+    "show_in_rest": 0
+}
