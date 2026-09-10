@@ -180,6 +180,7 @@ Automated checks are useful but cannot establish conformance by themselves. Ever
 - Set the document language through WordPress with `language_attributes()` and retain correct page metadata and viewport behavior.
 - Use native HTML elements before ARIA. Do not recreate buttons, links, headings, lists, navigation, or form controls with generic `div` or `span` elements.
 - Keep a logical heading hierarchy. Each page needs a clear primary heading, and heading levels must describe structure rather than visual size.
+- Do not require a Hero on every page or assume that every primary heading comes from a Hero. A Hero may render the page's primary heading only when the applicable template and approved design designate it to do so; archives, search results, posts, and pages without a Hero must provide their primary heading through the relevant WordPress template.
 - Use landmarks such as `header`, `nav`, `main`, `aside`, and `footer` appropriately. Label repeated landmarks so their purposes are distinguishable.
 - Keep exactly one primary `main` region and provide a visible-on-focus skip link to it.
 - Preserve a sensible DOM and reading order at every breakpoint. CSS must not create a visual order that conflicts with keyboard or screen-reader order.
