@@ -111,12 +111,6 @@
 		if ( menuLabel ) {
 			menuLabel.textContent = menuLabel.dataset.closeLabel;
 		}
-
-		const firstMenuControl = primaryMenu.querySelector( 'a, button' );
-
-		if ( firstMenuControl ) {
-			firstMenuControl.focus();
-		}
 	};
 
 	submenuToggles.forEach( function ( toggle ) {
