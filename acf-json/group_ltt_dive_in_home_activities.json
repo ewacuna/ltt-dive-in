@@ -3,13 +3,12 @@
     "title": "LTT Dive In: Homepage Activities",
     "fields": [
         {
-            "key": "field_ltt_dive_in_activities_content_accordion",
+            "key": "field_ltt_dive_in_activities_content_tab",
             "label": "Section content",
             "name": "",
-            "type": "accordion",
-            "instructions": "Heading, introduction, category tag, and section-level links.",
-            "open": 1,
-            "multi_expand": 0,
+            "type": "tab",
+            "placement": "top",
+            "selected": 1,
             "endpoint": 0
         },
         {
@@ -60,13 +59,12 @@
             ]
         },
         {
-            "key": "field_ltt_dive_in_activities_cards_accordion",
+            "key": "field_ltt_dive_in_activities_cards_tab",
             "label": "Activity cards",
             "name": "",
-            "type": "accordion",
-            "instructions": "Open this panel to edit the four homepage activity cards.",
-            "open": 0,
-            "multi_expand": 0,
+            "type": "tab",
+            "placement": "top",
+            "selected": 0,
             "endpoint": 0
         },
         {
