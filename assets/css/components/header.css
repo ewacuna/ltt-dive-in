@@ -494,6 +494,12 @@
 }
 
 @media (max-width: 991.98px) {
+	.main-navigation a,
+	.main-navigation__submenu-toggle,
+	.main-navigation__back {
+		-webkit-tap-highlight-color: transparent;
+	}
+
 	.site-header {
 		min-height: 4.125rem;
 	}
