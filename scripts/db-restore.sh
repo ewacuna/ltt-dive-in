@@ -63,7 +63,7 @@ find_mysql_binary() {
 	local binary="$1"
 	local found
 	found="$(find "${HOME}/Library/Application Support/Local/lightning-services" \
-			-type f -path "*/mysql-*/bin/mac*/bin/${binary}" 2>/dev/null | sort -r | head -n 1)"
+			-type f -path "*/mysql-*/bin/*/bin/${binary}" 2>/dev/null | sort -r | head -n 1)"
 	if [ -z "${found}" ]; then
 		found="$(command -v "${binary}" || true)"
 	fi
@@ -87,15 +87,16 @@ import json, os, sys
 with open(os.environ["SITES_JSON"], "r", encoding="utf-8") as handle:
 	sites = json.load(handle)
 
-site = next((s for s in sites.values() if s.get("domain") == os.environ["DOMAIN"]), None)
-if site is None:
+match = next(((site_id, s) for site_id, s in sites.items() if s.get("domain") == os.environ["DOMAIN"]), None)
+if match is None:
 	known = ", ".join(sorted(s.get("domain", "?") for s in sites.values()))
 	sys.exit(f"Site with domain '{os.environ['DOMAIN']}' not found in LocalWP. Known domains: {known}")
 
+site_id, site = match
 mysql = site.get("services", {}).get("mysql", {})
 ports = mysql.get("ports", {}).get("MYSQL", [])
 port = ports[0] if ports else ""
-socket = site.get("path", "") + "/conf/mysql/mysql.sock"
+socket = os.path.expanduser(f"~/Library/Application Support/Local/run/{site_id}/mysql/mysqld.sock")
 print(f"{port}\t{socket}")
 PY
 )" || fail "${SITE_INFO}"
@@ -110,10 +111,10 @@ MYSQLDUMP="$(find_mysql_binary mysqldump)"
 MYSQL="$(find_mysql_binary mysql)"
 
 CONN_ARGS=()
-if [ -n "${MYSQL_PORT}" ]; then
-	CONN_ARGS+=(--host=127.0.0.1 "--port=${MYSQL_PORT}")
-elif [ -S "${MYSQL_SOCKET}" ]; then
+if [ -S "${MYSQL_SOCKET}" ]; then
 	CONN_ARGS+=("--socket=${MYSQL_SOCKET}")
+elif [ -n "${MYSQL_PORT}" ]; then
+	CONN_ARGS+=(--host=127.0.0.1 "--port=${MYSQL_PORT}")
 else
 	fail "No MySQL port or socket found for '${DOMAIN}'. Is the site running in LocalWP?"
 fi
