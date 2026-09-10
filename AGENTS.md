@@ -89,7 +89,11 @@ ACF Pro is an approved project dependency and is installed in the Local WordPres
 ### Field definitions and version control
 
 - A field group is not complete if it exists only in the local database. Version its definition with the code that consumes it.
-- Prefer ACF Local JSON in an `acf-json/` directory for theme-owned field groups. If registration in PHP is required, place it in a focused file under `inc/` and load it from `functions.php`.
+- ACF Local JSON and PHP registration may coexist in the theme, but each field group must have exactly one source of truth. Never register or maintain the same field-group key in both formats.
+- Use ACF Local JSON in `acf-json/` for theme-owned editorial field groups that are created and maintained through the ACF admin UI, including page-builder layouts, reusable clone groups, and template-specific content fields. Review and commit the generated JSON with the PHP template and styles that consume it.
+- Use PHP registration for field groups that are deliberately code-driven, programmatically composed, or depend on dynamic choices or behavior that cannot be represented reliably in generated JSON. Place each registration in a focused file under `inc/` and load it explicitly from `functions.php`.
+- Do not move an existing field group between PHP and Local JSON casually. Treat the change as a migration: preserve its group and field keys, remove the previous registration source, verify saved content, and confirm that only one definition loads.
+- Local JSON versions field definitions, not field values or editorial content. Review generated files before committing them and never place secrets, credentials, personal data, or environment-specific values in a field-group definition.
 - Keep field and group keys stable after content exists. Prefix human-readable group names and programmatic identifiers consistently with `ltt_dive_in` or `ltt-dive-in` as appropriate.
 - Scope location rules narrowly to the intended post type, page template, taxonomy, or options page. Avoid field groups that appear across unrelated editing screens.
 - Give fields clear labels, concise instructions, useful defaults, and validation constraints that match the design. Use conditional logic to hide irrelevant controls.
