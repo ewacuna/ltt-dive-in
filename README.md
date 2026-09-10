@@ -97,7 +97,7 @@ Copy `templates/full-width.php`, change its `Template Name` header, and customiz
 
 The theme includes Alpine.js `3.17.2` at `assets/js/vendor/alpine.min.js` with its MIT license. WordPress loads the local file from the document head with the non-render-blocking `defer` strategy recommended by Alpine; do not add an additional `unpkg` or other CDN script tag to `header.php`.
 
-The local copy avoids an extra third-party connection, prevents an unpinned CDN URL from changing unexpectedly, and keeps page content server-rendered for crawling and no-JavaScript fallbacks. Alpine currently owns the mobile-navigation and header-search states, plus the homepage video's reduced-motion safeguard. The remaining `assets/js/main.js` behavior is kept for footer DOM ordering because it is not a simple component-local state.
+The local copy avoids an extra third-party connection, prevents an unpinned CDN URL from changing unexpectedly, and keeps page content server-rendered for crawling and no-JavaScript fallbacks. Alpine currently owns the header-search states and the homepage video's reduced-motion safeguard. `assets/js/main.js` owns the accessible mobile-navigation shell, nested primary-menu disclosures, and footer DOM ordering.
 
 When upgrading Alpine:
 

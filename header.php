@@ -25,10 +25,7 @@
 	<header
 		id="masthead"
 		class="<?php echo esc_attr( $header_classes ); ?>"
-		x-data="{ menuOpen: false, searchHovered: false, searchFocused: false, searchValue: '' }"
-		x-effect="document.body.classList.toggle('has-open-menu', menuOpen)"
-		@keydown.escape.window="if (menuOpen) { menuOpen = false; $nextTick(() => $refs.menuButton.focus()) }"
-		@resize.window="if (window.innerWidth >= 992) menuOpen = false"
+		x-data="{ searchHovered: false, searchFocused: false, searchValue: '' }"
 	>
 		<div class="site-header__inner">
 			<div class="site-header__branding">
@@ -44,10 +41,38 @@
 			<div
 				id="header-navigation"
 				class="site-header__navigation"
-				x-ref="navigation"
-				x-bind:class="{ 'is-open': menuOpen }"
-				@click="if (window.innerWidth < 992 && $event.target.closest('a')) menuOpen = false"
 			>
+				<form
+					role="search"
+					method="get"
+					class="site-header__search"
+					action="<?php echo esc_url( home_url( '/' ) ); ?>"
+					x-bind:class="{ 'is-active': searchHovered || searchFocused || searchValue.length > 0 }"
+					@mouseenter="searchHovered = true"
+					@mouseleave="searchHovered = false"
+					@focusin="searchFocused = true"
+					@focusout="searchFocused = false"
+				>
+					<label for="header-search-field" class="screen-reader-text"><?php esc_html_e( 'Search the site', 'ltt-dive-in' ); ?></label>
+					<input
+						id="header-search-field"
+						type="search"
+						name="s"
+						value="<?php echo esc_attr( get_search_query() ); ?>"
+						placeholder="<?php echo esc_attr_x( 'Search', 'header search placeholder', 'ltt-dive-in' ); ?>"
+						data-default-placeholder="<?php echo esc_attr_x( 'Search', 'header search placeholder', 'ltt-dive-in' ); ?>"
+						data-expanded-placeholder="<?php echo esc_attr_x( 'Type your search…', 'expanded header search placeholder', 'ltt-dive-in' ); ?>"
+						x-model="searchValue"
+						x-init="searchValue = $el.value"
+						x-bind:placeholder="searchHovered || searchFocused ? $el.dataset.expandedPlaceholder : $el.dataset.defaultPlaceholder"
+					>
+					<button type="submit">
+						<span class="screen-reader-text"><?php esc_html_e( 'Submit search', 'ltt-dive-in' ); ?></span>
+						<img class="site-header__search-icon site-header__search-icon--default" src="<?php echo esc_url( $header_assets_uri . '/search-icon.svg' ); ?>" alt="" width="22" height="17">
+						<img class="site-header__search-icon site-header__search-icon--active" src="<?php echo esc_url( $header_assets_uri . '/search-icon-active.svg' ); ?>" alt="" width="22" height="17">
+					</button>
+				</form>
+
 				<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'ltt-dive-in' ); ?>">
 					<?php
 					wp_nav_menu(
@@ -57,7 +82,8 @@
 							'menu_class'     => 'main-navigation__menu',
 							'container'      => false,
 							'fallback_cb'    => false,
-							'depth'          => 1,
+							'depth'          => 3,
+							'walker'         => new LTT_Dive_In_Navigation_Walker(),
 						)
 					);
 					?>
@@ -101,52 +127,18 @@
 				</div>
 			<?php endif; ?>
 
-			<form
-				role="search"
-				method="get"
-				class="site-header__search"
-				action="<?php echo esc_url( home_url( '/' ) ); ?>"
-				x-bind:class="{ 'is-active': searchHovered || searchFocused || searchValue.length > 0 }"
-				@mouseenter="searchHovered = true"
-				@mouseleave="searchHovered = false"
-				@focusin="searchFocused = true"
-				@focusout="searchFocused = false"
-			>
-				<label for="header-search-field" class="screen-reader-text"><?php esc_html_e( 'Search the site', 'ltt-dive-in' ); ?></label>
-				<input
-					id="header-search-field"
-					type="search"
-					name="s"
-					value="<?php echo esc_attr( get_search_query() ); ?>"
-					placeholder="<?php echo esc_attr_x( 'Search', 'header search placeholder', 'ltt-dive-in' ); ?>"
-					data-default-placeholder="<?php echo esc_attr_x( 'Search', 'header search placeholder', 'ltt-dive-in' ); ?>"
-					data-expanded-placeholder="<?php echo esc_attr_x( 'Type your search…', 'expanded header search placeholder', 'ltt-dive-in' ); ?>"
-					x-model="searchValue"
-					x-init="searchValue = $el.value"
-					x-bind:placeholder="searchHovered || searchFocused ? $el.dataset.expandedPlaceholder : $el.dataset.defaultPlaceholder"
-				>
-				<button type="submit">
-					<span class="screen-reader-text"><?php esc_html_e( 'Submit search', 'ltt-dive-in' ); ?></span>
-					<img class="site-header__search-icon site-header__search-icon--default" src="<?php echo esc_url( $header_assets_uri . '/search-icon.svg' ); ?>" alt="" width="22" height="17">
-					<img class="site-header__search-icon site-header__search-icon--active" src="<?php echo esc_url( $header_assets_uri . '/search-icon-active.svg' ); ?>" alt="" width="22" height="17">
-				</button>
-			</form>
-
 			<button
 				class="menu-toggle"
 				type="button"
-				x-ref="menuButton"
+				data-menu-button
 				aria-controls="header-navigation"
 				aria-expanded="false"
-				x-bind:aria-expanded="menuOpen.toString()"
-				@click="menuOpen = !menuOpen; if (menuOpen) $nextTick(() => { const firstLink = $refs.navigation.querySelector('a'); if (firstLink) firstLink.focus() })"
 			>
 				<span
 					class="screen-reader-text"
 					data-menu-label
 					data-open-label="<?php esc_attr_e( 'Open menu', 'ltt-dive-in' ); ?>"
 					data-close-label="<?php esc_attr_e( 'Close menu', 'ltt-dive-in' ); ?>"
-					x-text="menuOpen ? $el.dataset.closeLabel : $el.dataset.openLabel"
 				><?php esc_html_e( 'Open menu', 'ltt-dive-in' ); ?></span>
 				<img class="menu-toggle__icon menu-toggle__icon--open" src="<?php echo esc_url( $header_assets_uri . '/mobile-menu-icon.svg' ); ?>" alt="" width="25" height="22">
 				<img class="menu-toggle__icon menu-toggle__icon--close" src="<?php echo esc_url( $header_assets_uri . '/close-icon.svg' ); ?>" alt="" width="25" height="25">

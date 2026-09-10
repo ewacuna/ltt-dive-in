@@ -1,7 +1,7 @@
 # Lake Tahoe Travel Design Guide
 
 - Status: initial implementation reference
-- Last verified against Figma: 2026-09-08
+- Last verified against Figma: 2026-09-09
 - Design source: [Lake Tahoe Travel — New Site Design — Dev Access](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=0-1&m=dev)
 
 ## Purpose and authority
@@ -279,6 +279,9 @@ Implementation rules:
 ### Navigation state direction
 
 - Expanded desktop navigation uses large Big Caslon menu labels.
+- The WordPress primary-menu hierarchy maps to the navigation states: level one opens the global panel, level two lists its destinations, and an optional level three opens the secondary flyout.
+- Mobile navigation places the native site-search form before the primary menu. Primary labels use Big Caslon at `48px`; expanded submenu links use Gotham HTF at `18px`, and utility links use Gotham HTF at `14px`.
+- Mobile submenu sections expand inline. Inactive primary sections use primary tint 300 `#85A2B2`, the open section uses near-white `#F9F9F9`, submenu links use primary tint 50 `#C7D1D8`, and the open indicator/back action uses Peak Gold `#EEB040`.
 - Main and footer navigation move from light/cool tones toward gold for emphasized hover states on dark navy.
 - Back actions and submenu arrows are part of the label's clickable target, not separate unlabeled controls.
 - Mobile menu labels require the same selected, expanded, and focus states as desktop navigation.
