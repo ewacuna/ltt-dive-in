@@ -1,0 +1,9 @@
+.ltt-calendar { padding: 1rem; border: 1px solid #cccccc; border-radius: .5rem; background: #f8f8f8; color: #333333; font-family: "Gotham HTF", Arial, sans-serif; }
+.ltt-calendar__header, .ltt-calendar__week, .ltt-calendar__weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); align-items: center; gap: .25rem; }
+.ltt-calendar__month { grid-column: 2 / span 5; margin: 0; color: #073959; font-size: 1.5rem; font-weight: 400; text-align: center; }
+.ltt-calendar__previous, .ltt-calendar__next, .ltt-calendar__day { display: inline-grid; width: 2.5rem; height: 2.5rem; place-items: center; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.ltt-calendar__weekdays { margin-block: .75rem .25rem; color: #85a2b2; font-size: .75rem; text-align: center; }
+.ltt-calendar__day { font-size: 1.125rem; }
+.ltt-calendar__day--outside-month { color: #999999; font-size: .75rem; }
+.ltt-calendar__day[aria-selected="true"] { background: #61c2b7; color: #ffffff; }
+.ltt-calendar__previous:focus-visible, .ltt-calendar__next:focus-visible, .ltt-calendar__day:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }

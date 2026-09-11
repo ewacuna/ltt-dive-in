@@ -1,0 +1,17 @@
+.ltt-expand-cta {
+	display: inline-flex;
+	min-height: 2.125rem;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid #073959;
+	border-radius: 2.5rem;
+	background: #ffffff;
+	color: #073959;
+	font: 400 0.75rem/1.45 "Gotham HTF", Arial, sans-serif;
+	text-decoration: none;
+}
+
+.ltt-expand-cta--image { border-color: rgba(255,255,255,.5); background: rgba(2,22,43,.1); color: #ffffff; backdrop-filter: blur(.25rem); }
+.ltt-expand-cta:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }

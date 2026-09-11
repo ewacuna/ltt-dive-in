@@ -375,6 +375,12 @@ Do not place homepage sections, post grids, archive layouts, template-specific h
 - The shared component owns default, hover, pressed, disabled, forced-colors, and focus-visible states. A section may add a BEM class only for placement, such as margins or alignment.
 - Figma calls for Gotham Medium in CTAs, but the theme currently has only Gotham Book `400` and Bold `700`. Do not synthesize or mislabel `500`; use the documented available face until the licensed Medium file is supplied.
 
+##### Shared controls
+
+- Keep each Figma control family in its own focused stylesheet under `assets/css/components/`. Current control files are `category-selection.css`, `form-submit-button.css`, `read-more-cta.css`, `slider-navigation.css`, `carousel-indicators.css`, `accordion-navigation.css`, `search-icon.css`, `dropdown-menu.css`, `expand-cta.css`, `search-bar.css`, `jump-link-bar.css`, `text-input.css`, `calendar-dropdown.css`, and `calendar.css`.
+- Prefix theme-owned control classes with `ltt-` and use the component name directly, such as `ltt-slider-navigation` or `ltt-calendar`; do not add a redundant `control` segment.
+- These stylesheets define approved variants and states only. Do not enqueue or apply a control stylesheet until the matching semantic markup, required icon assets, interaction behavior, and accessibility states are implemented.
+
 ### Conditional stylesheet loading
 
 Register and enqueue styles from `inc/enqueue.php` through WordPress APIs. Every non-global stylesheet must load only when its template or component is used.

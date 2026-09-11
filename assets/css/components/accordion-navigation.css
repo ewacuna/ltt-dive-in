@@ -1,0 +1,16 @@
+.ltt-accordion-navigation {
+	--accordion-nav-bg: #ffffff;
+	--accordion-nav-color: #073959;
+	display: inline-grid;
+	width: 2.5rem;
+	height: 2.5rem;
+	place-items: center;
+	border: 1px solid #61c2b7;
+	background: var(--accordion-nav-bg);
+	color: var(--accordion-nav-color);
+	cursor: pointer;
+}
+
+.ltt-accordion-navigation:is(:hover, :focus-visible) { background: #073959; color: #ffffff; }
+.ltt-accordion-navigation--dark { --accordion-nav-bg: #073959; --accordion-nav-color: #ffffff; }
+.ltt-accordion-navigation--color { --accordion-nav-bg: #8ab5c5; }

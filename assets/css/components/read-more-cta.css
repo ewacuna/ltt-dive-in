@@ -1,0 +1,22 @@
+.ltt-read-more-cta {
+	--read-more-border: #073959;
+	--read-more-bg: transparent;
+	--read-more-color: #073959;
+	display: inline-flex;
+	min-height: 2.125rem;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--read-more-border);
+	border-radius: 2.5rem;
+	background: var(--read-more-bg);
+	color: var(--read-more-color);
+	font: 400 0.75rem/1.45 "Gotham HTF", Arial, sans-serif;
+	text-decoration: none;
+}
+
+.ltt-read-more-cta:is(:hover, :focus-visible) { background: #073959; border-color: #073959; color: #ffffff; }
+.ltt-read-more-cta--dark { --read-more-border: #ffffff; --read-more-color: #ffffff; }
+.ltt-read-more-cta--dark:is(:hover, :focus-visible) { background: #ffffff; color: #073959; }
+.ltt-read-more-cta--image { --read-more-border: rgba(255,255,255,.5); --read-more-bg: rgba(2,22,43,.1); --read-more-color: #ffffff; backdrop-filter: blur(.25rem); }
+.ltt-read-more-cta--image:is(:hover, :focus-visible) { background: rgba(255,255,255,.6); color: #073959; }

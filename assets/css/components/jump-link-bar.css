@@ -1,0 +1,15 @@
+.ltt-jump-link-bar {
+	display: flex;
+	min-height: 3rem;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75rem 1.125rem;
+	border: 2px solid transparent;
+	background: transparent;
+	color: #ffffff;
+	font: 400 1rem/1.45 "Gotham HTF", Arial, sans-serif;
+	text-align: center;
+	text-decoration: none;
+}
+
+.ltt-jump-link-bar:is(:hover, :focus-visible) { border-color: #ffffff; background: #ffffff; color: #073959; }

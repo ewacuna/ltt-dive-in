@@ -1,0 +1,18 @@
+.ltt-text-input {
+	--text-input-bg: #ffffff;
+	--text-input-color: #333333;
+	--text-input-placeholder: #525062;
+	width: 100%;
+	min-height: 2.9375rem;
+	padding: 0.625rem;
+	border: 1px solid rgba(199,209,216,.5);
+	border-radius: 0.3125rem;
+	background: var(--text-input-bg);
+	box-shadow: 0 .25rem .125rem rgba(0,0,0,.25);
+	color: var(--text-input-color);
+	font: 400 1rem/1.45 "Gotham HTF", Arial, sans-serif;
+}
+
+.ltt-text-input::placeholder { color: var(--text-input-placeholder); opacity: 1; }
+.ltt-text-input--photo { --text-input-bg: rgba(2,22,43,.1); --text-input-color: #ffffff; --text-input-placeholder: rgba(255,255,255,.65); box-shadow: 0 .25rem .25rem rgba(0,0,0,.25); }
+.ltt-text-input:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }

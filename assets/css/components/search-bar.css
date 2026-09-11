@@ -1,0 +1,92 @@
+.ltt-search-bar {
+	--search-bar-background: #ffffff;
+	--search-bar-border: rgba(199, 209, 216, 0.5);
+	--search-bar-color: #333333;
+	--search-bar-placeholder: #525062;
+	display: flex;
+	width: 100%;
+	min-height: 2.9375rem;
+	align-items: center;
+	gap: 0.375rem;
+	padding: 0.25rem 0.625rem;
+	border: 1px solid var(--search-bar-border);
+	border-radius: 0.3125rem;
+	background: var(--search-bar-background);
+	box-shadow: 0 0.25rem 0.125rem rgba(0, 0, 0, 0.25);
+	color: var(--search-bar-color);
+	transition: width 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.ltt-search-bar .ltt-search-bar__input {
+	width: 100%;
+	min-width: 0;
+	flex: 1 1 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	outline: 0;
+	background: transparent;
+	color: inherit;
+	font: 400 1rem/1.45 "Gotham HTF", Arial, sans-serif;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.ltt-search-bar .ltt-search-bar__input::placeholder {
+	color: var(--search-bar-placeholder);
+	opacity: 1;
+}
+
+.ltt-search-bar .ltt-search-bar__submit {
+	display: inline-grid;
+	width: 1rem;
+	height: 1rem;
+	place-items: center;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
+.ltt-search-bar:focus-within {
+	outline: 3px solid #eeb040;
+	outline-offset: 3px;
+}
+
+.ltt-search-bar--compact {
+	min-height: 2rem;
+	border-radius: 2.5rem;
+	box-shadow: none;
+}
+
+.ltt-search-bar--compact .ltt-search-bar__input {
+	font-size: 0.75rem;
+}
+
+.ltt-search-bar--outlined {
+	--search-bar-border: #073959;
+}
+
+.ltt-search-bar--on-image {
+	--search-bar-background: rgba(2, 22, 43, 0.1);
+	--search-bar-border: rgba(199, 209, 216, 0.5);
+	--search-bar-color: #ffffff;
+	--search-bar-placeholder: rgba(255, 255, 255, 0.65);
+	width: 6.5rem;
+	min-height: 1.5625rem;
+	padding: 0 0.5rem;
+	border-radius: 2.5rem;
+	box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(0.25rem);
+}
+
+.ltt-search-bar--on-image .ltt-search-bar__input {
+	font-size: 0.75rem;
+}
+
+.ltt-search-bar--on-image:is(:hover, :focus-within),
+.ltt-search-bar--on-image.is-active,
+.ltt-search-bar--on-image.is-expanded {
+	width: 15.5625rem;
+}

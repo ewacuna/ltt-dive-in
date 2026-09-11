@@ -1,0 +1,4 @@
+.ltt-carousel-indicators { display: inline-flex; align-items: center; gap: 0.375rem; margin: 0; padding: 0; list-style: none; }
+.ltt-carousel-indicator { width: 0.375rem; height: 0.375rem; padding: 0; border: 0; border-radius: 50%; background: #c7d1d8; cursor: pointer; }
+.ltt-carousel-indicator[aria-current="true"], .ltt-carousel-indicator.is-active { background: #073959; }
+.ltt-carousel-indicator:focus-visible { outline: 2px solid #eeb040; outline-offset: 2px; }

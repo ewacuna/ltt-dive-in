@@ -1,0 +1,16 @@
+.ltt-form-submit-button {
+	display: inline-flex;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75rem 1.5rem;
+	border: 2px solid #eeb040;
+	border-radius: 0;
+	background: #ffffff;
+	color: #151419;
+	font: 400 0.875rem/1.45 "Gotham HTF", Arial, sans-serif;
+	cursor: pointer;
+}
+
+.ltt-form-submit-button:is(:hover, :focus-visible) { background: #eeb040; }
+.ltt-form-submit-button:focus-visible { outline: 3px solid #073959; outline-offset: 3px; }

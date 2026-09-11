@@ -1,0 +1,18 @@
+.ltt-calendar-dropdown {
+	--calendar-dropdown-bg: #073959;
+	--calendar-dropdown-color: #ffffff;
+	display: flex;
+	min-height: 2.5rem;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--calendar-dropdown-bg);
+	border-radius: 0;
+	background: #ffffff;
+	color: #073959;
+	font: 400 .75rem/1.45 "Gotham HTF", Arial, sans-serif;
+}
+
+.ltt-calendar-dropdown__toggle { align-self: stretch; margin: -.5rem -.75rem -.5rem auto; padding: .5rem .75rem; border: 0; background: var(--calendar-dropdown-bg); color: var(--calendar-dropdown-color); cursor: pointer; }
+.ltt-calendar-dropdown--gold { --calendar-dropdown-bg: #eeb040; --calendar-dropdown-color: #073959; }
+.ltt-calendar-dropdown__toggle:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }

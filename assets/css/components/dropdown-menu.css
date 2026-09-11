@@ -1,0 +1,18 @@
+.ltt-dropdown-menu {
+	--dropdown-bg: #073959;
+	--dropdown-color: #ffffff;
+	display: inline-flex;
+	min-height: 2.5rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--dropdown-bg);
+	background: var(--dropdown-bg);
+	color: var(--dropdown-color);
+	font: 400 0.75rem/1.45 "Gotham HTF", Arial, sans-serif;
+	cursor: pointer;
+}
+
+.ltt-dropdown-menu--gold { --dropdown-bg: #eeb040; --dropdown-color: #073959; }
+.ltt-dropdown-menu:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }

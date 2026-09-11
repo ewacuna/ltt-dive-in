@@ -3,114 +3,117 @@
  * and sections may only control button placement.
  */
 .ltt-button {
-	--ltt-button-background: transparent;
-	--ltt-button-border-color: transparent;
-	--ltt-button-color: #073959;
-	--ltt-button-hover-background: var(--ltt-button-background);
-	--ltt-button-hover-border-color: var(--ltt-button-border-color);
-	--ltt-button-hover-color: var(--ltt-button-color);
-	--ltt-button-pressed-background: var(--ltt-button-background);
-	--ltt-button-pressed-border-color: var(--ltt-button-border-color);
-	--ltt-button-pressed-color: var(--ltt-button-color);
-	display: inline-flex;
-	min-height: 2.75rem;
-	align-items: center;
-	justify-content: center;
-	padding: 0.75rem 0.9375rem;
-	border: 1.3px solid var(--ltt-button-border-color);
-	border-radius: 2.5rem;
-	background: var(--ltt-button-background);
-	color: var(--ltt-button-color);
-	font-family: "Gotham HTF", Arial, sans-serif;
-	font-size: 0.875rem;
-	font-weight: 400;
-	line-height: 1.45;
-	text-align: center;
-	text-decoration: none;
-	transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+    --ltt-button-background: transparent;
+    --ltt-button-border-color: transparent;
+    --ltt-button-color: #073959;
+    --ltt-button-hover-background: var(--ltt-button-background);
+    --ltt-button-hover-border-color: var(--ltt-button-border-color);
+    --ltt-button-hover-color: var(--ltt-button-color);
+    --ltt-button-pressed-background: var(--ltt-button-background);
+    --ltt-button-pressed-border-color: var(--ltt-button-border-color);
+    --ltt-button-pressed-color: var(--ltt-button-color);
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.9375rem;
+    border: 1.3px solid var(--ltt-button-border-color);
+    border-radius: 2.5rem;
+    background: var(--ltt-button-background);
+    color: var(--ltt-button-color);
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.45;
+    text-align: center;
+    text-decoration: none;
+    transition:
+        background-color 0.3s ease-out,
+        border-color 0.3s ease-out,
+        color 0.3s ease-out;
 }
 
 .ltt-button:is(:hover, :focus-visible) {
-	border-color: var(--ltt-button-hover-border-color);
-	background: var(--ltt-button-hover-background);
-	color: var(--ltt-button-hover-color);
+    border-color: var(--ltt-button-hover-border-color);
+    background: var(--ltt-button-hover-background);
+    color: var(--ltt-button-hover-color);
 }
 
 .ltt-button:active {
-	border-color: var(--ltt-button-pressed-border-color);
-	background: var(--ltt-button-pressed-background);
-	color: var(--ltt-button-pressed-color);
+    border-color: var(--ltt-button-pressed-border-color);
+    background: var(--ltt-button-pressed-background);
+    color: var(--ltt-button-pressed-color);
 }
 
 .ltt-button:focus-visible {
-	outline: 3px solid #eeb040;
-	outline-offset: 3px;
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
 }
 
 .ltt-button[aria-disabled="true"],
 .ltt-button:disabled {
-	border-color: transparent;
-	background: #e2e2e5;
-	color: #8c8a96;
-	cursor: not-allowed;
-	pointer-events: none;
+    border-color: transparent;
+    background: #e2e2e5;
+    color: #8c8a96;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .ltt-button--primary-outline {
-	--ltt-button-border-color: #61c2b7;
-	--ltt-button-color: #073959;
-	--ltt-button-hover-background: #073959;
-	--ltt-button-hover-border-color: #073959;
-	--ltt-button-hover-color: #ffffff;
-	--ltt-button-pressed-background: #f9f9f9;
+    --ltt-button-border-color: #61c2b7;
+    --ltt-button-color: #073959;
+    --ltt-button-hover-background: #073959;
+    --ltt-button-hover-border-color: #073959;
+    --ltt-button-hover-color: #ffffff;
+    --ltt-button-pressed-background: #f9f9f9;
 }
 
 .ltt-button--secondary-outline {
-	--ltt-button-border-color: #6f6d7c;
-	--ltt-button-color: #525062;
-	--ltt-button-hover-background: #85a2b2;
-	--ltt-button-hover-border-color: #85a2b2;
-	--ltt-button-hover-color: #ffffff;
-	--ltt-button-pressed-background: #f9f9f9;
-	--ltt-button-pressed-border-color: #6f6d7c;
+    --ltt-button-border-color: #6f6d7c;
+    --ltt-button-color: #525062;
+    --ltt-button-hover-background: #85a2b2;
+    --ltt-button-hover-border-color: #85a2b2;
+    --ltt-button-hover-color: #ffffff;
+    --ltt-button-pressed-background: #f9f9f9;
+    --ltt-button-pressed-border-color: #6f6d7c;
 }
 
 .ltt-button--primary-fill {
-	--ltt-button-background: #073959;
-	--ltt-button-color: #ffffff;
-	--ltt-button-hover-background: #87a8b8;
-	--ltt-button-hover-color: #ffffff;
+    --ltt-button-background: #073959;
+    --ltt-button-color: #ffffff;
+    --ltt-button-hover-background: #87a8b8;
+    --ltt-button-hover-color: #ffffff;
 }
 
 .ltt-button--glass {
-	--ltt-button-background: rgba(0, 0, 0, 0.05);
-	--ltt-button-border-color: rgba(255, 255, 255, 0.5);
-	--ltt-button-color: #ffffff;
-	--ltt-button-hover-background: rgba(255, 255, 255, 0.6);
-	--ltt-button-hover-border-color: transparent;
-	--ltt-button-hover-color: #073959;
-	backdrop-filter: blur(0.25rem);
+    --ltt-button-background: rgba(0, 0, 0, 0.05);
+    --ltt-button-border-color: rgba(255, 255, 255, 0.5);
+    --ltt-button-color: #ffffff;
+    --ltt-button-hover-background: rgba(255, 255, 255, 0.6);
+    --ltt-button-hover-border-color: transparent;
+    --ltt-button-hover-color: #073959;
+    backdrop-filter: blur(0.25rem);
 }
 
 .ltt-button--dark-standard {
-	--ltt-button-border-color: #ffffff;
-	--ltt-button-color: #ffffff;
-	--ltt-button-hover-background: #ffffff;
-	--ltt-button-hover-color: #073959;
+    --ltt-button-border-color: #ffffff;
+    --ltt-button-color: #ffffff;
+    --ltt-button-hover-background: #ffffff;
+    --ltt-button-hover-color: #073959;
 }
 
 .ltt-button--dark-secondary {
-	--ltt-button-background: #eeb040;
-	--ltt-button-color: #073959;
-	--ltt-button-hover-background: #ffffff;
-	--ltt-button-hover-color: #073959;
+    --ltt-button-background: #eeb040;
+    --ltt-button-color: #073959;
+    --ltt-button-hover-background: #ffffff;
+    --ltt-button-hover-color: #073959;
 }
 
 .ltt-button--dark-tertiary {
-	--ltt-button-background: #79cdc4;
-	--ltt-button-color: #073959;
-	--ltt-button-hover-background: #ffffff;
-	--ltt-button-hover-color: #073959;
+    --ltt-button-background: #79cdc4;
+    --ltt-button-color: #073959;
+    --ltt-button-hover-background: #ffffff;
+    --ltt-button-hover-color: #073959;
 }
 
 .ltt-button--glass[aria-disabled="true"],
@@ -121,17 +124,23 @@
 .ltt-button--dark-secondary:disabled,
 .ltt-button--dark-tertiary[aria-disabled="true"],
 .ltt-button--dark-tertiary:disabled {
-	background: rgba(197, 197, 203, 0.85);
+    background: rgba(197, 197, 203, 0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ltt-button {
+        transition: none;
+    }
 }
 
 @media (forced-colors: active) {
-	.ltt-button {
-		border-color: ButtonText;
-		background: ButtonFace;
-		color: ButtonText;
-	}
+    .ltt-button {
+        border-color: ButtonText;
+        background: ButtonFace;
+        color: ButtonText;
+    }
 
-	.ltt-button:focus-visible {
-		outline-color: Highlight;
-	}
+    .ltt-button:focus-visible {
+        outline-color: Highlight;
+    }
 }
