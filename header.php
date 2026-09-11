@@ -50,7 +50,7 @@
 				<form
 					role="search"
 					method="get"
-					class="site-header__search"
+					class="site-header__search ltt-search-bar ltt-search-bar--on-image"
 					action="<?php echo esc_url( home_url( '/' ) ); ?>"
 					x-bind:class="{ 'is-active': searchHovered || searchFocused || searchValue.length > 0 }"
 					@mouseenter="searchHovered = true"
@@ -61,6 +61,7 @@
 					<label for="header-search-field" class="screen-reader-text"><?php esc_html_e( 'Search the site', 'ltt-dive-in' ); ?></label>
 					<input
 						id="header-search-field"
+						class="ltt-search-bar__input"
 						type="search"
 						name="s"
 						value="<?php echo esc_attr( get_search_query() ); ?>"
@@ -71,7 +72,7 @@
 						x-init="searchValue = $el.value"
 						x-bind:placeholder="searchHovered || searchFocused ? $el.dataset.expandedPlaceholder : $el.dataset.defaultPlaceholder"
 					>
-					<button type="submit">
+					<button class="ltt-search-bar__submit" type="submit">
 						<span class="screen-reader-text"><?php esc_html_e( 'Submit search', 'ltt-dive-in' ); ?></span>
 						<img class="site-header__search-icon site-header__search-icon--default" src="<?php echo esc_url( $header_assets_uri . '/search-icon.svg' ); ?>" alt="" width="22" height="17">
 						<img class="site-header__search-icon site-header__search-icon--active" src="<?php echo esc_url( $header_assets_uri . '/search-icon-active.svg' ); ?>" alt="" width="22" height="17">

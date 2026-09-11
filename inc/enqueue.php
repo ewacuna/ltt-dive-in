@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function ltt_dive_in_enqueue_assets() {
 	$style_path             = LTT_DIVE_IN_DIR . '/assets/css/main.css';
 	$header_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/header.css';
+	$search_bar_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/search-bar.css';
 	$footer_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/footer.css';
 	$accordion_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/accordions.css';
 	$buttons_style_path     = LTT_DIVE_IN_DIR . '/assets/css/components/buttons.css';
@@ -31,9 +32,16 @@ function ltt_dive_in_enqueue_assets() {
 	);
 
 	wp_enqueue_style(
+		'ltt-dive-in-search-bar',
+		LTT_DIVE_IN_URI . '/assets/css/components/search-bar.css',
+		array( 'ltt-dive-in-style' ),
+		file_exists( $search_bar_style_path ) ? (string) filemtime( $search_bar_style_path ) : LTT_DIVE_IN_VERSION
+	);
+
+	wp_enqueue_style(
 		'ltt-dive-in-header',
 		LTT_DIVE_IN_URI . '/assets/css/components/header.css',
-		array( 'ltt-dive-in-style' ),
+		array( 'ltt-dive-in-style', 'ltt-dive-in-search-bar' ),
 		file_exists( $header_style_path ) ? (string) filemtime( $header_style_path ) : LTT_DIVE_IN_VERSION
 	);
 
