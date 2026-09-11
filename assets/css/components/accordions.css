@@ -1,0 +1,361 @@
+.global-accordion {
+	--accordion-background: #ffffff;
+	--accordion-text: #073959;
+	--accordion-surface: #8ab5c5;
+	--accordion-expanded-start: #073959;
+	--accordion-expanded-end: #02162b;
+	--accordion-accent: #61c2b7;
+	/* The Figma cyan border is 2.12:1 on white; shade 300 preserves the hue at 3.31:1. */
+	--accordion-control-border: #319d8e;
+	--accordion-focus: #eeb040;
+	--accordion-light-focus: #073959;
+
+	padding: 3.125rem 4rem 3.75rem;
+	background: var(--accordion-background);
+	color: var(--accordion-text);
+}
+
+.global-accordion__container {
+	display: grid;
+	max-width: 80rem;
+	gap: 1.5rem;
+	margin-inline: auto;
+}
+
+.global-accordion__header {
+	display: grid;
+	grid-template-columns: minmax(0, 48rem) minmax(0, 1fr);
+	align-items: end;
+	gap: 2rem;
+}
+
+.global-accordion__intro {
+	display: grid;
+	gap: 1rem;
+}
+
+.global-accordion__heading,
+.global-accordion__description,
+.global-accordion__item-heading,
+.global-accordion__answer > :first-child {
+	margin-top: 0;
+}
+
+.global-accordion__heading,
+.global-accordion__description,
+.global-accordion__item-heading,
+.global-accordion__answer > :last-child {
+	margin-bottom: 0;
+}
+
+.global-accordion__heading {
+	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+	/* DESIGN.md's annotated H2 scale overrides the raw 48px Figma layer. */
+	font-size: 2.5rem;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: 1;
+}
+
+.global-accordion__description {
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.45;
+}
+
+.global-accordion__actions {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.global-accordion__section-link {
+	display: inline-flex;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	padding: 0.6875rem 0.9375rem;
+	border: 1.3px solid var(--accordion-control-border);
+	border-radius: 2.5rem;
+	color: var(--accordion-text);
+	font-size: 0.875rem;
+	font-weight: 700;
+	line-height: 1.45;
+	text-align: center;
+	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.global-accordion__section-link:hover {
+	border-color: var(--accordion-text);
+	background: var(--accordion-text);
+	color: #ffffff;
+}
+
+.global-accordion__section-link:focus-visible {
+	outline: 0.1875rem solid var(--accordion-light-focus);
+	outline-offset: 0.1875rem;
+}
+
+.global-accordion__list {
+	display: grid;
+	gap: 0;
+}
+
+.global-accordion__item {
+	border: 0.125rem solid #ffffff;
+	background: linear-gradient(180deg, var(--accordion-expanded-start), var(--accordion-expanded-end));
+}
+
+.global-accordion__item-heading {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+}
+
+.global-accordion__trigger {
+	display: flex;
+	width: 100%;
+	min-height: 5rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	padding: 1.25rem 1.5rem;
+	border: 0;
+	border-radius: 0;
+	background: var(--accordion-surface);
+	color: var(--accordion-text);
+	text-align: left;
+	transition:
+		background-color 220ms ease,
+		color 220ms ease;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.global-accordion__trigger:hover,
+.global-accordion__trigger:focus-visible,
+.global-accordion__trigger[aria-expanded="true"] {
+	background: var(--accordion-expanded-start);
+	color: #ffffff;
+}
+
+.global-accordion__trigger[aria-expanded="true"] {
+	background: transparent;
+}
+
+.global-accordion__trigger:focus-visible {
+	position: relative;
+	z-index: 1;
+	outline: 0.1875rem solid var(--accordion-focus);
+	outline-offset: -0.3125rem;
+}
+
+.global-accordion__question {
+	min-width: 0;
+	font-size: 1.1875rem;
+	font-weight: 700;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+
+.global-accordion__icon {
+	position: relative;
+	display: block;
+	width: 1.3125rem;
+	height: 2.5rem;
+	flex: 0 0 1.3125rem;
+}
+
+.global-accordion__icon img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.global-accordion__icon-collapsed {
+	/* Preserve Figma's SVG geometry while making it contrast-safe on the tint. */
+	filter: brightness(0) saturate(100%) invert(18%) sepia(20%) saturate(3000%) hue-rotate(164deg) brightness(88%) contrast(98%);
+}
+
+.global-accordion__trigger:hover .global-accordion__icon-collapsed,
+.global-accordion__trigger:focus-visible .global-accordion__icon-collapsed {
+	filter: brightness(0) invert(1);
+}
+
+.global-accordion__icon-expanded,
+.global-accordion__trigger[aria-expanded="true"] .global-accordion__icon-collapsed {
+	display: none;
+}
+
+.global-accordion__trigger[aria-expanded="true"] .global-accordion__icon-expanded {
+	display: block;
+}
+
+.global-accordion__panel {
+	padding-inline: 3rem;
+	background: transparent;
+	color: #ffffff;
+}
+
+.global-accordion__panel[hidden] {
+	display: none;
+}
+
+.global-accordion.is-ready .global-accordion__panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 220ms ease;
+}
+
+.global-accordion.is-ready .global-accordion__item.is-expanded .global-accordion__panel {
+	grid-template-rows: 1fr;
+}
+
+.global-accordion__answer {
+	min-height: 0;
+	padding-block: 0;
+	overflow: hidden;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.8;
+	transition: padding-block 220ms ease;
+}
+
+.global-accordion.is-ready .global-accordion__item.is-expanded .global-accordion__answer {
+	padding-block: 1.5rem 3rem;
+}
+
+.global-accordion__answer a:not(.global-accordion__answer-link) {
+	color: var(--accordion-accent);
+	text-decoration: underline;
+	text-decoration-thickness: 0.08em;
+	text-underline-offset: 0.15em;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.global-accordion__answer a:not(.global-accordion__answer-link):hover,
+.global-accordion__answer a:not(.global-accordion__answer-link):focus-visible {
+	color: var(--accordion-focus);
+}
+
+.global-accordion__answer-link {
+	display: inline-flex;
+	min-height: 2.75rem;
+	align-items: center;
+	gap: 0.625rem;
+	margin-top: 1rem;
+	color: var(--accordion-focus);
+	font-size: 0.875rem;
+	font-weight: 700;
+	line-height: 1.45;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.global-accordion__answer-link:hover,
+.global-accordion__answer-link:focus-visible {
+	color: #ffffff;
+}
+
+.global-accordion__answer-link img {
+	width: 0.6875rem;
+	height: 0.625rem;
+	transform: rotate(-90deg);
+}
+
+.global-accordion__answer-link:hover img,
+.global-accordion__answer-link:focus-visible img {
+	filter: brightness(0) invert(1);
+}
+
+@media (max-width: 991.98px) {
+	.global-accordion__header {
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+
+	.global-accordion__actions {
+		justify-content: flex-start;
+	}
+}
+
+@media (max-width: 767.98px) {
+	.global-accordion {
+		padding: 3.125rem 1.25rem 4rem;
+	}
+
+	.global-accordion__container {
+		gap: 0.9375rem;
+	}
+
+	.global-accordion__intro {
+		gap: 1.25rem;
+	}
+
+	.global-accordion__heading {
+		font-size: 2.25rem;
+	}
+
+	.global-accordion__trigger {
+		min-height: 5rem;
+		padding: 1.25rem 1.5rem;
+	}
+
+	.global-accordion__panel {
+		padding-inline: 1.5rem;
+	}
+
+	.global-accordion.is-ready .global-accordion__item.is-expanded .global-accordion__answer {
+		padding-bottom: 2rem;
+	}
+}
+
+@media (max-width: 575.98px) {
+	.global-accordion__question {
+		font-size: 1.125rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.global-accordion.is-ready .global-accordion__panel,
+	.global-accordion__answer,
+	.global-accordion__trigger {
+		transition: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.global-accordion__item {
+		border-color: CanvasText;
+		background: Canvas;
+	}
+
+	.global-accordion__trigger,
+	.global-accordion__trigger:hover,
+	.global-accordion__trigger:focus-visible,
+	.global-accordion__trigger[aria-expanded="true"],
+	.global-accordion__panel {
+		background: Canvas;
+		color: CanvasText;
+	}
+
+	.global-accordion__icon img {
+		display: none;
+	}
+
+	.global-accordion__icon::after {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		color: CanvasText;
+		content: "+";
+		font-size: 1.5rem;
+	}
+
+	.global-accordion__trigger[aria-expanded="true"] .global-accordion__icon::after {
+		content: "−";
+	}
+}

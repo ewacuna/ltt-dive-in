@@ -16,6 +16,7 @@ get_header();
 		get_template_part( 'template-parts/page/content', 'front-page' );
 	endwhile;
 	?>
+	<?php get_template_part( 'template-parts/sections/home', 'faq' ); ?>
 </main>
 <?php
 get_footer();

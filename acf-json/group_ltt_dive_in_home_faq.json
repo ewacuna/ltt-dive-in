@@ -1,0 +1,99 @@
+{
+    "key": "group_ltt_dive_in_home_faq",
+    "title": "LTT Dive In: Homepage FAQ",
+    "fields": [
+        {
+            "key": "field_ltt_dive_in_home_faq_heading",
+            "label": "Heading",
+            "name": "ltt_dive_in_home_faq_heading",
+            "type": "text",
+            "instructions": "Required level-two heading displayed above the FAQ list.",
+            "required": 1,
+            "default_value": "",
+            "maxlength": 90
+        },
+        {
+            "key": "field_ltt_dive_in_home_faq_description",
+            "label": "Introduction",
+            "name": "ltt_dive_in_home_faq_description",
+            "type": "textarea",
+            "instructions": "A concise introduction to the questions. Keep it to one or two short sentences.",
+            "required": 0,
+            "default_value": "",
+            "maxlength": 240,
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ltt_dive_in_home_faq_cta",
+            "label": "Section call to action",
+            "name": "ltt_dive_in_home_faq_cta",
+            "type": "link",
+            "instructions": "Optional. Hidden unless both a meaningful label and destination are provided.",
+            "required": 0,
+            "return_format": "array"
+        },
+        {
+            "key": "field_ltt_dive_in_home_faq_items",
+            "label": "Frequently asked questions",
+            "name": "ltt_dive_in_home_faq_items",
+            "type": "repeater",
+            "instructions": "Add up to five questions. Each answer opens in place; only one answer is shown at a time.",
+            "required": 1,
+            "min": 1,
+            "max": 5,
+            "layout": "block",
+            "collapsed": "field_ltt_dive_in_home_faq_question",
+            "button_label": "Add question",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_home_faq_question",
+                    "label": "Question",
+                    "name": "question",
+                    "type": "text",
+                    "instructions": "Use a short, specific question that makes sense out of context.",
+                    "required": 1,
+                    "maxlength": 160
+                },
+                {
+                    "key": "field_ltt_dive_in_home_faq_answer",
+                    "label": "Answer",
+                    "name": "answer",
+                    "type": "wysiwyg",
+                    "instructions": "Provide a concise answer. Use meaningful link text rather than phrases such as ‘click here’.",
+                    "required": 1,
+                    "tabs": "all",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 1
+                },
+                {
+                    "key": "field_ltt_dive_in_home_faq_link",
+                    "label": "Answer call to action",
+                    "name": "link",
+                    "type": "link",
+                    "instructions": "Optional related destination shown after the answer.",
+                    "required": 0,
+                    "return_format": "array"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "description": "Editable content for the reusable global accordion shown above the homepage footer.",
+    "show_in_rest": 0
+}
