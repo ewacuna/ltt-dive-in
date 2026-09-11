@@ -74,7 +74,7 @@ $newsletter_form        = ltt_dive_in_get_footer_newsletter_form();
 					<?php if ( has_nav_menu( 'footer_navigation' ) || ( is_array( $faq_link ) && ! empty( $faq_link['url'] ) && ! empty( $faq_link['title'] ) ) ) : ?>
 						<nav aria-label="<?php esc_attr_e( 'Footer navigation', 'ltt-dive-in' ); ?>">
 							<?php if ( is_array( $faq_link ) && ! empty( $faq_link['url'] ) && ! empty( $faq_link['title'] ) ) : ?>
-								<a class="site-footer__faq-link" href="<?php echo esc_url( $faq_link['url'] ); ?>"<?php echo ! empty( $faq_link['target'] ) ? ' target="' . esc_attr( $faq_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $faq_link['title'] ); ?></a>
+								<a class="site-footer__faq-link ltt-button ltt-button--dark-tertiary" href="<?php echo esc_url( $faq_link['url'] ); ?>"<?php echo ! empty( $faq_link['target'] ) ? ' target="' . esc_attr( $faq_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $faq_link['title'] ); ?></a>
 							<?php endif; ?>
 
 							<?php

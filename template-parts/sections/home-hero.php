@@ -81,7 +81,7 @@ $hero_links = array_filter(
 		<?php if ( $hero_links ) : ?>
 			<div class="home-hero__actions">
 				<?php foreach ( $hero_links as $hero_link ) : ?>
-					<a class="home-hero__button" href="<?php echo esc_url( $hero_link['url'] ); ?>"<?php echo ! empty( $hero_link['target'] ) ? ' target="' . esc_attr( $hero_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $hero_link['title'] ); ?></a>
+					<a class="ltt-button ltt-button--glass" href="<?php echo esc_url( $hero_link['url'] ); ?>"<?php echo ! empty( $hero_link['target'] ) ? ' target="' . esc_attr( $hero_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $hero_link['title'] ); ?></a>
 				<?php endforeach; ?>
 			</div>
 		<?php endif; ?>

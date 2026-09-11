@@ -44,6 +44,13 @@ function ltt_dive_in_enqueue_assets() {
 		file_exists( $footer_style_path ) ? (string) filemtime( $footer_style_path ) : LTT_DIVE_IN_VERSION
 	);
 
+	wp_enqueue_style(
+		'ltt-dive-in-buttons',
+		LTT_DIVE_IN_URI . '/assets/css/components/buttons.css',
+		array( 'ltt-dive-in-style' ),
+		file_exists( $buttons_style_path ) ? (string) filemtime( $buttons_style_path ) : LTT_DIVE_IN_VERSION
+	);
+
 	if ( is_front_page() ) {
 		wp_enqueue_style(
 			'ltt-dive-in-accordions',
@@ -57,13 +64,6 @@ function ltt_dive_in_enqueue_assets() {
 			LTT_DIVE_IN_URI . '/assets/css/templates/front-page.css',
 			array( 'ltt-dive-in-style', 'ltt-dive-in-header', 'ltt-dive-in-accordions' ),
 			file_exists( $front_page_style_path ) ? (string) filemtime( $front_page_style_path ) : LTT_DIVE_IN_VERSION
-		);
-
-		wp_enqueue_style(
-			'ltt-dive-in-buttons',
-			LTT_DIVE_IN_URI . '/assets/css/components/buttons.css',
-			array( 'ltt-dive-in-front-page' ),
-			file_exists( $buttons_style_path ) ? (string) filemtime( $buttons_style_path ) : LTT_DIVE_IN_VERSION
 		);
 
 		wp_enqueue_style(
