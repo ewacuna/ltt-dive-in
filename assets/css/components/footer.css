@@ -319,24 +319,7 @@
 }
 
 .site-footer__faq-link {
-	display: inline-flex;
-	min-height: 2.75rem;
-	align-items: center;
-	justify-content: center;
 	margin-bottom: 2.5rem;
-	padding: 0.75rem 0.9375rem;
-	border-radius: 2.5rem;
-	background: var(--footer-accent-soft);
-	color: #073959;
-	font-size: 0.875rem;
-	line-height: 1.45;
-	text-decoration: none;
-}
-
-.site-footer__faq-link:hover,
-.site-footer__faq-link:focus-visible {
-	background: var(--footer-gold);
-	color: var(--footer-background);
 }
 
 .site-footer__menu {

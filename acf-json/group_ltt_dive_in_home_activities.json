@@ -38,25 +38,22 @@
             "required": 0
         },
         {
-            "key": "field_ltt_dive_in_activities_ctas",
-            "label": "Section calls to action",
-            "name": "ltt_dive_in_activities_ctas",
-            "type": "repeater",
+            "key": "field_ltt_dive_in_activities_primary_link",
+            "label": "Primary button",
+            "name": "ltt_dive_in_activities_primary_link",
+            "type": "link",
+            "instructions": "Optional. The button is hidden until both a label and destination are provided.",
             "required": 0,
-            "min": 0,
-            "max": 2,
-            "layout": "table",
-            "button_label": "Add call to action",
-            "sub_fields": [
-                {
-                    "key": "field_ltt_dive_in_activities_cta_link",
-                    "label": "Link",
-                    "name": "link",
-                    "type": "link",
-                    "required": 1,
-                    "return_format": "array"
-                }
-            ]
+            "return_format": "array"
+        },
+        {
+            "key": "field_ltt_dive_in_activities_secondary_link",
+            "label": "Secondary button",
+            "name": "ltt_dive_in_activities_secondary_link",
+            "type": "link",
+            "instructions": "Optional. The button is hidden until both a label and destination are provided.",
+            "required": 0,
+            "return_format": "array"
         },
         {
             "key": "field_ltt_dive_in_activities_cards_tab",

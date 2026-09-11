@@ -367,6 +367,14 @@ Do not place homepage sections, post grids, archive layouts, template-specific h
 - Use BEM for theme-owned components. Do not rename or apply BEM to WordPress core structural classes.
 - If a component is truly present on every public page, it may be loaded globally. Otherwise, enqueue it only on the templates that use it.
 
+##### Shared CTA buttons
+
+- Use `assets/css/components/buttons.css` and the `ltt-button` class for theme-owned CTA links and buttons. Do not copy CTA geometry, colors, states, or focus styles into template and section stylesheets.
+- Do not use or restyle the generic `.button` class for this system: WordPress and Gravity Forms use it independently. Keep plugin-generated form controls scoped to their form component unless they can safely receive an approved `ltt-button` class.
+- Apply exactly one approved visual modifier: `ltt-button--primary-outline`, `ltt-button--secondary-outline`, `ltt-button--primary-fill`, `ltt-button--glass`, `ltt-button--dark-standard`, `ltt-button--dark-secondary`, or `ltt-button--dark-tertiary`. Choose the modifier from the target Figma surface and CTA priority; do not invent color combinations.
+- The shared component owns default, hover, pressed, disabled, forced-colors, and focus-visible states. A section may add a BEM class only for placement, such as margins or alignment.
+- Figma calls for Gotham Medium in CTAs, but the theme currently has only Gotham Book `400` and Bold `700`. Do not synthesize or mislabel `500`; use the documented available face until the licensed Medium file is supplied.
+
 ### Conditional stylesheet loading
 
 Register and enqueue styles from `inc/enqueue.php` through WordPress APIs. Every non-global stylesheet must load only when its template or component is used.
