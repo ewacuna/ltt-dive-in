@@ -1,7 +1,7 @@
 # Lake Tahoe Travel Design Guide
 
 - Status: initial implementation reference
-- Last verified against Figma: 2026-09-09
+- Last verified against Figma: 2026-09-13
 - Design source: [Lake Tahoe Travel — New Site Design — Dev Access](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=0-1&m=dev)
 
 ## Purpose and authority
@@ -249,6 +249,10 @@ Figma defines these control families:
 - Category selectors with selected and hover states.
 - Form submission buttons and text “Read More” actions.
 
+#### Footer FAQ CTA
+
+The approved footer FAQ CTA uses the shared dark-tertiary button treatment over the primary shade 200 footer surface: tertiary tint 200 `#79CDC4` fill, primary `#073959` text, and the shared pill geometry. Its hover state uses a white fill with primary text, and keyboard focus uses the shared Peak Gold outline. The reference label is “Frequently Asked Questions”; the label and destination remain editable through the Footer Settings link field. When the editor provides only a destination, the theme uses the reference label as its fallback.
+
 ### Homepage header search
 
 The homepage search-bar states were verified against Figma node `1:44668`:
@@ -303,7 +307,7 @@ Implementation rules:
 - Side-by-side accordions pair introductory content and one CTA with a static question list.
 - The active question uses an expanded state; other questions remain collapsed.
 - Implement with native buttons, unique relationships between triggers and panels, accurate `aria-expanded`, and predictable keyboard order.
-- Figma leaves the final FAQ button treatment open. Do not invent a new visual pattern without approval.
+- The footer FAQ CTA uses the confirmed dark-tertiary treatment documented under Buttons and controls; accordion-module CTAs continue to use the approved variant for their individual surface.
 
 ## Developer notes captured from Figma
 
@@ -421,7 +425,7 @@ The following must be resolved before the related production work is considered 
 - Minimum logo sizes, clear space, and final exported assets.
 - Approval and semantics of success, warning, and danger colors.
 - Accessible light-background link and hover colors.
-- Final FAQ button and gallery-expansion patterns.
+- Final gallery-expansion pattern.
 - Search and filtering technology, including whether Algolia is used.
 - Final ACF field-group and page-template mapping for each editable module, including which content is reusable or global.
 - Final Gravity Forms inventory and environment-migration process, including fields, consent, confirmations, notifications, retention, spam protection, email delivery, and external feeds.

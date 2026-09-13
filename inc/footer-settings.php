@@ -53,10 +53,10 @@ function ltt_dive_in_register_footer_settings() {
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_footer_faq_link',
-					'label'         => __( 'FAQ link', 'ltt-dive-in' ),
+					'label'         => __( 'Frequently Asked Questions button', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_footer_faq_link',
 					'type'          => 'link',
-					'instructions'  => __( 'Optional. The FAQ button is hidden until a link is provided.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Select the FAQ destination. The button is hidden until a URL is provided; its label defaults to “Frequently Asked Questions” when the Title is empty.', 'ltt-dive-in' ),
 					'return_format' => 'array',
 				),
 				array(

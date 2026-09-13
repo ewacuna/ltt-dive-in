@@ -5,8 +5,24 @@
  * @package LTT_Dive_In
  */
 
-$footer_assets_uri      = LTT_DIVE_IN_URI . '/assets/images/footer';
-$faq_link               = ltt_dive_in_get_footer_option( 'ltt_dive_in_footer_faq_link', array() );
+$footer_assets_uri = LTT_DIVE_IN_URI . '/assets/images/footer';
+$faq_link          = ltt_dive_in_get_footer_option( 'ltt_dive_in_footer_faq_link', array() );
+$faq_url           = '';
+$faq_title         = __( 'Frequently Asked Questions', 'ltt-dive-in' );
+$faq_target        = '';
+
+if ( is_array( $faq_link ) ) {
+	$faq_url = ! empty( $faq_link['url'] ) ? $faq_link['url'] : '';
+
+	if ( ! empty( $faq_link['title'] ) ) {
+		$faq_title = $faq_link['title'];
+	}
+
+	if ( ! empty( $faq_link['target'] ) && '_blank' === $faq_link['target'] ) {
+		$faq_target = '_blank';
+	}
+}
+
 $newsletter_heading     = ltt_dive_in_get_footer_option( 'ltt_dive_in_footer_newsletter_heading', __( 'Subscribe', 'ltt-dive-in' ) );
 $newsletter_description = ltt_dive_in_get_footer_option(
 	'ltt_dive_in_footer_newsletter_description',
@@ -71,10 +87,10 @@ $newsletter_form        = ltt_dive_in_get_footer_newsletter_form();
 				</div>
 
 				<div class="site-footer__navigation" data-footer-section="navigation">
-					<?php if ( has_nav_menu( 'footer_navigation' ) || ( is_array( $faq_link ) && ! empty( $faq_link['url'] ) && ! empty( $faq_link['title'] ) ) ) : ?>
+					<?php if ( has_nav_menu( 'footer_navigation' ) || $faq_url ) : ?>
 						<nav aria-label="<?php esc_attr_e( 'Footer navigation', 'ltt-dive-in' ); ?>">
-							<?php if ( is_array( $faq_link ) && ! empty( $faq_link['url'] ) && ! empty( $faq_link['title'] ) ) : ?>
-								<a class="site-footer__faq-link ltt-button ltt-button--dark-tertiary" href="<?php echo esc_url( $faq_link['url'] ); ?>"<?php echo ! empty( $faq_link['target'] ) ? ' target="' . esc_attr( $faq_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $faq_link['title'] ); ?></a>
+							<?php if ( $faq_url ) : ?>
+								<a class="site-footer__faq-link ltt-button ltt-button--dark-tertiary" href="<?php echo esc_url( $faq_url ); ?>"<?php echo $faq_target ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $faq_title ); ?></a>
 							<?php endif; ?>
 
 							<?php
