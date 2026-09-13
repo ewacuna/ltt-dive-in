@@ -3,6 +3,26 @@
     "title": "LTT Dive In: Homepage FAQ",
     "fields": [
         {
+            "key": "field_ltt_dive_in_home_faq_variant",
+            "label": "Accordion variant",
+            "name": "ltt_dive_in_home_faq_variant",
+            "type": "select",
+            "instructions": "Choose the approved layout for this FAQ section. No layout is selected automatically.",
+            "required": 1,
+            "choices": {
+                "global": "Global Accordion",
+                "toggle": "Toggle Accordion",
+                "side_by_side": "Side by Side Accordion"
+            },
+            "default_value": "",
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 1,
+            "ajax": 0,
+            "return_format": "value",
+            "placeholder": "Select an accordion variant"
+        },
+        {
             "key": "field_ltt_dive_in_home_faq_heading",
             "label": "Heading",
             "name": "ltt_dive_in_home_faq_heading",
@@ -38,8 +58,24 @@
             "label": "Frequently asked questions",
             "name": "ltt_dive_in_home_faq_items",
             "type": "repeater",
-            "instructions": "Add up to five questions. Each answer opens in place; only one answer is shown at a time.",
+            "instructions": "Add up to five questions for the Global or Side by Side variant. Each answer opens in place; only one answer is shown at a time.",
             "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_home_faq_variant",
+                        "operator": "==",
+                        "value": "global"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_ltt_dive_in_home_faq_variant",
+                        "operator": "==",
+                        "value": "side_by_side"
+                    }
+                ]
+            ],
             "min": 1,
             "max": 5,
             "layout": "block",
@@ -77,6 +113,103 @@
                     "return_format": "array"
                 }
             ]
+        },
+        {
+            "key": "field_ltt_dive_in_home_faq_toggle_tagline",
+            "label": "Category tag",
+            "name": "ltt_dive_in_home_faq_toggle_tagline",
+            "type": "text",
+            "instructions": "Optional short category label displayed above the heading on larger screens.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_home_faq_variant",
+                        "operator": "==",
+                        "value": "toggle"
+                    }
+                ]
+            ],
+            "default_value": "",
+            "maxlength": 40
+        },
+        {
+            "key": "field_ltt_dive_in_home_faq_toggle_topics",
+            "label": "FAQ topics",
+            "name": "ltt_dive_in_home_faq_toggle_topics",
+            "type": "repeater",
+            "instructions": "Add two to four short topic labels. Each topic controls its own question list.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_home_faq_variant",
+                        "operator": "==",
+                        "value": "toggle"
+                    }
+                ]
+            ],
+            "min": 2,
+            "max": 4,
+            "layout": "block",
+            "collapsed": "field_ltt_dive_in_home_faq_toggle_topic_label",
+            "button_label": "Add FAQ topic",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_home_faq_toggle_topic_label",
+                    "label": "Topic label",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "Keep the label concise so all topics remain usable on small screens.",
+                    "required": 1,
+                    "maxlength": 40
+                },
+                {
+                    "key": "field_ltt_dive_in_home_faq_toggle_topic_items",
+                    "label": "Topic questions",
+                    "name": "items",
+                    "type": "repeater",
+                    "instructions": "Add up to five questions for this topic.",
+                    "required": 1,
+                    "min": 1,
+                    "max": 5,
+                    "layout": "block",
+                    "collapsed": "field_ltt_dive_in_home_faq_toggle_question",
+                    "button_label": "Add question",
+                    "sub_fields": [
+                        {
+                            "key": "field_ltt_dive_in_home_faq_toggle_question",
+                            "label": "Question",
+                            "name": "question",
+                            "type": "text",
+                            "instructions": "Use a short, specific question that makes sense out of context.",
+                            "required": 1,
+                            "maxlength": 160
+                        },
+                        {
+                            "key": "field_ltt_dive_in_home_faq_toggle_answer",
+                            "label": "Answer",
+                            "name": "answer",
+                            "type": "wysiwyg",
+                            "instructions": "Provide a concise answer. Use meaningful link text rather than phrases such as ‘click here’.",
+                            "required": 1,
+                            "tabs": "all",
+                            "toolbar": "basic",
+                            "media_upload": 0,
+                            "delay": 1
+                        },
+                        {
+                            "key": "field_ltt_dive_in_home_faq_toggle_link",
+                            "label": "Answer call to action",
+                            "name": "link",
+                            "type": "link",
+                            "instructions": "Optional related destination shown after the answer.",
+                            "required": 0,
+                            "return_format": "array"
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "location": [
@@ -94,6 +227,6 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "active": true,
-    "description": "Editable content for the reusable global accordion shown above the homepage footer.",
+    "description": "Editable content and approved layout variants for the reusable accordion shown above the homepage footer.",
     "show_in_rest": 0
 }

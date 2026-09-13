@@ -5,8 +5,6 @@
 	--accordion-expanded-start: #073959;
 	--accordion-expanded-end: #02162b;
 	--accordion-accent: #61c2b7;
-	/* The Figma cyan border is 2.12:1 on white; shade 300 preserves the hue at 3.31:1. */
-	--accordion-control-border: #319d8e;
 	--accordion-focus: #eeb040;
 	--accordion-light-focus: #073959;
 
@@ -36,6 +34,7 @@
 
 .global-accordion__heading,
 .global-accordion__description,
+.global-accordion__tagline,
 .global-accordion__item-heading,
 .global-accordion__answer > :first-child {
 	margin-top: 0;
@@ -43,6 +42,7 @@
 
 .global-accordion__heading,
 .global-accordion__description,
+.global-accordion__tagline,
 .global-accordion__item-heading,
 .global-accordion__answer > :last-child {
 	margin-bottom: 0;
@@ -63,37 +63,23 @@
 	line-height: 1.45;
 }
 
+.global-accordion__tagline {
+	width: fit-content;
+	align-self: flex-start;
+	padding: 0.25rem 0.75rem;
+	border-radius: 0 0.8125rem 0 0;
+	background: rgba(4, 39, 66, 0.15);
+	color: #06304d;
+	font-size: 0.875rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	line-height: 1.45;
+	text-transform: uppercase;
+}
+
 .global-accordion__actions {
 	display: flex;
 	justify-content: flex-end;
-}
-
-.global-accordion__section-link {
-	display: inline-flex;
-	min-height: 2.75rem;
-	align-items: center;
-	justify-content: center;
-	padding: 0.6875rem 0.9375rem;
-	border: 1.3px solid var(--accordion-control-border);
-	border-radius: 2.5rem;
-	color: var(--accordion-text);
-	font-size: 0.875rem;
-	font-weight: 700;
-	line-height: 1.45;
-	text-align: center;
-	text-decoration: none;
-	-webkit-tap-highlight-color: transparent;
-}
-
-.global-accordion__section-link:hover {
-	border-color: var(--accordion-text);
-	background: var(--accordion-text);
-	color: #ffffff;
-}
-
-.global-accordion__section-link:focus-visible {
-	outline: 0.1875rem solid var(--accordion-light-focus);
-	outline-offset: 0.1875rem;
 }
 
 .global-accordion__list {
@@ -202,13 +188,13 @@
 	display: none;
 }
 
-.global-accordion.is-ready .global-accordion__panel {
+[data-accordion].is-ready .global-accordion__panel {
 	display: grid;
 	grid-template-rows: 0fr;
 	transition: grid-template-rows 220ms ease;
 }
 
-.global-accordion.is-ready .global-accordion__item.is-expanded .global-accordion__panel {
+[data-accordion].is-ready .global-accordion__item.is-expanded .global-accordion__panel {
 	grid-template-rows: 1fr;
 }
 
@@ -222,7 +208,7 @@
 	transition: padding-block 220ms ease;
 }
 
-.global-accordion.is-ready .global-accordion__item.is-expanded .global-accordion__answer {
+[data-accordion].is-ready .global-accordion__item.is-expanded .global-accordion__answer {
 	padding-block: 1.5rem 3rem;
 }
 
@@ -270,6 +256,69 @@
 	filter: brightness(0) invert(1);
 }
 
+.global-accordion__topics {
+	display: flex;
+	align-items: stretch;
+}
+
+.global-accordion__topic {
+	min-height: 2.25rem;
+	padding: 0.5rem 1rem;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: var(--accordion-text);
+	font-family: inherit;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.45;
+	text-align: center;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.global-accordion__topic[aria-selected="true"] {
+	background: #91d9d1;
+	font-weight: 700;
+}
+
+.global-accordion__topic:focus-visible {
+	position: relative;
+	z-index: 1;
+	outline: 0.1875rem solid var(--accordion-light-focus);
+	outline-offset: -0.1875rem;
+}
+
+.global-accordion__topic-panel[hidden] {
+	display: none;
+}
+
+.global-accordion--side-by-side {
+	padding-block: 3.75rem;
+}
+
+.global-accordion__side-layout {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: start;
+	gap: 5rem;
+}
+
+.global-accordion--side-by-side .global-accordion__header {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0;
+}
+
+.global-accordion--side-by-side .global-accordion__heading {
+	max-width: 25.625rem;
+}
+
+.global-accordion--side-by-side .global-accordion__actions {
+	margin-top: 5rem;
+}
+
 @media (max-width: 991.98px) {
 	.global-accordion__header {
 		grid-template-columns: 1fr;
@@ -278,6 +327,15 @@
 
 	.global-accordion__actions {
 		justify-content: flex-start;
+	}
+
+	.global-accordion__side-layout {
+		grid-template-columns: 1fr;
+		gap: 0.9375rem;
+	}
+
+	.global-accordion--side-by-side .global-accordion__actions {
+		margin-top: 1.25rem;
 	}
 }
 
@@ -298,6 +356,26 @@
 		font-size: 2.25rem;
 	}
 
+	.global-accordion__tagline {
+		display: none;
+	}
+
+	.global-accordion__topics {
+		width: 100%;
+		padding-top: 0.75rem;
+	}
+
+	.global-accordion__topic {
+		min-width: 0;
+		flex: 1 1 0;
+		padding-inline: 0.5rem;
+		overflow-wrap: anywhere;
+	}
+
+	.global-accordion--side-by-side {
+		padding-block: 4rem;
+	}
+
 	.global-accordion__trigger {
 		min-height: 5rem;
 		padding: 1.25rem 1.5rem;
@@ -307,7 +385,7 @@
 		padding-inline: 1.5rem;
 	}
 
-	.global-accordion.is-ready .global-accordion__item.is-expanded .global-accordion__answer {
+	[data-accordion].is-ready .global-accordion__item.is-expanded .global-accordion__answer {
 		padding-bottom: 2rem;
 	}
 }
@@ -319,7 +397,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.global-accordion.is-ready .global-accordion__panel,
+	[data-accordion].is-ready .global-accordion__panel,
 	.global-accordion__answer,
 	.global-accordion__trigger {
 		transition: none;
@@ -327,6 +405,16 @@
 }
 
 @media (forced-colors: active) {
+	.global-accordion__topic[aria-selected="true"] {
+		border-block-end: 0.1875rem solid ButtonText;
+		background: SelectedItem;
+		color: SelectedItemText;
+	}
+
+	.global-accordion__topic:focus-visible {
+		outline-color: Highlight;
+	}
+
 	.global-accordion__item {
 		border-color: CanvasText;
 		background: Canvas;

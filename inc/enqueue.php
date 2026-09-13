@@ -63,7 +63,7 @@ function ltt_dive_in_enqueue_assets() {
 		wp_enqueue_style(
 			'ltt-dive-in-accordions',
 			LTT_DIVE_IN_URI . '/assets/css/components/accordions.css',
-			array( 'ltt-dive-in-style' ),
+			array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
 			file_exists( $accordion_style_path ) ? (string) filemtime( $accordion_style_path ) : LTT_DIVE_IN_VERSION
 		);
 

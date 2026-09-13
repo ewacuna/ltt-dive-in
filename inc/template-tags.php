@@ -84,3 +84,66 @@ function ltt_dive_in_branding() {
 		);
 	}
 }
+
+/**
+ * Prepare valid accordion items for a component template.
+ *
+ * @param mixed $rows  Raw ACF repeater value.
+ * @param int   $limit Maximum number of items supported by the design.
+ * @return array[]
+ */
+function ltt_dive_in_prepare_accordion_items( $rows, $limit = 5 ) {
+	$items = array();
+	$limit = max( 1, (int) $limit );
+
+	if ( ! is_array( $rows ) ) {
+		return $items;
+	}
+
+	foreach ( array_slice( $rows, 0, $limit ) as $row ) {
+		$question = isset( $row['question'] ) && is_string( $row['question'] ) ? trim( $row['question'] ) : '';
+		$answer   = isset( $row['answer'] ) && is_string( $row['answer'] ) ? trim( $row['answer'] ) : '';
+
+		if ( ! $question || ! trim( wp_strip_all_tags( $answer ) ) ) {
+			continue;
+		}
+
+		$items[] = array(
+			'question' => $question,
+			'answer'   => $answer,
+			'link'     => isset( $row['link'] ) && is_array( $row['link'] ) ? $row['link'] : array(),
+		);
+	}
+
+	return $items;
+}
+
+/**
+ * Prepare topic groups for the toggle accordion variant.
+ *
+ * @param mixed $rows Raw ACF topic repeater value.
+ * @return array[]
+ */
+function ltt_dive_in_prepare_accordion_topics( $rows ) {
+	$topics = array();
+
+	if ( ! is_array( $rows ) ) {
+		return $topics;
+	}
+
+	foreach ( array_slice( $rows, 0, 4 ) as $row ) {
+		$label = isset( $row['label'] ) && is_string( $row['label'] ) ? trim( $row['label'] ) : '';
+		$items = ltt_dive_in_prepare_accordion_items( isset( $row['items'] ) ? $row['items'] : array() );
+
+		if ( ! $label || ! $items ) {
+			continue;
+		}
+
+		$topics[] = array(
+			'label' => $label,
+			'items' => $items,
+		);
+	}
+
+	return $topics;
+}

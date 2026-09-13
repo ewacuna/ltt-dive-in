@@ -108,4 +108,65 @@
 			}
 		} );
 	} );
+
+	const toggleAccordions = document.querySelectorAll( '[data-toggle-accordion]' );
+
+	toggleAccordions.forEach( function ( toggleAccordion ) {
+		const tabs = Array.from( toggleAccordion.querySelectorAll( '[data-toggle-tab]' ) );
+
+		if ( tabs.length < 2 ) {
+			return;
+		}
+
+		const activateTab = function ( activeTab, moveFocus ) {
+			tabs.forEach( function ( tab ) {
+				const selected = tab === activeTab;
+				const panel = document.getElementById( tab.getAttribute( 'aria-controls' ) );
+
+				tab.setAttribute( 'aria-selected', selected ? 'true' : 'false' );
+				tab.setAttribute( 'tabindex', selected ? '0' : '-1' );
+
+				if ( panel ) {
+					panel.hidden = ! selected;
+
+					if ( selected ) {
+						panel.removeAttribute( 'inert' );
+					} else {
+						panel.setAttribute( 'inert', '' );
+					}
+				}
+			} );
+
+			if ( moveFocus ) {
+				activeTab.focus();
+			}
+		};
+
+		tabs.forEach( function ( tab, index ) {
+			tab.addEventListener( 'click', function () {
+				activateTab( tab, false );
+			} );
+
+			tab.addEventListener( 'keydown', function ( event ) {
+				let targetIndex = null;
+
+				if ( 'ArrowRight' === event.key ) {
+					targetIndex = ( index + 1 ) % tabs.length;
+				} else if ( 'ArrowLeft' === event.key ) {
+					targetIndex = ( index - 1 + tabs.length ) % tabs.length;
+				} else if ( 'Home' === event.key ) {
+					targetIndex = 0;
+				} else if ( 'End' === event.key ) {
+					targetIndex = tabs.length - 1;
+				}
+
+				if ( null !== targetIndex ) {
+					event.preventDefault();
+					activateTab( tabs[ targetIndex ], true );
+				}
+			} );
+		} );
+
+		activateTab( tabs[ 0 ], false );
+	} );
 }() );
