@@ -22,9 +22,14 @@
 
 .global-accordion__header {
 	display: grid;
-	grid-template-columns: minmax(0, 48rem) minmax(0, 1fr);
+	grid-template-columns: minmax(0, 48rem) max-content;
 	align-items: end;
 	gap: 2rem;
+}
+
+.ltt-faq-block {
+	container-name: ltt-faq;
+	container-type: inline-size;
 }
 
 .global-accordion__intro {
@@ -317,6 +322,30 @@
 
 .global-accordion--side-by-side .global-accordion__actions {
 	margin-top: 5rem;
+}
+
+/*
+ * The block-editor canvas may be narrower than the browser viewport, so the
+ * viewport query below cannot always detect when this header needs to stack.
+ */
+@container ltt-faq (max-width: 991.98px) {
+	.global-accordion__header {
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+
+	.global-accordion__actions {
+		justify-content: flex-start;
+	}
+
+	.global-accordion__side-layout {
+		grid-template-columns: 1fr;
+		gap: 0.9375rem;
+	}
+
+	.global-accordion--side-by-side .global-accordion__actions {
+		margin-top: 1.25rem;
+	}
 }
 
 @media (max-width: 991.98px) {
