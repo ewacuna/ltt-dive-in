@@ -80,6 +80,7 @@ function ltt_dive_in_enqueue_assets() {
 			array( 'ltt-dive-in-buttons' ),
 			file_exists( $activities_style_path ) ? (string) filemtime( $activities_style_path ) : LTT_DIVE_IN_VERSION
 		);
+
 	}
 
 	wp_enqueue_script(
@@ -115,6 +116,7 @@ function ltt_dive_in_enqueue_assets() {
 				'in_footer' => true,
 			)
 		);
+
 	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

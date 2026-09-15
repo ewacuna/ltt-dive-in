@@ -18,6 +18,7 @@ function ltt_dive_in_setup() {
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
+	add_post_type_support( 'page', 'excerpt' );
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'wp-block-styles' );
 	add_theme_support( 'align-wide' );

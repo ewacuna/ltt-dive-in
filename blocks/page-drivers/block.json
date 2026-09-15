@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ltt-dive-in/page-drivers",
+    "title": "Up Driver",
+    "category": "ltt-blocks",
+    "icon": "screenoptions",
+    "description": "A selectable hub-page grid with approved layout and filter variants.",
+    "textdomain": "ltt-dive-in",
+    "style": "ltt-dive-in-page-drivers",
+    "editorStyle": "ltt-dive-in-page-drivers",
+    "viewScript": "ltt-dive-in-page-drivers",
+    "acf": { "mode": "preview", "renderTemplate": "template-parts/blocks/page-drivers.php" },
+    "attributes": {
+        "align": { "type": "string", "default": "full" }
+    },
+    "supports": { "align": [ "full" ], "anchor": true, "customClassName": false, "html": false, "multiple": true }
+}
