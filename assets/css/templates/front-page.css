@@ -130,10 +130,6 @@
 	height: 0.75rem;
 }
 
-.front-page-entry {
-	padding-block: clamp(3rem, 7vw, 6rem);
-}
-
 #front-page-content {
 	scroll-margin-top: 1rem;
 }
