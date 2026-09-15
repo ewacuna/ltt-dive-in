@@ -17,12 +17,10 @@ function ltt_dive_in_enqueue_assets() {
 	$header_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/header.css';
 	$search_bar_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/search-bar.css';
 	$footer_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/footer.css';
-	$accordion_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/accordions.css';
 	$buttons_style_path     = LTT_DIVE_IN_DIR . '/assets/css/components/buttons.css';
 	$activities_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$front_page_style_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/front-page.css';
 	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
-	$accordion_script_path  = LTT_DIVE_IN_DIR . '/assets/js/components/accordion.js';
 
 	wp_enqueue_style(
 		'ltt-dive-in-style',
@@ -61,16 +59,9 @@ function ltt_dive_in_enqueue_assets() {
 
 	if ( is_front_page() ) {
 		wp_enqueue_style(
-			'ltt-dive-in-accordions',
-			LTT_DIVE_IN_URI . '/assets/css/components/accordions.css',
-			array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
-			file_exists( $accordion_style_path ) ? (string) filemtime( $accordion_style_path ) : LTT_DIVE_IN_VERSION
-		);
-
-		wp_enqueue_style(
 			'ltt-dive-in-front-page',
 			LTT_DIVE_IN_URI . '/assets/css/templates/front-page.css',
-			array( 'ltt-dive-in-style', 'ltt-dive-in-header', 'ltt-dive-in-accordions' ),
+			array( 'ltt-dive-in-style', 'ltt-dive-in-header' ),
 			file_exists( $front_page_style_path ) ? (string) filemtime( $front_page_style_path ) : LTT_DIVE_IN_VERSION
 		);
 
@@ -80,7 +71,6 @@ function ltt_dive_in_enqueue_assets() {
 			array( 'ltt-dive-in-buttons' ),
 			file_exists( $activities_style_path ) ? (string) filemtime( $activities_style_path ) : LTT_DIVE_IN_VERSION
 		);
-
 	}
 
 	wp_enqueue_script(
@@ -104,20 +94,6 @@ function ltt_dive_in_enqueue_assets() {
 			'in_footer' => true,
 		)
 	);
-
-	if ( is_front_page() ) {
-		wp_enqueue_script(
-			'ltt-dive-in-accordion',
-			LTT_DIVE_IN_URI . '/assets/js/components/accordion.js',
-			array( 'ltt-dive-in-script' ),
-			file_exists( $accordion_script_path ) ? (string) filemtime( $accordion_script_path ) : LTT_DIVE_IN_VERSION,
-			array(
-				'strategy'  => 'defer',
-				'in_footer' => true,
-			)
-		);
-
-	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );

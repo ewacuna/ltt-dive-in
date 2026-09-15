@@ -1,6 +1,6 @@
 {
     "key": "group_ltt_dive_in_home_faq",
-    "title": "LTT Dive In: Homepage FAQ",
+    "title": "LTT Dive In: FAQ / Accordion Block",
     "fields": [
         {
             "key": "field_ltt_dive_in_home_faq_variant",
@@ -215,9 +215,9 @@
     "location": [
         [
             {
-                "param": "page_type",
+                "param": "block",
                 "operator": "==",
-                "value": "front_page"
+                "value": "acf/ltt-faq"
             }
         ]
     ],
@@ -227,6 +227,6 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "active": true,
-    "description": "Editable content and approved layout variants for the reusable accordion shown above the homepage footer.",
+    "description": "Editable content and approved layout variants for the reusable FAQ / Accordion block.",
     "show_in_rest": 0
 }
