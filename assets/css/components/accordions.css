@@ -22,7 +22,7 @@
 
 .global-accordion__header {
 	display: grid;
-	grid-template-columns: minmax(0, 48rem) max-content;
+	grid-template-columns: minmax(0, 48rem) minmax(max-content, 1fr);
 	align-items: end;
 	gap: 2rem;
 }
