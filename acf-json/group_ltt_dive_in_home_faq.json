@@ -58,7 +58,7 @@
             "label": "Frequently asked questions",
             "name": "ltt_dive_in_home_faq_items",
             "type": "repeater",
-            "instructions": "Add up to five questions for the Global or Side by Side variant. Each answer opens in place; only one answer is shown at a time.",
+            "instructions": "Add one or more questions for the Global or Side by Side variant. Each answer opens in place; only one answer is shown at a time.",
             "required": 1,
             "conditional_logic": [
                 [
@@ -77,7 +77,7 @@
                 ]
             ],
             "min": 1,
-            "max": 5,
+            "max": 0,
             "layout": "block",
             "collapsed": "field_ltt_dive_in_home_faq_question",
             "button_label": "Add question",
@@ -169,10 +169,10 @@
                     "label": "Topic questions",
                     "name": "items",
                     "type": "repeater",
-                    "instructions": "Add up to five questions for this topic.",
+                    "instructions": "Add one or more questions for this topic.",
                     "required": 1,
                     "min": 1,
-                    "max": 5,
+                    "max": 0,
                     "layout": "block",
                     "collapsed": "field_ltt_dive_in_home_faq_toggle_question",
                     "button_label": "Add question",

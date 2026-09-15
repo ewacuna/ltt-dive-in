@@ -88,19 +88,17 @@ function ltt_dive_in_branding() {
 /**
  * Prepare valid accordion items for a component template.
  *
- * @param mixed $rows  Raw ACF repeater value.
- * @param int   $limit Maximum number of items supported by the design.
+ * @param mixed $rows Raw ACF repeater value.
  * @return array[]
  */
-function ltt_dive_in_prepare_accordion_items( $rows, $limit = 5 ) {
+function ltt_dive_in_prepare_accordion_items( $rows ) {
 	$items = array();
-	$limit = max( 1, (int) $limit );
 
 	if ( ! is_array( $rows ) ) {
 		return $items;
 	}
 
-	foreach ( array_slice( $rows, 0, $limit ) as $row ) {
+	foreach ( $rows as $row ) {
 		$question = isset( $row['question'] ) && is_string( $row['question'] ) ? trim( $row['question'] ) : '';
 		$answer   = isset( $row['answer'] ) && is_string( $row['answer'] ) ? trim( $row['answer'] ) : '';
 
