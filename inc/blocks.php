@@ -89,7 +89,7 @@ function ltt_dive_in_register_blocks() {
 	$style_path       = LTT_DIVE_IN_DIR . '/assets/css/components/page-drivers.css';
 	$script_path      = LTT_DIVE_IN_DIR . '/assets/js/components/page-drivers.js';
 	$page_driver_path = LTT_DIVE_IN_DIR . '/blocks/page-drivers';
-	$faq_path         = LTT_DIVE_IN_DIR . '/blocks/faq';
+	$accordion_path   = LTT_DIVE_IN_DIR . '/blocks/faq';
 
 	ltt_dive_in_register_block_assets();
 
@@ -101,8 +101,8 @@ function ltt_dive_in_register_blocks() {
 		register_block_type( $page_driver_path );
 	}
 
-	if ( file_exists( $faq_path . '/block.json' ) ) {
-		register_block_type( $faq_path );
+	if ( file_exists( $accordion_path . '/block.json' ) ) {
+		register_block_type( $accordion_path );
 	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );

@@ -81,11 +81,11 @@ Inside the part, values are available from `$args`:
 
 Copy `templates/full-width.php`, change its `Template Name` header, and customize its markup. It will become selectable in the page editor.
 
-## FAQ / Accordion block
+## Interactive Accordions block
 
-With ACF Pro active and the included field group synchronized, editors can add **FAQ / Accordion** from the **LTT Blocks** category in the block inserter. Each block supports the approved Global, Toggle, and Side by Side variants and may be moved, duplicated, or removed like any other Gutenberg block.
+With ACF Pro active and the included field group synchronized, editors can add **Interactive Accordions** from the **LTT Blocks** category in the block inserter. Each block supports the approved Global, Toggle, and Side by Side variants and may be moved, duplicated, or removed like any other Gutenberg block.
 
-The FAQ is not tied to the homepage template. It renders only where an editor inserts the block, so copy any legacy homepage FAQ content into a new block before publishing the converted page.
+Interactive Accordions is not tied to the homepage template. It renders only where an editor inserts the block, so copy any legacy homepage FAQ content into a new block before publishing the converted page.
 
 ## Development notes
 

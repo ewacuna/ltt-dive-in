@@ -1,6 +1,6 @@
 {
     "key": "group_ltt_dive_in_home_faq",
-    "title": "LTT Dive In: FAQ / Accordion Block",
+    "title": "LTT Dive In: Interactive Accordions Block",
     "fields": [
         {
             "key": "field_ltt_dive_in_home_faq_variant",
@@ -227,6 +227,6 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "active": true,
-    "description": "Editable content and approved layout variants for the reusable FAQ / Accordion block.",
+    "description": "Editable content and approved layout variants for the reusable Interactive Accordions block.",
     "show_in_rest": 0
 }

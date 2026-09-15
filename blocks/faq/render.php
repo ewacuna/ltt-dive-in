@@ -1,6 +1,6 @@
 <?php
 /**
- * FAQ block render template.
+ * Interactive Accordions block render template.
  *
  * @package LTT_Dive_In
  *
@@ -42,8 +42,8 @@ if ( ! $is_valid ) {
 	if ( ! empty( $is_preview ) ) {
 		?>
 		<div class="ltt-faq-block-placeholder">
-			<strong><?php esc_html_e( 'FAQ / Accordion', 'ltt-dive-in' ); ?></strong>
-			<p><?php esc_html_e( 'Choose a variant and complete its required FAQ fields to preview this module.', 'ltt-dive-in' ); ?></p>
+			<strong><?php esc_html_e( 'Interactive Accordions', 'ltt-dive-in' ); ?></strong>
+			<p><?php esc_html_e( 'Choose a variant and complete its required accordion fields to preview this module.', 'ltt-dive-in' ); ?></p>
 		</div>
 		<?php
 	}
