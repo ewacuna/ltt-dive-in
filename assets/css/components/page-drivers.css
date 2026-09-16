@@ -391,59 +391,6 @@
     margin-top: 1rem;
 }
 
-.page-drivers__select-wrap {
-    position: relative;
-    display: inline-block;
-}
-
-.page-drivers__select {
-    width: auto;
-    height: 2.5rem;
-    min-height: 0;
-    padding: 0 3.5rem 0 1rem;
-    border: 1.3px solid #073959;
-    border-radius: 0.5rem;
-    background: #ffffff;
-    color: #073959;
-    font-family: "Gotham HTF", Arial, sans-serif;
-    font-size: 1rem;
-    line-height: 1.45;
-    text-align: right;
-    appearance: none;
-    -webkit-appearance: none;
-}
-
-.page-drivers__select:focus-visible {
-    outline: 3px solid #eeb040;
-    outline-offset: 3px;
-}
-
-.page-drivers__select-icon {
-    position: absolute;
-    top: 50%;
-    right: -1px;
-    width: 2.6rem;
-    height: 2.6625rem;
-    pointer-events: none;
-    transform: translateY(-50%);
-}
-
-.page-drivers__select-icon img {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.page-drivers--dark .page-drivers__select {
-    border-color: #ffffff;
-}
-
-.page-drivers--dark .page-drivers__select-icon {
-    border: 1.3px solid #ffffff;
-    border-left: 0;
-    border-radius: 0 0.5rem 0.5rem 0;
-}
-
 @media (max-width: 1399.98px) {
     .page-drivers {
         padding-top: 2.5rem;

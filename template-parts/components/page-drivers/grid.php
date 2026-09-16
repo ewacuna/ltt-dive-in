@@ -15,6 +15,8 @@ $intro        = isset( $args['intro'] ) && is_string( $args['intro'] ) ? $args['
 $show_excerpt = ! empty( $args['show_excerpt'] );
 $tiles        = isset( $args['tiles'] ) && is_array( $args['tiles'] ) ? $args['tiles'] : array();
 $filters      = isset( $args['filters'] ) && is_array( $args['filters'] ) ? $args['filters'] : array();
+$filter_label = isset( $args['filter_label'] ) && is_string( $args['filter_label'] ) ? $args['filter_label'] : __( 'Filter destinations', 'ltt-dive-in' );
+$all_filters_label = isset( $args['all_filters_label'] ) && is_string( $args['all_filters_label'] ) ? $args['all_filters_label'] : __( 'All', 'ltt-dive-in' );
 $is_carousel  = in_array( $layout, array( 'six_plus_up', 'monthly' ), true );
 $is_monthly   = 'monthly' === $layout;
 
@@ -39,16 +41,37 @@ $status_id  = $section_id . '-filter-status';
 
 		<?php if ( $filters && $is_monthly ) : ?>
 			<div class="page-drivers__month-select">
-				<label class="screen-reader-text" for="<?php echo esc_attr( $section_id ); ?>-month-filter"><?php esc_html_e( 'Choose a month', 'ltt-dive-in' ); ?></label>
-				<div class="page-drivers__select-wrap">
-					<select id="<?php echo esc_attr( $section_id ); ?>-month-filter" class="page-drivers__select" data-page-driver-filter-select aria-controls="<?php echo esc_attr( $section_id ); ?>-tiles">
-						<option value="all"><?php esc_html_e( 'All months', 'ltt-dive-in' ); ?></option>
-						<?php foreach ( $filters as $term ) : ?>
-							<option value="<?php echo esc_attr( $term->term_id ); ?>"><?php echo esc_html( $term->name ); ?></option>
-						<?php endforeach; ?>
-					</select>
-					<span class="page-drivers__select-icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/month-select-toggle.svg' ) ); ?>" alt="" /></span>
-				</div>
+				<?php
+				$select_options = array(
+					array(
+						'value' => 'all',
+						'label' => $all_filters_label,
+					),
+				);
+
+				foreach ( $filters as $term ) {
+					$select_options[] = array(
+						'value' => (string) $term->term_id,
+						'label' => $term->name,
+					);
+				}
+
+				get_template_part(
+					'template-parts/components/select',
+					null,
+					array(
+						'id'                => $section_id . '-filter',
+						'label'             => sprintf( __( 'Choose a %s', 'ltt-dive-in' ), strtolower( $filter_label ) ),
+						'options'           => $select_options,
+						'selected_value'    => 'all',
+						'surface'           => $surface,
+						'aria_controls'     => $section_id . '-tiles',
+						'native_attributes' => array(
+							'data-page-driver-filter-select' => true,
+						),
+					)
+				);
+				?>
 			</div>
 		<?php elseif ( $filters ) : ?>
 			<div class="page-drivers__filters" role="group" aria-label="<?php esc_attr_e( 'Filter destinations', 'ltt-dive-in' ); ?>">

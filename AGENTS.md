@@ -377,6 +377,13 @@ Do not place homepage sections, post grids, archive layouts, template-specific h
 - Do not use or restyle the generic `.button` class for this system: WordPress and Gravity Forms use it independently. Keep plugin-generated form controls scoped to their form component unless they can safely receive an approved `ltt-button` class.
 - Apply exactly one approved visual modifier: `ltt-button--primary-outline`, `ltt-button--secondary-outline`, `ltt-button--primary-fill`, `ltt-button--glass`, `ltt-button--dark-standard`, `ltt-button--dark-secondary`, or `ltt-button--dark-tertiary`. Choose the modifier from the target Figma surface and CTA priority; do not invent color combinations.
 - The shared component owns default, hover, pressed, disabled, forced-colors, and focus-visible states. A section may add a BEM class only for placement, such as margins or alignment.
+
+##### Shared enhanced selects
+
+- Use `template-parts/components/select.php`, `assets/css/components/select.css`, and `assets/js/components/select.js` for theme-owned enhanced selects. Pass a label, option value/label pairs, selected value, surface, and only the native attributes required by the consuming component.
+- The reusable Alpine state is `lttSelect`; it must not contain taxonomy, block, or filtering-specific data attributes. A consuming component listens for the native select's standard `change` event.
+- Use the `light` or `dark` surface argument. The component selects `select-toggle.svg` for light surfaces and `select-toggle-dark.svg` for dark surfaces; do not hard-code either icon in a consuming block.
+- Keep the native `<select>` in the markup as the no-JavaScript fallback. The reusable component owns its focus indicator, menu, icon state, and reduced-motion behavior; a consuming block owns only placement.
 - Figma calls for Gotham Medium in CTAs, but the theme currently has only Gotham Book `400` and Bold `700`. Do not synthesize or mislabel `500`; use the documented available face until the licensed Medium file is supplied.
 
 ##### Shared controls

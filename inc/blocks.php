@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function ltt_dive_in_register_block_assets() {
 	$style_path            = LTT_DIVE_IN_DIR . '/assets/css/main.css';
 	$buttons_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/buttons.css';
+	$select_style_path     = LTT_DIVE_IN_DIR . '/assets/css/components/select.css';
 	$accordion_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/accordions.css';
 	$accordion_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/accordion.js';
 
@@ -36,6 +37,15 @@ function ltt_dive_in_register_block_assets() {
 			LTT_DIVE_IN_URI . '/assets/css/components/buttons.css',
 			array( 'ltt-dive-in-style' ),
 			file_exists( $buttons_style_path ) ? (string) filemtime( $buttons_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	if ( ! wp_style_is( 'ltt-dive-in-select', 'registered' ) ) {
+		wp_register_style(
+			'ltt-dive-in-select',
+			LTT_DIVE_IN_URI . '/assets/css/components/select.css',
+			array( 'ltt-dive-in-style' ),
+			file_exists( $select_style_path ) ? (string) filemtime( $select_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
 
@@ -98,7 +108,7 @@ function ltt_dive_in_register_blocks() {
 
 	ltt_dive_in_register_block_assets();
 
-	wp_register_style( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/css/components/page-drivers.css', array( 'ltt-dive-in-buttons' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_style( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/css/components/page-drivers.css', array( 'ltt-dive-in-buttons', 'ltt-dive-in-select' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_script( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/js/components/page-drivers.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_register_style( 'ltt-dive-in-swiper', LTT_DIVE_IN_URI . '/assets/css/vendor/swiper-bundle.min.css', array(), file_exists( $carousel_style_path ) ? (string) filemtime( $carousel_style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_style( 'ltt-dive-in-slider-navigation', LTT_DIVE_IN_URI . '/assets/css/components/slider-navigation.css', array(), file_exists( $slider_navigation_style_path ) ? (string) filemtime( $slider_navigation_style_path ) : LTT_DIVE_IN_VERSION );

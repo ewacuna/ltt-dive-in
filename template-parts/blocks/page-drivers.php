@@ -46,8 +46,18 @@ $has_filters = (bool) $get_value( 'ltt_dive_in_page_driver_enable_toggles' );
 $taxonomy    = $get_value( 'ltt_dive_in_page_driver_taxonomy' );
 $term_ids    = $get_value( 'ltt_dive_in_page_driver_toggle_terms' );
 $filters     = array();
+$filter_label = __( 'Filter destinations', 'ltt-dive-in' );
+$all_filters_label = __( 'All', 'ltt-dive-in' );
+
 if ( $has_filters && is_string( $taxonomy ) && taxonomy_exists( $taxonomy ) && is_array( $term_ids ) ) {
 	foreach ( array_slice( array_values( array_filter( array_map( 'absint', $term_ids ) ) ), 0, 5 ) as $term_id ) { $term = get_term( $term_id, $taxonomy ); if ( $term && ! is_wp_error( $term ) ) { $filters[] = $term; } }
+
+	$taxonomy_object = get_taxonomy( $taxonomy );
+
+	if ( $taxonomy_object instanceof WP_Taxonomy ) {
+		$filter_label      = $taxonomy_object->labels->singular_name;
+		$all_filters_label = $taxonomy_object->labels->all_items;
+	}
 }
 foreach ( $tiles as $index => $tile ) {
 	$terms = $filters ? wp_get_object_terms( $tile['id'], $taxonomy, array( 'fields' => 'ids' ) ) : array();
@@ -68,5 +78,7 @@ get_template_part(
 		'show_excerpt' => (bool) $get_value( 'ltt_dive_in_page_driver_show_excerpt' ),
 		'tiles'        => $tiles,
 		'filters'      => $filters,
+		'filter_label' => $filter_label,
+		'all_filters_label' => $all_filters_label,
 	)
 );

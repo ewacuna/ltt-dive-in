@@ -1,6 +1,6 @@
 {
     "key": "taxonomy_6aa9bc39be09b",
-    "title": "month",
+    "title": "Month",
     "menu_order": 0,
     "active": true,
     "taxonomy": "month",
@@ -11,8 +11,8 @@
     "import_source": "",
     "import_date": "",
     "labels": {
-        "name": "month",
-        "singular_name": "month",
+        "name": "Month",
+        "singular_name": "Month",
         "menu_name": "month",
         "all_items": "All month",
         "edit_item": "Edit month",
@@ -73,5 +73,5 @@
     "meta_box_sanitize_cb": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789508682
+    "modified": 1789519365
 }
