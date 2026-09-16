@@ -29,6 +29,79 @@ function ltt_dive_in_get_page_driver_taxonomies() {
 }
 
 /**
+ * Return terms for the selected Up Driver taxonomy in the block editor.
+ */
+function ltt_dive_in_get_page_driver_terms() {
+	check_ajax_referer( 'ltt_dive_in_page_driver_terms', 'nonce' );
+
+	if ( ! current_user_can( 'edit_pages' ) ) {
+		wp_send_json_error();
+	}
+
+	$taxonomy  = isset( $_POST['taxonomy'] ) ? sanitize_key( wp_unslash( $_POST['taxonomy'] ) ) : '';
+	$taxonomies = ltt_dive_in_get_page_driver_taxonomies();
+
+	if ( ! $taxonomy || ! isset( $taxonomies[ $taxonomy ] ) ) {
+		wp_send_json_error();
+	}
+
+	$terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => false ) );
+
+	if ( is_wp_error( $terms ) ) {
+		wp_send_json_error();
+	}
+
+	wp_send_json_success( wp_list_pluck( $terms, 'name', 'term_id' ) );
+}
+add_action( 'wp_ajax_ltt_dive_in_page_driver_terms', 'ltt_dive_in_get_page_driver_terms' );
+
+/**
+ * Return selected filter values that are not assigned to selected hub pages.
+ */
+function ltt_dive_in_get_page_driver_filter_coverage() {
+	check_ajax_referer( 'ltt_dive_in_page_driver_terms', 'nonce' );
+
+	if ( ! current_user_can( 'edit_pages' ) ) {
+		wp_send_json_error();
+	}
+
+	$taxonomy  = isset( $_POST['taxonomy'] ) ? sanitize_key( wp_unslash( $_POST['taxonomy'] ) ) : '';
+	$tiles     = isset( $_POST['tiles'] ) && is_array( $_POST['tiles'] ) ? array_values( array_filter( array_map( 'absint', wp_unslash( $_POST['tiles'] ) ) ) ) : array();
+	$term_ids  = isset( $_POST['terms'] ) && is_array( $_POST['terms'] ) ? array_values( array_filter( array_map( 'absint', wp_unslash( $_POST['terms'] ) ) ) ) : array();
+	$taxonomies = ltt_dive_in_get_page_driver_taxonomies();
+
+	if ( ! $taxonomy || ! isset( $taxonomies[ $taxonomy ] ) ) {
+		wp_send_json_error();
+	}
+
+	$uncovered_terms = array();
+
+	foreach ( $term_ids as $term_id ) {
+		$term = get_term( $term_id, $taxonomy );
+
+		if ( ! $term || is_wp_error( $term ) ) {
+			continue;
+		}
+
+		$has_tile = false;
+
+		foreach ( $tiles as $tile_id ) {
+			if ( 'publish' === get_post_status( $tile_id ) && 'page' === get_post_type( $tile_id ) && has_term( $term_id, $taxonomy, $tile_id ) ) {
+				$has_tile = true;
+				break;
+			}
+		}
+
+		if ( ! $has_tile ) {
+			$uncovered_terms[ $term_id ] = $term->name;
+		}
+	}
+
+	wp_send_json_success( array( 'uncoveredTerms' => $uncovered_terms ) );
+}
+add_action( 'wp_ajax_ltt_dive_in_page_driver_filter_coverage', 'ltt_dive_in_get_page_driver_filter_coverage' );
+
+/**
  * Get a submitted ACF value by field key during validation.
  *
  * @param string $field_key ACF field key.
@@ -80,6 +153,7 @@ function ltt_dive_in_register_page_driver_settings() {
 	foreach ( ltt_dive_in_get_page_driver_taxonomies() as $taxonomy ) {
 		$taxonomy_choices[ $taxonomy->name ] = $taxonomy->labels->singular_name;
 	}
+	$default_taxonomy = $taxonomy_choices ? (string) array_key_first( $taxonomy_choices ) : 'category';
 
 	acf_add_local_field_group(
 		array(
@@ -100,7 +174,7 @@ function ltt_dive_in_register_page_driver_settings() {
 						'four_up'      => __( '4 Up', 'ltt-dive-in' ),
 						'five_up'      => __( '5 Up', 'ltt-dive-in' ),
 						'six_plus_up'  => __( '6+ Up (up to 12)', 'ltt-dive-in' ),
-						'monthly'      => __( 'Monthly Up Driver', 'ltt-dive-in' ),
+						'monthly'      => __( 'Monthly Up Driver (8–14)', 'ltt-dive-in' ),
 					),
 					'allow_null'   => 1,
 					'ui'           => 1,
@@ -114,6 +188,22 @@ function ltt_dive_in_register_page_driver_settings() {
 					'instructions' => __( 'Required section heading.', 'ltt-dive-in' ),
 					'required'     => 1,
 					'maxlength'    => 90,
+				),
+				array(
+					'key'           => 'field_ltt_dive_in_page_driver_surface',
+					'label'         => __( 'Background', 'ltt-dive-in' ),
+					'name'          => 'ltt_dive_in_page_driver_surface',
+					'type'          => 'select',
+					'instructions'  => __( 'Choose the approved light or dark Up Driver surface.', 'ltt-dive-in' ),
+					'required'      => 1,
+					'choices'       => array(
+						'light' => __( 'Light', 'ltt-dive-in' ),
+						'dark'  => __( 'Dark', 'ltt-dive-in' ),
+					),
+					'default_value' => 'light',
+					'allow_null'    => 0,
+					'ui'            => 1,
+					'return_format' => 'value',
 				),
 				array(
 					'key'          => 'field_ltt_dive_in_page_driver_tag',
@@ -154,7 +244,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'filters'       => array( 'search' ),
 					'return_format' => 'id',
 					'min'           => 1,
-					'max'           => 12,
+					'max'           => 14,
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_page_driver_enable_toggles',
@@ -191,9 +281,10 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'             => __( 'Filter values', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_toggle_terms',
 					'type'              => 'taxonomy',
-					'instructions'      => __( 'Select two to five values from the chosen taxonomy. Save after changing the taxonomy so this field can reload its available terms.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Select two to five values from the chosen taxonomy. The available terms update when you change the taxonomy.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'field_type'        => 'checkbox',
+					'taxonomy'          => $default_taxonomy,
 					'allow_null'        => 0,
 					'add_term'          => 0,
 					'save_terms'        => 0,
@@ -247,8 +338,22 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 	$filters_enabled = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_enable_toggles' );
 	$taxonomy        = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy' );
 
+	/*
+	 * ACF validates the Layout select independently while its value changes in
+	 * the block editor. That request contains the Layout field only, not its
+	 * sibling filter controls. Defer cross-field validation until the complete
+	 * block submission includes those values.
+	 */
+	if ( null === $filters_enabled ) {
+		return $valid;
+	}
+
 	if ( ! $filters_enabled ) {
 		return __( 'Monthly Up Driver requires filters to be enabled.', 'ltt-dive-in' );
+	}
+
+	if ( null === $taxonomy ) {
+		return $valid;
 	}
 
 	if ( 'month' !== $taxonomy || ! isset( ltt_dive_in_get_page_driver_taxonomies()['month'] ) ) {
@@ -260,26 +365,36 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 add_filter( 'acf/validate_value/key=field_ltt_dive_in_page_driver_layout', 'ltt_dive_in_validate_page_driver_layout', 10, 4 );
 
 /**
- * Restrict the filter-value control to the taxonomy saved for this page.
+ * Restrict the filter-value control to the taxonomy selected in this block.
  *
  * @param array $field ACF field configuration.
  * @return array
  */
 function ltt_dive_in_prepare_page_driver_toggle_terms_field( $field ) {
+	$taxonomy = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy' );
+
+	/* ACF Blocks load their current values into the active field context. */
+	if ( ! is_string( $taxonomy ) || ! $taxonomy ) {
+		$taxonomy = function_exists( 'get_field' ) ? get_field( 'ltt_dive_in_page_driver_taxonomy' ) : '';
+	}
+
+	/*
+	 * Keep ACF's block post ID (for example, block_123abc) intact. Casting it
+	 * to an integer loses the active block context and leaves this field empty.
+	 */
 	$post_id = function_exists( 'acf_get_form_data' ) ? acf_get_form_data( 'post_id' ) : 0;
-	$post_id = is_numeric( $post_id ) ? (int) $post_id : 0;
+	$post_id = is_string( $post_id ) || is_numeric( $post_id ) ? $post_id : 0;
 
 	if ( ! $post_id && isset( $_GET['post'] ) ) {
 		$post_id = absint( wp_unslash( $_GET['post'] ) );
 	}
 
-	$taxonomy = $post_id && function_exists( 'get_field' ) ? get_field( 'ltt_dive_in_page_driver_taxonomy', $post_id ) : '';
+	if ( ( ! is_string( $taxonomy ) || ! $taxonomy ) && $post_id && function_exists( 'get_field' ) ) {
+		$taxonomy = get_field( 'ltt_dive_in_page_driver_taxonomy', $post_id );
+	}
 
 	if ( is_string( $taxonomy ) && isset( ltt_dive_in_get_page_driver_taxonomies()[ $taxonomy ] ) ) {
-		$field['taxonomy'] = array( $taxonomy );
-	} else {
-		$field['taxonomy'] = array();
-		$field['instructions'] .= ' ' . __( 'Choose and save a filter taxonomy first.', 'ltt-dive-in' );
+		$field['taxonomy'] = $taxonomy;
 	}
 
 	return $field;
@@ -309,7 +424,7 @@ function ltt_dive_in_validate_page_driver_tiles( $valid, $value, $field, $input 
 		'four_up'     => array( 4, 4 ),
 		'five_up'     => array( 5, 5 ),
 		'six_plus_up' => array( 6, 12 ),
-		'monthly'     => array( 1, 12 ),
+		'monthly'     => array( 8, 14 ),
 	);
 
 	if ( ! is_string( $layout ) || ! isset( $counts[ $layout ] ) ) {
@@ -362,7 +477,8 @@ function ltt_dive_in_validate_page_driver_toggle_terms( $valid, $value, $field, 
 	$tiles    = is_array( $tiles ) ? array_values( array_filter( array_map( 'absint', $tiles ) ) ) : array();
 
 	if ( ! is_string( $taxonomy ) || ! isset( ltt_dive_in_get_page_driver_taxonomies()[ $taxonomy ] ) ) {
-		return __( 'Choose a valid taxonomy registered for pages.', 'ltt-dive-in' );
+		/* See the dependent-field note above: defer cross-field validation. */
+		return $valid;
 	}
 
 	if ( count( $terms ) < 2 || count( $terms ) > 5 ) {

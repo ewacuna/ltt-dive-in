@@ -88,6 +88,11 @@ add_filter( 'block_categories_all', 'ltt_dive_in_block_categories' );
 function ltt_dive_in_register_blocks() {
 	$style_path       = LTT_DIVE_IN_DIR . '/assets/css/components/page-drivers.css';
 	$script_path      = LTT_DIVE_IN_DIR . '/assets/js/components/page-drivers.js';
+	$carousel_style_path  = LTT_DIVE_IN_DIR . '/assets/css/vendor/swiper-bundle.min.css';
+	$carousel_script_path = LTT_DIVE_IN_DIR . '/assets/js/vendor/swiper-bundle.min.js';
+	$carousel_init_path   = LTT_DIVE_IN_DIR . '/assets/js/components/page-drivers-carousel.js';
+	$slider_navigation_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/slider-navigation.css';
+	$carousel_indicators_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/carousel-indicators.css';
 	$page_driver_path = LTT_DIVE_IN_DIR . '/blocks/page-drivers';
 	$accordion_path   = LTT_DIVE_IN_DIR . '/blocks/faq';
 
@@ -95,6 +100,11 @@ function ltt_dive_in_register_blocks() {
 
 	wp_register_style( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/css/components/page-drivers.css', array( 'ltt-dive-in-buttons' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_script( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/js/components/page-drivers.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_register_style( 'ltt-dive-in-swiper', LTT_DIVE_IN_URI . '/assets/css/vendor/swiper-bundle.min.css', array(), file_exists( $carousel_style_path ) ? (string) filemtime( $carousel_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_style( 'ltt-dive-in-slider-navigation', LTT_DIVE_IN_URI . '/assets/css/components/slider-navigation.css', array(), file_exists( $slider_navigation_style_path ) ? (string) filemtime( $slider_navigation_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_style( 'ltt-dive-in-carousel-indicators', LTT_DIVE_IN_URI . '/assets/css/components/carousel-indicators.css', array(), file_exists( $carousel_indicators_style_path ) ? (string) filemtime( $carousel_indicators_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_script( 'ltt-dive-in-swiper', LTT_DIVE_IN_URI . '/assets/js/vendor/swiper-bundle.min.js', array(), file_exists( $carousel_script_path ) ? (string) filemtime( $carousel_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_register_script( 'ltt-dive-in-page-drivers-carousel', LTT_DIVE_IN_URI . '/assets/js/components/page-drivers-carousel.js', array( 'ltt-dive-in-swiper' ), file_exists( $carousel_init_path ) ? (string) filemtime( $carousel_init_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_localize_script( 'ltt-dive-in-page-drivers', 'ltt_dive_in_page_drivers', array( 'destinationSingular' => __( 'destination shown.', 'ltt-dive-in' ), 'destinationPlural' => __( 'destinations shown.', 'ltt-dive-in' ) ) );
 
 	if ( file_exists( $page_driver_path . '/block.json' ) ) {
@@ -106,3 +116,116 @@ function ltt_dive_in_register_blocks() {
 	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
+
+/**
+ * Load carousel assets only on pages that render a carousel Up Driver.
+ *
+ * WordPress de-duplicates registered handles, so multiple carousel blocks still
+ * produce one copy of Swiper and one initializer.
+ *
+ * @return void
+ */
+function ltt_dive_in_enqueue_page_driver_carousel_assets() {
+	wp_enqueue_style( 'ltt-dive-in-swiper' );
+	wp_enqueue_style( 'ltt-dive-in-slider-navigation' );
+	wp_enqueue_style( 'ltt-dive-in-carousel-indicators' );
+	wp_enqueue_script( 'ltt-dive-in-page-drivers-carousel' );
+}
+
+/**
+ * Determine whether a block tree contains a block matching a callback.
+ *
+ * @param array[] $blocks Parsed blocks.
+ * @param callable $matcher Callback that receives one parsed block.
+ * @return bool
+ */
+function ltt_dive_in_block_tree_contains( $blocks, $matcher ) {
+	if ( ! is_array( $blocks ) || ! is_callable( $matcher ) ) {
+		return false;
+	}
+
+	foreach ( $blocks as $block ) {
+		if ( is_array( $block ) && call_user_func( $matcher, $block ) ) {
+			return true;
+		}
+
+		if ( ! empty( $block['innerBlocks'] ) && ltt_dive_in_block_tree_contains( $block['innerBlocks'], $matcher ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Determine whether a parsed Page Driver block uses a carousel layout.
+ *
+ * Other blocks can supply their own predicate to ltt_dive_in_block_tree_contains()
+ * when they need to conditionally enqueue an asset.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_page_driver_uses_carousel( $block ) {
+	if ( ! is_array( $block ) || 'ltt-dive-in/page-drivers' !== ( $block['blockName'] ?? '' ) ) {
+		return false;
+	}
+
+	$layout           = isset( $block['attrs']['data']['ltt_dive_in_page_driver_layout'] ) ? $block['attrs']['data']['ltt_dive_in_page_driver_layout'] : '';
+	$carousel_layouts = apply_filters( 'ltt_dive_in_page_driver_carousel_layouts', array( 'six_plus_up', 'monthly' ) );
+
+	if ( ! is_array( $carousel_layouts ) ) {
+		return false;
+	}
+
+	return is_string( $layout ) && in_array( $layout, $carousel_layouts, true );
+}
+
+/**
+ * Enqueue carousel assets before the document head is printed when possible.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_page_driver_carousel_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( ! $post instanceof WP_Post || ! has_blocks( $post->post_content ) ) {
+		return;
+	}
+
+	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_page_driver_uses_carousel' ) ) {
+		ltt_dive_in_enqueue_page_driver_carousel_assets();
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_page_driver_carousel_assets', 20 );
+
+function ltt_dive_in_enqueue_page_driver_editor_assets() {
+	$script_path = LTT_DIVE_IN_DIR . '/assets/js/admin/page-driver-fields.js';
+
+	wp_enqueue_script( 'ltt-dive-in-page-driver-editor', LTT_DIVE_IN_URI . '/assets/js/admin/page-driver-fields.js', array( 'acf-input', 'jquery', 'wp-data' ), file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION, true );
+	wp_localize_script(
+		'ltt-dive-in-page-driver-editor',
+		'ltt_dive_in_page_driver_editor',
+		array(
+			'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
+			'nonce'           => wp_create_nonce( 'ltt_dive_in_page_driver_terms' ),
+			'selectPages'     => __( 'Select ', 'ltt-dive-in' ),
+			'currentlySelected' => __( 'Currently selected: ', 'ltt-dive-in' ),
+			'filtersWithoutPages' => __( 'These filter values are not assigned to any selected hub page: ', 'ltt-dive-in' ),
+			'tileLimits'      => array(
+				'one_up'      => array( 'min' => 1, 'max' => 1, 'label' => __( 'exactly 1 hub page', 'ltt-dive-in' ) ),
+				'two_up'      => array( 'min' => 2, 'max' => 2, 'label' => __( 'exactly 2 hub pages', 'ltt-dive-in' ) ),
+				'three_up'    => array( 'min' => 3, 'max' => 3, 'label' => __( 'exactly 3 hub pages', 'ltt-dive-in' ) ),
+				'four_up'     => array( 'min' => 4, 'max' => 4, 'label' => __( 'exactly 4 hub pages', 'ltt-dive-in' ) ),
+				'five_up'     => array( 'min' => 5, 'max' => 5, 'label' => __( 'exactly 5 hub pages', 'ltt-dive-in' ) ),
+				'six_plus_up' => array( 'min' => 6, 'max' => 12, 'label' => __( 'between 6 and 12 hub pages', 'ltt-dive-in' ) ),
+				'monthly'     => array( 'min' => 8, 'max' => 14, 'label' => __( 'between 8 and 14 hub pages', 'ltt-dive-in' ) ),
+			),
+		)
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'ltt_dive_in_enqueue_page_driver_editor_assets' );

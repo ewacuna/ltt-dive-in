@@ -1,13 +1,32 @@
 .page-drivers {
     --page-driver-columns: 1;
     --page-driver-card-height: 20.0625rem;
-    padding: 3.125rem 0;
+    padding-top: 3.125rem;
     background: #ffffff;
     color: #073959;
 }
 
 .page-drivers__container {
     margin-inline: auto;
+}
+
+.page-drivers--dark {
+    background: #073959;
+    color: #ffffff;
+}
+
+.page-drivers--dark .page-drivers__tag {
+    background: rgba(4, 39, 66, 0.5);
+    color: #f8dfb3;
+}
+
+.page-drivers--dark .page-drivers__filter {
+    color: #ffffff;
+}
+
+.page-drivers--dark .page-drivers__filter:is(:hover, :focus-visible),
+.page-drivers--dark .page-drivers__filter[aria-pressed="true"] {
+    color: #073959;
 }
 
 .page-drivers__header {
@@ -63,6 +82,7 @@
     padding: 0.5rem 1rem;
     border: 0;
     background: transparent;
+    border-radius: 0;
     color: #073959;
     font-family: "Gotham HTF", Arial, sans-serif;
     font-size: 0.875rem;
@@ -104,10 +124,19 @@
     min-width: 0;
     min-height: var(--page-driver-card-height);
     background: #073959;
+    transition:
+        opacity 180ms ease-out,
+        transform 180ms ease-out;
 }
 
 .page-drivers__card[hidden] {
     display: none;
+}
+
+.page-drivers__card.is-filtering-in {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.5rem);
 }
 
 .page-drivers__card-link {
@@ -191,19 +220,29 @@
     --page-driver-card-height: 19.25rem;
 }
 
-.page-drivers--three-up,
-.page-drivers--four-up {
-    --page-driver-columns: 4;
+.page-drivers--three-up {
+    --page-driver-columns: 3;
     --page-driver-card-height: 19.25rem;
 }
 
-.page-drivers--three-up .page-drivers__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.page-drivers--four-up {
+    --page-driver-columns: 2;
+    --page-driver-card-height: 19.25rem;
 }
 
 .page-drivers--five-up {
-    --page-driver-columns: 5;
+    --page-driver-columns: 3;
     --page-driver-card-height: 17rem;
+}
+
+.page-drivers--five-up .page-drivers__card:first-child {
+    grid-row: span 2;
+}
+
+.page-drivers--five-up
+    .page-drivers__card:first-child
+    .page-drivers__card-link {
+    height: 100%;
 }
 
 .page-drivers--six-plus-up,
@@ -217,9 +256,197 @@
     grid-auto-flow: row;
 }
 
+.page-drivers--six-plus-up,
+.page-drivers--monthly {
+    overflow: hidden;
+}
+
+.page-drivers__carousel {
+    position: relative;
+    width: 100%;
+    margin-top: 1.5625rem;
+}
+
+.page-drivers__carousel-viewport {
+    overflow: visible;
+}
+
+.page-drivers__carousel .page-drivers__grid {
+    display: flex;
+    gap: 0;
+    margin-top: 0;
+}
+
+.page-drivers__carousel .page-drivers__card {
+    width: 21rem;
+    min-height: 21.0625rem;
+}
+
+.page-drivers--monthly .page-drivers__carousel .page-drivers__card {
+    display: flex;
+    align-items: center;
+    min-height: 24rem;
+    background: transparent;
+}
+
+.page-drivers--monthly .page-drivers__carousel .page-drivers__card-link {
+    height: 21.0625rem;
+    min-height: 0;
+    transition: height 350ms ease-out;
+}
+
+.page-drivers--monthly
+    .page-drivers__carousel
+    .swiper-slide-active
+    .page-drivers__card-link {
+    z-index: 1;
+    height: 24rem;
+}
+
+.page-drivers__carousel-control {
+    position: absolute;
+    z-index: 2;
+    padding: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    background: transparent;
+    min-height: 0;
+    bottom: 7rem;
+    width: 2.8125rem;
+    height: 2.875rem;
+}
+
+.page-drivers__carousel-control--previous {
+    left: 0.5rem;
+}
+
+.page-drivers__carousel-control--next {
+    right: 0.5rem;
+}
+
+.page-drivers__carousel-control--next img {
+    margin-left: 3px;
+}
+
+.page-drivers__carousel-control--previous img {
+    margin-right: 3px;
+}
+
+.page-drivers__carousel-control img {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.page-drivers__carousel-control--next img,
+.page-drivers__carousel-control--previous img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.page-drivers__carousel-control:disabled {
+    visibility: hidden;
+}
+
+.page-drivers__carousel-pagination {
+    display: flex;
+    justify-content: center;
+    padding: 2.5rem 0 !important;
+}
+
+.page-drivers__carousel-pagination .ltt-carousel-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    min-height: 0;
+    background: url("../../images/icons/carousel-dot.svg") center / 100% 100%
+        no-repeat;
+}
+
+.page-drivers__carousel-pagination .ltt-carousel-indicator.is-active,
+.page-drivers__carousel-pagination
+    .ltt-carousel-indicator[aria-current="true"] {
+    background-image: url("../../images/icons/carousel-dot-active.svg");
+}
+
+.page-drivers--dark .page-drivers__carousel-pagination .ltt-carousel-indicator {
+    background-color: rgba(255, 255, 255, 0.45);
+    background-image: none;
+}
+
+.page-drivers--dark
+    .page-drivers__carousel-pagination
+    .ltt-carousel-indicator.is-active,
+.page-drivers--dark
+    .page-drivers__carousel-pagination
+    .ltt-carousel-indicator[aria-current="true"] {
+    background-color: #ffffff;
+}
+
+.page-drivers__month-select {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.page-drivers__select-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.page-drivers__select {
+    width: auto;
+    height: 2.5rem;
+    min-height: 0;
+    padding: 0 3.5rem 0 1rem;
+    border: 1.3px solid #073959;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.45;
+    text-align: right;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.page-drivers__select:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+.page-drivers__select-icon {
+    position: absolute;
+    top: 50%;
+    right: -1px;
+    width: 2.6rem;
+    height: 2.6625rem;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.page-drivers__select-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.page-drivers--dark .page-drivers__select {
+    border-color: #ffffff;
+}
+
+.page-drivers--dark .page-drivers__select-icon {
+    border: 1.3px solid #ffffff;
+    border-left: 0;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
 @media (max-width: 1399.98px) {
     .page-drivers {
-        padding-inline: 2.5rem;
+        padding-top: 2.5rem;
     }
 }
 
@@ -228,7 +455,12 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .page-drivers--two-up .page-drivers__grid {
+    .page-drivers--one-up .page-drivers__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-drivers--two-up .page-drivers__grid,
+    .page-drivers--four-up .page-drivers__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -242,16 +474,21 @@
 @media (max-width: 991.98px) {
     .page-drivers__grid,
     .page-drivers--two-up .page-drivers__grid,
+    .page-drivers--three-up .page-drivers__grid,
     .page-drivers--five-up .page-drivers__grid,
     .page-drivers--six-plus-up .page-drivers__grid,
     .page-drivers--monthly .page-drivers__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .page-drivers--one-up .page-drivers__grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 767.98px) {
     .page-drivers {
-        padding: 2.5rem 1.25rem 0.25rem;
+        padding-top: 2.5rem;
     }
 
     .page-drivers__heading {
@@ -284,6 +521,29 @@
     .page-drivers__card {
         min-height: 17.5rem;
     }
+
+    .page-drivers__carousel .page-drivers__card {
+        width: calc(100% - 3rem);
+        min-height: 17.5rem;
+    }
+
+    .page-drivers__carousel-control--previous {
+        left: 1.5rem;
+    }
+
+    .page-drivers__carousel-control--next {
+        right: 1.5rem;
+    }
+
+    .page-drivers--five-up .page-drivers__card:first-child {
+        grid-row: auto;
+    }
+
+    .page-drivers--five-up
+        .page-drivers__card:first-child
+        .page-drivers__card-link {
+        height: auto;
+    }
 }
 
 @media (max-width: 575.98px) {
@@ -298,6 +558,9 @@
 
 @media (prefers-reduced-motion: reduce) {
     .page-drivers__filter,
+    .page-drivers__card,
+    .page-drivers--monthly .page-drivers__carousel .page-drivers__card,
+    .page-drivers--monthly .page-drivers__carousel .page-drivers__card-link,
     .page-drivers__media::after,
     .page-drivers__media img {
         transition: none;

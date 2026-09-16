@@ -20,6 +20,7 @@ $get_value  = static function ( $name ) use ( $block_data ) {
 	return ( false === $value || null === $value ) && array_key_exists( $name, $block_data ) ? $block_data[ $name ] : $value;
 };
 $layout     = $get_value( 'ltt_dive_in_page_driver_layout' );
+$surface    = $get_value( 'ltt_dive_in_page_driver_surface' );
 $heading    = $get_value( 'ltt_dive_in_page_driver_heading' );
 $tile_ids   = $get_value( 'ltt_dive_in_page_driver_tiles' );
 $layouts    = array( 'one_up', 'two_up', 'three_up', 'four_up', 'five_up', 'six_plus_up', 'monthly' );
@@ -37,6 +38,10 @@ foreach ( array_slice( array_values( array_filter( array_map( 'absint', $tile_id
 }
 if ( ! $tiles ) { return; }
 
+if ( in_array( $layout, array( 'six_plus_up', 'monthly' ), true ) && function_exists( 'ltt_dive_in_enqueue_page_driver_carousel_assets' ) ) {
+	ltt_dive_in_enqueue_page_driver_carousel_assets();
+}
+
 $has_filters = (bool) $get_value( 'ltt_dive_in_page_driver_enable_toggles' );
 $taxonomy    = $get_value( 'ltt_dive_in_page_driver_taxonomy' );
 $term_ids    = $get_value( 'ltt_dive_in_page_driver_toggle_terms' );
@@ -49,4 +54,19 @@ foreach ( $tiles as $index => $tile ) {
 	$tiles[ $index ]['terms'] = is_wp_error( $terms ) ? array() : array_map( 'absint', $terms );
 }
 
-get_template_part( 'template-parts/components/page-drivers/grid', null, array( 'id' => $anchor ? $anchor : 'page-drivers-' . $block_id, 'class_name' => $alignment, 'layout' => $layout, 'heading' => trim( $heading ), 'tag' => (string) $get_value( 'ltt_dive_in_page_driver_tag' ), 'intro' => (string) $get_value( 'ltt_dive_in_page_driver_intro' ), 'show_excerpt' => (bool) $get_value( 'ltt_dive_in_page_driver_show_excerpt' ), 'tiles' => $tiles, 'filters' => $filters ) );
+get_template_part(
+	'template-parts/components/page-drivers/grid',
+	null,
+	array(
+		'id'           => $anchor ? $anchor : 'page-drivers-' . $block_id,
+		'class_name'   => $alignment,
+		'layout'       => $layout,
+		'surface'      => 'dark' === $surface ? 'dark' : 'light',
+		'heading'      => trim( $heading ),
+		'tag'          => (string) $get_value( 'ltt_dive_in_page_driver_tag' ),
+		'intro'        => (string) $get_value( 'ltt_dive_in_page_driver_intro' ),
+		'show_excerpt' => (bool) $get_value( 'ltt_dive_in_page_driver_show_excerpt' ),
+		'tiles'        => $tiles,
+		'filters'      => $filters,
+	)
+);

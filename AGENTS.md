@@ -405,6 +405,16 @@ Use consistent handles such as `ltt-dive-in-front-page` and declare `ltt-dive-in
 
 Do not enqueue every template and component stylesheet globally for convenience. When a component is used on a conditionally assembled page, keep a clear mapping in `inc/enqueue.php` between the WordPress condition, template stylesheet, and component dependencies.
 
+### Conditional block feature assets
+
+Register block-only assets in `inc/blocks.php`, but enqueue them only when the parsed block tree needs the related feature. Use `ltt_dive_in_block_tree_contains( $blocks, $matcher )` to recursively inspect a page's parsed blocks, including nested blocks. Its matcher receives one parsed block and returns whether that block needs the feature.
+
+- Keep the generic tree traversal independent of any particular block, attribute, or layout.
+- Give each block feature a focused predicate that owns its own block name and attribute checks. For example, `ltt_dive_in_page_driver_uses_carousel()` decides whether a Page Driver layout needs carousel assets.
+- Reuse the generic traversal with a new predicate for other blocks that need Swiper or another conditionally loaded dependency; do not add their rules to a Page Driver helper.
+- When a Page Driver variant also needs the carousel, extend `ltt_dive_in_page_driver_carousel_layouts` rather than editing the generic traversal.
+- Register third-party libraries once, enqueue their shared handles only after a matching block is found, and let WordPress de-duplicate handles when multiple matching blocks render. Keep a safe render-time enqueue fallback for dynamic blocks whose content cannot be discovered from the queried post before rendering.
+
 ### Editor styles
 
 The block editor currently loads `assets/css/main.css`. Keep editor-safe global typography, colors, and content primitives there. Template-only front-end layout must not leak into the editor automatically.
