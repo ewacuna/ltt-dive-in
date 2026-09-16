@@ -97,6 +97,73 @@ function ltt_dive_in_register_footer_settings() {
 					'default_value' => __( 'By subscribing you agree to our Privacy Policy and consent to receive updates from Lake Tahoe Travel.', 'ltt-dive-in' ),
 				),
 				array(
+					'key'   => 'field_ltt_dive_in_footer_logos_tab',
+					'label' => __( 'Logos', 'ltt-dive-in' ),
+					'name'  => '',
+					'type'  => 'tab',
+				),
+				array(
+					'key'           => 'field_ltt_dive_in_footer_brand_logo',
+					'label'         => __( 'Main Logo', 'ltt-dive-in' ),
+					'name'          => 'ltt_dive_in_footer_brand_logo',
+					'type'          => 'image',
+					'instructions'  => __( 'Main logo displayed above the partner logos. Add meaningful alternative text in the Media Library and use reverse artwork suitable for the dark footer.', 'ltt-dive-in' ),
+					'required'      => 1,
+					'return_format' => 'id',
+					'preview_size'  => 'medium',
+					'library'       => 'all',
+				),
+				array(
+					'key'          => 'field_ltt_dive_in_footer_partner_left_logos',
+					'label'        => __( 'Left column logos', 'ltt-dive-in' ),
+					'name'         => 'ltt_dive_in_footer_partner_left_logos',
+					'type'         => 'repeater',
+					'instructions' => __( 'Add the partner logos for the left column in display order. At least one logo is required.', 'ltt-dive-in' ),
+					'required'     => 1,
+					'min'          => 1,
+					'layout'       => 'block',
+					'button_label' => __( 'Add logo', 'ltt-dive-in' ),
+					'wrapper'      => array( 'width' => '50' ),
+					'sub_fields'   => array(
+						array(
+							'key'           => 'field_ltt_dive_in_footer_partner_left_logo',
+							'label'         => __( 'Logo', 'ltt-dive-in' ),
+							'name'          => 'logo',
+							'type'          => 'image',
+							'instructions'  => __( 'Add meaningful alternative text in the Media Library. Reverse SVG artwork is preferred.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'return_format' => 'id',
+							'preview_size'  => 'medium',
+							'library'       => 'all',
+						),
+					),
+				),
+				array(
+					'key'          => 'field_ltt_dive_in_footer_partner_right_logos',
+					'label'        => __( 'Right column logos', 'ltt-dive-in' ),
+					'name'         => 'ltt_dive_in_footer_partner_right_logos',
+					'type'         => 'repeater',
+					'instructions' => __( 'Add the partner logos for the right column in display order. At least one logo is required.', 'ltt-dive-in' ),
+					'required'     => 1,
+					'min'          => 1,
+					'layout'       => 'block',
+					'button_label' => __( 'Add logo', 'ltt-dive-in' ),
+					'wrapper'      => array( 'width' => '50' ),
+					'sub_fields'   => array(
+						array(
+							'key'           => 'field_ltt_dive_in_footer_partner_right_logo',
+							'label'         => __( 'Logo', 'ltt-dive-in' ),
+							'name'          => 'logo',
+							'type'          => 'image',
+							'instructions'  => __( 'Add meaningful alternative text in the Media Library. Reverse SVG artwork is preferred.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'return_format' => 'id',
+							'preview_size'  => 'medium',
+							'library'       => 'all',
+						),
+					),
+				),
+				array(
 					'key'   => 'field_ltt_dive_in_footer_social_tab',
 					'label' => __( 'Social links', 'ltt-dive-in' ),
 					'name'  => '',
@@ -170,6 +237,53 @@ function ltt_dive_in_get_footer_option( $field_name, $default = '' ) {
 	$value = get_field( $field_name, 'option' );
 
 	return empty( $value ) ? $default : $value;
+}
+
+/**
+ * Get configured footer logos grouped by their visual column.
+ *
+ * Empty and invalid image selections are omitted so partially configured columns
+ * remain valid and no theme-owned logo is used as an implicit fallback.
+ *
+ * @return array{brand: array, columns: array}
+ */
+function ltt_dive_in_get_footer_logos() {
+	$brand_id      = absint( ltt_dive_in_get_footer_option( 'ltt_dive_in_footer_brand_logo' ) );
+	$column_fields = array(
+		'left'  => 'ltt_dive_in_footer_partner_left_logos',
+		'right' => 'ltt_dive_in_footer_partner_right_logos',
+	);
+	$columns       = array();
+
+	foreach ( $column_fields as $column_name => $field_name ) {
+		$rows                    = ltt_dive_in_get_footer_option( $field_name, array() );
+		$columns[ $column_name ] = array();
+
+		if ( ! is_array( $rows ) ) {
+			continue;
+		}
+
+		foreach ( $rows as $row ) {
+			$attachment_id = is_array( $row ) && isset( $row['logo'] ) ? absint( $row['logo'] ) : 0;
+
+			if ( ! $attachment_id || ! wp_attachment_is_image( $attachment_id ) ) {
+				continue;
+			}
+
+			$columns[ $column_name ][] = array(
+				'attachment_id' => $attachment_id,
+				'class'         => 'site-footer__partner-logo',
+			);
+		}
+	}
+
+	return array(
+		'brand'   => $brand_id && wp_attachment_is_image( $brand_id ) ? array(
+			'attachment_id' => $brand_id,
+			'class'         => 'site-footer__brand-logo',
+		) : array(),
+		'columns' => $columns,
+	);
 }
 
 /**

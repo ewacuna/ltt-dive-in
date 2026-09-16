@@ -34,6 +34,10 @@ $newsletter_disclaimer  = ltt_dive_in_get_footer_option(
 );
 $social_links           = ltt_dive_in_get_footer_social_links();
 $newsletter_form        = ltt_dive_in_get_footer_newsletter_form();
+$footer_logos           = ltt_dive_in_get_footer_logos();
+$footer_logo_columns    = $footer_logos['columns'];
+$has_partner_logos      = (bool) array_filter( $footer_logo_columns );
+$has_footer_logos       = ! empty( $footer_logos['brand'] ) || $has_partner_logos;
 ?>
 	<footer id="colophon" class="site-footer">
 		<div class="site-footer__container">
@@ -66,24 +70,50 @@ $newsletter_form        = ltt_dive_in_get_footer_newsletter_form();
 					<?php endif; ?>
 				</section>
 
-				<div class="site-footer__partners" data-footer-section="partners">
-					<img class="site-footer__brand-logo" src="<?php echo esc_url( $footer_assets_uri . '/lake-tahoe-travel-white.svg' ); ?>" alt="<?php esc_attr_e( 'Lake Tahoe Travel', 'ltt-dive-in' ); ?>" width="194" height="78">
-					<div class="site-footer__partner-divider" aria-hidden="true"></div>
+				<div class="site-footer__partners" data-footer-section="partners"<?php echo $has_footer_logos ? '' : ' hidden'; ?>>
+					<?php if ( ! empty( $footer_logos['brand'] ) ) : ?>
+						<?php
+						echo wp_get_attachment_image(
+							$footer_logos['brand']['attachment_id'],
+							'full',
+							false,
+							array(
+								'class'   => $footer_logos['brand']['class'],
+								'loading' => 'lazy',
+							)
+						); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core-generated image markup.
+						?>
+					<?php endif; ?>
 
-					<div class="site-footer__partner-row site-footer__partner-row--primary">
-						<img src="<?php echo esc_url( $footer_assets_uri . '/north-tahoe-community-alliance.svg' ); ?>" alt="<?php esc_attr_e( 'North Tahoe Community Alliance', 'ltt-dive-in' ); ?>" width="186" height="59">
-						<img src="<?php echo esc_url( $footer_assets_uri . '/travel-north-tahoe-nevada.svg' ); ?>" alt="<?php esc_attr_e( 'Travel North Tahoe Nevada', 'ltt-dive-in' ); ?>" width="102" height="86">
-					</div>
+					<?php if ( ! empty( $footer_logos['brand'] ) && $has_partner_logos ) : ?>
+						<div class="site-footer__partner-divider" aria-hidden="true"></div>
+					<?php endif; ?>
 
-					<div class="site-footer__partner-row site-footer__partner-row--secondary">
-						<img src="<?php echo esc_url( $footer_assets_uri . '/travel-nevada.svg' ); ?>" alt="<?php esc_attr_e( 'Travel Nevada', 'ltt-dive-in' ); ?>" width="81" height="66">
-						<img src="<?php echo esc_url( $footer_assets_uri . '/visit-california.svg' ); ?>" alt="<?php esc_attr_e( 'Visit California', 'ltt-dive-in' ); ?>" width="135" height="44">
-					</div>
-
-					<div class="site-footer__partner-row site-footer__partner-row--supporting">
-						<img src="<?php echo esc_url( $footer_assets_uri . '/usa.svg' ); ?>" alt="<?php esc_attr_e( 'USA', 'ltt-dive-in' ); ?>" width="93" height="38">
-						<img src="<?php echo esc_url( $footer_assets_uri . '/leave-no-trace.svg' ); ?>" alt="<?php esc_attr_e( 'Leave No Trace', 'ltt-dive-in' ); ?>" width="118" height="32">
-					</div>
+					<?php if ( $has_partner_logos ) : ?>
+						<div class="site-footer__partner-columns">
+							<?php foreach ( $footer_logo_columns as $column_name => $column_logos ) : ?>
+								<?php if ( $column_logos ) : ?>
+										<div class="site-footer__partner-column site-footer__partner-column--<?php echo esc_attr( $column_name ); ?>">
+											<?php foreach ( $column_logos as $column_logo ) : ?>
+												<div class="site-footer__partner-item">
+													<?php
+													echo wp_get_attachment_image(
+														$column_logo['attachment_id'],
+														'full',
+														false,
+														array(
+															'class'   => $column_logo['class'],
+															'loading' => 'lazy',
+														)
+													); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core-generated image markup.
+													?>
+												</div>
+											<?php endforeach; ?>
+									</div>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
 				</div>
 
 				<div class="site-footer__navigation" data-footer-section="navigation">
