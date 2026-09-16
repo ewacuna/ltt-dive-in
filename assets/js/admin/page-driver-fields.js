@@ -32,8 +32,9 @@
 		} );
 
 		const hasInvalidFilterCoverage = document.querySelector( '[data-key="' + termsKey + '"][data-ltt-dive-in-filter-coverage-invalid="true"]' );
+		const hasInvalidFilterCount = document.querySelector( '[data-key="' + termsKey + '"][data-ltt-dive-in-filter-count-invalid="true"]' );
 
-		if ( hasInvalidDriver || hasInvalidFilterCoverage ) {
+		if ( hasInvalidDriver || hasInvalidFilterCoverage || hasInvalidFilterCount ) {
 			editor.lockPostSaving( savingLockKey );
 			if ( editor.lockPostAutosaving ) {
 				editor.lockPostAutosaving( savingLockKey );
@@ -112,6 +113,43 @@
 		syncSavingLock();
 	};
 
+	const clearFilterValueCount = function ( $termsField ) {
+		$termsField.removeAttr( 'data-ltt-dive-in-filter-count-invalid' );
+		$termsField.find( '.ltt-dive-in-page-driver-filter-count-error' ).remove();
+		syncSavingLock();
+	};
+
+	const updateFilterValueCount = function ( $termsField ) {
+		const $fields = $termsField.closest( '.acf-fields' );
+		const filtersEnabled = $fields.find( '[data-key="' + toggleKey + '"] input[type="checkbox"]' ).prop( 'checked' );
+		const layout = $fields.find( '[data-key="' + layoutKey + '"] select' ).val();
+		const taxonomy = $fields.find( '[data-key="' + taxonomyKey + '"] select' ).val();
+		const count = $termsField.find( 'input[type="checkbox"]:checked' ).length;
+
+		if ( ! filtersEnabled || 'monthly' === layout || ! taxonomy ) {
+			clearFilterValueCount( $termsField );
+			return;
+		}
+
+		const isValid = count >= 2 && count <= 5;
+		let $error = $termsField.find( '.ltt-dive-in-page-driver-filter-count-error' );
+
+		$termsField.attr( 'data-ltt-dive-in-filter-count-invalid', isValid ? 'false' : 'true' );
+
+		if ( ! isValid ) {
+			if ( ! $error.length ) {
+				$error = $( '<div class="acf-notice -error ltt-dive-in-page-driver-filter-count-error" role="alert"><p></p></div>' );
+				$termsField.find( '.acf-input' ).append( $error );
+			}
+
+			$error.find( 'p' ).text( editorSettings.filterValueCount || 'Choose between two and five filter values.' );
+		} else {
+			$error.remove();
+		}
+
+		syncSavingLock();
+	};
+
 	const updateFilterCoverage = function ( $termsField ) {
 		const $fields = $termsField.closest( '.acf-fields' );
 		const filtersEnabled = $fields.find( '[data-key="' + toggleKey + '"] input[type="checkbox"]' ).prop( 'checked' );
@@ -176,6 +214,7 @@
 		if ( ! taxonomy ) {
 			clearAndHideTerms( $termsField, name );
 			clearFilterCoverage( $termsField );
+			clearFilterValueCount( $termsField );
 			$taxonomyField.removeData( 'lttDiveInTaxonomy' );
 			return;
 		}
@@ -219,6 +258,7 @@
 
 			$termsField.find( '.acf-input' ).html( html );
 			updateFilterCoverage( $termsField );
+			updateFilterValueCount( $termsField );
 		} ).always( function () {
 			if ( requestId === $taxonomyField.data( 'lttDiveInTermsRequest' ) ) {
 				$termsField.removeAttr( 'aria-busy' );
@@ -237,6 +277,7 @@
 
 		$el.find( '[data-key="' + termsKey + '"]' ).each( function () {
 			updateFilterCoverage( $( this ) );
+			updateFilterValueCount( $( this ) );
 		} );
 	} );
 
@@ -252,7 +293,10 @@
 	} );
 
 	$( document ).on( 'change', '[data-key="' + layoutKey + '"] select', function () {
-		updateTileLimits( $( this ).closest( '[data-key]' ) );
+		const $layoutField = $( this ).closest( '[data-key]' );
+
+		updateTileLimits( $layoutField );
+		updateFilterValueCount( $layoutField.closest( '.acf-fields' ).find( '[data-key="' + termsKey + '"]' ) );
 	} );
 
 	$( document ).on( 'change', '[data-key="' + tilesKey + '"] input', function () {
@@ -264,10 +308,16 @@
 	} );
 
 	$( document ).on( 'change', '[data-key="' + termsKey + '"] input[type="checkbox"]', function () {
-		updateFilterCoverage( $( this ).closest( '[data-key]' ) );
+		const $termsField = $( this ).closest( '[data-key]' );
+
+		updateFilterCoverage( $termsField );
+		updateFilterValueCount( $termsField );
 	} );
 
 	$( document ).on( 'change', '[data-key="' + toggleKey + '"] input[type="checkbox"]', function () {
-		updateFilterCoverage( $( this ).closest( '.acf-fields' ).find( '[data-key="' + termsKey + '"]' ) );
+		const $termsField = $( this ).closest( '.acf-fields' ).find( '[data-key="' + termsKey + '"]' );
+
+		updateFilterCoverage( $termsField );
+		updateFilterValueCount( $termsField );
 	} );
 }( jQuery, acf ) );

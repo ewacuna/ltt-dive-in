@@ -226,6 +226,7 @@ function ltt_dive_in_enqueue_page_driver_editor_assets() {
 			'selectPages'     => __( 'Select ', 'ltt-dive-in' ),
 			'currentlySelected' => __( 'Currently selected: ', 'ltt-dive-in' ),
 			'filtersWithoutPages' => __( 'These filter values are not assigned to any selected hub page: ', 'ltt-dive-in' ),
+			'filterValueCount' => __( 'Choose between two and five filter values.', 'ltt-dive-in' ),
 			'tileLimits'      => array(
 				'one_up'      => array( 'min' => 1, 'max' => 1, 'label' => __( 'exactly 1 hub page', 'ltt-dive-in' ) ),
 				'two_up'      => array( 'min' => 2, 'max' => 2, 'label' => __( 'exactly 2 hub pages', 'ltt-dive-in' ) ),

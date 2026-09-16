@@ -173,8 +173,8 @@ function ltt_dive_in_register_page_driver_settings() {
 						'three_up'     => __( '3 Up', 'ltt-dive-in' ),
 						'four_up'      => __( '4 Up', 'ltt-dive-in' ),
 						'five_up'      => __( '5 Up', 'ltt-dive-in' ),
-						'six_plus_up'  => __( '6+ Up (up to 12)', 'ltt-dive-in' ),
-						'monthly'      => __( 'Monthly Up Driver (8–14)', 'ltt-dive-in' ),
+						'six_plus_up'  => __( '6+ Up', 'ltt-dive-in' ),
+						'monthly'      => __( 'Monthly Up Driver', 'ltt-dive-in' ),
 					),
 					'allow_null'   => 1,
 					'ui'           => 1,
@@ -260,7 +260,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'             => __( 'Filter taxonomy', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_taxonomy',
 					'type'              => 'select',
-						'instructions'      => __( 'Choose a public taxonomy registered for pages. For Monthly Up Driver, choose the site’s month taxonomy.', 'ltt-dive-in' ),
+						'instructions'      => __( 'Choose a public taxonomy registered for pages.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'choices'           => $taxonomy_choices,
 					'allow_null'        => 1,
@@ -481,7 +481,9 @@ function ltt_dive_in_validate_page_driver_toggle_terms( $valid, $value, $field, 
 		return $valid;
 	}
 
-	if ( count( $terms ) < 2 || count( $terms ) > 5 ) {
+	$layout = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_layout' );
+
+	if ( 'monthly' !== $layout && ( count( $terms ) < 2 || count( $terms ) > 5 ) ) {
 		return __( 'Choose between two and five filter values.', 'ltt-dive-in' );
 	}
 
