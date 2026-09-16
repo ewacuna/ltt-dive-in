@@ -152,9 +152,10 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 add_filter( 'wp_preload_resources', 'ltt_dive_in_preload_fonts' );
 
 /**
- * Load the main stylesheet in the block editor.
+ * Load foundations scoped to block-editor content, not the admin interface.
  */
 function ltt_dive_in_editor_styles() {
+	add_theme_support( 'editor-styles' );
 	add_editor_style( 'assets/css/main.css' );
 }
 add_action( 'after_setup_theme', 'ltt_dive_in_editor_styles' );

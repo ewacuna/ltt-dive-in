@@ -22,6 +22,10 @@ function ltt_dive_in_register_block_assets() {
 	$accordion_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/accordions.css';
 	$accordion_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/accordion.js';
 
+	// In admin, main.css is supplied as a scoped editor style, not a global
+	// dependency: its element selectors must not reach media dialogs or admin UI.
+	$foundation_dependencies = is_admin() ? array() : array( 'ltt-dive-in-style' );
+
 	if ( ! wp_style_is( 'ltt-dive-in-style', 'registered' ) ) {
 		wp_register_style(
 			'ltt-dive-in-style',
@@ -35,7 +39,7 @@ function ltt_dive_in_register_block_assets() {
 		wp_register_style(
 			'ltt-dive-in-buttons',
 			LTT_DIVE_IN_URI . '/assets/css/components/buttons.css',
-			array( 'ltt-dive-in-style' ),
+			$foundation_dependencies,
 			file_exists( $buttons_style_path ) ? (string) filemtime( $buttons_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
@@ -44,7 +48,7 @@ function ltt_dive_in_register_block_assets() {
 		wp_register_style(
 			'ltt-dive-in-select',
 			LTT_DIVE_IN_URI . '/assets/css/components/select.css',
-			array( 'ltt-dive-in-style' ),
+			$foundation_dependencies,
 			file_exists( $select_style_path ) ? (string) filemtime( $select_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
@@ -53,7 +57,7 @@ function ltt_dive_in_register_block_assets() {
 		wp_register_style(
 			'ltt-dive-in-accordions',
 			LTT_DIVE_IN_URI . '/assets/css/components/accordions.css',
-			array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
+			array_merge( $foundation_dependencies, array( 'ltt-dive-in-buttons' ) ),
 			file_exists( $accordion_style_path ) ? (string) filemtime( $accordion_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}

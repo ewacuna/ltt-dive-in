@@ -260,7 +260,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'             => __( 'Filter taxonomy', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_taxonomy',
 					'type'              => 'select',
-						'instructions'      => __( 'Choose a public taxonomy registered for pages.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Choose any public taxonomy registered for pages. All Page Driver variants use the selected taxonomy for filtering.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'choices'           => $taxonomy_choices,
 					'allow_null'        => 1,
@@ -322,7 +322,7 @@ function ltt_dive_in_register_page_driver_settings() {
 add_action( 'acf/init', 'ltt_dive_in_register_page_driver_settings' );
 
 /**
- * Require the month taxonomy and filters for the Monthly Page Driver.
+ * Require a public page taxonomy and filters for the Monthly Page Driver.
  *
  * @param bool|string $valid Validation result.
  * @param mixed       $value Submitted value.
@@ -356,8 +356,8 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 		return $valid;
 	}
 
-	if ( 'month' !== $taxonomy || ! isset( ltt_dive_in_get_page_driver_taxonomies()['month'] ) ) {
-		return __( 'Monthly Up Driver requires a public page taxonomy with the slug “month”.', 'ltt-dive-in' );
+	if ( ! is_string( $taxonomy ) || ! isset( ltt_dive_in_get_page_driver_taxonomies()[ $taxonomy ] ) ) {
+		return __( 'Monthly Up Driver requires a public taxonomy registered for pages.', 'ltt-dive-in' );
 	}
 
 	return $valid;

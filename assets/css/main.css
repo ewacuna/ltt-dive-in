@@ -80,16 +80,19 @@ a:focus {
     color: var(--color-primary-dark);
 }
 
-button,
+/* Keep WordPress editor controls under the editor's own styles.
+ * :where() preserves the existing specificity for public-facing controls.
+ */
+button:not(:where(.components-button)),
 input,
 textarea,
 select {
     font: inherit;
 }
 
-button,
-.button,
-input[type="submit"] {
+button:not(:where(.components-button)),
+.button:not(:where(.components-button)),
+input[type="submit"]:not(:where(.components-button)) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -118,7 +121,7 @@ select {
     color: var(--color-text);
 }
 
-:focus-visible {
+:focus-visible:not(:where(.components-button)) {
     outline: 3px solid rgba(20, 87, 217, 0.35);
     outline-offset: 3px;
 }
