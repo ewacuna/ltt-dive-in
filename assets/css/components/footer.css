@@ -20,7 +20,7 @@
 .site-footer__content {
     display: grid;
     grid-template-columns: 30.5rem 22.0625rem minmax(11.25rem, 1fr);
-    column-gap: 2.5rem;
+    column-gap: 2rem;
     align-items: start;
     width: 100%;
     padding: 1.5rem 3rem;
