@@ -1,5 +1,6 @@
 .home-activities {
     padding-top: 1.25rem;
+    padding-bottom: 2.5rem;
     background: #ffffff;
     color: #073959;
 }
@@ -213,7 +214,6 @@
     }
 
     .home-activities__grid {
-        grid-template-columns: repeat(2, minmax(0, 11.3125rem));
         justify-content: center;
         gap: 0.6875rem;
         width: calc(100% - 0.125rem);
