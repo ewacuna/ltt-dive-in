@@ -1,0 +1,10 @@
+{
+  "key": "group_ltt_dive_in_activities_block", "title": "LTT Dive In — Activities", "fields": [
+    {"key":"field_ltt_dive_in_activities_heading_block","label":"Heading","name":"ltt_dive_in_activities_heading","type":"text","required":1},
+    {"key":"field_ltt_dive_in_activities_copy_block","label":"Introduction","name":"ltt_dive_in_activities_copy","type":"textarea","required":1,"rows":3},
+    {"key":"field_ltt_dive_in_activities_tag_block","label":"Category tag","name":"ltt_dive_in_activities_tag","type":"text"},
+    {"key":"field_ltt_dive_in_activities_primary_link_block","label":"Primary button","name":"ltt_dive_in_activities_primary_link","type":"link","return_format":"array"},
+    {"key":"field_ltt_dive_in_activities_secondary_link_block","label":"Secondary button","name":"ltt_dive_in_activities_secondary_link","type":"link","return_format":"array"},
+    {"key":"field_ltt_dive_in_activities_items","label":"Activities","name":"ltt_dive_in_activities_items","type":"relationship","instructions":"Select and order exactly four published pages or posts. Each requires a featured image.","required":1,"post_type":["page","post"],"post_status":["publish"],"filters":["search"],"return_format":"id","min":4,"max":4}
+  ], "location":[[{"param":"block","operator":"==","value":"ltt-dive-in/activities"}]], "position":"normal", "style":"default", "label_placement":"top", "instruction_placement":"label", "active":true, "show_in_rest":0
+}

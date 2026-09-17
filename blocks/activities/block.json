@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/activities",
+  "title": "Activities",
+  "category": "ltt-blocks",
+  "icon": "screenoptions",
+  "description": "Feature four selected pages or posts as activity cards.",
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-home-activities",
+  "editorStyle": "ltt-dive-in-home-activities",
+  "acf": { "mode": "preview", "renderTemplate": "template-parts/blocks/activities.php" },
+  "attributes": { "align": { "type": "string", "default": "full" } },
+  "supports": { "align": [ "full" ], "anchor": true, "customClassName": false, "html": false, "multiple": true }
+}

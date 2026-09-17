@@ -37,6 +37,7 @@
 		const filters = Array.from( driver.querySelectorAll( '[data-page-driver-filter]' ) );
 		const filterSelect = driver.querySelector( '[data-page-driver-filter-select]' );
 		const cards = Array.from( driver.querySelectorAll( '[data-page-driver-card]' ) );
+		const grid = driver.querySelector( '[data-page-driver-grid]' );
 		const status = driver.querySelector( '[data-page-driver-status]' );
 		const isCarousel = Boolean( driver.querySelector( '[data-page-driver-carousel]' ) );
 
@@ -47,6 +48,10 @@
 		const activateFilter = function ( activeFilter ) {
 			const termId = activeFilter.dataset.pageDriverFilter || activeFilter.value;
 			let visibleCount = 0;
+
+			if ( grid ) {
+				grid.classList.toggle( 'is-filtered', 'all' !== termId );
+			}
 
 			filters.forEach( function ( filter ) {
 				const selected = filter === activeFilter;

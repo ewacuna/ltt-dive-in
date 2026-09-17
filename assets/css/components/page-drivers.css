@@ -239,6 +239,10 @@
     grid-row: span 2;
 }
 
+.page-drivers--five-up .page-drivers__grid.is-filtered .page-drivers__card:first-child {
+    grid-row: auto;
+}
+
 .page-drivers--five-up
     .page-drivers__card:first-child
     .page-drivers__card-link {

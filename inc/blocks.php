@@ -19,6 +19,7 @@ function ltt_dive_in_register_block_assets() {
 	$style_path            = LTT_DIVE_IN_DIR . '/assets/css/main.css';
 	$buttons_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/buttons.css';
 	$select_style_path     = LTT_DIVE_IN_DIR . '/assets/css/components/select.css';
+	$activities_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$accordion_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/accordions.css';
 	$accordion_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/accordion.js';
 
@@ -101,6 +102,7 @@ add_filter( 'block_categories_all', 'ltt_dive_in_block_categories' );
  */
 function ltt_dive_in_register_blocks() {
 	$style_path       = LTT_DIVE_IN_DIR . '/assets/css/components/page-drivers.css';
+	$activities_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$script_path      = LTT_DIVE_IN_DIR . '/assets/js/components/page-drivers.js';
 	$carousel_style_path  = LTT_DIVE_IN_DIR . '/assets/css/vendor/swiper-bundle.min.css';
 	$carousel_script_path = LTT_DIVE_IN_DIR . '/assets/js/vendor/swiper-bundle.min.js';
@@ -108,6 +110,7 @@ function ltt_dive_in_register_blocks() {
 	$slider_navigation_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/slider-navigation.css';
 	$carousel_indicators_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/carousel-indicators.css';
 	$page_driver_path = LTT_DIVE_IN_DIR . '/blocks/page-drivers';
+	$activities_path  = LTT_DIVE_IN_DIR . '/blocks/activities';
 	$accordion_path   = LTT_DIVE_IN_DIR . '/blocks/faq';
 
 	ltt_dive_in_register_block_assets();
@@ -123,6 +126,19 @@ function ltt_dive_in_register_blocks() {
 
 	if ( file_exists( $page_driver_path . '/block.json' ) ) {
 		register_block_type( $page_driver_path );
+	}
+
+	if ( ! wp_style_is( 'ltt-dive-in-home-activities', 'registered' ) ) {
+		wp_register_style(
+			'ltt-dive-in-home-activities',
+			LTT_DIVE_IN_URI . '/assets/css/components/home-activities.css',
+			array( 'ltt-dive-in-buttons' ),
+			file_exists( $activities_style_path ) ? (string) filemtime( $activities_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	if ( file_exists( $activities_path . '/block.json' ) ) {
+		register_block_type( $activities_path );
 	}
 
 	if ( file_exists( $accordion_path . '/block.json' ) ) {
@@ -244,3 +260,10 @@ function ltt_dive_in_enqueue_page_driver_editor_assets() {
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'ltt_dive_in_enqueue_page_driver_editor_assets' );
+
+function ltt_dive_in_enqueue_activities_editor_assets() {
+	$script_path = LTT_DIVE_IN_DIR . '/assets/js/admin/activities-fields.js';
+
+	wp_enqueue_script( 'ltt-dive-in-activities-editor', LTT_DIVE_IN_URI . '/assets/js/admin/activities-fields.js', array( 'acf-input', 'jquery', 'wp-data' ), file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION, true );
+}
+add_action( 'enqueue_block_editor_assets', 'ltt_dive_in_enqueue_activities_editor_assets' );
