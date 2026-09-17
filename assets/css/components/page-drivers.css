@@ -451,8 +451,8 @@
     }
 
     .page-drivers__filters {
-        width: calc(100% + 1rem);
-        margin-left: -0.5rem;
+        width: 100%;
+        margin-left: 0;
     }
 
     .page-drivers__filter {
