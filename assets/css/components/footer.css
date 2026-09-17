@@ -317,27 +317,28 @@
 }
 
 .site-footer__partner-logo {
-	width: auto;
+	width: 100%;
 	max-width: 100%;
-	height: auto;
-	max-height: 5.5rem;
+	height: 100%;
+	max-height: 100%;
 	object-fit: contain;
 }
 
 .site-footer__partner-item {
 	display: flex;
 	width: 100%;
-	min-height: 2.375rem;
+	height: 2.375rem;
+	flex: 0 0 auto;
 	align-items: center;
 	justify-content: center;
 }
 
 .site-footer__partner-item:first-child {
-	min-height: 6.625rem;
+	height: 6.625rem;
 }
 
 .site-footer__partner-item:nth-child(2) {
-	min-height: 5.375rem;
+	height: 5.375rem;
 }
 
 .site-footer__navigation {
