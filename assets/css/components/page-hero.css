@@ -1,0 +1,164 @@
+/*
+ * Internal Page Hero (Figma dev-access file, node 1:1701 desktop / 1:2180 mobile).
+ */
+.site-main--has-hero {
+	padding-top: 0;
+}
+
+/* The hero sits directly under the solid header; Figma shows no divider. */
+.site-header {
+	border-bottom: 0;
+}
+
+.page-hero {
+	/* Fill the window below the solid header, like the homepage hero. */
+	--page-hero-offset: calc(5.625rem + var(--wp-admin--admin-bar--height, 0px));
+	position: relative;
+	display: flex;
+	width: 100%;
+	min-height: max(32rem, calc(100vh - var(--page-hero-offset)));
+	min-height: max(32rem, calc(100svh - var(--page-hero-offset)));
+	padding-block: 5.5rem;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 4rem;
+	overflow: hidden;
+	background: linear-gradient(180deg, #073959 0%, #02162b 100%);
+	color: #ffffff;
+}
+
+.page-hero__media {
+	position: absolute;
+	inset: 0;
+}
+
+.page-hero__media::after {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(7, 57, 89, 0.51) 0%, rgba(2, 22, 43, 0.51) 100%);
+	content: "";
+}
+
+.page-hero__image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.page-hero__content {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	width: min(100%, 79.125rem);
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 1.25rem;
+}
+
+.page-hero__title {
+	margin: 0;
+	color: #ffffff;
+	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+	font-size: 6rem;
+	font-synthesis: none;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	line-height: 0.9375;
+	overflow-wrap: anywhere;
+	text-transform: uppercase;
+}
+
+.page-hero__text {
+	width: min(100%, 36.3125rem);
+	margin: 0;
+	color: #ffffff;
+	font-size: 0.875rem;
+	font-weight: 700;
+	line-height: 1.45;
+}
+
+.page-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.page-hero__scroll {
+	position: absolute;
+	right: 50%;
+	bottom: 2rem;
+	z-index: 1;
+	display: flex;
+	min-width: 9.25rem;
+	min-height: 3.5rem;
+	transform: translateX(50%);
+	align-items: center;
+	justify-content: flex-end;
+	flex-direction: column;
+	gap: 0.375rem;
+	padding-top: 0.75rem;
+	border-radius: 2.5rem;
+	color: #ffffff;
+	font-size: 0.875rem;
+	font-weight: 700;
+	line-height: 1.45;
+	text-decoration: none;
+}
+
+.page-hero__scroll:hover,
+.page-hero__scroll:focus-visible {
+	color: #eeb040;
+}
+
+.page-hero__scroll img {
+	width: 0.875rem;
+	height: 0.75rem;
+}
+
+.page-hero + .container {
+	margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+[id="page-content"] {
+	scroll-margin-top: 1rem;
+}
+
+@media (max-width: 1399.98px) {
+	.page-hero__title {
+		font-size: 5rem;
+	}
+}
+
+@media (max-width: 991.98px) {
+	.page-hero {
+		--page-hero-offset: calc(4.125rem + var(--wp-admin--admin-bar--height, 0px));
+	}
+}
+
+@media (max-width: 767.98px) {
+	.page-hero {
+		padding-inline: 1.25rem;
+	}
+
+	.page-hero__content {
+		width: min(100%, 20.9375rem);
+	}
+
+	.page-hero__title {
+		font-size: 4rem;
+		letter-spacing: 0;
+		line-height: 1.2;
+	}
+
+	.page-hero__scroll {
+		bottom: 1rem;
+	}
+}
+
+@media (max-width: 575.98px) {
+	.page-hero__title {
+		font-size: clamp(2.75rem, 15vw, 4rem);
+	}
+}

@@ -316,37 +316,6 @@ select {
     width: 100%;
 }
 
-.hero-section {
-    display: grid;
-    min-height: 28rem;
-    place-items: center;
-    padding: clamp(2rem, 8vw, 6rem);
-    border-radius: var(--radius);
-    background: linear-gradient(135deg, #101728, #1457d9);
-    color: #fff;
-    text-align: center;
-}
-
-.hero-section__content {
-    max-width: 48rem;
-}
-
-.hero-section__title {
-    margin: 0;
-    font-size: clamp(2.5rem, 7vw, 5.5rem);
-    line-height: 1;
-}
-
-.hero-section__text {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-}
-
-.hero-section .button {
-    border-color: #fff;
-    background: #fff;
-    color: var(--color-primary-dark);
-}
-
 .content-with-sidebar {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 20rem;

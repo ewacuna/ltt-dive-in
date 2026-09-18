@@ -21,6 +21,7 @@ function ltt_dive_in_enqueue_assets() {
 	$select_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/select.css';
 	$activities_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$front_page_style_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/front-page.css';
+	$page_hero_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/page-hero.css';
 	$select_script_path     = LTT_DIVE_IN_DIR . '/assets/js/components/select.js';
 	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
 
@@ -82,6 +83,15 @@ function ltt_dive_in_enqueue_assets() {
 		);
 	}
 
+	if ( ltt_dive_in_has_page_hero() ) {
+		wp_enqueue_style(
+			'ltt-dive-in-page-hero',
+			LTT_DIVE_IN_URI . '/assets/css/components/page-hero.css',
+			array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
+			file_exists( $page_hero_style_path ) ? (string) filemtime( $page_hero_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
 	wp_enqueue_script(
 		'ltt-dive-in-select',
 		LTT_DIVE_IN_URI . '/assets/js/components/select.js',
@@ -124,8 +134,8 @@ add_action( 'wp_enqueue_scripts', 'ltt_dive_in_enqueue_assets' );
 /**
  * Preload fonts used above the fold.
  *
- * Bold is intentionally left on demand. Big Caslon is limited to the front
- * page, where the hero uses it immediately.
+ * Bold is intentionally left on demand. Big Caslon is limited to templates
+ * whose hero uses it immediately.
  *
  * @param array[] $preload_resources Resources and attributes to preload.
  * @return array[]
@@ -138,7 +148,7 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		'crossorigin' => 'anonymous',
 	);
 
-	if ( is_front_page() ) {
+	if ( is_front_page() || ltt_dive_in_has_page_hero() ) {
 		$preload_resources[] = array(
 			'href'        => LTT_DIVE_IN_URI . '/assets/fonts/big-caslon/Big-Caslon-Medium.woff2',
 			'as'          => 'font',
@@ -150,6 +160,15 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 	return $preload_resources;
 }
 add_filter( 'wp_preload_resources', 'ltt_dive_in_preload_fonts' );
+
+/**
+ * Whether the current view renders the internal page hero.
+ *
+ * @return bool
+ */
+function ltt_dive_in_has_page_hero() {
+	return ( is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' ) ) || is_singular( 'post' );
+}
 
 /**
  * Load foundations scoped to block-editor content, not the admin interface.
