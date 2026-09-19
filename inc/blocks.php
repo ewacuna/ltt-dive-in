@@ -159,8 +159,88 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $team_path . '/block.json' ) ) {
 		register_block_type( $team_path );
 	}
+
+	$testimonials_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/testimonials.css';
+	$testimonials_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/testimonials.js';
+	$testimonials_path        = LTT_DIVE_IN_DIR . '/blocks/testimonials';
+
+	// Carousel styles are not dependencies here so a single-testimonial block
+	// does not load Swiper; they are enqueued only for multi-testimonial blocks.
+	wp_register_style( 'ltt-dive-in-testimonials', LTT_DIVE_IN_URI . '/assets/css/components/testimonials.css', array(), file_exists( $testimonials_style_path ) ? (string) filemtime( $testimonials_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_script( 'ltt-dive-in-testimonials', LTT_DIVE_IN_URI . '/assets/js/components/testimonials.js', array( 'ltt-dive-in-swiper' ), file_exists( $testimonials_script_path ) ? (string) filemtime( $testimonials_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_localize_script(
+		'ltt-dive-in-testimonials',
+		'ltt_dive_in_testimonials',
+		array(
+			'carousel'   => __( 'carousel', 'ltt-dive-in' ),
+			'slide'      => __( 'slide', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}} and {{slidesLength}}; keep both placeholders. */
+			'slideLabel' => __( '{{index}} of {{slidesLength}}', 'ltt-dive-in' ),
+			'previous'   => __( 'Previous testimonial', 'ltt-dive-in' ),
+			'next'       => __( 'Next testimonial', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}}; keep the placeholder. */
+			'goTo'       => __( 'Go to testimonial {{index}}', 'ltt-dive-in' ),
+		)
+	);
+
+	if ( file_exists( $testimonials_path . '/block.json' ) ) {
+		register_block_type( $testimonials_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
+
+/**
+ * Load carousel assets for Testimonials blocks with two or more testimonials.
+ *
+ * @return void
+ */
+function ltt_dive_in_enqueue_testimonials_carousel_assets() {
+	wp_enqueue_style( 'ltt-dive-in-swiper' );
+	wp_enqueue_style( 'ltt-dive-in-slider-navigation' );
+	wp_enqueue_style( 'ltt-dive-in-carousel-indicators' );
+	wp_enqueue_script( 'ltt-dive-in-testimonials' );
+}
+
+/**
+ * Determine whether a parsed Testimonials block renders as a carousel.
+ *
+ * ACF stores the repeater row count under the field name, so rows skipped at
+ * render time for missing content can make this a harmless over-match.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_testimonials_uses_carousel( $block ) {
+	if ( ! is_array( $block ) || 'ltt-dive-in/testimonials' !== ( $block['blockName'] ?? '' ) ) {
+		return false;
+	}
+
+	$count = $block['attrs']['data']['ltt_dive_in_testimonials_items'] ?? 0;
+
+	return is_numeric( $count ) && (int) $count > 1;
+}
+
+/**
+ * Enqueue Testimonials carousel assets before the document head is printed.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_testimonials_carousel_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( ! $post instanceof WP_Post || ! has_block( 'ltt-dive-in/testimonials', $post ) ) {
+		return;
+	}
+
+	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_testimonials_uses_carousel' ) ) {
+		ltt_dive_in_enqueue_testimonials_carousel_assets();
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_testimonials_carousel_assets', 20 );
 
 /**
  * Load carousel assets only on pages that render a carousel Up Driver.

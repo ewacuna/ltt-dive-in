@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/testimonials",
+  "title": "Testimonials",
+  "category": "ltt-blocks",
+  "icon": "format-quote",
+  "description": "Show one testimonial or a carousel of quotes with the person’s name, role, and photo.",
+  "keywords": [ "testimonial", "quote", "review" ],
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-testimonials",
+  "editorStyle": "ltt-dive-in-testimonials",
+  "acf": { "mode": "preview", "renderTemplate": "template-parts/blocks/testimonials.php" },
+  "attributes": { "align": { "type": "string", "default": "full" } },
+  "supports": { "align": [ "full" ], "anchor": true, "customClassName": false, "html": false, "multiple": true }
+}

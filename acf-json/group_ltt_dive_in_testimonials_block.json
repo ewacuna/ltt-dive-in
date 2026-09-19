@@ -1,0 +1,20 @@
+{
+  "key": "group_ltt_dive_in_testimonials_block",
+  "title": "LTT Dive In — Testimonials",
+  "fields": [
+    {"key":"field_ltt_dive_in_testimonials_items","label":"Testimonials","name":"ltt_dive_in_testimonials_items","type":"repeater","instructions":"Add between one and ten testimonials. With two or more, visitors browse them one at a time with arrow and dot controls.","required":1,"min":1,"max":10,"layout":"block","collapsed":"field_ltt_dive_in_testimonial_name","button_label":"Add testimonial","rows_per_page":20,"sub_fields":[
+      {"key":"field_ltt_dive_in_testimonial_quote","label":"Quote","name":"quote","type":"textarea","instructions":"Enter the quote without quotation marks; they are added automatically.","required":1,"maxlength":200,"rows":3,"new_lines":"","parent_repeater":"field_ltt_dive_in_testimonials_items"},
+      {"key":"field_ltt_dive_in_testimonial_photo","label":"Photo","name":"photo","type":"image","instructions":"Optional square portrait, shown as a small circle. The photo is decorative because the person’s name appears directly below it.","return_format":"id","preview_size":"thumbnail","library":"all","mime_types":"jpg,jpeg,png,webp","parent_repeater":"field_ltt_dive_in_testimonials_items"},
+      {"key":"field_ltt_dive_in_testimonial_name","label":"Name","name":"name","type":"text","required":1,"maxlength":60,"parent_repeater":"field_ltt_dive_in_testimonials_items"},
+      {"key":"field_ltt_dive_in_testimonial_role","label":"Role or location","name":"role","type":"text","instructions":"Optional, for example a job title and town.","maxlength":60,"parent_repeater":"field_ltt_dive_in_testimonials_items"}
+    ]}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"ltt-dive-in/testimonials"}]],
+  "position":"normal",
+  "style":"default",
+  "label_placement":"top",
+  "instruction_placement":"label",
+  "active":true,
+  "show_in_rest":0,
+  "modified":1789862400
+}

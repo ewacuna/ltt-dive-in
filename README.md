@@ -91,6 +91,10 @@ Interactive Accordions is not tied to the homepage template. It renders only whe
 
 With ACF Pro active and the **LTT Dive In — Meet the Team** field group synchronized, editors can add **Meet the Team** from the **LTT Blocks** category. It takes a heading with an optional tag and introduction, an optional contact column (heading, copy, and one button), and one to twelve team members. Each member needs a name and a square photo; role, short bio, and up to five social profile URLs are optional. The icon is chosen from the URL; LinkedIn, X, Instagram, Facebook, YouTube, and Dribbble are supported, and other domains are rejected when the page is saved. Photos render as decorative images because each name appears directly below them.
 
+## Testimonials block
+
+With ACF Pro active and the **LTT Dive In — Testimonials** field group synchronized, editors can add **Testimonials** from the **LTT Blocks** category. It takes one to ten testimonials, each with a quote (up to 200 characters, entered without quotation marks) and a name; a role or location and a square photo are optional. A single testimonial renders on its own. Two or more become a Swiper carousel with previous/next arrows (desktop and tablet) and dot pagination; it never autoplays. Swiper and the carousel control styles load only on pages with a multi-testimonial block. Without JavaScript, and in the editor preview, all testimonials are listed in order.
+
 ## Development notes
 
 - Prefix PHP functions, option names, handles, and hooks with `ltt_dive_in_`.

@@ -1,0 +1,189 @@
+/*
+ * Testimonials block. Figma has no dev-access component for this block; values
+ * are measured from the approved 1440px and 375px exports.
+ *
+ * Arrows and dots reuse the shared slider-navigation and carousel-indicators
+ * components, which load only when a block has two or more testimonials.
+ */
+.testimonials {
+    padding-block: 4rem;
+    background: #ffffff;
+    color: #073959;
+}
+
+.testimonials__container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    width: min(calc(100% - 8rem), 80rem);
+    margin-inline: auto;
+}
+
+.testimonials[data-testimonials-carousel] .testimonials__container {
+    grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+    column-gap: 2rem;
+}
+
+/*
+ * Swiper's .swiper { margin-inline: auto } stops a grid item from stretching,
+ * so it sizes to its slides, which Swiper sizes to it: a runaway width loop.
+ */
+.testimonials .testimonials__viewport {
+    width: 100%;
+    min-width: 0;
+    margin-inline: 0;
+}
+
+/* Stacked fallback before the carousel is enhanced, and in the editor. */
+.testimonials__track:not(.swiper-wrapper) {
+    display: grid;
+    gap: 4rem;
+}
+
+/*
+ * Scoped under the block root: this block style loads before the conditional
+ * Swiper stylesheet, whose .swiper-slide { display: block } would otherwise win.
+ */
+.testimonials .testimonials__slide {
+    display: grid;
+    justify-items: center;
+    gap: 2rem;
+    margin: 0;
+    text-align: center;
+}
+
+.testimonials__quote {
+    max-width: 45rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.testimonials__quote p {
+    margin: 0;
+    overflow-wrap: break-word;
+    quotes: "\0022" "\0022";
+}
+
+.testimonials__quote p::before {
+    content: open-quote;
+}
+
+.testimonials__quote p::after {
+    content: close-quote;
+}
+
+.testimonials__author {
+    display: grid;
+    justify-items: center;
+}
+
+.testimonials__photo {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: #e2e2e5;
+    object-fit: cover;
+}
+
+.testimonials__name {
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+.testimonials__role {
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+/* Placement and the 44px target size; the shared component owns states. */
+.testimonials .testimonials__control {
+    width: 2.75rem;
+    height: 2.75rem;
+}
+
+.testimonials__control[hidden],
+.testimonials__pagination[hidden] {
+    display: none;
+}
+
+.testimonials__control-icon {
+    background-color: currentColor;
+    -webkit-mask: var(--testimonials-control-icon) center / contain no-repeat;
+    mask: var(--testimonials-control-icon) center / contain no-repeat;
+}
+
+.testimonials__control--previous .testimonials__control-icon {
+    --testimonials-control-icon: url("../../images/icons/carousel-arrow-previous.svg");
+}
+
+.testimonials__control--next .testimonials__control-icon {
+    --testimonials-control-icon: url("../../images/icons/carousel-arrow-next.svg");
+}
+
+.testimonials[data-testimonials-carousel] .testimonials__pagination {
+    grid-column: 2;
+    justify-self: center;
+    width: auto;
+    gap: 0;
+    margin-top: 3rem;
+}
+
+/*
+ * A transparent border extends each 6px dot to a 24px target (WCAG 2.5.8),
+ * since the dots are the only click control once the arrows are hidden.
+ * min-height resets the global 44px button rule, and width: auto resets
+ * Swiper's full-width horizontal pagination. The root attribute outranks
+ * those rules and the active dot's background shorthand, which load later.
+ */
+.testimonials[data-testimonials-carousel] .ltt-carousel-indicator {
+    box-sizing: content-box;
+    min-height: 0;
+    border: 0.5625rem solid transparent;
+    background-clip: padding-box;
+}
+
+@media (max-width: 1199.98px) {
+    .testimonials__container {
+        width: min(calc(100% - 4rem), 70rem);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .testimonials__container,
+    .testimonials[data-testimonials-carousel] .testimonials__container {
+        grid-template-columns: minmax(0, 1fr);
+        width: calc(100% - 2.5rem);
+    }
+
+    .testimonials .testimonials__slide {
+        gap: 1.5rem;
+    }
+
+    .testimonials__quote {
+        font-size: 0.875rem;
+        line-height: 1.45;
+    }
+
+    .testimonials .testimonials__control {
+        display: none;
+    }
+
+    .testimonials[data-testimonials-carousel] .testimonials__pagination {
+        grid-column: 1;
+        margin-top: 4.5rem;
+    }
+}
+
+@media (forced-colors: active) {
+    .testimonials__control-icon {
+        background-color: ButtonText;
+        forced-color-adjust: none;
+    }
+}
