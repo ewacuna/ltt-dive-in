@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/team",
+  "title": "Meet the Team",
+  "category": "ltt-blocks",
+  "icon": "groups",
+  "description": "Introduce team members with portraits, roles, short bios, and social links.",
+  "keywords": [ "team", "people", "staff" ],
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-team",
+  "editorStyle": "ltt-dive-in-team",
+  "acf": { "mode": "preview", "renderTemplate": "template-parts/blocks/team.php" },
+  "attributes": { "align": { "type": "string", "default": "full" } },
+  "supports": { "align": [ "full" ], "anchor": true, "customClassName": false, "html": false, "multiple": true }
+}

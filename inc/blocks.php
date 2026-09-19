@@ -112,6 +112,8 @@ function ltt_dive_in_register_blocks() {
 	$page_driver_path = LTT_DIVE_IN_DIR . '/blocks/page-drivers';
 	$activities_path  = LTT_DIVE_IN_DIR . '/blocks/activities';
 	$accordion_path   = LTT_DIVE_IN_DIR . '/blocks/faq';
+	$team_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/meet-the-team.css';
+	$team_path        = LTT_DIVE_IN_DIR . '/blocks/team';
 
 	ltt_dive_in_register_block_assets();
 
@@ -143,6 +145,19 @@ function ltt_dive_in_register_blocks() {
 
 	if ( file_exists( $accordion_path . '/block.json' ) ) {
 		register_block_type( $accordion_path );
+	}
+
+	if ( ! wp_style_is( 'ltt-dive-in-team', 'registered' ) ) {
+		wp_register_style(
+			'ltt-dive-in-team',
+			LTT_DIVE_IN_URI . '/assets/css/components/meet-the-team.css',
+			array( 'ltt-dive-in-buttons' ),
+			file_exists( $team_style_path ) ? (string) filemtime( $team_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	if ( file_exists( $team_path . '/block.json' ) ) {
+		register_block_type( $team_path );
 	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );

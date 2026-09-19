@@ -1,0 +1,53 @@
+/*
+ * Internal pages (page.php and the Full Width template).
+ *
+ * Figma composes internal pages as a hero followed by edge-to-edge sections,
+ * so the content is not boxed. Full-width blocks own their own container and
+ * spacing; .alignwide centers itself from main.css; other loose editor
+ * content keeps the shared content width.
+ */
+.page-main {
+    padding-bottom: 0;
+    background: #ffffff;
+}
+
+.page-main .page-entry {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+.page-main .entry-content > :not(.alignfull, .alignwide),
+.page-main .page-links,
+.page-main .comments-area {
+    width: min(calc(100% - 8rem), 80rem);
+    margin-inline: auto;
+}
+
+/* Keep loose content off the hero and footer when it opens or closes the page. */
+.page-main .entry-content > :not(.alignfull, .alignwide):first-child {
+    margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+.page-main .entry-content > :not(.alignfull, .alignwide):last-child,
+.page-main .comments-area {
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+}
+
+@media (max-width: 1199.98px) {
+    .page-main .entry-content > :not(.alignfull, .alignwide),
+    .page-main .page-links,
+    .page-main .comments-area {
+        width: calc(100% - 4rem);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .page-main .entry-content > :not(.alignfull, .alignwide),
+    .page-main .page-links,
+    .page-main .comments-area {
+        width: calc(100% - 2.5rem);
+    }
+}

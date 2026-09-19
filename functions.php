@@ -25,4 +25,5 @@ require_once LTT_DIVE_IN_DIR . '/inc/weather.php';
 require_once LTT_DIVE_IN_DIR . '/inc/footer-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/activity-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/team-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/blocks.php';

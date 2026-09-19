@@ -1,0 +1,298 @@
+/*
+ * Meet the Team block. Figma: dev-access node 2145:14909 (desktop 1:5596,
+ * mobile 1:5782).
+ */
+.meet-the-team {
+    padding-block: 3.125rem;
+    background: #ffffff;
+    color: #073959;
+}
+
+.meet-the-team__container {
+    display: grid;
+    gap: 3.125rem;
+    width: min(calc(100% - 8rem), 80rem);
+    margin-inline: auto;
+}
+
+.meet-the-team__header {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 5rem;
+}
+
+.meet-the-team__intro {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+}
+
+.meet-the-team__tag {
+    margin: 0;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0 0.8125rem 0 0;
+    background: rgba(4, 39, 66, 0.15);
+    color: #06304d;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.45;
+    text-transform: uppercase;
+}
+
+.meet-the-team__title,
+.meet-the-team__name {
+    margin: 0;
+    font-family:
+        "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 3rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+.meet-the-team__copy {
+    max-width: 37.5rem;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.meet-the-team__contact {
+    display: grid;
+    justify-items: start;
+    gap: 2rem;
+}
+
+.meet-the-team__contact-text {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.meet-the-team__contact-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.meet-the-team__contact-copy {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.meet-the-team__grid,
+.meet-the-team__socials {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.meet-the-team__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4rem 3rem;
+}
+
+.meet-the-team__card {
+    display: grid;
+    align-content: start;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+.meet-the-team__media {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #e2e2e5;
+}
+
+.meet-the-team__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.meet-the-team__card-content {
+    display: grid;
+    gap: 1rem;
+}
+
+.meet-the-team__name {
+    overflow-wrap: anywhere;
+}
+
+.meet-the-team__role {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.0025em;
+    line-height: 1.2;
+}
+
+.meet-the-team__bio {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.meet-the-team__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+}
+
+/*
+ * Figma uses primary tint 300 (#85A2B2) for these icons, which is 2.6:1 on
+ * white and fails WCAG 1.4.11 for the only visible cue of each link. Primary
+ * navy is the accessible substitution.
+ */
+.meet-the-team__social-link {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #073959;
+}
+
+.meet-the-team__social-link:focus-visible {
+    outline: 2px solid #073959;
+    outline-offset: 3px;
+}
+
+.meet-the-team__social-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    -webkit-mask: var(--meet-the-team-social-icon) center / contain no-repeat;
+    mask: var(--meet-the-team-social-icon) center / contain no-repeat;
+}
+
+.meet-the-team__social-icon--linkedin {
+    --meet-the-team-social-icon: url("../../images/team/linkedin.svg");
+}
+
+.meet-the-team__social-icon--x {
+    --meet-the-team-social-icon: url("../../images/team/x.svg");
+}
+
+.meet-the-team__social-icon--dribbble {
+    --meet-the-team-social-icon: url("../../images/team/dribbble.svg");
+}
+
+/*
+ * Facebook, Instagram, and YouTube are the same Figma glyph family as the
+ * footer icons but are exported without the 3px inset the 24px team icons
+ * carry, so they are scaled to the same 18px glyph area.
+ */
+.meet-the-team__social-icon--facebook,
+.meet-the-team__social-icon--instagram,
+.meet-the-team__social-icon--youtube {
+    -webkit-mask-size: 75%;
+    mask-size: 75%;
+}
+
+.meet-the-team__social-icon--facebook {
+    --meet-the-team-social-icon: url("../../images/team/facebook.svg");
+}
+
+.meet-the-team__social-icon--instagram {
+    --meet-the-team-social-icon: url("../../images/team/instagram.svg");
+}
+
+.meet-the-team__social-icon--youtube {
+    --meet-the-team-social-icon: url("../../images/team/youtube.svg");
+}
+
+@media (max-width: 1199.98px) {
+    .meet-the-team__container {
+        width: min(calc(100% - 4rem), 70rem);
+    }
+
+    .meet-the-team__header {
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .meet-the-team__header {
+        grid-template-columns: 1fr;
+        gap: 1.5625rem;
+    }
+
+    .meet-the-team__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .meet-the-team {
+        padding-block: 4rem;
+    }
+
+    .meet-the-team__container {
+        width: calc(100% - 2.5rem);
+        gap: 1.5625rem;
+    }
+
+    .meet-the-team__intro {
+        gap: 0.75rem;
+    }
+
+    .meet-the-team__contact {
+        gap: 1.5rem;
+    }
+
+    .meet-the-team__contact-title {
+        font-size: 1.25rem;
+        letter-spacing: -0.0025em;
+    }
+
+    .meet-the-team__contact-copy,
+    .meet-the-team__bio {
+        font-size: 0.75rem;
+    }
+
+    .meet-the-team__contact-link {
+        min-width: 9.6875rem;
+    }
+
+    .meet-the-team__grid {
+        row-gap: 3rem;
+        column-gap: 1.5rem;
+    }
+
+    .meet-the-team__card {
+        gap: 1.25rem;
+    }
+
+    .meet-the-team__card-content {
+        gap: 0.75rem;
+    }
+
+    .meet-the-team__role {
+        font-size: 1.125rem;
+        letter-spacing: 0;
+        line-height: 1.45;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .meet-the-team__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (forced-colors: active) {
+    .meet-the-team__tag {
+        border: 1px solid CanvasText;
+    }
+
+    .meet-the-team__social-icon {
+        background-color: LinkText;
+        forced-color-adjust: none;
+    }
+}

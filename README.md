@@ -87,6 +87,10 @@ With ACF Pro active and the included field group synchronized, editors can add *
 
 Interactive Accordions is not tied to the homepage template. It renders only where an editor inserts the block, so copy any legacy homepage FAQ content into a new block before publishing the converted page.
 
+## Meet the Team block
+
+With ACF Pro active and the **LTT Dive In — Meet the Team** field group synchronized, editors can add **Meet the Team** from the **LTT Blocks** category. It takes a heading with an optional tag and introduction, an optional contact column (heading, copy, and one button), and one to twelve team members. Each member needs a name and a square photo; role, short bio, and up to five social profile URLs are optional. The icon is chosen from the URL; LinkedIn, X, Instagram, Facebook, YouTube, and Dribbble are supported, and other domains are rejected when the page is saved. Photos render as decorative images because each name appears directly below them.
+
 ## Development notes
 
 - Prefix PHP functions, option names, handles, and hooks with `ltt_dive_in_`.

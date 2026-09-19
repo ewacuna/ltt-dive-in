@@ -22,6 +22,7 @@ function ltt_dive_in_enqueue_assets() {
 	$activities_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$front_page_style_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/front-page.css';
 	$page_hero_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/page-hero.css';
+	$page_style_path        = LTT_DIVE_IN_DIR . '/assets/css/templates/page.css';
 	$select_script_path     = LTT_DIVE_IN_DIR . '/assets/js/components/select.js';
 	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
 
@@ -80,6 +81,16 @@ function ltt_dive_in_enqueue_assets() {
 			LTT_DIVE_IN_URI . '/assets/css/components/home-activities.css',
 			array( 'ltt-dive-in-buttons' ),
 			file_exists( $activities_style_path ) ? (string) filemtime( $activities_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	// Internal pages (page.php and Full Width); Blank Canvas owns its own layout.
+	if ( is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' ) ) {
+		wp_enqueue_style(
+			'ltt-dive-in-page',
+			LTT_DIVE_IN_URI . '/assets/css/templates/page.css',
+			array( 'ltt-dive-in-style' ),
+			file_exists( $page_style_path ) ? (string) filemtime( $page_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
 

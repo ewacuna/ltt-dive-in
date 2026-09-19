@@ -17,6 +17,4 @@
 		);
 		?>
 	</div>
-
-	<?php edit_post_link( esc_html__( 'Edit this page', 'ltt-dive-in' ), '<footer class="entry-footer">', '</footer>' ); ?>
 </article>

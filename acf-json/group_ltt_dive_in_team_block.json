@@ -1,0 +1,29 @@
+{
+  "key": "group_ltt_dive_in_team_block",
+  "title": "LTT Dive In — Meet the Team",
+  "fields": [
+    {"key":"field_ltt_dive_in_team_tag","label":"Category tag","name":"ltt_dive_in_team_tag","type":"text","instructions":"Optional short label shown above the heading.","maxlength":30},
+    {"key":"field_ltt_dive_in_team_heading","label":"Heading","name":"ltt_dive_in_team_heading","type":"text","required":1},
+    {"key":"field_ltt_dive_in_team_intro","label":"Introduction","name":"ltt_dive_in_team_intro","type":"textarea","rows":2,"new_lines":""},
+    {"key":"field_ltt_dive_in_team_contact_heading","label":"Contact heading","name":"ltt_dive_in_team_contact_heading","type":"text","instructions":"Optional lead-in for the contact column."},
+    {"key":"field_ltt_dive_in_team_contact_copy","label":"Contact copy","name":"ltt_dive_in_team_contact_copy","type":"textarea","rows":2,"new_lines":""},
+    {"key":"field_ltt_dive_in_team_contact_link","label":"Contact button","name":"ltt_dive_in_team_contact_link","type":"link","instructions":"The button renders only when it has both a label and a destination.","return_format":"array"},
+    {"key":"field_ltt_dive_in_team_members","label":"Team members","name":"ltt_dive_in_team_members","type":"repeater","instructions":"Add between one and twelve people. Cards display three per row on desktop.","required":1,"min":1,"max":12,"layout":"block","collapsed":"field_ltt_dive_in_team_member_name","button_label":"Add team member","rows_per_page":20,"sub_fields":[
+      {"key":"field_ltt_dive_in_team_member_photo","label":"Photo","name":"photo","type":"image","instructions":"Square portrait. The photo is decorative because the person’s name appears directly below it.","required":1,"return_format":"id","preview_size":"thumbnail","library":"all","mime_types":"jpg,jpeg,png,webp","parent_repeater":"field_ltt_dive_in_team_members"},
+      {"key":"field_ltt_dive_in_team_member_name","label":"Name","name":"name","type":"text","required":1,"parent_repeater":"field_ltt_dive_in_team_members"},
+      {"key":"field_ltt_dive_in_team_member_role","label":"Role","name":"role","type":"text","parent_repeater":"field_ltt_dive_in_team_members"},
+      {"key":"field_ltt_dive_in_team_member_bio","label":"Short bio","name":"bio","type":"textarea","rows":2,"new_lines":"","parent_repeater":"field_ltt_dive_in_team_members"},
+      {"key":"field_ltt_dive_in_team_member_socials","label":"Social links","name":"social_links","type":"repeater","instructions":"Optional. Paste up to five profile URLs in display order. Supported: LinkedIn, X, Instagram, Facebook, YouTube, and Dribbble; the icon is chosen from the URL.","min":0,"max":5,"layout":"table","button_label":"Add social link","rows_per_page":20,"parent_repeater":"field_ltt_dive_in_team_members","sub_fields":[
+        {"key":"field_ltt_dive_in_team_member_social_url","label":"Profile URL","name":"url","type":"url","required":1,"parent_repeater":"field_ltt_dive_in_team_member_socials"}
+      ]}
+    ]}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"ltt-dive-in/team"}]],
+  "position":"normal",
+  "style":"default",
+  "label_placement":"top",
+  "instruction_placement":"label",
+  "active":true,
+  "show_in_rest":0,
+  "modified":1789780749
+}
