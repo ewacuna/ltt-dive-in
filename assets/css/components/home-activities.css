@@ -227,10 +227,13 @@
 
     .home-activities__card-content {
         z-index: 2;
-        display: block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
         width: 100%;
         height: 100%;
-        padding: 1.75rem 1rem 0;
+        padding: 1.25rem 0.75rem;
     }
 
     .home-activities__card-title {
@@ -242,18 +245,21 @@
     .home-activities__card-copy {
         width: min(100%, 9.1875rem);
         margin: 0.5rem auto 0;
+        display: -webkit-box;
+        overflow: hidden;
         font-size: 0.75rem;
         line-height: 1.45;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
     }
 
     .home-activities__card-link {
-        position: absolute;
-        top: 7.625rem;
-        left: 50%;
+        flex-shrink: 0;
         width: 8rem;
+        max-width: 100%;
         min-height: 2.8125rem;
-        margin: 0;
+        margin: auto 0 0;
         padding: 0.75rem 0.9375rem;
-        transform: translateX(-50%);
     }
 }
