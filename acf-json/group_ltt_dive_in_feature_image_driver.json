@@ -1,0 +1,245 @@
+{
+    "key": "group_ltt_dive_in_feature_image_driver",
+    "title": "LTT Dive In — Feature Image Driver Block",
+    "fields": [
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_variant",
+            "label": "Variant",
+            "name": "ltt_dive_in_feature_image_driver_variant",
+            "type": "select",
+            "required": 1,
+            "choices": {
+                "single": "Feature Driver Single",
+                "carousel": "Feature Driver Carousel",
+                "short": "Short Feature Driver Single",
+                "stacked": "Stacked Feature Driver"
+            },
+            "default_value": "single",
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 1,
+            "return_format": "value"
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_stacked_tag",
+            "label": "Section category tag",
+            "name": "ltt_dive_in_feature_image_driver_stacked_tag",
+            "type": "text",
+            "instructions": "Optional short label for the Stacked Feature Driver introduction.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_feature_image_driver_variant",
+                        "operator": "==",
+                        "value": "stacked"
+                    }
+                ]
+            ],
+            "maxlength": 40
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_stacked_heading",
+            "label": "Section heading",
+            "name": "ltt_dive_in_feature_image_driver_stacked_heading",
+            "type": "text",
+            "instructions": "Required heading displayed above the stacked rows.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_feature_image_driver_variant",
+                        "operator": "==",
+                        "value": "stacked"
+                    }
+                ]
+            ],
+            "maxlength": 90
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_stacked_intro",
+            "label": "Section introduction",
+            "name": "ltt_dive_in_feature_image_driver_stacked_intro",
+            "type": "textarea",
+            "instructions": "Optional introductory copy displayed beneath the section heading.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_feature_image_driver_variant",
+                        "operator": "==",
+                        "value": "stacked"
+                    }
+                ]
+            ],
+            "maxlength": 360,
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_stacked_primary_link",
+            "label": "Section primary call to action",
+            "name": "ltt_dive_in_feature_image_driver_stacked_primary_link",
+            "type": "link",
+            "instructions": "Optional primary action shown beside the section introduction.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_feature_image_driver_variant",
+                        "operator": "==",
+                        "value": "stacked"
+                    }
+                ]
+            ],
+            "return_format": "array"
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_stacked_secondary_link",
+            "label": "Section secondary call to action",
+            "name": "ltt_dive_in_feature_image_driver_stacked_secondary_link",
+            "type": "link",
+            "instructions": "Optional secondary action shown beside the section introduction.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_feature_image_driver_variant",
+                        "operator": "==",
+                        "value": "stacked"
+                    }
+                ]
+            ],
+            "return_format": "array"
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_stacked_mobile_background",
+            "label": "Mobile Background",
+            "name": "ltt_dive_in_feature_image_driver_stacked_mobile_background",
+            "type": "button_group",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_feature_image_driver_variant",
+                        "operator": "==",
+                        "value": "stacked"
+                    }
+                ]
+            ],
+            "choices": {
+                "light": "Light",
+                "dark": "Dark"
+            },
+            "default_value": "light",
+            "return_format": "value",
+            "layout": "horizontal"
+        },
+        {
+            "key": "field_ltt_dive_in_feature_image_driver_items",
+            "label": "Feature items",
+            "name": "ltt_dive_in_feature_image_driver_items",
+            "type": "repeater",
+            "required": 1,
+            "min": 1,
+            "max": 5,
+            "layout": "block",
+            "collapsed": "field_ltt_dive_in_feature_image_driver_item_title",
+            "button_label": "Add feature item",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_enabled",
+                    "label": "Active item",
+                    "name": "enabled",
+                    "type": "true_false",
+                    "required": 0,
+                    "default_value": 1,
+                    "ui": 1,
+                    "ui_on_text": "Active",
+                    "ui_off_text": "Inactive"
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_tag",
+                    "label": "Category tag",
+                    "name": "tag",
+                    "type": "text",
+                    "instructions": "Optional short label displayed by the Single and Carousel presentations.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "maxlength": 40
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "Required for active items.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all"
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "Required title for this active item.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "maxlength": 110
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_show_body",
+                    "label": "Show body copy",
+                    "name": "show_body",
+                    "type": "true_false",
+                    "instructions": "Turn off to render this item without supporting copy.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "default_value": 1,
+                    "ui": 1
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_body",
+                    "label": "Body copy",
+                    "name": "body",
+                    "type": "textarea",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "maxlength": 360,
+                    "rows": 4,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_item_link",
+                    "label": "Call to action",
+                    "name": "link",
+                    "type": "link",
+                    "instructions": "Required for active items.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "return_format": "array"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "ltt-dive-in/feature-image-driver"
+            }
+        ]
+    ],
+    "menu_order": 12,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "show_in_rest": 0,
+    "modified": 1789941169
+}

@@ -1,0 +1,769 @@
+.feature-image-driver {
+    position: relative;
+    width: 100%;
+    color: #ffffff;
+    font-family: "Gotham HTF", Arial, sans-serif;
+}
+
+.feature-image-driver__feature,
+.feature-image-driver__stacked-row {
+    position: relative;
+    color: inherit;
+}
+
+.feature-image-driver__media,
+.feature-image-driver__overlay {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.feature-image-driver__media {
+    overflow: hidden;
+}
+
+.feature-image-driver__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feature-image-driver__overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(7, 57, 89, 0.51),
+        rgba(2, 22, 43, 0.51)
+    );
+}
+
+.feature-image-driver__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(38.6875rem, 100%);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.feature-image-driver__tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.625rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0 0.8125rem 0 0;
+    background: rgba(4, 39, 66, 0.5);
+    color: #f8dfb3;
+    font-size: 0.875rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.feature-image-driver__title,
+.feature-image-driver__stacked-title {
+    margin: 0;
+    font-family: "Big Caslon", Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.02em;
+}
+
+.feature-image-driver__body {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.feature-image-driver__cta {
+    align-self: flex-start;
+}
+
+.feature-image-driver--single {
+    min-height: 34.1875rem;
+}
+
+.feature-image-driver--single .feature-image-driver__feature {
+    display: flex;
+    min-height: 34.1875rem;
+    align-items: center;
+    padding: 8rem 5rem;
+}
+
+.feature-image-driver--short {
+    min-height: 25.8125rem;
+}
+
+.feature-image-driver--short .feature-image-driver__feature {
+    display: flex;
+    min-height: 25.8125rem;
+    align-items: center;
+    justify-content: center;
+    padding: 7rem 4rem;
+}
+
+.feature-image-driver--short .feature-image-driver__content {
+    width: min(48rem, 100%);
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+/* Short Feature Driver Single — Figma node 1:11346. */
+.feature-image-driver--short .feature-image-driver__title {
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.feature-image-driver--short .feature-image-driver__body {
+    font-size: 1.125rem;
+    line-height: 1.5;
+}
+
+.feature-image-driver--short .feature-image-driver__cta {
+    --ltt-button-border-color: #ffffff;
+    --ltt-button-color: #ffffff;
+    --ltt-button-hover-background: #ffffff;
+    --ltt-button-hover-border-color: #ffffff;
+    --ltt-button-hover-color: #151419;
+    --ltt-button-pressed-background: #ffffff;
+    --ltt-button-pressed-border-color: #ffffff;
+    --ltt-button-pressed-color: #151419;
+    min-height: 3rem;
+    align-self: center;
+    margin-top: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.feature-image-driver--carousel {
+    min-height: 29.8125rem;
+    overflow: hidden;
+}
+
+.feature-image-driver__carousel-viewport,
+.feature-image-driver__carousel-track,
+.feature-image-driver__slide {
+    min-height: 29.8125rem;
+}
+
+.feature-image-driver__slide {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    padding: 3.125rem 4rem 7.5rem;
+}
+
+.feature-image-driver__carousel-control {
+    position: absolute;
+    z-index: 3;
+    bottom: 2.125rem;
+    background: transparent;
+}
+
+.feature-image-driver__carousel-control--previous {
+    left: 4rem;
+}
+
+.feature-image-driver__carousel-control--next {
+    right: 4rem;
+}
+
+.feature-image-driver__carousel-pagination {
+    position: absolute;
+    z-index: 1;
+    bottom: 3rem !important;
+    left: 50% !important;
+    display: inline-flex;
+    justify-content: center;
+    width: 2.5rem;
+    height: 0.5rem;
+    gap: 0.5rem;
+    transform: translateX(-50%);
+}
+
+.feature-image-driver__carousel-pagination .ltt-carousel-indicator {
+    flex: 0 0 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    min-height: auto;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.feature-image-driver__carousel-pagination span.ltt-carousel-indicator {
+    cursor: default;
+}
+
+.feature-image-driver__carousel-pagination
+    .ltt-carousel-indicator:is(.is-active, [aria-current="true"]) {
+    background: #ffffff;
+}
+
+.feature-image-driver--preview .feature-image-driver__slide:not(:first-child),
+.feature-image-driver--preview .feature-image-driver__carousel-control {
+    display: none;
+}
+
+.feature-image-driver--stacked {
+    padding: 3.125rem 4rem 7rem;
+    background: #ffffff;
+    color: #073959;
+}
+
+.feature-image-driver__stacked-container {
+    width: min(80rem, 100%);
+    margin-inline: auto;
+}
+
+.feature-image-driver__stacked-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 3rem;
+    margin-bottom: 2.4375rem;
+}
+
+.feature-image-driver__stacked-intro {
+    width: min(48rem, 100%);
+}
+
+.feature-image-driver__tag--light {
+    margin: 0 0 1rem;
+    background: rgba(4, 39, 66, 0.15);
+    color: #06304d;
+}
+
+.feature-image-driver__stacked-copy {
+    margin: 1.5rem 0 0;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.feature-image-driver__stacked-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.feature-image-driver__stacked-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+}
+
+.feature-image-driver__stacked-card {
+    min-height: 9.8125rem;
+    overflow: hidden;
+    border-top-right-radius: 5.25rem;
+    transition: all 500ms ease;
+}
+
+.feature-image-driver__stacked-card:is(:hover, :focus-within) {
+    min-height: 19.5625rem;
+    border-bottom-right-radius: 5.25rem;
+}
+
+.feature-image-driver__stacked-row {
+    display: flex;
+    min-height: inherit;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    overflow: hidden;
+    border-radius: inherit;
+    color: #ffffff;
+}
+
+.feature-image-driver__stacked-card-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(34.5rem, 58%);
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.feature-image-driver__stacked-card-panel,
+.feature-image-driver__stacked-card-panel-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.feature-image-driver__stacked-card-title {
+    margin: 0;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.feature-image-driver__stacked-card-body {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    opacity: 0;
+    font-size: 1rem;
+    line-height: 1.45;
+    transition:
+        max-height 500ms ease,
+        margin-top 500ms ease,
+        opacity 300ms ease;
+}
+
+.feature-image-driver__stacked-card:is(:hover, :focus-within)
+    .feature-image-driver__stacked-card-body {
+    max-height: 9rem;
+    margin-top: 1rem;
+    opacity: 1;
+}
+
+.feature-image-driver__stacked-card .feature-image-driver__cta {
+    margin-top: 1rem;
+}
+
+.feature-image-driver__stacked-expand {
+    display: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+    .feature-image-driver__stacked-card {
+        min-height: 19.5625rem;
+    }
+
+    .feature-image-driver__stacked-card-body {
+        max-height: 9rem;
+        margin-top: 1rem;
+        opacity: 1;
+    }
+}
+
+@media (max-width: 1399.98px) {
+    .feature-image-driver--single .feature-image-driver__feature {
+        padding-inline: 4rem;
+    }
+
+    .feature-image-driver--stacked {
+        padding-inline: 3rem;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .feature-image-driver--single .feature-image-driver__feature,
+    .feature-image-driver__slide {
+        padding-inline: 3rem;
+    }
+
+    .feature-image-driver__carousel-control--previous {
+        left: 3rem;
+    }
+
+    .feature-image-driver__carousel-control--next {
+        right: 3rem;
+    }
+
+    .feature-image-driver__stacked-header {
+        align-items: flex-start;
+    }
+
+    .feature-image-driver__stacked-card-content {
+        width: min(34.5rem, 70%);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .feature-image-driver__stacked-header {
+        flex-direction: column;
+    }
+
+    .feature-image-driver__stacked-actions {
+        justify-content: flex-start;
+    }
+
+    .feature-image-driver__stacked-card-content {
+        width: min(34.5rem, 82%);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .feature-image-driver__title,
+    .feature-image-driver__stacked-title {
+        font-size: 2.25rem !important;
+    }
+
+    .feature-image-driver__body {
+        font-size: 0.875rem;
+    }
+
+    .feature-image-driver--single,
+    .feature-image-driver--single .feature-image-driver__feature {
+        min-height: 24.5rem;
+    }
+
+    .feature-image-driver--single .feature-image-driver__feature {
+        align-items: flex-start;
+        padding: 3rem 1.25rem 1.5rem;
+    }
+
+    .feature-image-driver__content {
+        gap: 1.25rem;
+    }
+
+    .feature-image-driver--short,
+    .feature-image-driver--short .feature-image-driver__feature {
+        min-height: 23.625rem;
+    }
+
+    .feature-image-driver--short .feature-image-driver__feature {
+        padding: 4rem 1.25rem;
+    }
+
+    .feature-image-driver--carousel,
+    .feature-image-driver__carousel-viewport,
+    .feature-image-driver__carousel-track,
+    .feature-image-driver__slide {
+        min-height: 28.125rem;
+    }
+
+    .feature-image-driver__slide {
+        padding: 3rem 1.25rem 6.75rem;
+    }
+
+    .feature-image-driver__carousel-control {
+        bottom: 1.5rem;
+    }
+
+    .feature-image-driver__carousel-control--previous {
+        left: 1.25rem;
+    }
+
+    .feature-image-driver__carousel-control--next {
+        right: 1.25rem;
+    }
+
+    .feature-image-driver__carousel-pagination {
+        bottom: 2.6875rem !important;
+    }
+
+    .feature-image-driver--stacked {
+        padding: 4rem 1.25rem;
+    }
+
+    .feature-image-driver__stacked-header {
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .feature-image-driver__stacked-copy {
+        margin-top: 1.25rem;
+    }
+
+    .feature-image-driver__stacked-list {
+        margin-inline: -1.25rem;
+        gap: 0;
+    }
+
+    .feature-image-driver__stacked-card,
+    .feature-image-driver__stacked-card:is(:hover, :focus-within) {
+        min-height: 0;
+        border: 1px solid #042742;
+        border-radius: 0;
+        background: #073959;
+    }
+
+    .feature-image-driver__stacked-row {
+        min-height: 0;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    .feature-image-driver__stacked-row .feature-image-driver__media {
+        position: relative;
+        order: 2;
+        aspect-ratio: 271 / 180;
+    }
+
+    .feature-image-driver__stacked-row .feature-image-driver__overlay {
+        display: none;
+    }
+
+    .feature-image-driver__stacked-card-content {
+        order: 1;
+        width: 100%;
+        padding: 2rem;
+    }
+
+    .feature-image-driver__stacked-card-title {
+        font-size: 1.5rem;
+    }
+
+    .feature-image-driver__stacked-card-body,
+    .feature-image-driver__stacked-card:is(:hover, :focus-within)
+        .feature-image-driver__stacked-card-body {
+        max-height: none;
+        margin-top: 1.5rem;
+        overflow: visible;
+        opacity: 1;
+        font-size: 0.875rem;
+    }
+
+    .feature-image-driver__stacked-card .feature-image-driver__cta {
+        --ltt-button-background: #073959;
+        --ltt-button-border-color: #ffffff;
+        --ltt-button-color: #ffffff;
+        --ltt-button-hover-background: #ffffff;
+        --ltt-button-hover-color: #073959;
+        margin-top: 1.5rem;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-list {
+        gap: 0.125rem;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card,
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:is(:hover, :focus-within) {
+        --feature-image-driver-mobile-card-height: 7.125rem;
+        min-height: var(--feature-image-driver-mobile-card-height);
+        border: 0;
+        background: transparent;
+        transition: min-height 500ms ease;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded {
+        --feature-image-driver-mobile-card-height: 19.5625rem;
+        border: 0;
+        background: transparent;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-row,
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card-content {
+        transition: min-height 500ms ease;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-row {
+        position: relative;
+        display: block;
+        min-height: var(--feature-image-driver-mobile-card-height);
+        padding: 1.5rem;
+        color: #ffffff;
+        transition: min-height 500ms ease;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__media {
+        position: absolute;
+        inset: 0;
+        order: initial;
+        aspect-ratio: auto;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__overlay {
+        display: block;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-content {
+        position: relative;
+        order: initial;
+        min-height: var(--feature-image-driver-mobile-card-height);
+        padding: 0;
+        transition: min-height 500ms ease;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-title {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: 500;
+        letter-spacing: -0.0025em;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-panel {
+        display: grid;
+        align-items: stretch;
+        grid-template-rows: 0fr;
+        margin-top: 0;
+        opacity: 0;
+        transition:
+            grid-template-rows 500ms ease,
+            margin-top 500ms ease,
+            opacity 300ms ease;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card-panel-inner {
+        display: flex;
+        min-height: 0;
+        flex-direction: column;
+        gap: 3rem;
+        overflow: hidden;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-expand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 1rem;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #eeb040;
+        font-family: "Gotham HTF", Arial, sans-serif;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.45;
+        text-transform: uppercase;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-expand
+        img {
+        width: 0.5625rem;
+        height: 0.6875rem;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-expand:focus-visible {
+        outline: 3px solid #eeb040;
+        outline-offset: 3px;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-row {
+        position: relative;
+        display: block;
+        min-height: var(--feature-image-driver-mobile-card-height);
+        padding: 0;
+        color: #ffffff;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-content {
+        position: relative;
+        z-index: 1;
+        order: initial;
+        min-height: var(--feature-image-driver-mobile-card-height);
+        padding: 2rem;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-title {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: 500;
+        letter-spacing: -0.0025em;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-panel {
+        display: grid;
+        align-items: stretch;
+        min-height: 0;
+        flex: 1 1 auto;
+        grid-template-rows: 1fr;
+        margin-top: 1rem;
+        opacity: 1;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-body {
+        max-height: none;
+        margin: 0;
+        overflow: visible;
+        opacity: 1;
+        color: #ffffff;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__cta {
+        --ltt-button-background: rgba(0, 0, 0, 0.05);
+        --ltt-button-border-color: rgba(255, 255, 255, 0.5);
+        --ltt-button-color: #ffffff;
+        --ltt-button-hover-background: rgba(255, 255, 255, 0.6);
+        --ltt-button-hover-border-color: transparent;
+        --ltt-button-hover-color: #073959;
+        margin-top: 0;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__media {
+        position: absolute;
+        inset: 0;
+        order: initial;
+        aspect-ratio: auto;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__overlay {
+        display: block;
+    }
+
+    .feature-image-driver--mobile-background-light
+        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-expand {
+        display: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .feature-image-driver__stacked-actions,
+    .feature-image-driver--single .feature-image-driver__cta,
+    .feature-image-driver--short .feature-image-driver__cta {
+        max-width: 100%;
+    }
+
+    .feature-image-driver__stacked-actions .ltt-button {
+        flex: 1 1 auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .feature-image-driver__stacked-card,
+    .feature-image-driver__stacked-row,
+    .feature-image-driver__stacked-card-content,
+    .feature-image-driver__stacked-card-body,
+    .feature-image-driver__stacked-card-panel {
+        transition: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .feature-image-driver__overlay {
+        background: CanvasText;
+        opacity: 0.7;
+    }
+}

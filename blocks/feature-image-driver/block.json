@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ltt-dive-in/feature-image-driver",
+    "title": "Feature Image Driver",
+    "category": "ltt-blocks",
+    "icon": "format-image",
+    "description": "A hand-curated image feature with single, carousel, short, and stacked variants.",
+    "keywords": [ "feature", "image", "carousel" ],
+    "textdomain": "ltt-dive-in",
+    "style": "ltt-dive-in-feature-image-driver",
+    "editorStyle": "ltt-dive-in-feature-image-driver",
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "template-parts/blocks/feature-image-driver.php"
+    },
+    "attributes": {
+        "align": { "type": "string", "default": "full" }
+    },
+    "supports": {
+        "align": [ "full" ],
+        "anchor": true,
+        "customClassName": false,
+        "html": false,
+        "multiple": true
+    }
+}
