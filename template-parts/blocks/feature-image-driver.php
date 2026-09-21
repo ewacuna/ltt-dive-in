@@ -196,10 +196,6 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 	$stacked_links          = array_filter( array( $stacked_primary_link, $stacked_secondary_link ) );
 	$row_heading_tag        = $stacked_heading ? 'h3' : 'h2';
 	$classes               .= ' feature-image-driver--mobile-background-' . $stacked_mobile_background;
-
-	if ( 'light' === $stacked_mobile_background && ! $is_preview && function_exists( 'ltt_dive_in_enqueue_feature_image_driver_stacked_assets' ) ) {
-		ltt_dive_in_enqueue_feature_image_driver_stacked_assets();
-	}
 	?>
 	<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $stacked_heading ? ' aria-labelledby="' . esc_attr( $section_id . '-title' ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<div class="feature-image-driver__stacked-container">
@@ -226,13 +222,17 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 				</header>
 			<?php endif; ?>
 
-			<div class="feature-image-driver__stacked-list"<?php echo 'light' === $stacked_mobile_background ? ' data-feature-image-driver-stacked-mobile' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+			<div class="feature-image-driver__stacked-list">
 				<?php foreach ( $items as $item_index => $item ) : ?>
 					<?php
-					$panel_id   = $section_id . '-stacked-panel-' . ( $item_index + 1 );
-					$is_expanded = 'light' === $stacked_mobile_background && 0 === $item_index;
+					$panel_id  = $section_id . '-stacked-panel-' . ( $item_index + 1 );
+					$toggle_id = $section_id . '-stacked-toggle-' . ( $item_index + 1 );
+					$toggle_name = $section_id . '-stacked-mobile-toggle';
 					?>
-					<article class="feature-image-driver__stacked-card<?php echo $is_expanded ? ' is-expanded' : ''; ?>">
+					<?php if ( 'light' === $stacked_mobile_background ) : ?>
+						<input id="<?php echo esc_attr( $toggle_id ); ?>" class="feature-image-driver__stacked-card-toggle" type="radio" name="<?php echo esc_attr( $toggle_name ); ?>" value="<?php echo esc_attr( $item_index + 1 ); ?>" aria-controls="<?php echo esc_attr( $panel_id ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Expand %s', 'ltt-dive-in' ), $item['title'] ) ); ?>"<?php checked( 0, $item_index ); ?> />
+					<?php endif; ?>
+					<article class="feature-image-driver__stacked-card">
 						<div class="feature-image-driver__stacked-row">
 							<span class="feature-image-driver__media" aria-hidden="true">
 								<?php echo wp_get_attachment_image( $item['image'], 'large', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
@@ -240,10 +240,12 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 							<span class="feature-image-driver__overlay" aria-hidden="true"></span>
 							<div class="feature-image-driver__stacked-card-content">
 								<<?php echo esc_attr( $row_heading_tag ); ?> class="feature-image-driver__stacked-card-title"><?php echo esc_html( $item['title'] ); ?></<?php echo esc_attr( $row_heading_tag ); ?>>
-								<button class="feature-image-driver__stacked-expand" type="button" data-feature-image-driver-stacked-expand aria-expanded="<?php echo $is_expanded ? 'true' : 'false'; ?>" aria-controls="<?php echo esc_attr( $panel_id ); ?>">
+								<?php if ( 'light' === $stacked_mobile_background ) : ?>
+								<label class="feature-image-driver__stacked-expand" for="<?php echo esc_attr( $toggle_id ); ?>">
 									<span><?php esc_html_e( 'Expand', 'ltt-dive-in' ); ?></span>
 									<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/feature-image-driver-expand.svg' ) ); ?>" alt="" aria-hidden="true" width="9" height="11" />
-								</button>
+								</label>
+								<?php endif; ?>
 								<div id="<?php echo esc_attr( $panel_id ); ?>" class="feature-image-driver__stacked-card-panel">
 									<div class="feature-image-driver__stacked-card-panel-inner">
 										<?php if ( $item['body'] ) : ?>

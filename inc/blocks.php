@@ -109,7 +109,6 @@ function ltt_dive_in_register_blocks() {
 	$carousel_script_path              = LTT_DIVE_IN_DIR . '/assets/js/vendor/swiper-bundle.min.js';
 	$carousel_init_path                = LTT_DIVE_IN_DIR . '/assets/js/components/page-drivers-carousel.js';
 	$feature_image_carousel_init_path = LTT_DIVE_IN_DIR . '/assets/js/components/feature-image-driver-carousel.js';
-	$feature_image_stacked_init_path  = LTT_DIVE_IN_DIR . '/assets/js/components/feature-image-driver-stacked.js';
 	$slider_navigation_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/slider-navigation.css';
 	$carousel_indicators_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/carousel-indicators.css';
 	$page_driver_path                  = LTT_DIVE_IN_DIR . '/blocks/page-drivers';
@@ -135,7 +134,6 @@ function ltt_dive_in_register_blocks() {
 		file_exists( $feature_image_style_path ) ? (string) filemtime( $feature_image_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script( 'ltt-dive-in-feature-image-driver-carousel', LTT_DIVE_IN_URI . '/assets/js/components/feature-image-driver-carousel.js', array( 'ltt-dive-in-swiper' ), file_exists( $feature_image_carousel_init_path ) ? (string) filemtime( $feature_image_carousel_init_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_register_script( 'ltt-dive-in-feature-image-driver-stacked', LTT_DIVE_IN_URI . '/assets/js/components/feature-image-driver-stacked.js', array(), file_exists( $feature_image_stacked_init_path ) ? (string) filemtime( $feature_image_stacked_init_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_localize_script(
 		'ltt-dive-in-feature-image-driver-carousel',
 		'ltt_dive_in_feature_image_driver',
@@ -292,15 +290,6 @@ function ltt_dive_in_enqueue_feature_image_driver_carousel_assets() {
 	wp_enqueue_style( 'ltt-dive-in-slider-navigation' );
 	wp_enqueue_style( 'ltt-dive-in-carousel-indicators' );
 	wp_enqueue_script( 'ltt-dive-in-feature-image-driver-carousel' );
-}
-
-/**
- * Load the mobile-only interaction for the Light Stacked Feature Driver.
- *
- * @return void
- */
-function ltt_dive_in_enqueue_feature_image_driver_stacked_assets() {
-	wp_enqueue_script( 'ltt-dive-in-feature-image-driver-stacked' );
 }
 
 /**

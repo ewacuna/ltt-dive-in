@@ -332,6 +332,10 @@
     display: none;
 }
 
+.feature-image-driver__stacked-card-toggle {
+    display: none;
+}
+
 @media (hover: none), (pointer: coarse) {
     .feature-image-driver__stacked-card {
         min-height: 19.5625rem;
@@ -530,9 +534,20 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card,
+        .feature-image-driver__stacked-card-toggle {
+        position: absolute;
+        display: block;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:is(:hover, :focus-within) {
+        .feature-image-driver__stacked-card-toggle
+        + .feature-image-driver__stacked-card {
         --feature-image-driver-mobile-card-height: 7.125rem;
         min-height: var(--feature-image-driver-mobile-card-height);
         border: 0;
@@ -541,7 +556,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded {
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card {
         --feature-image-driver-mobile-card-height: 19.5625rem;
         border: 0;
         background: transparent;
@@ -555,7 +571,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-toggle:not(:checked)
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-row {
         position: relative;
         display: block;
@@ -566,7 +583,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-toggle:not(:checked)
+        + .feature-image-driver__stacked-card
         .feature-image-driver__media {
         position: absolute;
         inset: 0;
@@ -575,13 +593,15 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-toggle:not(:checked)
+        + .feature-image-driver__stacked-card
         .feature-image-driver__overlay {
         display: block;
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-toggle:not(:checked)
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-content {
         position: relative;
         order: initial;
@@ -591,7 +611,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-toggle:not(:checked)
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-title {
         color: #ffffff;
         font-size: 1.5rem;
@@ -600,17 +621,21 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card:not(.is-expanded)
+        .feature-image-driver__stacked-card-toggle:not(:checked)
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-panel {
         display: grid;
         align-items: stretch;
         grid-template-rows: 0fr;
         margin-top: 0;
         opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
         transition:
             grid-template-rows 500ms ease,
             margin-top 500ms ease,
-            opacity 300ms ease;
+            opacity 300ms ease,
+            visibility 0s linear 500ms;
     }
 
     .feature-image-driver--mobile-background-light
@@ -647,13 +672,15 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-expand:focus-visible {
+        .feature-image-driver__stacked-card-toggle:focus-visible
+        + .feature-image-driver__stacked-card {
         outline: 3px solid #eeb040;
-        outline-offset: 3px;
+        outline-offset: -3px;
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-row {
         position: relative;
         display: block;
@@ -663,7 +690,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-content {
         position: relative;
         z-index: 1;
@@ -673,7 +701,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-title {
         color: #ffffff;
         font-size: 1.5rem;
@@ -682,7 +711,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-panel {
         display: grid;
         align-items: stretch;
@@ -691,10 +721,18 @@
         grid-template-rows: 1fr;
         margin-top: 1rem;
         opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition:
+            grid-template-rows 500ms ease,
+            margin-top 500ms ease,
+            opacity 300ms ease,
+            visibility 0s;
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-body {
         max-height: none;
         margin: 0;
@@ -706,7 +744,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__cta {
         --ltt-button-background: rgba(0, 0, 0, 0.05);
         --ltt-button-border-color: rgba(255, 255, 255, 0.5);
@@ -718,7 +757,8 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__media {
         position: absolute;
         inset: 0;
@@ -727,13 +767,15 @@
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__overlay {
         display: block;
     }
 
     .feature-image-driver--mobile-background-light
-        .feature-image-driver__stacked-card.is-expanded
+        .feature-image-driver__stacked-card-toggle:checked
+        + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-expand {
         display: none;
     }
