@@ -136,9 +136,11 @@
 	};
 
 	const updateWithin = function ( $el ) {
-		const $itemsFields = $el.find( '[data-key="' + itemsKey + '"]' )
+		// ACF's ready action does not pass a context; append does.
+		const $context = $el ? $( $el ) : $( document );
+		const $itemsFields = $context.find( '[data-key="' + itemsKey + '"]' )
 			.addBack( '[data-key="' + itemsKey + '"]' )
-			.add( $el.closest( '[data-key="' + itemsKey + '"]' ) );
+			.add( $context.closest( '[data-key="' + itemsKey + '"]' ) );
 
 		$itemsFields.each( function () {
 			updateItemLimits( $( this ) );
