@@ -46,4 +46,13 @@
     display: block;
     width: 1rem;
     height: 1rem;
+    background-color: currentColor;
+    -webkit-mask: var(--slider-navigation-icon) center / contain no-repeat;
+    mask: var(--slider-navigation-icon) center / contain no-repeat;
+}
+.ltt-slider-navigation__icon--previous {
+    --slider-navigation-icon: url("../../images/icons/carousel-arrow-previous.svg");
+}
+.ltt-slider-navigation__icon--next {
+    --slider-navigation-icon: url("../../images/icons/carousel-arrow-next.svg");
 }

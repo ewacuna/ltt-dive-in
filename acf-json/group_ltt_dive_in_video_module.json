@@ -1,0 +1,186 @@
+{
+  "key": "group_ltt_dive_in_video_module",
+  "title": "LTT Dive In — Video Module",
+  "fields": [
+    {
+      "key": "field_ltt_dive_in_video_module_variant",
+      "label": "Variant",
+      "name": "ltt_dive_in_video_module_variant",
+      "type": "select",
+      "instructions": "Choose the approved layout. The preview updates after the block is saved or refreshed.",
+      "required": 1,
+      "choices": {
+        "editorial": "1x1 Editorial",
+        "full_bleed": "Full Bleed",
+        "episodic": "Episodic",
+        "full_bleed_copy": "Full Bleed w/copy",
+        "carousel": "Video Carousel"
+      },
+      "default_value": "editorial",
+      "return_format": "value",
+      "ui": 1
+    },
+    {
+      "key": "field_ltt_dive_in_video_module_eyebrow",
+      "label": "Section tag",
+      "name": "ltt_dive_in_video_module_eyebrow",
+      "type": "text",
+      "instructions": "Optional short label above the Episodic heading.",
+      "maxlength": 40,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_variant","operator":"==","value":"episodic"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_video_module_heading",
+      "label": "Section heading",
+      "name": "ltt_dive_in_video_module_heading",
+      "type": "text",
+      "instructions": "Used by the Episodic layout. Individual video titles are entered below.",
+      "required": 1,
+      "maxlength": 90,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_variant","operator":"==","value":"episodic"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_video_module_intro",
+      "label": "Section introduction",
+      "name": "ltt_dive_in_video_module_intro",
+      "type": "textarea",
+      "instructions": "Optional introductory copy for the Episodic layout.",
+      "rows": 3,
+      "maxlength": 300,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_variant","operator":"==","value":"episodic"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_video_module_items",
+      "label": "Videos",
+      "name": "ltt_dive_in_video_module_items",
+      "type": "repeater",
+      "instructions": "Use one video for Editorial and both Full Bleed variants. Carousel needs 2–8 videos. Episodic supports 2–12; the first is featured.",
+      "required": 1,
+      "min": 1,
+      "max": 12,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_video_module_item_title",
+      "button_label": "Add video",
+      "rows_per_page": 20,
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_video_module_item_source",
+          "label": "Video source",
+          "name": "source",
+          "type": "select",
+          "required": 1,
+          "choices": {
+            "cloudflare": "Cloudflare Stream",
+            "external": "YouTube or Vimeo",
+            "self_hosted": "Self-hosted MP4"
+          },
+          "default_value": "cloudflare",
+          "return_format": "value",
+          "ui": 1,
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_cloudflare_id",
+          "label": "Cloudflare Stream video ID",
+          "name": "cloudflare_id",
+          "type": "text",
+          "instructions": "Enter the Stream video UID only, not an iframe or script.",
+          "required": 1,
+          "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_item_source","operator":"==","value":"cloudflare"}]],
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_external_url",
+          "label": "YouTube or Vimeo URL",
+          "name": "external_url",
+          "type": "url",
+          "required": 1,
+          "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_item_source","operator":"==","value":"external"}]],
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_mp4",
+          "label": "MP4 file",
+          "name": "mp4",
+          "type": "file",
+          "instructions": "Use an optimized MP4. The player is not loaded until a visitor presses Play.",
+          "required": 1,
+          "return_format": "id",
+          "library": "all",
+          "mime_types": "mp4",
+          "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_item_source","operator":"==","value":"self_hosted"}]],
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_poster",
+          "label": "Poster image",
+          "name": "poster",
+          "type": "image",
+          "instructions": "Required. Choose a meaningful still frame; the image is decorative because the Play control is labelled with the video title.",
+          "required": 1,
+          "return_format": "id",
+          "preview_size": "medium",
+          "library": "all",
+          "mime_types": "jpg,jpeg,png,webp",
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_tag",
+          "label": "Tag",
+          "name": "tag",
+          "type": "text",
+          "instructions": "Optional category label. Episodic tags become visitor filter buttons.",
+          "maxlength": 40,
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_duration",
+          "label": "Duration",
+          "name": "duration",
+          "type": "text",
+          "instructions": "Optional accessible duration such as “5 min watch”.",
+          "maxlength": 30,
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_title",
+          "label": "Title",
+          "name": "title",
+          "type": "text",
+          "instructions": "Required except for Full Bleed.",
+          "maxlength": 90,
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_body",
+          "label": "Body copy",
+          "name": "body",
+          "type": "textarea",
+          "instructions": "Optional. Full Bleed intentionally ignores copy.",
+          "rows": 4,
+          "maxlength": 600,
+          "new_lines": "wpautop",
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        },
+        {
+          "key": "field_ltt_dive_in_video_module_item_cta",
+          "label": "Call to action",
+          "name": "cta",
+          "type": "link",
+          "instructions": "Optional. Provide both a meaningful label and destination.",
+          "return_format": "array",
+          "parent_repeater": "field_ltt_dive_in_video_module_items"
+        }
+      ]
+    }
+  ],
+  "location": [[{"param":"block","operator":"==","value":"ltt-dive-in/video-module"}]],
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "active": true,
+  "show_in_rest": 0,
+  "modified": 1790053200
+}

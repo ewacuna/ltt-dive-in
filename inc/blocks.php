@@ -19,6 +19,7 @@ function ltt_dive_in_register_block_assets() {
 	$style_path            = LTT_DIVE_IN_DIR . '/assets/css/main.css';
 	$buttons_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/buttons.css';
 	$select_style_path     = LTT_DIVE_IN_DIR . '/assets/css/components/select.css';
+	$category_selection_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/category-selection.css';
 	$activities_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$accordion_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/accordions.css';
 	$accordion_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/accordion.js';
@@ -51,6 +52,15 @@ function ltt_dive_in_register_block_assets() {
 			LTT_DIVE_IN_URI . '/assets/css/components/select.css',
 			$foundation_dependencies,
 			file_exists( $select_style_path ) ? (string) filemtime( $select_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	if ( ! wp_style_is( 'ltt-dive-in-category-selection', 'registered' ) ) {
+		wp_register_style(
+			'ltt-dive-in-category-selection',
+			LTT_DIVE_IN_URI . '/assets/css/components/category-selection.css',
+			$foundation_dependencies,
+			file_exists( $category_selection_style_path ) ? (string) filemtime( $category_selection_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
 
@@ -117,6 +127,9 @@ function ltt_dive_in_register_blocks() {
 	$accordion_path                    = LTT_DIVE_IN_DIR . '/blocks/faq';
 	$team_style_path                   = LTT_DIVE_IN_DIR . '/assets/css/components/meet-the-team.css';
 	$team_path                         = LTT_DIVE_IN_DIR . '/blocks/team';
+	$video_module_style_path           = LTT_DIVE_IN_DIR . '/assets/css/components/video-module.css';
+	$video_module_script_path          = LTT_DIVE_IN_DIR . '/assets/js/components/video-module.js';
+	$video_module_path                 = LTT_DIVE_IN_DIR . '/blocks/video-module';
 
 	ltt_dive_in_register_block_assets();
 
@@ -209,6 +222,37 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $testimonials_path . '/block.json' ) ) {
 		register_block_type( $testimonials_path );
 	}
+
+	wp_register_style(
+		'ltt-dive-in-video-module',
+		LTT_DIVE_IN_URI . '/assets/css/components/video-module.css',
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-category-selection', 'ltt-dive-in-slider-navigation' ),
+		file_exists( $video_module_style_path ) ? (string) filemtime( $video_module_style_path ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script(
+		'ltt-dive-in-video-module',
+		LTT_DIVE_IN_URI . '/assets/js/components/video-module.js',
+		array(),
+		file_exists( $video_module_script_path ) ? (string) filemtime( $video_module_script_path ) : LTT_DIVE_IN_VERSION,
+		array( 'strategy' => 'defer', 'in_footer' => true )
+	);
+	wp_localize_script(
+		'ltt-dive-in-video-module',
+		'ltt_dive_in_video_module',
+		array(
+			'carousel'   => __( 'video carousel', 'ltt-dive-in' ),
+			'slide'      => __( 'video', 'ltt-dive-in' ),
+			'slideLabel' => __( '{{index}} of {{slidesLength}}', 'ltt-dive-in' ),
+			'previous'   => __( 'Previous video', 'ltt-dive-in' ),
+			'next'       => __( 'Next video', 'ltt-dive-in' ),
+			'goTo'       => __( 'Go to video {{index}}', 'ltt-dive-in' ),
+			'playerTitle' => __( 'Video player', 'ltt-dive-in' ),
+		)
+	);
+
+	if ( file_exists( $video_module_path . '/block.json' ) ) {
+		register_block_type( $video_module_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
 
@@ -293,6 +337,18 @@ function ltt_dive_in_enqueue_feature_image_driver_carousel_assets() {
 }
 
 /**
+ * Load shared carousel assets used by the Video Carousel variant.
+ *
+ * @return void
+ */
+function ltt_dive_in_enqueue_video_module_carousel_assets() {
+	wp_enqueue_style( 'ltt-dive-in-swiper' );
+	wp_enqueue_style( 'ltt-dive-in-slider-navigation' );
+	wp_enqueue_style( 'ltt-dive-in-carousel-indicators' );
+	wp_enqueue_script( 'ltt-dive-in-swiper' );
+}
+
+/**
  * Determine whether a block tree contains a block matching a callback.
  *
  * @param array[] $blocks Parsed blocks.
@@ -358,6 +414,22 @@ function ltt_dive_in_feature_image_driver_uses_carousel( $block ) {
 }
 
 /**
+ * Determine whether a parsed Video Module block uses the carousel variant.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_video_module_uses_carousel( $block ) {
+	if ( ! is_array( $block ) || 'ltt-dive-in/video-module' !== ( $block['blockName'] ?? '' ) ) {
+		return false;
+	}
+
+	$variant = isset( $block['attrs']['data']['ltt_dive_in_video_module_variant'] ) ? $block['attrs']['data']['ltt_dive_in_video_module_variant'] : '';
+
+	return 'carousel' === $variant;
+}
+
+/**
  * Enqueue carousel assets before the document head is printed when possible.
  *
  * @return void
@@ -403,6 +475,28 @@ function ltt_dive_in_maybe_enqueue_feature_image_driver_carousel_assets() {
 }
 // Match the Page Driver priority so Swiper precedes every carousel component.
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_feature_image_driver_carousel_assets', 5 );
+
+/**
+ * Enqueue Video Module carousel foundations before the document head.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_video_module_carousel_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( ! $post instanceof WP_Post || ! has_blocks( $post->post_content ) ) {
+		return;
+	}
+
+	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_video_module_uses_carousel' ) ) {
+		ltt_dive_in_enqueue_video_module_carousel_assets();
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_video_module_carousel_assets', 5 );
 
 /**
  * Load shared carousel styles before block styles inside the editor canvas.

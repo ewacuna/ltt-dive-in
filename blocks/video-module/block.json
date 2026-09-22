@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/video-module",
+  "title": "Video Module",
+  "category": "ltt-blocks",
+  "icon": "video-alt3",
+  "description": "Editable editorial, full-bleed, episodic, and carousel video layouts.",
+  "keywords": [ "video", "carousel", "episode" ],
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-video-module",
+  "editorStyle": "ltt-dive-in-video-module",
+  "viewScript": "ltt-dive-in-video-module",
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "template-parts/blocks/video-module.php"
+  },
+  "attributes": {
+    "align": { "type": "string", "default": "full" }
+  },
+  "supports": {
+    "align": [ "full" ],
+    "anchor": true,
+    "customClassName": false,
+    "html": false,
+    "multiple": true
+  }
+}
