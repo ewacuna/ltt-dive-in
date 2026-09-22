@@ -25,7 +25,7 @@ The standalone shell PHP version may differ from the PHP runtime selected in Loc
 [`DESIGN.md`](./DESIGN.md) translates the project's Figma source into implementation guidance. Read it before creating or changing a public-facing page, component, pattern, design token, or interaction.
 
 - [Dev-access component file](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=0-1&m=dev): component inventory, developer annotations, states, and the source values already verified in `DESIGN.md`.
-- [Complete-page review file](https://www.figma.com/design/mtPSWGL8CiiwJyDnj8FqQL/LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---REVIEW--1?node-id=95-12598&p=f): the `Review Phase 2 - All Pages` compositions showing how components are combined across the current desktop and mobile pages.
+- [Complete-page review file](https://www.figma.com/design/vBshJcx70aPkoObfGZzd4f/-DevOps-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---REVIEW--1--Copy-?node-id=95-12598&m=dev): the `Review Phase 2 - All Pages` compositions showing how components are combined across the current desktop and mobile pages.
 - Use the complete-page file to understand page composition, responsive context, and where reusable components appear. Use the dev-access file together with `DESIGN.md` for component-level values and documented behavior. A review composition does not silently override a confirmed token or implementation rule.
 
 - Do not invent colors, typography, spacing, radii, shadows, or behavior. Use the approved responsive breakpoints documented below.
