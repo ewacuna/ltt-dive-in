@@ -46,6 +46,16 @@
     display: block;
     width: 1rem;
     height: 1rem;
+}
+
+/*
+ * Mask only where this component also supplies the icon. Consumers may add the
+ * base class to an icon they mask themselves, and masking from the base rule
+ * resolved `--slider-navigation-icon` to nothing for them, which dropped the
+ * mask and left a filled square.
+ */
+.ltt-slider-navigation__icon--previous,
+.ltt-slider-navigation__icon--next {
     background-color: currentColor;
     -webkit-mask: var(--slider-navigation-icon) center / contain no-repeat;
     mask: var(--slider-navigation-icon) center / contain no-repeat;
