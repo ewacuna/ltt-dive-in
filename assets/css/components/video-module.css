@@ -247,7 +247,6 @@
     display: grid;
     max-width: 48rem;
     gap: 1.5rem;
-    padding-inline: 3.125rem;
 }
 
 .video-module__intro {
@@ -438,10 +437,6 @@
     .video-module__editorial-media .video-module__poster {
         min-height: 0;
         aspect-ratio: 335 / 348;
-    }
-
-    .video-module__episodes-header {
-        padding-inline: 0;
     }
 
     .video-module__featured-episode {
