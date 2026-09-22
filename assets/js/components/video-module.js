@@ -30,12 +30,47 @@
 		return iframe;
 	};
 
-	const stopPlayers = function ( scope ) {
-		scope.querySelectorAll( 'iframe, video' ).forEach( function ( player ) {
-			if ( 'VIDEO' === player.tagName ) {
-				player.pause();
-			} else {
-				player.src = player.src;
+	const pauseMedia = function ( scope ) {
+		scope.querySelectorAll( 'video' ).forEach( function ( video ) {
+			video.pause();
+		} );
+	};
+
+	/*
+	 * A cross-origin iframe cannot be paused without the provider's SDK, so a
+	 * started player is discarded and its poster restored instead. The original
+	 * nodes are kept detached rather than re-created, which preserves the play
+	 * button's listener and its accessible name.
+	 */
+	const posters = new WeakMap();
+
+	const restorePoster = function ( wrapper, moveFocus ) {
+		const original = posters.get( wrapper );
+
+		if ( ! original || ! wrapper.classList.contains( 'is-playing' ) ) {
+			return;
+		}
+
+		const hadFocus = false !== moveFocus && wrapper.contains( document.activeElement );
+
+		pauseMedia( wrapper );
+		wrapper.replaceChildren.apply( wrapper, original );
+		wrapper.classList.remove( 'is-playing' );
+
+		if ( hadFocus ) {
+			const button = wrapper.querySelector( '[data-video-play]' );
+
+			if ( button ) {
+				button.focus( { preventScroll: true } );
+			}
+		}
+	};
+
+	/* Keep at most one player started per page so two videos never overlap. */
+	const stopOtherPlayers = function ( except ) {
+		document.querySelectorAll( '[data-video-player].is-playing' ).forEach( function ( other ) {
+			if ( other !== except ) {
+				restorePoster( other );
 			}
 		} );
 	};
@@ -57,8 +92,17 @@
 					return;
 				}
 
-				wrapper.replaceChildren( buildPlayer( source, url, title ) );
+				if ( ! posters.has( wrapper ) ) {
+					posters.set( wrapper, Array.prototype.slice.call( wrapper.childNodes ) );
+				}
+
+				stopOtherPlayers( wrapper );
+
+				const player = buildPlayer( source, url, title );
+
+				wrapper.replaceChildren( player );
 				wrapper.classList.add( 'is-playing' );
+				player.focus( { preventScroll: true } );
 			} );
 		} );
 
@@ -88,7 +132,7 @@
 				return;
 			}
 
-			stopPlayers( dialogPlayer );
+			pauseMedia( dialogPlayer );
 			dialogPlayer.replaceChildren();
 
 			if ( dialog.open ) {
@@ -107,6 +151,8 @@
 						return;
 					}
 
+					stopOtherPlayers( null );
+
 					dialogTrigger = trigger;
 					dialogTitle.textContent = title;
 					dialogPlayer.replaceChildren( buildPlayer( source, url, title ) );
@@ -124,8 +170,11 @@
 				}
 			} );
 
+			/* Escape fires `cancel` first; do not leave the teardown to `close` alone. */
+			dialog.addEventListener( 'cancel', closeDialog );
+
 			dialog.addEventListener( 'close', function () {
-				stopPlayers( dialogPlayer );
+				pauseMedia( dialogPlayer );
 				dialogPlayer.replaceChildren();
 
 				if ( dialogTrigger ) {
@@ -166,9 +215,25 @@
 		previous.hidden = false;
 		next.hidden = false;
 
+		/*
+		 * Swiper 14 leaves off-screen slides in the tab order and the
+		 * accessibility tree. `inert` removes both in one attribute, and
+		 * `swiper-slide-visible` needs `watchSlidesProgress`.
+		 */
+		const setSlidesInert = function ( instance ) {
+			instance.slides.forEach( function ( slide ) {
+				const hidden = ! slide.classList.contains( 'swiper-slide-visible' );
+
+				if ( slide.inert !== hidden ) {
+					slide.inert = hidden;
+				}
+			} );
+		};
+
 		new window.Swiper( viewport, {
 			slidesPerView: 1,
 			spaceBetween: 32,
+			watchSlidesProgress: true,
 			speed: reducedMotion ? 0 : 350,
 			rewind: true,
 			a11y: {
@@ -195,8 +260,37 @@
 				},
 			},
 			on: {
-				slideChangeTransitionStart: function () {
-					stopPlayers( carousel );
+				afterInit: setSlidesInert,
+				resize: setSlidesInert,
+				/*
+				 * Swiper derives its `...TransitionEnd` events from the CSS
+				 * `transitionend`, which never arrives when the transition does
+				 * not actually run (background tab, interrupted move, a user
+				 * stylesheet disabling transitions). The slide classes are
+				 * already final here, so update inertness at the start.
+				 */
+				slideChangeTransitionStart: function ( instance ) {
+					setSlidesInert( instance );
+
+					const active = document.activeElement;
+					const playerHadFocus = !! active && carousel.contains( active ) && !! active.closest( '[data-video-player]' );
+
+					carousel.querySelectorAll( '[data-video-player]' ).forEach( function ( wrapper ) {
+						restorePoster( wrapper, false );
+					} );
+
+					/*
+					 * The slide holding the focused player is leaving and is
+					 * about to become inert, so hand focus to the incoming
+					 * slide instead of letting it fall back to the body.
+					 */
+					if ( playerHadFocus ) {
+						const button = instance.slides[ instance.activeIndex ].querySelector( '[data-video-play]' );
+
+						if ( button ) {
+							button.focus( { preventScroll: true } );
+						}
+					}
 				},
 				paginationUpdate: function ( instance ) {
 					if ( ! instance.pagination || ! instance.pagination.bullets ) {
