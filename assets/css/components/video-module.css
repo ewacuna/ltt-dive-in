@@ -121,9 +121,15 @@
     gap: 5rem;
 }
 
+/*
+ * The copy leads in the DOM so the heading precedes its own video in reading
+ * and keyboard order. Desktop puts the media back in the first column.
+ */
 .video-module__editorial-media {
     width: calc(100% + 5rem);
     margin-left: -5rem;
+    grid-row: 1;
+    grid-column: 1;
     align-self: stretch;
 }
 
@@ -135,6 +141,8 @@
 
 .video-module__editorial .video-module__copy {
     max-width: 40.625rem;
+    grid-row: 1;
+    grid-column: 2;
 }
 
 .video-module--full_bleed .video-module__player,
@@ -409,23 +417,31 @@
     }
 
     .video-module__editorial {
+        min-height: 0;
         grid-template-columns: 1fr;
         padding-block: 4rem;
     }
 
     .video-module__editorial .video-module__copy {
-        grid-row: 1;
+        grid-row: auto;
+        grid-column: auto;
     }
 
     .video-module__editorial-media {
         width: 100%;
         margin-left: 0;
+        grid-row: auto;
+        grid-column: auto;
     }
 
     .video-module__editorial-media .video-module__player,
     .video-module__editorial-media .video-module__poster {
         min-height: 0;
         aspect-ratio: 335 / 348;
+    }
+
+    .video-module__episodes-header {
+        padding-inline: 0;
     }
 
     .video-module__featured-episode {
@@ -446,11 +462,6 @@
     .video-module__intro {
         font-size: 1rem;
         line-height: 1.5;
-    }
-
-    .video-module__play {
-        width: 4.5rem;
-        height: 5.1875rem;
     }
 
     .video-module__editorial {
@@ -496,7 +507,6 @@
 
     .video-module__episodes-header {
         gap: 1.25rem;
-        padding-inline: 0;
     }
 
     .video-module__featured-episode {
@@ -507,10 +517,16 @@
         aspect-ratio: 335 / 225;
     }
 
+    /*
+     * overflow-x also makes overflow-y computed `auto`, so the scroller needs
+     * room for the filter buttons' focus ring. The negative margins keep the
+     * surrounding spacing unchanged.
+     */
     .video-module__filters {
         flex-wrap: nowrap;
         max-width: 100%;
-        margin-bottom: -1.5rem;
+        padding-block: 0.5rem;
+        margin-block: -0.5rem -2rem;
         overflow-x: auto;
     }
 

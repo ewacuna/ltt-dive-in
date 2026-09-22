@@ -190,8 +190,8 @@ $render_copy = static function ( $item, $heading_id = '' ) use ( $render_cta ) {
 <section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-video-module<?php echo 'full_bleed' === $variant ? ' aria-label="' . esc_attr__( 'Video', 'ltt-dive-in' ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php if ( 'editorial' === $variant ) : ?>
 		<div class="video-module__container video-module__editorial">
-			<div class="video-module__editorial-media"><?php $render_player( $items[0], $items[0]['title'], $is_preview ); ?></div>
 			<div class="video-module__copy"><?php $render_copy( $items[0], $section_id . '-title' ); ?></div>
+			<div class="video-module__editorial-media"><?php $render_player( $items[0], $items[0]['title'], $is_preview ); ?></div>
 		</div>
 
 	<?php elseif ( 'full_bleed' === $variant ) : ?>
