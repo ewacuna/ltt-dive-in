@@ -363,8 +363,8 @@
     justify-self: center;
 }
 
+/* Size from the width/height attributes, not the SVG's density-dependent natural size. */
 .site-footer__partner-logo {
-    width: auto;
     max-width: 90%;
     height: auto;
     max-height: 100%;

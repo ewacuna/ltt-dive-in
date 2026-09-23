@@ -37,3 +37,26 @@ function ltt_dive_in_pingback_header() {
 	}
 }
 add_action( 'wp_head', 'ltt_dive_in_pingback_header' );
+
+/**
+ * Remove responsive sources from SVG attachments.
+ *
+ * SVG plugins may store raster-style size metadata whose width descriptors all
+ * point to the same vector file. Browsers then treat the SVG as a high-density
+ * candidate and shrink its natural size, so vectors render without a srcset.
+ *
+ * @param array|false $sources       Source data keyed by width descriptor.
+ * @param array       $size_array    Requested width and height values.
+ * @param string      $image_src     Image source URL.
+ * @param array       $image_meta    Attachment metadata.
+ * @param int         $attachment_id Attachment ID.
+ * @return array|false
+ */
+function ltt_dive_in_disable_svg_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
+	if ( 'image/svg+xml' === get_post_mime_type( $attachment_id ) ) {
+		return false;
+	}
+
+	return $sources;
+}
+add_filter( 'wp_calculate_image_srcset', 'ltt_dive_in_disable_svg_srcset', 10, 5 );
