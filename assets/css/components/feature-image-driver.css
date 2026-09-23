@@ -31,9 +31,10 @@
 .feature-image-driver__overlay {
     background: linear-gradient(
         180deg,
-        rgba(7, 57, 89, 0.51),
-        rgba(2, 22, 43, 0.51)
+        rgba(7, 57, 89, 0.75),
+        rgba(2, 22, 43, 0.75)
     );
+    pointer-events: none;
 }
 
 .feature-image-driver__content {
@@ -497,7 +498,9 @@
         aspect-ratio: 271 / 180;
     }
 
-    .feature-image-driver__stacked-row .feature-image-driver__overlay {
+    .feature-image-driver--mobile-background-dark
+        .feature-image-driver__stacked-row
+        .feature-image-driver__overlay {
         display: none;
     }
 
