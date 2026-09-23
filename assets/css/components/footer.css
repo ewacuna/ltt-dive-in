@@ -364,10 +364,10 @@
 }
 
 .site-footer__partner-logo {
-    width: 90%;
+    width: auto;
+    max-width: 90%;
+    height: auto;
     max-height: 100%;
-    aspect-ratio: 3/2;
-    object-fit: contain;
 }
 
 .site-footer__partner-item {
