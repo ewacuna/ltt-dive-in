@@ -1,0 +1,208 @@
+{
+    "key": "group_ltt_dive_in_static_image_cluster",
+    "title": "LTT Dive In — Static Image Cluster Block",
+    "fields": [
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_variant",
+            "label": "Variant",
+            "name": "ltt_dive_in_static_image_cluster_variant",
+            "type": "select",
+            "instructions": "Choose the approved editorial image composition.",
+            "required": 1,
+            "choices": {
+                "hero_caption": "Hero With Caption",
+                "one_up": "1 Up Gallery",
+                "two_up": "2 Up Gallery",
+                "three_up": "3 Up Gallery",
+                "inline_four_up": "Inline 4 Up Gallery",
+                "staggered_four": "Staggered 4 Up Gallery",
+                "five_plus": "5+ Up Gallery",
+                "side_by_side": "Side by Side 1 Up Image",
+                "inspired": "Inspired Gallery"
+            },
+            "default_value": "one_up",
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 1,
+            "return_format": "value"
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_heading",
+            "label": "Section heading",
+            "name": "ltt_dive_in_static_image_cluster_heading",
+            "type": "text",
+            "instructions": "Required for all variants except Inspired Gallery. The Hero With Caption uses its caption instead.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "hero_caption"
+                    }
+                ]
+            ],
+            "maxlength": 110
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_intro",
+            "label": "Introduction",
+            "name": "ltt_dive_in_static_image_cluster_intro",
+            "type": "textarea",
+            "instructions": "Optional supporting copy displayed with the section heading.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "hero_caption"
+                    }
+                ]
+            ],
+            "maxlength": 420,
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_images",
+            "label": "Images",
+            "name": "ltt_dive_in_static_image_cluster_images",
+            "type": "gallery",
+            "required": 1,
+            "min": 1,
+            "max": 0,
+            "insert": "append",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": "jpg,jpeg,png,webp,avif",
+            "return_format": "id",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_hero_caption",
+            "label": "Hero caption",
+            "name": "ltt_dive_in_static_image_cluster_hero_caption",
+            "type": "textarea",
+            "instructions": "Caption displayed below the Hero With Caption image.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "==",
+                        "value": "hero_caption"
+                    }
+                ]
+            ],
+            "maxlength": 420,
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_image_details",
+            "label": "Image details",
+            "name": "ltt_dive_in_static_image_cluster_image_details",
+            "type": "repeater",
+            "instructions": "One row is required for each Gallery image",
+            "required": 0,
+            "layout": "block",
+            "button_label": "Add image details",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_static_image_cluster_image_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_ltt_dive_in_static_image_cluster_variant",
+                                "operator": "==",
+                                "value": "inspired"
+                            }
+                        ]
+                    ],
+                    "maxlength": 110
+                },
+                {
+                    "key": "field_ltt_dive_in_static_image_cluster_image_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_ltt_dive_in_static_image_cluster_variant",
+                                "operator": "==",
+                                "value": "inspired"
+                            }
+                        ]
+                    ],
+                    "maxlength": 420,
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_static_image_cluster_image_alt",
+                    "label": "Alternative text",
+                    "name": "alt",
+                    "type": "text",
+                    "required": 1,
+                    "maxlength": 150
+                }
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_primary_link",
+            "label": "Primary button",
+            "name": "ltt_dive_in_static_image_cluster_primary_link",
+            "type": "link",
+            "instructions": "Optional primary call to action.",
+            "required": 0,
+            "return_format": "array"
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_secondary_link",
+            "label": "Secondary button",
+            "name": "ltt_dive_in_static_image_cluster_secondary_link",
+            "type": "link",
+            "instructions": "Optional secondary call to action.",
+            "required": 0,
+            "return_format": "array"
+        },
+        {
+            "key": "field_ltt_dive_in_static_image_cluster_third_link",
+            "label": "Third button",
+            "name": "ltt_dive_in_static_image_cluster_third_link",
+            "type": "link",
+            "instructions": "Optional third call to action.",
+            "required": 0,
+            "return_format": "array"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "ltt-dive-in/static-image-cluster"
+            }
+        ]
+    ],
+    "menu_order": 13,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "show_in_rest": 0,
+    "modified": 1790089200
+}
