@@ -1,0 +1,119 @@
+/*
+ * Stories Hero (Figma review file, Website Components > HERO > "Blog Post
+ * Header": Stories Hero Desktop 95:86676 / Mobile 95:86677).
+ *
+ * A white block below the site header, not anchored to the navigation like
+ * the Internal Page Hero. Gotham Medium is not available, so Book stands in.
+ */
+.stories-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5625rem 4rem 0;
+    background: #ffffff;
+    color: #073959;
+}
+
+.stories-hero__header {
+    display: flex;
+    width: min(100%, 59.25rem);
+    flex-direction: column;
+    align-items: center;
+    margin-inline: auto;
+    text-align: center;
+}
+
+/* DESIGN.md H1 (48px) replaces Figma's raw 54px layer, as agreed. */
+.stories-hero__title {
+    margin: 0 0 0.75rem;
+    color: #073959;
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 3rem;
+    font-synthesis: none;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.stories-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem 0.5rem;
+    padding-block: 0.625rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+/*
+ * Read time follows Figma's cyan #319D8E (tertiary shade 300) at the design
+ * owner's request. It is 3.31:1 on white, below WCAG AA's 4.5:1 for 14px text.
+ */
+.stories-hero__meta .reading-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid #073959;
+    color: #319d8e;
+}
+
+.stories-hero__meta .reading-time img {
+    display: block;
+    flex-shrink: 0;
+}
+
+.stories-hero__text {
+    width: min(100%, 56.5625rem);
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+/* Full-bleed image: cancel the section's side padding. */
+.stories-hero__media {
+    margin-inline: -4rem;
+}
+
+.stories-hero__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1436 / 673;
+    object-fit: cover;
+}
+
+@media (max-width: 767.98px) {
+    .stories-hero {
+        padding: 3.125rem 1.25rem 0;
+    }
+
+    .stories-hero__header {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .stories-hero__title {
+        font-size: 2.25rem;
+    }
+
+    .stories-hero__meta {
+        justify-content: flex-start;
+    }
+
+    .stories-hero__text {
+        font-size: 1rem;
+        letter-spacing: -0.0025em;
+        line-height: 1.5;
+    }
+
+    .stories-hero__media {
+        margin-inline: -1.25rem;
+    }
+
+    .stories-hero__image {
+        aspect-ratio: 375 / 252;
+    }
+}

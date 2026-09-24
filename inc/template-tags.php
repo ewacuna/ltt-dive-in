@@ -49,14 +49,52 @@ function ltt_dive_in_posted_by() {
 }
 
 /**
- * Print the last-updated month and year, e.g. "Last updated: July 2026".
+ * Print the published month and year, e.g. "Mar 2024".
  */
-function ltt_dive_in_last_updated() {
+function ltt_dive_in_posted_month() {
 	printf(
-		'<span class="last-updated">%1$s <time class="updated" datetime="%2$s">%3$s</time></span>',
-		esc_html__( 'Last updated:', 'ltt-dive-in' ),
-		esc_attr( get_the_modified_date( DATE_W3C ) ),
-		esc_html( get_the_modified_date( _x( 'F Y', 'last updated date format', 'ltt-dive-in' ) ) )
+		'<time class="entry-date published" datetime="%1$s">%2$s</time>',
+		esc_attr( get_the_date( DATE_W3C ) ),
+		esc_html( get_the_date( _x( 'M Y', 'post month date format', 'ltt-dive-in' ) ) )
+	);
+}
+
+/**
+ * Estimate the reading time of a post in whole minutes.
+ *
+ * @param int|WP_Post|null $post Optional. Post ID or object. Defaults to the current post.
+ * @return int Minutes, at least 1.
+ */
+function ltt_dive_in_get_reading_time( $post = null ) {
+	$post = get_post( $post );
+
+	if ( ! $post ) {
+		return 1;
+	}
+
+	/**
+	 * Filter the reading speed used for read-time estimates.
+	 *
+	 * @param int $words_per_minute Average words read per minute.
+	 */
+	$words_per_minute = max( 1, (int) apply_filters( 'ltt_dive_in_reading_words_per_minute', 200 ) );
+	$text             = wp_strip_all_tags( strip_shortcodes( excerpt_remove_blocks( $post->post_content ) ) );
+	$words            = preg_split( '/\s+/u', trim( $text ), -1, PREG_SPLIT_NO_EMPTY );
+
+	return max( 1, (int) ceil( count( $words ) / $words_per_minute ) );
+}
+
+/**
+ * Print the estimated reading time, e.g. "5 min read".
+ */
+function ltt_dive_in_reading_time() {
+	$minutes = ltt_dive_in_get_reading_time();
+
+	printf(
+		'<span class="reading-time"><img src="%1$s" alt="" width="17" height="17"> %2$s</span>',
+		esc_url( LTT_DIVE_IN_URI . '/assets/images/icons/read-time.svg' ),
+		/* translators: %s: Estimated reading time in minutes. */
+		esc_html( sprintf( _n( '%s min read', '%s min read', $minutes, 'ltt-dive-in' ), number_format_i18n( $minutes ) ) )
 	);
 }
 

@@ -24,6 +24,7 @@ function ltt_dive_in_enqueue_assets() {
 	$page_hero_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/page-hero.css';
 	$page_style_path        = LTT_DIVE_IN_DIR . '/assets/css/templates/page.css';
 	$single_style_path      = LTT_DIVE_IN_DIR . '/assets/css/templates/single.css';
+	$stories_hero_path      = LTT_DIVE_IN_DIR . '/assets/css/components/stories-hero.css';
 	$select_script_path     = LTT_DIVE_IN_DIR . '/assets/js/components/select.js';
 	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
 
@@ -102,6 +103,13 @@ function ltt_dive_in_enqueue_assets() {
 			array( 'ltt-dive-in-style' ),
 			file_exists( $single_style_path ) ? (string) filemtime( $single_style_path ) : LTT_DIVE_IN_VERSION
 		);
+
+		wp_enqueue_style(
+			'ltt-dive-in-stories-hero',
+			LTT_DIVE_IN_URI . '/assets/css/components/stories-hero.css',
+			array( 'ltt-dive-in-style' ),
+			file_exists( $stories_hero_path ) ? (string) filemtime( $stories_hero_path ) : LTT_DIVE_IN_VERSION
+		);
 	}
 
 	if ( ltt_dive_in_has_page_hero() ) {
@@ -157,7 +165,7 @@ add_action( 'wp_enqueue_scripts', 'ltt_dive_in_enqueue_assets' );
  * Preload fonts used above the fold.
  *
  * Bold is intentionally left on demand. Big Caslon is limited to templates
- * whose hero uses it immediately.
+ * whose hero uses it immediately, including the Stories Hero on posts.
  *
  * @param array[] $preload_resources Resources and attributes to preload.
  * @return array[]
@@ -170,7 +178,7 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		'crossorigin' => 'anonymous',
 	);
 
-	if ( is_front_page() || ltt_dive_in_has_page_hero() ) {
+	if ( is_front_page() || ltt_dive_in_has_page_hero() || is_singular( 'post' ) ) {
 		$preload_resources[] = array(
 			'href'        => LTT_DIVE_IN_URI . '/assets/fonts/big-caslon/Big-Caslon-Medium.woff2',
 			'as'          => 'font',
@@ -189,7 +197,7 @@ add_filter( 'wp_preload_resources', 'ltt_dive_in_preload_fonts' );
  * @return bool
  */
 function ltt_dive_in_has_page_hero() {
-	return ( is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' ) ) || is_singular( 'post' );
+	return is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' );
 }
 
 /**

@@ -58,13 +58,6 @@ function ltt_dive_in_register_page_hero_settings() {
 						'value'    => 'templates/blank-canvas.php',
 					),
 				),
-				array(
-					array(
-						'param'    => 'post_type',
-						'operator' => '==',
-						'value'    => 'post',
-					),
-				),
 			),
 			'position'    => 'acf_after_title',
 			'style'       => 'default',

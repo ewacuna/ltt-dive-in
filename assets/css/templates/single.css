@@ -1,49 +1,30 @@
 /*
  * Single post (single.php).
  *
- * Figma has no single-post composition yet. This layout reuses the Internal
- * Page Hero and the internal-page content widths from page.css, with body copy
- * held to the shared --content-width reading measure and DESIGN.md's annotated
- * type scale. Full-width and wide blocks keep their own containers.
+ * The Stories Hero (components/stories-hero.css) opens the page. Figma has no
+ * article-body composition yet, so body copy is held to the shared
+ * --content-width reading measure and DESIGN.md's annotated type scale.
+ * Full-width and wide blocks keep their own containers.
  */
 .single-main {
-    padding-bottom: 0;
+    padding-block: 0;
     background: #ffffff;
     color: #073959;
 }
 
 .single-main .single-entry {
-    padding: 0;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 0;
     border: 0;
     border-radius: 0;
     background: none;
     box-shadow: none;
 }
 
-.single-main .entry-header,
 .single-main .entry-content > :not(.alignfull, .alignwide),
 .single-main .page-links,
 .single-main__navigation {
     width: min(calc(100% - 8rem), var(--content-width));
     margin-inline: auto;
-}
-
-/* Meta (Body 2) */
-.single-main .entry-header {
-    padding-block: clamp(2rem, 4vw, 3rem) 1.5rem;
-    border-bottom: 1px solid #e2e2e5;
-    margin-bottom: clamp(2rem, 4vw, 3rem);
-}
-
-.single-main .entry-meta {
-    gap: 0.5rem 1.5rem;
-    color: #525062;
-    font-size: 0.875rem;
-    line-height: 1.45;
-}
-
-.single-main .entry-meta a {
-    color: #073959;
 }
 
 /* Body 1 */
@@ -171,7 +152,6 @@
 }
 
 @media (max-width: 1199.98px) {
-    .single-main .entry-header,
     .single-main .entry-content > :not(.alignfull, .alignwide),
     .single-main .page-links,
     .single-main__navigation {
@@ -180,7 +160,6 @@
 }
 
 @media (max-width: 767.98px) {
-    .single-main .entry-header,
     .single-main .entry-content > :not(.alignfull, .alignwide),
     .single-main .page-links,
     .single-main__navigation {
