@@ -6,6 +6,104 @@
 
 	const strings = window.ltt_dive_in_static_image_cluster || {};
 
+	document.querySelectorAll( '.static-image-cluster--inspired' ).forEach( function ( cluster ) {
+		const loadMore = cluster.querySelector( '[data-inspired-load-more]' );
+		const gallery = cluster.querySelector( '.static-image-cluster__gallery' );
+		const status = loadMore ? loadMore.querySelector( '[data-inspired-load-more-status]' ) : null;
+		const label = loadMore ? loadMore.querySelector( '[data-inspired-load-more-label]' ) : null;
+		const icon = loadMore ? loadMore.querySelector( '[data-inspired-load-more-icon]' ) : null;
+		const defaultLabel = label ? label.textContent : '';
+
+		if ( ! loadMore || ! gallery || ! strings.loadMoreEndpoint ) {
+			return;
+		}
+
+		loadMore.addEventListener( 'click', function () {
+			if ( loadMore.disabled ) {
+				return;
+			}
+
+			const requestUrl = new URL( strings.loadMoreEndpoint, window.location.origin );
+
+			requestUrl.searchParams.set( 'post', loadMore.dataset.loadMorePost || '' );
+			requestUrl.searchParams.set( 'block', loadMore.dataset.loadMoreBlock || '' );
+			requestUrl.searchParams.set( 'dialog', loadMore.dataset.loadMoreDialog || '' );
+			requestUrl.searchParams.set( 'offset', loadMore.dataset.loadMoreOffset || '0' );
+			loadMore.disabled = true;
+			loadMore.setAttribute( 'aria-busy', 'true' );
+
+			if ( label ) {
+				label.textContent = strings.loading || 'Loading…';
+			}
+
+			if ( icon ) {
+				icon.hidden = true;
+			}
+
+			if ( status ) {
+				status.textContent = strings.loading || 'Loading…';
+			}
+
+			window.fetch( requestUrl.toString(), { credentials: 'same-origin' } )
+				.then( function ( response ) {
+					if ( ! response.ok ) {
+						throw new Error( 'Unable to load gallery images.' );
+					}
+
+					return response.json();
+				} )
+				.then( function ( payload ) {
+					if ( ! payload || ! payload.html || ! Array.isArray( payload.images ) ) {
+						throw new Error( 'Invalid gallery response.' );
+					}
+
+					gallery.insertAdjacentHTML( 'beforeend', payload.html );
+					loadMore.dataset.loadMoreOffset = String( payload.nextOffset || 0 );
+
+					const dialog = cluster.querySelector( '[data-ltt-lightbox]' );
+
+					if ( dialog ) {
+						dialog.dispatchEvent( new CustomEvent( 'ltt-lightbox:items-added', { detail: { items: payload.images } } ) );
+					}
+
+					if ( payload.hasMore ) {
+						loadMore.disabled = false;
+						loadMore.removeAttribute( 'aria-busy' );
+
+						if ( label ) {
+							label.textContent = defaultLabel;
+						}
+
+						if ( icon ) {
+							icon.hidden = false;
+						}
+
+						if ( status ) {
+							status.textContent = '';
+						}
+					} else {
+						loadMore.remove();
+					}
+				} )
+				.catch( function () {
+					loadMore.disabled = false;
+					loadMore.removeAttribute( 'aria-busy' );
+
+					if ( label ) {
+						label.textContent = defaultLabel;
+					}
+
+					if ( icon ) {
+						icon.hidden = false;
+					}
+
+					if ( status ) {
+						status.textContent = strings.loadMoreError || 'More images could not be loaded. Please try again.';
+					}
+				} );
+		} );
+	} );
+
 	document.querySelectorAll( '.static-image-cluster--has-lightbox' ).forEach( function ( cluster ) {
 		const dialog = cluster.querySelector( '[data-static-image-cluster-lightbox]' );
 		const dataElement = dialog ? dialog.querySelector( '[data-static-image-cluster-data]' ) : null;

@@ -3,6 +3,7 @@
 
 	const variantKey = 'field_ltt_dive_in_static_image_cluster_variant';
 	const headingKey = 'field_ltt_dive_in_static_image_cluster_heading';
+	const introKey = 'field_ltt_dive_in_static_image_cluster_intro';
 	const imagesKey = 'field_ltt_dive_in_static_image_cluster_images';
 	const detailsKey = 'field_ltt_dive_in_static_image_cluster_image_details';
 	const optionalHeadingVariants = [ 'hero_caption', 'inspired' ];
@@ -18,7 +19,8 @@
 		const editor = window.wp.data.dispatch( 'core/editor' );
 		const invalid = document.querySelector(
 			'[data-key="' + imagesKey + '"][data-ltt-image-count-invalid="true"], ' +
-			'[data-key="' + headingKey + '"][data-ltt-heading-invalid="true"]'
+			'[data-key="' + headingKey + '"][data-ltt-heading-invalid="true"], ' +
+			'[data-key="' + introKey + '"][data-ltt-intro-invalid="true"]'
 		);
 
 		if ( invalid ) {
@@ -31,6 +33,41 @@
 			if ( editor.unlockPostAutosaving ) {
 				editor.unlockPostAutosaving( savingLockKey );
 			}
+		}
+	};
+
+	const updateIntroductionRequirement = function ( $fields ) {
+		const variant = $fields.find( '[data-key="' + variantKey + '"] select' ).first().val();
+		const $field = $fields.find( '[data-key="' + introKey + '"]' ).first();
+
+		if ( ! $field.length ) {
+			return;
+		}
+
+		const required = 'hero_caption' === variant;
+		const $input = $field.find( 'textarea' ).first();
+		const valid = ! required || $.trim( $input.val() || '' ).length > 0;
+		let $requiredMark = $field.find( '> .acf-label label > .acf-required' );
+		let $error = $field.find( '> .acf-input > .ltt-static-image-cluster-intro-error' );
+
+		$field.attr( 'data-ltt-intro-invalid', valid ? 'false' : 'true' );
+		$input.attr( 'aria-required', required ? 'true' : 'false' );
+
+		if ( required && ! $requiredMark.length ) {
+			$requiredMark = $( '<span class="acf-required">*</span>' );
+			$field.find( '> .acf-label label' ).first().append( $requiredMark );
+		} else if ( ! required ) {
+			$requiredMark.remove();
+		}
+
+		if ( ! valid ) {
+			if ( ! $error.length ) {
+				$error = $( '<div class="acf-notice -error ltt-static-image-cluster-intro-error" role="alert"><p></p></div>' );
+				$field.children( '.acf-input' ).append( $error );
+			}
+			$error.find( 'p' ).text( settings.introductionRequired || 'Introduction is required for Hero With Caption.' );
+		} else {
+			$error.remove();
 		}
 	};
 
@@ -75,7 +112,7 @@
 		const requiredCount = limit && limit.display ? limit.display : imageCount;
 		let detailCount = $details.find( '> .acf-input > .acf-repeater > table > tbody > .acf-row:not(.acf-clone)' ).length;
 		while ( detailCount < requiredCount ) {
-			$details.find( '[data-event="add-row"]' ).first().trigger( 'click' );
+			$details.find( '> .acf-input > .acf-repeater > .acf-actions [data-event="add-row"]' ).trigger( 'click' );
 			detailCount++;
 		}
 	};
@@ -121,6 +158,7 @@
 		}
 
 		updateHeadingRequirement( $fields );
+		updateIntroductionRequirement( $fields );
 		syncImageDetails( $fields, count, limit );
 		syncSavingLock();
 	};
@@ -150,6 +188,13 @@
 		const $fields = $( this ).closest( '.acf-fields' );
 
 		updateHeadingRequirement( $fields );
+		syncSavingLock();
+	} );
+
+	$( document ).on( 'input change', '[data-key="' + introKey + '"] textarea', function () {
+		const $fields = $( this ).closest( '.acf-fields' );
+
+		updateIntroductionRequirement( $fields );
 		syncSavingLock();
 	} );
 

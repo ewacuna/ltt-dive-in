@@ -128,8 +128,8 @@ add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_image
 /**
  * Require a section heading for the variants that display editorial content.
  *
- * Hero With Caption supplies its own caption, and Inspired Gallery intentionally
- * keeps its heading optional.
+ * Hero With Caption uses the shared Introduction as its caption, and Inspired
+ * Gallery intentionally keeps its heading optional.
  *
  * @param bool|string $valid Current validation result.
  * @param mixed       $value Submitted heading.
@@ -154,6 +154,28 @@ function ltt_dive_in_validate_static_image_cluster_heading( $valid, $value ) {
 	return $valid;
 }
 add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_heading', 'ltt_dive_in_validate_static_image_cluster_heading', 10, 2 );
+
+/**
+ * Require the shared Introduction field for Hero With Caption.
+ *
+ * @param bool|string $valid Current validation result.
+ * @param mixed       $value Submitted introduction.
+ * @return bool|string
+ */
+function ltt_dive_in_validate_static_image_cluster_intro( $valid, $value ) {
+	if ( true !== $valid ) {
+		return $valid;
+	}
+
+	$variant = ltt_dive_in_get_static_image_cluster_submitted_value( 'field_ltt_dive_in_static_image_cluster_variant' );
+
+	if ( 'hero_caption' === $variant && '' === trim( (string) $value ) ) {
+		return __( 'Introduction is required for Hero With Caption.', 'ltt-dive-in' );
+	}
+
+	return $valid;
+}
+add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_intro', 'ltt_dive_in_validate_static_image_cluster_intro', 10, 2 );
 
 /**
  * Return links saved in the legacy CTA repeater.

@@ -171,10 +171,12 @@ function ltt_dive_in_register_blocks() {
 		'ltt-dive-in-static-image-cluster',
 		'ltt_dive_in_static_image_cluster',
 		array(
+			'loadMoreEndpoint' => rest_url( 'ltt-dive-in/v1/static-image-cluster-images' ),
 			/* translators: 1: current image number, 2: total images. */
 			'imageCount'     => __( 'Image %1$d of %2$d', 'ltt-dive-in' ),
 			'previousImages' => __( 'Previous images', 'ltt-dive-in' ),
 			'nextImages'     => __( 'Next images', 'ltt-dive-in' ),
+			'loading'        => __( 'Loading…', 'ltt-dive-in' ),
 			/* translators: %d: gallery position. */
 			'goToPosition'   => __( 'Go to gallery position %d', 'ltt-dive-in' ),
 		)
@@ -642,6 +644,7 @@ function ltt_dive_in_enqueue_static_image_cluster_editor_assets() {
 			'requirementPrefix' => __( 'This variant requires ', 'ltt-dive-in' ),
 			'currentlySelected' => __( 'Currently selected: ', 'ltt-dive-in' ),
 			'headingRequired'   => __( 'Section heading is required for this variant.', 'ltt-dive-in' ),
+			'introductionRequired' => __( 'Introduction is required for Hero With Caption.', 'ltt-dive-in' ),
 			'imageLimits'       => $limits,
 		)
 	);

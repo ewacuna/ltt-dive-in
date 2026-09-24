@@ -5,8 +5,8 @@
     "title": "Static Image Cluster",
     "category": "ltt-blocks",
     "icon": "format-gallery",
-    "description": "A non-routing editorial image cluster with gallery, hero, side-by-side, and inspired variants.",
-    "keywords": [ "gallery", "images", "editorial", "lightbox" ],
+    "description": "Editorial image cluster with gallery, hero, side-by-side, and inspired variants.",
+    "keywords": ["gallery", "images", "editorial", "lightbox"],
     "textdomain": "ltt-dive-in",
     "style": "ltt-dive-in-static-image-cluster",
     "editorStyle": "ltt-dive-in-static-image-cluster",
@@ -19,7 +19,7 @@
         "align": { "type": "string", "default": "full" }
     },
     "supports": {
-        "align": [ "full" ],
+        "align": ["full"],
         "anchor": true,
         "customClassName": false,
         "html": false,

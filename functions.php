@@ -26,6 +26,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/footer-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/feature-image-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/static-image-cluster-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/static-image-cluster-load-more.php';
 require_once LTT_DIVE_IN_DIR . '/inc/activity-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/team-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/testimonial-settings.php';
