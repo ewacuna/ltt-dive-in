@@ -1,0 +1,198 @@
+/*
+ * Single post (single.php).
+ *
+ * Figma has no single-post composition yet. This layout reuses the Internal
+ * Page Hero and the internal-page content widths from page.css, with body copy
+ * held to the shared --content-width reading measure and DESIGN.md's annotated
+ * type scale. Full-width and wide blocks keep their own containers.
+ */
+.single-main {
+    padding-bottom: 0;
+    background: #ffffff;
+    color: #073959;
+}
+
+.single-main .single-entry {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+.single-main .entry-header,
+.single-main .entry-content > :not(.alignfull, .alignwide),
+.single-main .page-links,
+.single-main__navigation {
+    width: min(calc(100% - 8rem), var(--content-width));
+    margin-inline: auto;
+}
+
+/* Meta (Body 2) */
+.single-main .entry-header {
+    padding-block: clamp(2rem, 4vw, 3rem) 1.5rem;
+    border-bottom: 1px solid #e2e2e5;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.single-main .entry-meta {
+    gap: 0.5rem 1.5rem;
+    color: #525062;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.single-main .entry-meta a {
+    color: #073959;
+}
+
+/* Body 1 */
+.single-main .entry-content {
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.single-main .entry-content > * {
+    margin-block: 0 1.5rem;
+}
+
+.single-main .entry-content a {
+    color: #073959;
+    text-decoration: underline;
+}
+
+.single-main .entry-content a:hover,
+.single-main .entry-content a:focus {
+    color: #06304d;
+    text-decoration-thickness: 2px;
+}
+
+/* H2 and H3 are the highest levels available below the hero's H1. */
+.single-main .entry-content :is(h2, h3, h4, h5, h6) {
+    margin-top: 2.5rem;
+    color: #073959;
+    overflow-wrap: anywhere;
+}
+
+.single-main .entry-content h2 {
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 2.5rem;
+    font-synthesis: none;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+/* Gotham Medium is not available; Bold is the documented substitute. */
+.single-main .entry-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.2;
+}
+
+.single-main .entry-content h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.0025em;
+    line-height: 1.25;
+}
+
+.single-main .entry-content :is(h5, h6) {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.single-main .entry-content blockquote {
+    padding-left: 1.5rem;
+    border-left: 4px solid #073959;
+    margin-inline: 0;
+}
+
+.single-main .entry-content figcaption {
+    margin-top: 0.5rem;
+    color: #525062;
+    font-size: 0.75rem;
+    line-height: 1.45;
+}
+
+.single-main .entry-content > .alignfull {
+    width: 100%;
+}
+
+/* Previous / next post */
+.single-main__navigation {
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e2e5;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+}
+
+.single-main__navigation .nav-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.single-main__navigation .nav-next {
+    grid-column: 2;
+    text-align: right;
+}
+
+.single-main__navigation a {
+    display: flex;
+    min-height: 2.75rem;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: #073959;
+    text-decoration: none;
+}
+
+.single-main__navigation .post-navigation__label {
+    color: #525062;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.45;
+    text-transform: uppercase;
+}
+
+.single-main__navigation .post-navigation__title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-decoration: underline;
+}
+
+.single-main__navigation a:hover .post-navigation__title,
+.single-main__navigation a:focus .post-navigation__title {
+    text-decoration-thickness: 2px;
+}
+
+@media (max-width: 1199.98px) {
+    .single-main .entry-header,
+    .single-main .entry-content > :not(.alignfull, .alignwide),
+    .single-main .page-links,
+    .single-main__navigation {
+        width: min(calc(100% - 4rem), var(--content-width));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .single-main .entry-header,
+    .single-main .entry-content > :not(.alignfull, .alignwide),
+    .single-main .page-links,
+    .single-main__navigation {
+        width: calc(100% - 2.5rem);
+    }
+
+    .single-main__navigation .nav-links {
+        grid-template-columns: 1fr;
+    }
+
+    .single-main__navigation .nav-next {
+        grid-column: auto;
+        text-align: left;
+    }
+}

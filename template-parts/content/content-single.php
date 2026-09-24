@@ -8,8 +8,7 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'single-entry' ); ?>>
 	<header class="entry-header">
 		<div class="entry-meta">
-			<?php ltt_dive_in_posted_on(); ?>
-			<?php ltt_dive_in_posted_by(); ?>
+			<?php ltt_dive_in_last_updated(); ?>
 		</div>
 	</header>
 
@@ -24,6 +23,4 @@
 		);
 		?>
 	</div>
-
-	<footer class="entry-footer"><?php ltt_dive_in_entry_footer(); ?></footer>
 </article>

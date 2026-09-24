@@ -49,6 +49,18 @@ function ltt_dive_in_posted_by() {
 }
 
 /**
+ * Print the last-updated month and year, e.g. "Last updated: July 2026".
+ */
+function ltt_dive_in_last_updated() {
+	printf(
+		'<span class="last-updated">%1$s <time class="updated" datetime="%2$s">%3$s</time></span>',
+		esc_html__( 'Last updated:', 'ltt-dive-in' ),
+		esc_attr( get_the_modified_date( DATE_W3C ) ),
+		esc_html( get_the_modified_date( _x( 'F Y', 'last updated date format', 'ltt-dive-in' ) ) )
+	);
+}
+
+/**
  * Print category and tag links.
  */
 function ltt_dive_in_entry_footer() {

@@ -23,6 +23,7 @@ function ltt_dive_in_enqueue_assets() {
 	$front_page_style_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/front-page.css';
 	$page_hero_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/page-hero.css';
 	$page_style_path        = LTT_DIVE_IN_DIR . '/assets/css/templates/page.css';
+	$single_style_path      = LTT_DIVE_IN_DIR . '/assets/css/templates/single.css';
 	$select_script_path     = LTT_DIVE_IN_DIR . '/assets/js/components/select.js';
 	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
 
@@ -94,6 +95,15 @@ function ltt_dive_in_enqueue_assets() {
 		);
 	}
 
+	if ( is_singular( 'post' ) ) {
+		wp_enqueue_style(
+			'ltt-dive-in-single',
+			LTT_DIVE_IN_URI . '/assets/css/templates/single.css',
+			array( 'ltt-dive-in-style' ),
+			file_exists( $single_style_path ) ? (string) filemtime( $single_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
 	if ( ltt_dive_in_has_page_hero() ) {
 		wp_enqueue_style(
 			'ltt-dive-in-page-hero',
@@ -136,7 +146,8 @@ function ltt_dive_in_enqueue_assets() {
 		)
 	);
 
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+	// single.php does not render comments.
+	if ( is_singular() && ! is_singular( 'post' ) && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }
