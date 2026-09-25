@@ -71,6 +71,7 @@
 		const locationIcon = cluster.dataset.photoswipeLocationIcon || '';
 		let images = source ? parseImages( source ) : [];
 		let instancePromise;
+		let swipeStart;
 		let trigger;
 
 		if ( ! source || ! lightboxModule || ! coreModule || ! images.length ) {
@@ -79,6 +80,24 @@
 
 		const getThumb = function ( index ) {
 			return cluster.querySelector( '[data-ltt-photoswipe-trigger][data-image-index="' + index + '"] img' );
+		};
+
+		const getTouchPoint = function ( event ) {
+			if ( event.type && event.type.endsWith( 'cancel' ) ) {
+				return null;
+			}
+
+			if ( 'touch' === event.pointerType ) {
+				return { x: event.clientX, y: event.clientY, id: event.pointerId };
+			}
+
+			if ( event.changedTouches && event.changedTouches.length ) {
+				const touch = event.changedTouches[0];
+
+				return { x: touch.clientX, y: touch.clientY, id: touch.identifier };
+			}
+
+			return null;
 		};
 
 		const renderCaption = function ( caption, location, pswp ) {
@@ -164,6 +183,51 @@
 							}
 						);
 
+						lightbox.on( 'pointerDown', function ( event ) {
+							const point = getTouchPoint( event.originalEvent );
+							const pswp = lightbox.pswp;
+							const slide = pswp ? pswp.currSlide : null;
+
+							if ( ! point || ! slide || swipeStart || Math.abs( slide.currZoomLevel - slide.zoomLevels.initial ) > 0.01 ) {
+								swipeStart = undefined;
+								return;
+							}
+
+							swipeStart = {
+								x: point.x,
+								y: point.y,
+								id: point.id,
+								index: pswp.currIndex,
+							};
+						} );
+
+						lightbox.on( 'pointerUp', function ( event ) {
+							const point = getTouchPoint( event.originalEvent );
+							const start = swipeStart;
+
+							swipeStart = undefined;
+							if ( ! point || ! start || point.id !== start.id ) {
+								return;
+							}
+
+							const horizontalDistance = point.x - start.x;
+							const verticalDistance = point.y - start.y;
+
+							if ( Math.abs( horizontalDistance ) < 48 || Math.abs( horizontalDistance ) <= Math.abs( verticalDistance ) * 1.25 ) {
+								return;
+							}
+
+							window.requestAnimationFrame( function () {
+								const pswp = lightbox.pswp;
+
+								if ( ! pswp || pswp.currIndex !== start.index || pswp.potentialIndex !== start.index ) {
+									return;
+								}
+
+								pswp.goTo( start.index + ( horizontalDistance < 0 ? 1 : -1 ) );
+							} );
+						} );
+
 						lightbox.addFilter( 'thumbEl', function ( thumb, item, index ) {
 							return getThumb( index ) || thumb;
 						} );
@@ -236,6 +300,8 @@
 
 						lightbox.on( 'close', function () {
 							const returnTarget = trigger;
+
+							swipeStart = undefined;
 
 							window.setTimeout( function () {
 								if ( returnTarget && document.contains( returnTarget ) ) {
