@@ -12,11 +12,13 @@
 
 	const getInspiredPadding = function ( viewportSize ) {
 		const mobile = window.matchMedia( '(max-width: 767.98px)' ).matches;
-		const horizontal = mobile ? 16 : Math.max( 16, ( viewportSize.x - 1152 ) / 2 );
-		const top = mobile ? 72 : 64;
+		const horizontal = mobile ? 32 : Math.max( 16, ( viewportSize.x - 1152 ) / 2 );
+		const minimumTop = mobile ? 72 : 64;
+		const minimumBottom = mobile ? 192 : 128;
 		const imageHeight = mobile
-			? Math.min( 310, Math.max( 224, viewportSize.y - top - 192 ) )
-			: Math.min( 640, Math.max( 384, viewportSize.y - top - 128 ) );
+			? Math.min( 310, Math.max( 224, viewportSize.y - minimumTop - minimumBottom ) )
+			: Math.min( 640, Math.max( 384, viewportSize.y - minimumTop - minimumBottom ) );
+		const top = Math.max( minimumTop, ( viewportSize.y - imageHeight ) / 2 );
 
 		return {
 			left: horizontal,
@@ -129,6 +131,7 @@
 			root.style.setProperty( '--ltt-photoswipe-image-center', imageCenter + 'px' );
 			caption.style.left = padding.left + 'px';
 			caption.style.right = padding.right + 'px';
+			caption.style.top = padding.top + 'px';
 			caption.style.bottom = padding.bottom + 'px';
 			location.style.left = padding.left + 'px';
 			location.style.right = padding.right + 'px';

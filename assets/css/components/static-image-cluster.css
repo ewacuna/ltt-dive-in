@@ -12,7 +12,6 @@
 
 .static-image-cluster__header {
     display: grid;
-    min-height: 11.5625rem;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
     gap: 3rem;
