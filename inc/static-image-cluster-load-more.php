@@ -87,7 +87,6 @@ function ltt_dive_in_get_static_image_cluster_image_details( $data, $field ) {
 	for ( $index = 0; $index < absint( $value ); ++$index ) {
 		$prefix = $field . '_' . $index . '_';
 		$details[] = array(
-			'alt'         => $data[ $prefix . 'alt' ] ?? '',
 			'title'       => $data[ $prefix . 'title' ] ?? '',
 			'description' => $data[ $prefix . 'description' ] ?? '',
 		);
@@ -119,9 +118,10 @@ function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
 		}
 
 		$detail = isset( $details[ $index ] ) && is_array( $details[ $index ] ) ? $details[ $index ] : array();
-		$alt    = trim( (string) ( $detail['alt'] ?? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) );
+		$alt    = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
+		$full   = wp_get_attachment_image_src( $image_id, 'full' );
 
-		if ( '' === $alt ) {
+		if ( '' === $alt || ! $full ) {
 			continue;
 		}
 
@@ -130,7 +130,9 @@ function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
 			'alt'         => $alt,
 			'title'       => trim( (string) ( $detail['title'] ?? '' ) ),
 			'description' => trim( (string) ( $detail['description'] ?? '' ) ),
-			'full'        => (string) wp_get_attachment_image_url( $image_id, 'full' ),
+			'full'        => (string) $full[0],
+			'width'       => (int) $full[1],
+			'height'      => (int) $full[2],
 			'srcset'      => (string) wp_get_attachment_image_srcset( $image_id, 'full' ),
 		);
 	}
@@ -144,10 +146,9 @@ function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
  * @param array  $image     Image data.
  * @param int    $index     Zero-based image position.
  * @param int    $total     Total gallery image count.
- * @param string $dialog_id Lightbox dialog ID.
  * @return string
  */
-function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total, $dialog_id ) {
+function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total ) {
 	$image_html = wp_get_attachment_image(
 		$image['id'],
 		'large',
@@ -165,9 +166,11 @@ function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total, $dial
 	}
 
 	return sprintf(
-		'<figure class="static-image-cluster__item"><button class="static-image-cluster__trigger" type="button" data-ltt-lightbox-trigger data-image-index="%1$d" aria-haspopup="dialog" aria-controls="%2$s" aria-label="%3$s">%4$s<span class="static-image-cluster__inspired-info" aria-hidden="true"><img src="%5$s" alt="" /></span><span class="static-image-cluster__inspired-title"><img src="%6$s" alt="" />%7$s</span></button></figure>',
+		'<figure class="static-image-cluster__item"><a class="static-image-cluster__trigger" href="%1$s" data-ltt-photoswipe-trigger data-image-index="%2$d" data-pswp-width="%3$d" data-pswp-height="%4$d" aria-haspopup="dialog" aria-label="%5$s">%6$s<span class="static-image-cluster__inspired-info" aria-hidden="true"><img src="%7$s" alt="" /></span><span class="static-image-cluster__inspired-title"><img src="%8$s" alt="" />%9$s</span></a></figure>',
+		esc_url( $image['full'] ),
 		(int) $index,
-		esc_attr( $dialog_id ),
+		(int) $image['width'],
+		(int) $image['height'],
 		esc_attr( sprintf( __( 'View image %1$d of %2$d: %3$s', 'ltt-dive-in' ), $index + 1, $total, $image['alt'] ) ),
 		$image_html,
 		esc_url( get_theme_file_uri( 'assets/images/icons/info.svg' ) ),
@@ -198,11 +201,10 @@ function ltt_dive_in_get_static_image_cluster_load_more( WP_REST_Request $reques
 	$images = ltt_dive_in_get_saved_inspired_gallery_images( $block );
 	$offset = min( absint( $request->get_param( 'offset' ) ), count( $images ) );
 	$batch  = array_slice( $images, $offset, 5 );
-	$dialog_id = sanitize_html_class( (string) $request->get_param( 'dialog' ) );
 	$html = '';
 
 	foreach ( $batch as $batch_index => $image ) {
-		$html .= ltt_dive_in_render_inspired_gallery_item( $image, $offset + $batch_index, count( $images ), $dialog_id );
+		$html .= ltt_dive_in_render_inspired_gallery_item( $image, $offset + $batch_index, count( $images ) );
 	}
 
 	$response = rest_ensure_response(
@@ -232,7 +234,6 @@ function ltt_dive_in_register_static_image_cluster_routes() {
 			'args'                => array(
 				'post'  => array( 'required' => true, 'sanitize_callback' => 'absint' ),
 				'block' => array( 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
-				'dialog' => array( 'required' => true, 'sanitize_callback' => 'sanitize_html_class' ),
 				'offset' => array( 'required' => true, 'sanitize_callback' => 'absint' ),
 			),
 		)

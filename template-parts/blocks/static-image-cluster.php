@@ -102,18 +102,21 @@ $images = array();
 
 foreach ( $image_ids as $image_index => $image_id ) {
 	$detail = isset( $image_details[ $image_index ] ) && is_array( $image_details[ $image_index ] ) ? $image_details[ $image_index ] : array();
-	$alt = trim( (string) ( $detail['alt'] ?? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) );
+	$alt    = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
+	$full   = wp_get_attachment_image_src( $image_id, 'full' );
 
-	if ( '' === $alt || ! wp_attachment_is_image( $image_id ) ) {
+	if ( '' === $alt || ! $full || ! wp_attachment_is_image( $image_id ) ) {
 		continue;
 	}
 
 	$images[] = array(
-		'id'      => $image_id,
-		'alt'     => $alt,
+		'id'          => $image_id,
+		'alt'         => $alt,
 		'title'       => 'inspired' === $variant ? trim( (string) ( $detail['title'] ?? '' ) ) : '',
 		'description' => 'inspired' === $variant ? trim( (string) ( $detail['description'] ?? '' ) ) : '',
-		'full'    => (string) wp_get_attachment_image_url( $image_id, 'full' ),
+		'full'    => (string) $full[0],
+		'width'   => (int) $full[1],
+		'height'  => (int) $full[2],
 		'srcset'  => (string) wp_get_attachment_image_srcset( $image_id, 'full' ),
 	);
 }
@@ -143,12 +146,16 @@ $hero_caption   = $intro ? $intro : trim( (string) $get_value( 'ltt_dive_in_stat
 $has_lightbox   = count( $images ) >= 3;
 $section_id     = $anchor ? $anchor : 'static-image-cluster-' . $block_id;
 $heading_id     = $section_id . '-title';
-$dialog_id      = $section_id . '-lightbox';
 $classes        = 'static-image-cluster static-image-cluster--' . $variant . $alignment . ( $has_lightbox ? ' static-image-cluster--has-lightbox' : '' ) . ( $is_preview ? ' static-image-cluster--preview' : '' );
 $post_id        = get_the_ID();
 $can_load_more  = 'inspired' === $variant && ! $is_preview && $post_id && $rest_block_id;
 $rendered_images = $can_load_more ? array_slice( $images, 0, 5 ) : $images;
 $button_classes = array( 'primary-outline', 'secondary-outline', 'primary-fill' );
+$photoswipe_lightbox_url = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe-lightbox.esm.js' );
+$photoswipe_core_url     = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe.esm.js' );
+$close_icon_url          = get_theme_file_uri( 'assets/images/header/close-icon.svg' );
+$arrow_icon_url          = get_theme_file_uri( 'assets/images/icons/lightbox-arrow.svg' );
+$location_icon_url       = get_theme_file_uri( 'assets/images/icons/location.svg' );
 $get_image_sizes = static function ( $index ) use ( $variant ) {
 	if ( in_array( $variant, array( 'hero_caption', 'one_up' ), true ) ) {
 		return '100vw';
@@ -233,7 +240,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 };
 ?>
 
-<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?>>
+<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-arrow-icon="<?php echo esc_url( $arrow_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
 	<div class="static-image-cluster__container"<?php echo 'five_plus' === $variant ? ' data-static-image-cluster-carousel' : ''; ?>>
 		<?php if ( 'hero_caption' !== $variant && ( $heading || $intro || $ctas ) ) : ?>
 			<header class="static-image-cluster__header">
@@ -265,10 +272,10 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 				<?php $mobile_image_source = $get_mobile_image_source( $index ); ?>
 				<figure class="static-image-cluster__item<?php echo 'five_plus' === $variant ? ' swiper-slide' : ''; ?>"<?php echo 'inspired' === $variant && $index >= 5 ? ' data-inspired-gallery-item hidden' : ''; ?>>
 					<?php if ( $has_lightbox ) : ?>
-						<button class="static-image-cluster__trigger" type="button" data-ltt-lightbox-trigger data-image-index="<?php echo esc_attr( (string) $index ); ?>" aria-haspopup="dialog" aria-controls="<?php echo esc_attr( $dialog_id ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'View image %1$d of %2$d: %3$s', 'ltt-dive-in' ), $index + 1, count( $images ), $image['alt'] ) ); ?>">
+						<a class="static-image-cluster__trigger" href="<?php echo esc_url( $image['full'] ); ?>" data-ltt-photoswipe-trigger data-image-index="<?php echo esc_attr( (string) $index ); ?>" data-pswp-width="<?php echo esc_attr( (string) $image['width'] ); ?>" data-pswp-height="<?php echo esc_attr( (string) $image['height'] ); ?>" aria-haspopup="dialog" aria-label="<?php echo esc_attr( sprintf( __( 'View image %1$d of %2$d: %3$s', 'ltt-dive-in' ), $index + 1, count( $images ), $image['alt'] ) ); ?>">
 							<?php echo $render_image( $image, $image_sizes, $mobile_image_source ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<?php if ( 'inspired' === $variant ) : ?><span class="static-image-cluster__inspired-info" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/info.svg' ) ); ?>" alt="" /></span><span class="static-image-cluster__inspired-title"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/location.svg' ) ); ?>" alt="" /><?php echo esc_html( $image['title'] ); ?></span><?php endif; ?>
-						</button>
+						</a>
 					<?php else : ?>
 						<?php echo $render_image( $image, $image_sizes, $mobile_image_source ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php endif; ?>
@@ -293,7 +300,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 			</div>
 		<?php endif; ?>
 		<?php if ( $can_load_more && count( $images ) > count( $rendered_images ) ) : ?>
-			<button class="static-image-cluster__inspired-load-more" type="button" data-inspired-load-more data-load-more-post="<?php echo esc_attr( (string) $post_id ); ?>" data-load-more-block="<?php echo esc_attr( $rest_block_id ); ?>" data-load-more-dialog="<?php echo esc_attr( $dialog_id ); ?>" data-load-more-offset="<?php echo esc_attr( (string) count( $rendered_images ) ); ?>">
+			<button class="static-image-cluster__inspired-load-more" type="button" data-inspired-load-more data-load-more-post="<?php echo esc_attr( (string) $post_id ); ?>" data-load-more-block="<?php echo esc_attr( $rest_block_id ); ?>" data-load-more-offset="<?php echo esc_attr( (string) count( $rendered_images ) ); ?>">
 				<span data-inspired-load-more-label><?php esc_html_e( 'Load More', 'ltt-dive-in' ); ?></span>
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/select-toggle.svg' ) ); ?>" alt="" aria-hidden="true" data-inspired-load-more-icon />
 				<span class="screen-reader-text" data-inspired-load-more-status role="status"></span>
@@ -310,13 +317,6 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 	</div>
 
 	<?php if ( $has_lightbox && ! $is_preview ) : ?>
-		<dialog id="<?php echo esc_attr( $dialog_id ); ?>" class="ltt-lightbox<?php echo 'inspired' === $variant ? ' ltt-lightbox--inspired' : ''; ?>" data-ltt-lightbox aria-label="<?php esc_attr_e( 'Image gallery viewer', 'ltt-dive-in' ); ?>">
-			<div class="ltt-lightbox__inner">
-				<div class="ltt-lightbox__header"><span data-ltt-lightbox-count aria-live="polite"></span><button class="ltt-lightbox__close" type="button" data-ltt-lightbox-close aria-label="<?php esc_attr_e( 'Close image viewer', 'ltt-dive-in' ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/header/close-icon.svg' ) ); ?>" alt="" aria-hidden="true" /></button></div>
-				<button class="ltt-lightbox__control ltt-lightbox__control--previous" type="button" data-ltt-lightbox-previous aria-label="<?php esc_attr_e( 'Previous image', 'ltt-dive-in' ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/lightbox-arrow.svg' ) ); ?>" alt="" aria-hidden="true" /></button>
-				<div class="ltt-lightbox__content"><figure class="ltt-lightbox__figure"><img class="ltt-lightbox__image" data-ltt-lightbox-image src="" alt="" decoding="async" /><figcaption class="ltt-lightbox__caption"><p class="ltt-lightbox__description" data-ltt-lightbox-description></p></figcaption></figure><div class="ltt-lightbox__location" data-ltt-lightbox-location><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/location.svg' ) ); ?>" alt="" aria-hidden="true" /><h2 class="ltt-lightbox__title" data-ltt-lightbox-title></h2></div></div>
-				<button class="ltt-lightbox__control ltt-lightbox__control--next" type="button" data-ltt-lightbox-next aria-label="<?php esc_attr_e( 'Next image', 'ltt-dive-in' ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/lightbox-arrow.svg' ) ); ?>" alt="" aria-hidden="true" /></button>
-			</div><script type="application/json" data-ltt-lightbox-data><?php echo wp_json_encode( $rendered_images, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?></script>
-		</dialog>
+		<script type="application/json" data-ltt-photoswipe-data><?php echo wp_json_encode( $rendered_images, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?></script>
 	<?php endif; ?>
 </section>

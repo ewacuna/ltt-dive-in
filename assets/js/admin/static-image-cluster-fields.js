@@ -131,7 +131,6 @@
 		}
 
 		const count = $field.find( '.acf-gallery-attachment' ).length;
-		$field.find( '.acf-gallery-attachment [data-name="edit"], .acf-gallery-attachment .acf-icon.-pencil' ).attr( 'aria-hidden', 'true' ).hide();
 		const valid = count >= limit.min;
 		const message = ( settings.requirementPrefix || 'This variant requires ' ) + limit.label + '. ' +
 			( settings.currentlySelected || 'Currently selected: ' ) + count + '.';
@@ -159,7 +158,9 @@
 
 		updateHeadingRequirement( $fields );
 		updateIntroductionRequirement( $fields );
-		syncImageDetails( $fields, count, limit );
+		if ( 'inspired' === variant ) {
+			syncImageDetails( $fields, count, limit );
+		}
 		syncSavingLock();
 	};
 
@@ -206,11 +207,4 @@
 		window.setTimeout( function () { updateWithin(); }, 250 );
 	} );
 
-	/* Keep Gallery ordering and removal, but prevent its attachment sidebar from opening. */
-	document.addEventListener( 'click', function ( event ) {
-		const attachment = event.target.closest( '[data-key="' + imagesKey + '"] .acf-gallery-attachment' );
-		if ( ! attachment || event.target.closest( '.acf-gallery-remove' ) ) { return; }
-		event.preventDefault();
-		event.stopImmediatePropagation();
-	}, true );
 } )( jQuery, acf );

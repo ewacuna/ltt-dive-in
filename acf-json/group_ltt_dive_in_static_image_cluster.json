@@ -85,6 +85,7 @@
             "label": "Images",
             "name": "ltt_dive_in_static_image_cluster_images",
             "type": "gallery",
+            "instructions": "Each image displayed by the selected variant needs Alternative Text in its Media Library details.",
             "required": 1,
             "min": 1,
             "max": 0,
@@ -105,8 +106,17 @@
             "label": "Image details",
             "name": "ltt_dive_in_static_image_cluster_image_details",
             "type": "repeater",
-            "instructions": "One row is required for each Gallery image",
+            "instructions": "Add a title and optional description for each Gallery image.",
             "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "==",
+                        "value": "inspired"
+                    }
+                ]
+            ],
             "layout": "block",
             "button_label": "Add image details",
             "sub_fields": [
@@ -145,14 +155,6 @@
                     "maxlength": 150,
                     "rows": 3,
                     "new_lines": ""
-                },
-                {
-                    "key": "field_ltt_dive_in_static_image_cluster_image_alt",
-                    "label": "Alternative text",
-                    "name": "alt",
-                    "type": "text",
-                    "required": 1,
-                    "maxlength": 50
                 }
             ]
         }

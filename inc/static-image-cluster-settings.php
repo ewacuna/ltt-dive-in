@@ -103,24 +103,52 @@ function ltt_dive_in_validate_static_image_cluster_images( $valid, $value ) {
 		);
 	}
 
+	$displayed_images = $limits[ $variant ]['display'] ? array_slice( $images, 0, $limits[ $variant ]['display'] ) : $images;
+	foreach ( $displayed_images as $index => $image_id ) {
+		$alt = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
+
+		if ( '' === $alt ) {
+			return sprintf(
+				/* translators: %d: one-based Gallery image position. */
+				__( 'Image %d needs Alternative Text in the Media Library.', 'ltt-dive-in' ),
+				$index + 1
+			);
+		}
+	}
+
 	return $valid;
 }
 add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_images', 'ltt_dive_in_validate_static_image_cluster_images', 10, 2 );
 
-/** Validate the per-image editorial and alternative-text rows. */
+/** Validate the Inspired Gallery image details. */
 function ltt_dive_in_validate_static_image_cluster_image_details( $valid, $value ) {
-	if ( true !== $valid ) { return $valid; }
+	if ( true !== $valid ) {
+		return $valid;
+	}
+
 	$variant = ltt_dive_in_get_static_image_cluster_submitted_value( 'field_ltt_dive_in_static_image_cluster_variant' );
+	if ( 'inspired' !== $variant ) {
+		return $valid;
+	}
+
 	$limits  = ltt_dive_in_get_static_image_cluster_image_limits();
 	$images = ltt_dive_in_get_static_image_cluster_submitted_value( 'field_ltt_dive_in_static_image_cluster_images' );
 	$images = array_values( array_filter( array_map( 'absint', (array) $images ) ) );
-	if ( ! is_string( $variant ) || ! isset( $limits[ $variant ] ) ) { return $valid; }
-	$required_count = $limits[ $variant ]['display'] ? $limits[ $variant ]['display'] : count( $images );
-	if ( count( (array) $value ) < $required_count ) { return __( 'Add Image details for every image displayed by this variant, in the same order.', 'ltt-dive-in' ); }
-	foreach ( array_slice( (array) $value, 0, $required_count ) as $index => $detail ) {
-		if ( ! is_array( $detail ) || '' === trim( (string) ( $detail['alt'] ?? '' ) ) ) { return sprintf( __( 'Image %d needs alternative text.', 'ltt-dive-in' ), $index + 1 ); }
-		if ( 'inspired' === $variant && '' === trim( (string) ( $detail['title'] ?? '' ) ) ) { return sprintf( __( 'Inspired Gallery image %d needs a title.', 'ltt-dive-in' ), $index + 1 ); }
+	if ( ! isset( $limits[ $variant ] ) ) {
+		return $valid;
 	}
+
+	$required_count = count( $images );
+	if ( count( (array) $value ) < $required_count ) {
+		return __( 'Add Image details for every Inspired Gallery image, in the same order.', 'ltt-dive-in' );
+	}
+
+	foreach ( array_slice( (array) $value, 0, $required_count ) as $index => $detail ) {
+		if ( ! is_array( $detail ) || '' === trim( (string) ( $detail['title'] ?? '' ) ) ) {
+			return sprintf( __( 'Inspired Gallery image %d needs a title.', 'ltt-dive-in' ), $index + 1 );
+		}
+	}
+
 	return $valid;
 }
 add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_image_details', 'ltt_dive_in_validate_static_image_cluster_image_details', 10, 2 );

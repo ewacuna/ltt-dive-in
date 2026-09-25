@@ -10,3 +10,11 @@ db-backups/
 # Alpine is intentionally vendored as a browser asset for production.
 !assets/js/vendor/
 !assets/css/vendor/
+
+# PhotoSwipe is intentionally vendored as browser assets for production.
+!assets/vendor/
+!assets/vendor/photoswipe/
+!assets/vendor/photoswipe/LICENSE
+!assets/vendor/photoswipe/photoswipe.css
+!assets/vendor/photoswipe/photoswipe-lightbox.esm.js
+!assets/vendor/photoswipe/photoswipe.esm.js

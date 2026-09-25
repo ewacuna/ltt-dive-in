@@ -115,8 +115,9 @@ function ltt_dive_in_register_blocks() {
 	$feature_image_style_path          = LTT_DIVE_IN_DIR . '/assets/css/components/feature-image-driver.css';
 	$static_image_cluster_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/static-image-cluster.css';
 	$static_image_cluster_script_path  = LTT_DIVE_IN_DIR . '/assets/js/components/static-image-cluster.js';
-	$lightbox_style_path                = LTT_DIVE_IN_DIR . '/assets/css/components/lightbox.css';
-	$lightbox_script_path               = LTT_DIVE_IN_DIR . '/assets/js/components/lightbox.js';
+	$photoswipe_style_path             = LTT_DIVE_IN_DIR . '/assets/vendor/photoswipe/photoswipe.css';
+	$photoswipe_lightbox_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/photoswipe-lightbox.css';
+	$photoswipe_lightbox_script_path   = LTT_DIVE_IN_DIR . '/assets/js/components/photoswipe-lightbox.js';
 	$activities_style_path             = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$script_path                       = LTT_DIVE_IN_DIR . '/assets/js/components/page-drivers.js';
 	$carousel_style_path               = LTT_DIVE_IN_DIR . '/assets/css/vendor/swiper-bundle.min.css';
@@ -145,8 +146,9 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style( 'ltt-dive-in-carousel-indicators', LTT_DIVE_IN_URI . '/assets/css/components/carousel-indicators.css', array(), file_exists( $carousel_indicators_style_path ) ? (string) filemtime( $carousel_indicators_style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_script( 'ltt-dive-in-swiper', LTT_DIVE_IN_URI . '/assets/js/vendor/swiper-bundle.min.js', array(), file_exists( $carousel_script_path ) ? (string) filemtime( $carousel_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_register_script( 'ltt-dive-in-page-drivers-carousel', LTT_DIVE_IN_URI . '/assets/js/components/page-drivers-carousel.js', array( 'ltt-dive-in-swiper' ), file_exists( $carousel_init_path ) ? (string) filemtime( $carousel_init_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_register_style( 'ltt-dive-in-lightbox', LTT_DIVE_IN_URI . '/assets/css/components/lightbox.css', array(), file_exists( $lightbox_style_path ) ? (string) filemtime( $lightbox_style_path ) : LTT_DIVE_IN_VERSION );
-	wp_register_script( 'ltt-dive-in-lightbox', LTT_DIVE_IN_URI . '/assets/js/components/lightbox.js', array(), file_exists( $lightbox_script_path ) ? (string) filemtime( $lightbox_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_register_style( 'ltt-dive-in-photoswipe', LTT_DIVE_IN_URI . '/assets/vendor/photoswipe/photoswipe.css', array(), file_exists( $photoswipe_style_path ) ? (string) filemtime( $photoswipe_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_style( 'ltt-dive-in-photoswipe-lightbox', LTT_DIVE_IN_URI . '/assets/css/components/photoswipe-lightbox.css', array( 'ltt-dive-in-photoswipe' ), file_exists( $photoswipe_lightbox_style_path ) ? (string) filemtime( $photoswipe_lightbox_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_script( 'ltt-dive-in-photoswipe-lightbox', LTT_DIVE_IN_URI . '/assets/js/components/photoswipe-lightbox.js', array(), file_exists( $photoswipe_lightbox_script_path ) ? (string) filemtime( $photoswipe_lightbox_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_register_style(
 		'ltt-dive-in-feature-image-driver',
 		LTT_DIVE_IN_URI . '/assets/css/components/feature-image-driver.css',
@@ -157,13 +159,13 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style(
 		'ltt-dive-in-static-image-cluster',
 		LTT_DIVE_IN_URI . '/assets/css/components/static-image-cluster.css',
-		array( 'ltt-dive-in-buttons', 'ltt-dive-in-swiper', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators', 'ltt-dive-in-lightbox' ),
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-swiper', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators', 'ltt-dive-in-photoswipe-lightbox' ),
 		file_exists( $static_image_cluster_style_path ) ? (string) filemtime( $static_image_cluster_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script(
 		'ltt-dive-in-static-image-cluster',
 		LTT_DIVE_IN_URI . '/assets/js/components/static-image-cluster.js',
-		array( 'ltt-dive-in-swiper', 'ltt-dive-in-lightbox' ),
+		array( 'ltt-dive-in-swiper', 'ltt-dive-in-photoswipe-lightbox' ),
 		file_exists( $static_image_cluster_script_path ) ? (string) filemtime( $static_image_cluster_script_path ) : LTT_DIVE_IN_VERSION,
 		array( 'strategy' => 'defer', 'in_footer' => true )
 	);
@@ -172,8 +174,6 @@ function ltt_dive_in_register_blocks() {
 		'ltt_dive_in_static_image_cluster',
 		array(
 			'loadMoreEndpoint' => rest_url( 'ltt-dive-in/v1/static-image-cluster-images' ),
-			/* translators: 1: current image number, 2: total images. */
-			'imageCount'     => __( 'Image %1$d of %2$d', 'ltt-dive-in' ),
 			'previousImages' => __( 'Previous images', 'ltt-dive-in' ),
 			'nextImages'     => __( 'Next images', 'ltt-dive-in' ),
 			'loading'        => __( 'Loading…', 'ltt-dive-in' ),
