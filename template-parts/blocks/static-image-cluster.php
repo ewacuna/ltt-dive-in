@@ -149,7 +149,8 @@ $heading_id     = $section_id . '-title';
 $classes        = 'static-image-cluster static-image-cluster--' . $variant . $alignment . ( $has_lightbox ? ' static-image-cluster--has-lightbox' : '' ) . ( $is_preview ? ' static-image-cluster--preview' : '' );
 $post_id        = get_the_ID();
 $can_load_more  = 'inspired' === $variant && ! $is_preview && $post_id && $rest_block_id;
-$rendered_images = $can_load_more ? array_slice( $images, 0, 5 ) : $images;
+$rendered_images = $can_load_more ? array_slice( $images, 0, 6 ) : $images;
+$image_batches   = 'inspired' === $variant ? array_chunk( $rendered_images, 6, true ) : array( $rendered_images );
 $button_classes = array( 'primary-outline', 'secondary-outline', 'primary-fill' );
 $photoswipe_lightbox_url = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe-lightbox.esm.js' );
 $photoswipe_core_url     = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe.esm.js' );
@@ -182,11 +183,9 @@ $get_image_sizes = static function ( $index ) use ( $variant ) {
 	}
 
 	if ( 'inspired' === $variant ) {
-		if ( 0 === $index ) {
-			return '(max-width: 767.98px) calc(100vw - 40px), (max-width: 1399.98px) calc(20vw - 29px), 247px';
-		}
+		$desktop_width = in_array( $index % 6, array( 2, 3 ), true ) ? '28vw' : '36vw';
 
-		return '(max-width: 767.98px) calc(50vw - 26px), (max-width: 1399.98px) calc(20vw - 29px), 247px';
+		return '(max-width: 767.98px) calc((100vw - 22px) / 3), ' . $desktop_width;
 	}
 
 	if ( 'side_by_side' === $variant ) {
@@ -201,7 +200,7 @@ $get_mobile_image_source = static function ( $index ) use ( $variant ) {
 		return 'half';
 	}
 
-	if ( 'inspired' === $variant && 0 !== $index ) {
+	if ( 'inspired' === $variant ) {
 		return 'half';
 	}
 
@@ -267,10 +266,14 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 				<div class="static-image-cluster__carousel-viewport swiper" role="region" aria-roledescription="<?php esc_attr_e( 'carousel', 'ltt-dive-in' ); ?>" aria-label="<?php esc_attr_e( 'Image gallery', 'ltt-dive-in' ); ?>">
 					<div class="static-image-cluster__carousel-track swiper-wrapper" data-static-image-cluster-carousel-track tabindex="0">
 			<?php endif; ?>
-			<?php foreach ( $rendered_images as $index => $image ) : ?>
+			<?php foreach ( $image_batches as $image_batch ) : ?>
+				<?php if ( 'inspired' === $variant ) : ?>
+					<div class="static-image-cluster__inspired-batch">
+				<?php endif; ?>
+			<?php foreach ( $image_batch as $index => $image ) : ?>
 				<?php $image_sizes = $get_image_sizes( $index ); ?>
 				<?php $mobile_image_source = $get_mobile_image_source( $index ); ?>
-				<figure class="static-image-cluster__item<?php echo 'five_plus' === $variant ? ' swiper-slide' : ''; ?>"<?php echo 'inspired' === $variant && $index >= 5 ? ' data-inspired-gallery-item hidden' : ''; ?>>
+				<figure class="static-image-cluster__item<?php echo 'five_plus' === $variant ? ' swiper-slide' : ''; ?>">
 					<?php if ( $has_lightbox ) : ?>
 						<a class="static-image-cluster__trigger" href="<?php echo esc_url( $image['full'] ); ?>" data-ltt-photoswipe-trigger data-image-index="<?php echo esc_attr( (string) $index ); ?>" data-pswp-width="<?php echo esc_attr( (string) $image['width'] ); ?>" data-pswp-height="<?php echo esc_attr( (string) $image['height'] ); ?>" aria-haspopup="dialog" aria-label="<?php echo esc_attr( sprintf( __( 'View image %1$d of %2$d: %3$s', 'ltt-dive-in' ), $index + 1, count( $images ), $image['alt'] ) ); ?>">
 							<?php echo $render_image( $image, $image_sizes, $mobile_image_source ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -284,6 +287,10 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 						<figcaption class="static-image-cluster__hero-caption"><?php echo esc_html( $hero_caption ); ?></figcaption>
 					<?php endif; ?>
 				</figure>
+			<?php endforeach; ?>
+				<?php if ( 'inspired' === $variant ) : ?>
+					</div>
+				<?php endif; ?>
 			<?php endforeach; ?>
 			<?php if ( 'five_plus' === $variant ) : ?>
 					</div>

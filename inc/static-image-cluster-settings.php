@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return the permitted image count for each cluster variant.
  *
- * The Inspired Gallery is not present in the supplied Figma node. It uses the
- * flexible editorial grid until a dedicated composition is approved.
+ * The Inspired Gallery uses six-image groups matching its approved Figma
+ * composition.
  *
  * The display value limits rendering without discarding extra editor-selected
  * images. A value of zero renders every image after validation.

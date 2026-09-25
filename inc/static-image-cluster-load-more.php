@@ -149,13 +149,14 @@ function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
  * @return string
  */
 function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total ) {
+	$desktop_width = in_array( $index % 6, array( 2, 3 ), true ) ? '28vw' : '36vw';
 	$image_html = wp_get_attachment_image(
 		$image['id'],
 		'large',
 		false,
 		array(
 			'alt'      => $image['alt'],
-			'sizes'    => '(max-width: 767.98px) calc(50vw - 26px), (max-width: 1399.98px) calc(20vw - 29px), 247px',
+			'sizes'    => '(max-width: 767.98px) calc((100vw - 22px) / 3), ' . $desktop_width,
 			'loading'  => 'lazy',
 			'decoding' => 'async',
 		)
@@ -180,7 +181,7 @@ function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total ) {
 }
 
 /**
- * Return the next five Inspired Gallery cards for a public post.
+ * Return the next six Inspired Gallery cards for a public post.
  *
  * @param WP_REST_Request $request REST request.
  * @return WP_REST_Response|WP_Error
@@ -200,11 +201,15 @@ function ltt_dive_in_get_static_image_cluster_load_more( WP_REST_Request $reques
 
 	$images = ltt_dive_in_get_saved_inspired_gallery_images( $block );
 	$offset = min( absint( $request->get_param( 'offset' ) ), count( $images ) );
-	$batch  = array_slice( $images, $offset, 5 );
-	$html = '';
+	$batch  = array_slice( $images, $offset, 6 );
+	$html   = '';
 
 	foreach ( $batch as $batch_index => $image ) {
 		$html .= ltt_dive_in_render_inspired_gallery_item( $image, $offset + $batch_index, count( $images ) );
+	}
+
+	if ( $html ) {
+		$html = '<div class="static-image-cluster__inspired-batch">' . $html . '</div>';
 	}
 
 	$response = rest_ensure_response(
