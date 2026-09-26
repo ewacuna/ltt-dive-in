@@ -108,7 +108,16 @@
 		}
 	};
 
+	// Align the fixed mobile panel with the header's visible bottom edge.
+	const updateMenuOffset = function () {
+		const inner = header.querySelector( '.site-header__inner' ) || header;
+		const bottom = Math.max( 0, inner.getBoundingClientRect().bottom );
+
+		navigation.style.setProperty( '--ltt-dive-in-menu-top', bottom + 'px' );
+	};
+
 	const openMobileMenu = function () {
+		updateMenuOffset();
 		navigation.classList.add( 'is-open' );
 		menuButton.setAttribute( 'aria-expanded', 'true' );
 		document.body.classList.add( 'has-open-menu' );
@@ -211,6 +220,12 @@
 
 	mobileQuery.addEventListener( 'change', function () {
 		closeMobileMenu( false );
+	} );
+
+	window.addEventListener( 'resize', function () {
+		if ( 'true' === menuButton.getAttribute( 'aria-expanded' ) ) {
+			updateMenuOffset();
+		}
 	} );
 }() );
 

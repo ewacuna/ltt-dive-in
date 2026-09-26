@@ -583,18 +583,24 @@
         height: auto;
     }
 
+    /*
+     * Pin the panel between the header and the visible viewport edge. Viewport
+     * units are unreliable here because iOS browsers size them independently of
+     * their toolbars, which pushed the last menu items out of reach.
+     */
     .site-header__navigation {
-        position: absolute;
-        top: 4.125rem;
+        position: fixed;
+        top: var(--ltt-dive-in-menu-top, 4.125rem);
+        right: 0;
+        bottom: 0;
         left: 0;
         display: none;
         width: 100%;
-        max-height: calc(100vh - 4.125rem);
         flex-direction: column;
         gap: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding: 0.75rem 1.25rem 2rem;
+        padding: 0.75rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
         background: linear-gradient(180deg, #073959 0%, #02162b 100%);
         box-shadow: 0 0.75rem 1.5rem rgba(2, 22, 43, 0.28);
     }
@@ -863,6 +869,11 @@
         background: rgba(255, 255, 255, 0.12);
     }
 
+    /* Suppress WebKit's native ring after touch; keyboard focus keeps the accent ring. */
+    .menu-toggle:focus:not(:focus-visible) {
+        outline: none;
+    }
+
     .menu-toggle:focus-visible {
         outline: 2px solid transparent;
         background: rgba(255, 255, 255, 0.12);
@@ -888,12 +899,6 @@
 
     body.has-open-menu {
         overflow: hidden;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .site-header__navigation {
-        min-height: calc(100vh - 4.125rem);
     }
 }
 
