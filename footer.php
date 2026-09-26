@@ -60,7 +60,7 @@ $has_footer_logos       = ! empty( $footer_logos['brand'] ) || $has_partner_logo
 							<ul>
 								<?php foreach ( $social_links as $social_link ) : ?>
 									<li>
-										<a href="<?php echo esc_url( $social_link['url'] ); ?>" aria-label="<?php echo esc_attr( $social_link['label'] ); ?>">
+										<a href="<?php echo esc_url( $social_link['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php /* translators: %s: social network name. */ echo esc_attr( sprintf( __( '%s (opens in a new tab)', 'ltt-dive-in' ), $social_link['label'] ) ); ?>">
 											<img src="<?php echo esc_url( $footer_assets_uri . '/' . $social_link['slug'] . '.svg' ); ?>" alt="" width="28" height="28">
 										</a>
 									</li>

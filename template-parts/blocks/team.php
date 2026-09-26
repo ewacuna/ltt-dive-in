@@ -96,12 +96,12 @@ if ( ! empty( $block['align'] ) && 'full' === $block['align'] ) {
 						<ul class="meet-the-team__socials" role="list">
 							<?php foreach ( $member['socials'] as $social ) : ?>
 								<li>
-									<a class="meet-the-team__social-link" href="<?php echo esc_url( $social['url'] ); ?>">
+									<a class="meet-the-team__social-link" href="<?php echo esc_url( $social['url'] ); ?>" target="_blank" rel="noopener noreferrer">
 										<span class="meet-the-team__social-icon meet-the-team__social-icon--<?php echo esc_attr( $social['network'] ); ?>" aria-hidden="true"></span>
 										<span class="screen-reader-text">
 											<?php
 											/* translators: 1: team member name, 2: social network name. */
-											echo esc_html( sprintf( __( '%1$s on %2$s', 'ltt-dive-in' ), $member['name'], $social['label'] ) );
+											echo esc_html( sprintf( __( '%1$s on %2$s (opens in a new tab)', 'ltt-dive-in' ), $member['name'], $social['label'] ) );
 											?>
 										</span>
 									</a>
