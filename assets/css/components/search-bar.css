@@ -14,6 +14,7 @@
     background: var(--search-bar-background);
     box-shadow: 0 0.25rem 0.125rem rgba(0, 0, 0, 0.25);
     color: var(--search-bar-color);
+    -webkit-tap-highlight-color: transparent;
     transition:
         width 500ms cubic-bezier(0.34, 1.56, 0.64, 1),
         background-color 500ms ease,
@@ -41,6 +42,26 @@
 .ltt-search-bar .ltt-search-bar__input::placeholder {
     color: var(--search-bar-placeholder);
     opacity: 1;
+}
+
+/* Replace the native WebKit clear glyph, which renders faded on dark surfaces. */
+.ltt-search-bar .ltt-search-bar__input::-webkit-search-cancel-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
+    background-color: currentColor;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-mask: url("../../images/header/close-icon.svg") center / 0.75rem no-repeat;
+    mask: url("../../images/header/close-icon.svg") center / 0.75rem no-repeat;
+}
+
+@media (forced-colors: active) {
+    .ltt-search-bar .ltt-search-bar__input::-webkit-search-cancel-button {
+        background-color: ButtonText;
+        forced-color-adjust: none;
+    }
 }
 
 .ltt-search-bar .ltt-search-bar__submit {
