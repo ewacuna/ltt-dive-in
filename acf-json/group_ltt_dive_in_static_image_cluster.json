@@ -38,6 +38,11 @@
                         "field": "field_ltt_dive_in_static_image_cluster_variant",
                         "operator": "!=",
                         "value": "hero_caption"
+                    },
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "inspired"
                     }
                 ]
             ],
@@ -49,6 +54,15 @@
             "name": "ltt_dive_in_static_image_cluster_intro",
             "type": "textarea",
             "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "inspired"
+                    }
+                ]
+            ],
             "maxlength": 420,
             "rows": 4,
             "new_lines": ""
@@ -60,6 +74,15 @@
             "type": "link",
             "instructions": "Optional primary call to action.",
             "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "inspired"
+                    }
+                ]
+            ],
             "return_format": "array"
         },
         {
@@ -69,6 +92,15 @@
             "type": "link",
             "instructions": "Optional secondary call to action.",
             "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "inspired"
+                    }
+                ]
+            ],
             "return_format": "array"
         },
         {
@@ -78,6 +110,15 @@
             "type": "link",
             "instructions": "Optional third call to action.",
             "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "!=",
+                        "value": "inspired"
+                    }
+                ]
+            ],
             "return_format": "array"
         },
         {
@@ -175,5 +216,5 @@
     "instruction_placement": "label",
     "active": true,
     "show_in_rest": 0,
-    "modified": 1790089200
+    "modified": 1790446875
 }

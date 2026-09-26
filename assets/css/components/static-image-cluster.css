@@ -270,7 +270,7 @@
     margin: 2.5rem auto 0;
     color: #073959;
     font-family: "Gotham HTF", Arial, sans-serif;
-    font-size: 0.875rem;
+    font-size: 1.125rem;
     line-height: 1.45;
     text-align: center;
 }
@@ -483,6 +483,10 @@
         justify-content: flex-start;
     }
 
+    .static-image-cluster__actions--hero {
+        justify-content: center;
+    }
+
     .static-image-cluster--side_by_side .static-image-cluster__container {
         grid-template-columns: minmax(0, 1fr) minmax(20rem, 45%);
     }
@@ -527,9 +531,9 @@
 
     .static-image-cluster--two_up .static-image-cluster__gallery,
     .static-image-cluster--three_up .static-image-cluster__gallery {
-        width: 100%;
+        width: calc(100% + 2.5rem);
         grid-template-columns: 1fr;
-        margin-inline: 0;
+        margin-inline: -1.25rem;
     }
 
     .static-image-cluster--two_up .static-image-cluster__item,
@@ -552,7 +556,8 @@
     }
 
     .static-image-cluster--inline_four_up .static-image-cluster__item,
-    .static-image-cluster--staggered_four .static-image-cluster__item {
+    .static-image-cluster--staggered_four
+        .static-image-cluster__item:nth-child(n) {
         aspect-ratio: 1;
         margin: 0;
     }
@@ -596,8 +601,8 @@
     }
 
     .static-image-cluster--five_plus .static-image-cluster__item {
-        width: calc(100vw - 2.5rem);
-        min-width: calc(100vw - 2.5rem);
+        width: 9rem;
+        min-width: 9rem;
     }
 
     .static-image-cluster--five_plus .static-image-cluster__gallery {
@@ -625,16 +630,18 @@
         .static-image-cluster__item
         > picture
         > img {
-        aspect-ratio: 375 / 320;
+        aspect-ratio: 385 / 216;
     }
 
     .static-image-cluster__hero-caption {
         width: calc(100% - 2.5rem);
         margin-top: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
     }
 
     .static-image-cluster--side_by_side {
-        padding: 4rem 1.25rem 0;
+        padding: 4rem 1.25rem 5rem;
     }
 
     .static-image-cluster--side_by_side .static-image-cluster__container {
@@ -650,8 +657,8 @@
     }
 
     .static-image-cluster--side_by_side .static-image-cluster__gallery {
-        width: calc(100% + 2.5rem);
-        margin-inline: -1.25rem;
+        width: 100%;
+        margin-inline: 0;
     }
 
     .static-image-cluster--side_by_side .static-image-cluster__item {

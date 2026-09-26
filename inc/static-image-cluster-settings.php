@@ -156,8 +156,8 @@ add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_image
 /**
  * Require a section heading for the variants that display editorial content.
  *
- * Hero With Caption uses the shared Introduction as its caption, and Inspired
- * Gallery intentionally keeps its heading optional.
+ * Hero With Caption uses the shared Introduction as its caption. Inspired
+ * Gallery does not render the shared editorial header.
  *
  * @param bool|string $valid Current validation result.
  * @param mixed       $value Submitted heading.

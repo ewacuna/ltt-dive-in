@@ -143,6 +143,7 @@ if ( ! $ctas ) {
 $heading        = trim( (string) $get_value( 'ltt_dive_in_static_image_cluster_heading' ) );
 $intro          = trim( (string) $get_value( 'ltt_dive_in_static_image_cluster_intro' ) );
 $hero_caption   = $intro ? $intro : trim( (string) $get_value( 'ltt_dive_in_static_image_cluster_hero_caption' ) );
+$shows_header   = ! in_array( $variant, array( 'hero_caption', 'inspired' ), true );
 $has_lightbox   = count( $images ) >= 3;
 $section_id     = $anchor ? $anchor : 'static-image-cluster-' . $block_id;
 $heading_id     = $section_id . '-title';
@@ -163,11 +164,11 @@ $get_image_sizes = static function ( $index ) use ( $variant ) {
 	}
 
 	if ( 'two_up' === $variant ) {
-		return '(max-width: 767.98px) calc(100vw - 40px), calc(50vw - 6px)';
+		return '(max-width: 767.98px) 100vw, calc(50vw - 6px)';
 	}
 
 	if ( 'three_up' === $variant ) {
-		return '(max-width: 767.98px) calc(100vw - 40px), calc(33.333vw - 8px)';
+		return '(max-width: 767.98px) 100vw, calc(33.333vw - 8px)';
 	}
 
 	if ( 'inline_four_up' === $variant ) {
@@ -179,7 +180,7 @@ $get_image_sizes = static function ( $index ) use ( $variant ) {
 	}
 
 	if ( 'five_plus' === $variant ) {
-		return '(max-width: 767.98px) calc(100vw - 40px), 296px';
+		return '(max-width: 767.98px) 144px, 296px';
 	}
 
 	if ( 'inspired' === $variant ) {
@@ -189,7 +190,7 @@ $get_image_sizes = static function ( $index ) use ( $variant ) {
 	}
 
 	if ( 'side_by_side' === $variant ) {
-		return '(max-width: 767.98px) 100vw, (max-width: 1199.98px) 45vw, 616px';
+		return '(max-width: 767.98px) calc(100vw - 40px), (max-width: 1199.98px) 45vw, 616px';
 	}
 
 	return '100vw';
@@ -239,9 +240,9 @@ $render_image = static function ( $image, $sizes, $mobile_source ) {
 };
 ?>
 
-<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-arrow-icon="<?php echo esc_url( $arrow_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
+<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $shows_header && $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-arrow-icon="<?php echo esc_url( $arrow_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
 	<div class="static-image-cluster__container"<?php echo 'five_plus' === $variant ? ' data-static-image-cluster-carousel' : ''; ?>>
-		<?php if ( 'hero_caption' !== $variant && ( $heading || $intro || $ctas ) ) : ?>
+		<?php if ( $shows_header && ( $heading || $intro || $ctas ) ) : ?>
 			<header class="static-image-cluster__header">
 				<div class="static-image-cluster__header-copy">
 					<?php if ( $heading ) : ?>
