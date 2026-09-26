@@ -71,6 +71,11 @@
     position: static;
 }
 
+/* Mobile scroll region only; desktop menus keep their header positioning. */
+.site-header__menus {
+    display: contents;
+}
+
 .main-navigation {
     position: absolute;
     top: 2.125rem;
@@ -598,11 +603,25 @@
         width: 100%;
         flex-direction: column;
         gap: 0;
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        padding: 0.75rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
+        overflow: hidden;
+        padding: 0.75rem 1.25rem 0;
         background: linear-gradient(180deg, #073959 0%, #02162b 100%);
         box-shadow: 0 0.75rem 1.5rem rgba(2, 22, 43, 0.28);
+    }
+
+    /*
+     * Scroll the menus below the search row so they never pass under the
+     * close button, which sits beside the search field while the panel is open.
+     */
+    .site-header__menus {
+        display: flex;
+        min-height: 0;
+        flex: 1 1 auto;
+        flex-direction: column;
+        margin-inline: -1.25rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 0 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
     }
 
     .site-header__navigation.is-open {
@@ -822,17 +841,22 @@
         min-height: 4.125rem;
     }
 
+    /* The close button moves beside the search field, so weather takes its place. */
+    body.has-open-menu .site-header__weather {
+        right: 1.25rem;
+    }
+
     .site-header__search,
     .site-header__search.is-active,
     .site-header__search:hover,
     .site-header__search:focus-within {
         position: static;
         display: flex;
-        width: 100%;
+        width: auto;
         height: 2.5rem;
         flex: 0 0 2.5rem;
         gap: 0.75rem;
-        margin: 0 0 0.5rem;
+        margin: 0 3rem 0.5rem 0;
         padding: 0 0.75rem 0 1.25rem;
         background: rgba(118, 118, 128, 0.12);
     }
@@ -862,6 +886,15 @@
         -webkit-tap-highlight-color: transparent;
         -webkit-appearance: none;
         appearance: none;
+    }
+
+    /*
+     * Center the close button on the search row: the panel starts at the
+     * header's bottom edge, then adds 0.75rem padding and half the 2.5rem field.
+     */
+    .menu-toggle[aria-expanded="true"] {
+        top: calc(100% + 0.5rem);
+        z-index: 3;
     }
 
     .menu-toggle:hover,

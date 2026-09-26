@@ -79,38 +79,40 @@
 					</button>
 				</form>
 
-				<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'ltt-dive-in' ); ?>">
-					<?php
-					wp_nav_menu(
-						array(
-							'theme_location' => 'primary',
-							'menu_id'        => 'primary-menu',
-							'menu_class'     => 'main-navigation__menu',
-							'container'      => false,
-							'fallback_cb'    => false,
-							'depth'          => 3,
-							'walker'         => new LTT_Dive_In_Navigation_Walker(),
-						)
-					);
-					?>
-				</nav>
-
-				<?php if ( has_nav_menu( 'header_utility' ) ) : ?>
-					<nav class="utility-navigation" aria-label="<?php esc_attr_e( 'Top header menu', 'ltt-dive-in' ); ?>">
+				<div class="site-header__menus">
+					<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'ltt-dive-in' ); ?>">
 						<?php
 						wp_nav_menu(
 							array(
-								'theme_location' => 'header_utility',
-								'menu_id'        => 'header-utility-menu',
-								'menu_class'     => 'utility-navigation__menu',
+								'theme_location' => 'primary',
+								'menu_id'        => 'primary-menu',
+								'menu_class'     => 'main-navigation__menu',
 								'container'      => false,
 								'fallback_cb'    => false,
-								'depth'          => 1,
+								'depth'          => 3,
+								'walker'         => new LTT_Dive_In_Navigation_Walker(),
 							)
 						);
 						?>
 					</nav>
-				<?php endif; ?>
+
+					<?php if ( has_nav_menu( 'header_utility' ) ) : ?>
+						<nav class="utility-navigation" aria-label="<?php esc_attr_e( 'Top header menu', 'ltt-dive-in' ); ?>">
+							<?php
+							wp_nav_menu(
+								array(
+									'theme_location' => 'header_utility',
+									'menu_id'        => 'header-utility-menu',
+									'menu_class'     => 'utility-navigation__menu',
+									'container'      => false,
+									'fallback_cb'    => false,
+									'depth'          => 1,
+								)
+							);
+							?>
+						</nav>
+					<?php endif; ?>
+				</div>
 			</div>
 
 			<?php if ( $weather['label'] ) : ?>
