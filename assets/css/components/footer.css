@@ -592,9 +592,6 @@
         .gform_button.button {
         width: 100% !important;
         justify-self: stretch !important;
-        border-color: var(--footer-gold) !important;
-        background: #f3f3f4 !important;
-        color: #151419 !important;
     }
 
     .site-footer
