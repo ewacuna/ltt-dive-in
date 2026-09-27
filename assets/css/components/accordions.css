@@ -271,6 +271,10 @@
 	-webkit-tap-highlight-color: transparent;
 }
 
+.global-accordion__topic:hover {
+	background: #c0e7e2;
+}
+
 .global-accordion__topic[aria-selected="true"] {
 	background: #91d9d1;
 	font-weight: 700;
