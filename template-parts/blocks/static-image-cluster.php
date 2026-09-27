@@ -152,7 +152,7 @@ $post_id        = get_the_ID();
 $can_load_more  = 'inspired' === $variant && ! $is_preview && $post_id && $rest_block_id;
 $rendered_images = $can_load_more ? array_slice( $images, 0, 6 ) : $images;
 $image_batches   = 'inspired' === $variant ? array_chunk( $rendered_images, 6, true ) : array( $rendered_images );
-$button_classes = array( 'primary-outline', 'secondary-outline', 'primary-fill' );
+$button_classes = array( 'primary-outline', 'secondary-outline', 'primary-outline' );
 $photoswipe_lightbox_url = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe-lightbox.esm.js' );
 $photoswipe_core_url     = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe.esm.js' );
 $close_icon_url          = get_theme_file_uri( 'assets/images/header/close-icon.svg' );

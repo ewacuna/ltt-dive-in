@@ -168,6 +168,13 @@
     width: calc(50% + 50vw);
 }
 
+.static-image-cluster--five_plus
+    .static-image-cluster__container.is-carousel-engaged
+    .static-image-cluster__gallery {
+    width: 100vw;
+    margin-inline-start: calc(50% - 50vw);
+}
+
 .static-image-cluster--five_plus .static-image-cluster__carousel-viewport {
     overflow: hidden;
 }

@@ -111,6 +111,7 @@
 		const previous = carousel.querySelector( '[data-static-image-cluster-carousel-previous]' );
 		const next = carousel.querySelector( '[data-static-image-cluster-carousel-next]' );
 		const pagination = carousel.querySelector( '[data-static-image-cluster-carousel-pagination]' );
+		let swiperInstance;
 
 		if ( ! viewport || viewport.classList.contains( 'swiper-initialized' ) || ! slides.length ) {
 			return;
@@ -127,7 +128,27 @@
 			} );
 		};
 
-		new window.Swiper( viewport, {
+		const engageFullWidth = function () {
+			if ( carousel.classList.contains( 'is-carousel-engaged' ) ) {
+				return;
+			}
+
+			carousel.classList.add( 'is-carousel-engaged' );
+
+			if ( swiperInstance ) {
+				window.requestAnimationFrame( function () {
+					swiperInstance.update();
+				} );
+			}
+		};
+
+		carousel.addEventListener( 'click', function ( event ) {
+			if ( event.target.closest( '[data-static-image-cluster-carousel-previous], [data-static-image-cluster-carousel-next], [data-static-image-cluster-carousel-pagination] .ltt-carousel-indicator' ) ) {
+				engageFullWidth();
+			}
+		}, true );
+
+		swiperInstance = new window.Swiper( viewport, {
 			slidesPerView: 'auto',
 			spaceBetween: 11,
 			speed: reducedMotion ? 0 : 350,
@@ -158,6 +179,9 @@
 			} : undefined,
 			on: {
 				init: updatePaginationState,
+				sliderFirstMove: engageFullWidth,
+				slideNextTransitionStart: engageFullWidth,
+				slidePrevTransitionStart: engageFullWidth,
 				slideChange: updatePaginationState,
 				paginationUpdate: updatePaginationState,
 			},
