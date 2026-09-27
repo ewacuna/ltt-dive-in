@@ -53,7 +53,7 @@ a.feature-image-driver__card-link:focus-visible {
         rgba(2, 22, 43, 0.75)
     );
     pointer-events: none;
-    transition: background 200ms ease-out;
+    transition: all 200ms ease-out;
 }
 
 a.feature-image-driver__card-link:is(:hover, :focus-visible)
@@ -64,7 +64,7 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
 
 a.feature-image-driver__card-link:is(:hover, :focus-visible)
     ~ .feature-image-driver__overlay {
-    background: rgba(2, 22, 43, 0.62);
+    background-color: rgba(2, 22, 43, 0.3);
 }
 
 .feature-image-driver__content {
