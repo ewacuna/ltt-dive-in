@@ -164,16 +164,6 @@
 	height: 100%;
 }
 
-.global-accordion__icon-collapsed {
-	/* Preserve Figma's SVG geometry while making it contrast-safe on the tint. */
-	filter: brightness(0) saturate(100%) invert(18%) sepia(20%) saturate(3000%) hue-rotate(164deg) brightness(88%) contrast(98%);
-}
-
-.global-accordion__trigger:hover .global-accordion__icon-collapsed,
-.global-accordion__trigger:focus-visible .global-accordion__icon-collapsed {
-	filter: brightness(0) invert(1);
-}
-
 .global-accordion__icon-expanded,
 .global-accordion__trigger[aria-expanded="true"] .global-accordion__icon-collapsed {
 	display: none;
