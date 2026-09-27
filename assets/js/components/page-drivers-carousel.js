@@ -36,7 +36,7 @@
 			}
 
 			instance.pagination.bullets.forEach( function ( bullet, index ) {
-				const isCurrent = index === instance.realIndex;
+				const isCurrent = bullet.classList.contains( 'is-active' );
 
 				bullet.setAttribute( 'aria-current', isCurrent ? 'true' : 'false' );
 				bullet.setAttribute( 'aria-label', 'Go to destination ' + ( index + 1 ) );
@@ -53,18 +53,17 @@
 
 		const createSwiper = function () {
 			const visibleSlides = getVisibleSlides();
-			const useLoop = mobileCarousel.matches && visibleSlides.length > 1;
+			const hasMultipleSlides = visibleSlides.length > 1;
+			const useLoop = isMonthly && hasMultipleSlides;
 
 			swiper = new window.Swiper( viewport, {
 				slidesPerView: 'auto',
 				spaceBetween: 11,
 				speed: reducedMotion ? 0 : 350,
-				centeredSlides: mobileCarousel.matches || isMonthly,
-				centerInsufficientSlides: isSixPlus && ! useLoop,
-				loop: isMonthly || useLoop,
-				rewind: isMonthly
-					? ! mobileCarousel.matches && visibleSlides.length > 1
-					: ! useLoop && visibleSlides.length > 1,
+				centeredSlides: hasMultipleSlides && ( mobileCarousel.matches || isMonthly ),
+				centerInsufficientSlides: isSixPlus,
+				loop: useLoop,
+				rewind: false,
 				watchOverflow: true,
 				watchSlidesProgress: true,
 				keyboard: {
