@@ -285,6 +285,18 @@
     line-height: 1.5;
 }
 
+.site-footer__newsletter-disclaimer a {
+    color: var(--footer-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 0.07em;
+    text-underline-offset: 0.2em;
+}
+
+.site-footer__newsletter-disclaimer a:hover,
+.site-footer__newsletter-disclaimer a:focus-visible {
+    color: var(--footer-gold);
+}
+
 .site-footer__social {
     margin-top: 1.5rem;
 }

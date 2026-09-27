@@ -28,10 +28,7 @@ $newsletter_description = ltt_dive_in_get_footer_option(
 	'ltt_dive_in_footer_newsletter_description',
 	__( 'Get trip ideas and seasonal guides delivered to your inbox.', 'ltt-dive-in' )
 );
-$newsletter_disclaimer  = ltt_dive_in_get_footer_option(
-	'ltt_dive_in_footer_newsletter_disclaimer',
-	__( 'By subscribing you agree to our Privacy Policy and consent to receive updates from Lake Tahoe Travel.', 'ltt-dive-in' )
-);
+$newsletter_disclaimer  = ltt_dive_in_get_footer_newsletter_disclaimer();
 $social_links           = ltt_dive_in_get_footer_social_links();
 $newsletter_form        = ltt_dive_in_get_footer_newsletter_form();
 $footer_logos           = ltt_dive_in_get_footer_logos();
@@ -52,7 +49,7 @@ $has_footer_logos       = ! empty( $footer_logos['brand'] ) || $has_partner_logo
 						<div class="site-footer__newsletter-form">
 							<?php echo $newsletter_form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted widget or registered integration output. ?>
 						</div>
-						<p class="site-footer__newsletter-disclaimer"><?php echo esc_html( $newsletter_disclaimer ); ?></p>
+						<p class="site-footer__newsletter-disclaimer"><?php echo $newsletter_disclaimer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped text joined with the core privacy policy link. ?></p>
 					<?php endif; ?>
 
 					<?php if ( $social_links ) : ?>

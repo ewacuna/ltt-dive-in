@@ -92,9 +92,10 @@ function ltt_dive_in_register_footer_settings() {
 					'label'         => __( 'Newsletter disclaimer', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_footer_newsletter_disclaimer',
 					'type'          => 'textarea',
+					'instructions'  => __( 'Type {privacy_policy} where the Privacy Policy link should appear. The link uses the page selected under Settings > Privacy and appears as plain text when that page is not published.', 'ltt-dive-in' ),
 					'rows'          => 3,
 					'new_lines'     => '',
-					'default_value' => __( 'By subscribing you agree to our Privacy Policy and consent to receive updates from Lake Tahoe Travel.', 'ltt-dive-in' ),
+					'default_value' => __( 'By subscribing you agree to our {privacy_policy} and consent to receive updates from Lake Tahoe Travel.', 'ltt-dive-in' ),
 				),
 				array(
 					'key'   => 'field_ltt_dive_in_footer_logos_tab',
@@ -316,6 +317,41 @@ function ltt_dive_in_get_footer_social_links() {
 	}
 
 	return $links;
+}
+
+/**
+ * Get the escaped newsletter disclaimer with its Privacy Policy link.
+ *
+ * Editors mark the link position with `{privacy_policy}`. Disclaimers saved
+ * before the placeholder existed link their first literal "Privacy Policy"
+ * instead. The link comes from the core privacy policy setting and falls back
+ * to plain text when no published privacy page is configured.
+ *
+ * @return string Escaped HTML.
+ */
+function ltt_dive_in_get_footer_newsletter_disclaimer() {
+	$placeholder = '{privacy_policy}';
+	$label       = __( 'Privacy Policy', 'ltt-dive-in' );
+	$disclaimer  = (string) ltt_dive_in_get_footer_option(
+		'ltt_dive_in_footer_newsletter_disclaimer',
+		/* translators: {privacy_policy} is replaced by a link to the privacy policy page. Keep it unchanged. */
+		__( 'By subscribing you agree to our {privacy_policy} and consent to receive updates from Lake Tahoe Travel.', 'ltt-dive-in' )
+	);
+
+	if ( false === strpos( $disclaimer, $placeholder ) ) {
+		$position = strpos( $disclaimer, $label );
+
+		if ( false === $position ) {
+			return esc_html( $disclaimer );
+		}
+
+		$disclaimer = substr_replace( $disclaimer, $placeholder, $position, strlen( $label ) );
+	}
+
+	$link  = get_the_privacy_policy_link();
+	$parts = explode( $placeholder, $disclaimer, 2 );
+
+	return esc_html( $parts[0] ) . ( $link ? $link : esc_html( $label ) ) . esc_html( str_replace( $placeholder, '', $parts[1] ) );
 }
 
 /**
