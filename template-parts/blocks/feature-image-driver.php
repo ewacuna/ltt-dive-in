@@ -123,12 +123,14 @@ if ( 'carousel' === $variant && function_exists( 'ltt_dive_in_enqueue_feature_im
 
 $section_id = $anchor ? $anchor : 'feature-image-driver-' . $block_id;
 $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignment . ( $is_preview ? ' feature-image-driver--preview' : '' );
+$link_tag   = $is_preview ? 'span' : 'a';
 ?>
 
 <?php if ( in_array( $variant, array( 'single', 'short' ), true ) ) : ?>
 	<?php $item = $items[0]; ?>
 	<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>" aria-labelledby="<?php echo esc_attr( $section_id . '-title' ); ?>">
 		<div class="feature-image-driver__feature">
+			<<?php echo esc_attr( $link_tag ); ?> class="feature-image-driver__card-link"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $item['link']['url'] ); ?>" aria-label="<?php echo esc_attr( $item['link']['title'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php else : ?> aria-hidden="true"<?php endif; ?>></<?php echo esc_attr( $link_tag ); ?>>
 			<span class="feature-image-driver__media" aria-hidden="true">
 				<?php echo wp_get_attachment_image( $item['image'], 'full', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
 			</span>
@@ -141,7 +143,7 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 				<?php if ( $item['body'] ) : ?>
 					<span class="feature-image-driver__body"><?php echo esc_html( $item['body'] ); ?></span>
 				<?php endif; ?>
-				<a class="feature-image-driver__cta ltt-button ltt-button--<?php echo esc_attr( 'short' === $variant ? 'dark-standard' : 'glass' ); ?>" href="<?php echo esc_url( $item['link']['url'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $item['link']['title'] ); ?></a>
+				<span class="feature-image-driver__cta ltt-button ltt-button--<?php echo esc_attr( 'short' === $variant ? 'dark-standard' : 'glass' ); ?>"><?php echo esc_html( $item['link']['title'] ); ?></span>
 			</span>
 		</div>
 	</section>
@@ -152,6 +154,7 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 			<div class="feature-image-driver__carousel-track swiper-wrapper">
 				<?php foreach ( $items as $index => $item ) : ?>
 					<div class="feature-image-driver__feature feature-image-driver__slide swiper-slide">
+						<<?php echo esc_attr( $link_tag ); ?> class="feature-image-driver__card-link"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $item['link']['url'] ); ?>" aria-label="<?php echo esc_attr( $item['link']['title'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php else : ?> aria-hidden="true"<?php endif; ?>></<?php echo esc_attr( $link_tag ); ?>>
 						<span class="feature-image-driver__media" aria-hidden="true">
 							<?php echo wp_get_attachment_image( $item['image'], 'full', false, array( 'alt' => '', 'loading' => 0 === $index ? 'eager' : 'lazy' ) ); ?>
 						</span>
@@ -164,7 +167,7 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 							<?php if ( $item['body'] ) : ?>
 								<span class="feature-image-driver__body"><?php echo esc_html( $item['body'] ); ?></span>
 							<?php endif; ?>
-							<a class="feature-image-driver__cta ltt-button ltt-button--glass" href="<?php echo esc_url( $item['link']['url'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $item['link']['title'] ); ?></a>
+							<span class="feature-image-driver__cta ltt-button ltt-button--glass"><?php echo esc_html( $item['link']['title'] ); ?></span>
 						</span>
 					</div>
 				<?php endforeach; ?>
@@ -215,7 +218,7 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 					<?php if ( $stacked_links ) : ?>
 						<div class="feature-image-driver__stacked-actions">
 							<?php foreach ( $stacked_links as $index => $stacked_link ) : ?>
-								<a class="ltt-button ltt-button--<?php echo esc_attr( 0 === $index ? 'primary-outline' : 'secondary-outline' ); ?>" href="<?php echo esc_url( $stacked_link['url'] ); ?>"<?php echo $link_attributes( $stacked_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $stacked_link['title'] ); ?></a>
+								<<?php echo esc_attr( $link_tag ); ?> class="ltt-button ltt-button--<?php echo esc_attr( 0 === $index ? 'primary-outline' : 'secondary-outline' ); ?>"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $stacked_link['url'] ); ?>"<?php echo $link_attributes( $stacked_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php endif; ?>><?php echo esc_html( $stacked_link['title'] ); ?></<?php echo esc_attr( $link_tag ); ?>>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
@@ -234,6 +237,7 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 					<?php endif; ?>
 					<article class="feature-image-driver__stacked-card">
 						<div class="feature-image-driver__stacked-row">
+							<<?php echo esc_attr( $link_tag ); ?> class="feature-image-driver__card-link"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $item['link']['url'] ); ?>" aria-label="<?php echo esc_attr( $item['link']['title'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php else : ?> aria-hidden="true"<?php endif; ?>></<?php echo esc_attr( $link_tag ); ?>>
 							<span class="feature-image-driver__media" aria-hidden="true">
 								<?php echo wp_get_attachment_image( $item['image'], 'large', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
 							</span>
@@ -251,7 +255,7 @@ $classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignm
 										<?php if ( $item['body'] ) : ?>
 											<span class="feature-image-driver__stacked-card-body"><?php echo esc_html( $item['body'] ); ?></span>
 										<?php endif; ?>
-										<a class="feature-image-driver__cta ltt-button ltt-button--glass" href="<?php echo esc_url( $item['link']['url'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $item['link']['title'] ); ?></a>
+										<span class="feature-image-driver__cta ltt-button ltt-button--glass"><?php echo esc_html( $item['link']['title'] ); ?></span>
 									</div>
 								</div>
 							</div>

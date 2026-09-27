@@ -280,6 +280,7 @@
 .page-drivers__carousel .page-drivers__grid {
     display: flex;
     gap: 0;
+    padding-bottom: 2.5rem;
     margin-top: 0;
 }
 
@@ -332,7 +333,12 @@
 .page-drivers__carousel-pagination {
     display: flex;
     justify-content: center;
-    padding: 2.5rem 0 !important;
+    padding-bottom: 2.5rem !important;
+}
+
+.page-drivers--six-plus-up
+    .page-drivers__carousel-pagination.swiper-pagination-lock {
+    display: none;
 }
 
 .page-drivers__carousel-pagination .ltt-carousel-indicator {

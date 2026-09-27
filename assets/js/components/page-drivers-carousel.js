@@ -21,6 +21,7 @@
 		const driver = carousel.closest( '[data-page-driver]' );
 		const allSlides = driver ? Array.from( driver.querySelectorAll( '[data-page-driver-card]' ) ) : [];
 		const mobileCarousel = window.matchMedia( '(max-width: 767.98px)' );
+		const isSixPlus = driver && driver.classList.contains( 'page-drivers--six-plus-up' );
 		const isMonthly = driver && driver.classList.contains( 'page-drivers--monthly' );
 		let activeTerm = 'all';
 		let swiper;
@@ -51,16 +52,19 @@
 		};
 
 		const createSwiper = function () {
-			const useLoop = mobileCarousel.matches;
 			const visibleSlides = getVisibleSlides();
+			const useLoop = mobileCarousel.matches && visibleSlides.length > 1;
 
 			swiper = new window.Swiper( viewport, {
 				slidesPerView: 'auto',
 				spaceBetween: 11,
 				speed: reducedMotion ? 0 : 350,
 				centeredSlides: mobileCarousel.matches || isMonthly,
-				loop: true,
-				rewind: ! useLoop && visibleSlides.length > 1,
+				centerInsufficientSlides: isSixPlus && ! useLoop,
+				loop: isMonthly || useLoop,
+				rewind: isMonthly
+					? ! mobileCarousel.matches && visibleSlides.length > 1
+					: ! useLoop && visibleSlides.length > 1,
 				watchOverflow: true,
 				watchSlidesProgress: true,
 				keyboard: {

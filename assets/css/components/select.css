@@ -4,6 +4,7 @@
 .ltt-select {
     position: relative;
     display: inline-block;
+    min-width: 8.5rem;
 }
 
 .ltt-select [x-cloak] {

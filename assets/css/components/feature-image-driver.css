@@ -22,10 +22,28 @@
     overflow: hidden;
 }
 
+a.feature-image-driver__card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+a.feature-image-driver__card-link,
+a.feature-image-driver__card-link:is(:hover, :focus-visible) {
+    color: inherit;
+    text-decoration: none;
+}
+
+a.feature-image-driver__card-link:focus-visible {
+    outline: 0.1875rem solid #eeb040;
+    outline-offset: -0.1875rem;
+}
+
 .feature-image-driver__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 300ms ease-out;
 }
 
 .feature-image-driver__overlay {
@@ -35,6 +53,18 @@
         rgba(2, 22, 43, 0.75)
     );
     pointer-events: none;
+    transition: background 200ms ease-out;
+}
+
+a.feature-image-driver__card-link:is(:hover, :focus-visible)
+    ~ .feature-image-driver__media
+    img {
+    transform: scale(1.04);
+}
+
+a.feature-image-driver__card-link:is(:hover, :focus-visible)
+    ~ .feature-image-driver__overlay {
+    background: rgba(2, 22, 43, 0.62);
 }
 
 .feature-image-driver__content {
@@ -45,6 +75,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
+    pointer-events: none;
 }
 
 .feature-image-driver__tag {
@@ -290,6 +321,7 @@
     width: min(34.5rem, 58%);
     flex-direction: column;
     align-items: flex-start;
+    pointer-events: none;
 }
 
 .feature-image-driver__stacked-card-panel,
@@ -333,6 +365,7 @@
 
 .feature-image-driver__stacked-expand {
     display: none;
+    pointer-events: auto;
 }
 
 .feature-image-driver__stacked-card-toggle {
@@ -803,7 +836,9 @@
     .feature-image-driver__stacked-row,
     .feature-image-driver__stacked-card-content,
     .feature-image-driver__stacked-card-body,
-    .feature-image-driver__stacked-card-panel {
+    .feature-image-driver__stacked-card-panel,
+    .feature-image-driver__media img,
+    .feature-image-driver__overlay {
         transition: none;
     }
 }
