@@ -51,6 +51,62 @@
 			} );
 		};
 
+		const handleMonthlyPaginationClick = function ( event ) {
+			const clickTarget = event.target;
+			const bullet = clickTarget instanceof Element
+				? clickTarget.closest( '.ltt-carousel-indicator' )
+				: null;
+
+			if (
+				! swiper ||
+				! isMonthly ||
+				! swiper.params.loop ||
+				swiper.animating ||
+				! bullet ||
+				! pagination.contains( bullet )
+			) {
+				return;
+			}
+
+			const targetIndex = Array.from( swiper.pagination.bullets ).indexOf( bullet );
+			const currentIndex = Array.from( swiper.pagination.bullets ).findIndex( function ( paginationBullet ) {
+				return paginationBullet.classList.contains( 'is-active' );
+			} );
+
+			if ( targetIndex < 0 || targetIndex === currentIndex ) {
+				return;
+			}
+
+			event.preventDefault();
+
+			const instance = swiper;
+			let loopRestored = false;
+			const restoreLoop = function () {
+				if ( loopRestored || instance.destroyed ) {
+					return;
+				}
+
+				loopRestored = true;
+				instance.params.loop = true;
+				instance.loopCreate( targetIndex );
+				instance.slideTo( instance.getSlideIndexByData( targetIndex ), 0, false, true );
+				updatePaginationState( instance );
+			};
+
+			instance.loopDestroy();
+			instance.params.loop = false;
+			instance.slideTo( currentIndex, 0, false, true );
+			// Commit the normalized slide order before starting the visible transition.
+			instance.wrapperEl.getBoundingClientRect();
+
+			if ( false === instance.slideTo( targetIndex ) || reducedMotion ) {
+				restoreLoop();
+				return;
+			}
+
+			instance.once( 'transitionEnd', restoreLoop );
+		};
+
 		const createSwiper = function () {
 			const visibleSlides = getVisibleSlides();
 			const hasMultipleSlides = visibleSlides.length > 1;
@@ -82,7 +138,7 @@
 				},
 				pagination: {
 					el: pagination,
-					clickable: true,
+					clickable: ! useLoop,
 					bulletElement: 'button',
 					bulletClass: 'ltt-carousel-indicator',
 					bulletActiveClass: 'is-active',
@@ -108,6 +164,7 @@
 		};
 
 		rebuildCarousel();
+		pagination.addEventListener( 'click', handleMonthlyPaginationClick );
 
 		if ( driver ) {
 			driver.addEventListener( 'ltt:page-driver-filtered', function ( event ) {
