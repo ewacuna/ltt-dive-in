@@ -576,7 +576,7 @@ function ltt_dive_in_enqueue_page_driver_editor_assets() {
 				'four_up'     => array( 'min' => 4, 'max' => 4, 'label' => __( 'exactly 4 hub pages', 'ltt-dive-in' ) ),
 				'five_up'     => array( 'min' => 5, 'max' => 5, 'label' => __( 'exactly 5 hub pages', 'ltt-dive-in' ) ),
 				'six_plus_up' => array( 'min' => 6, 'max' => 12, 'label' => __( 'between 6 and 12 hub pages', 'ltt-dive-in' ) ),
-				'monthly'     => array( 'min' => 8, 'max' => 14, 'label' => __( 'between 8 and 14 hub pages', 'ltt-dive-in' ) ),
+				'monthly'     => array( 'min' => 12, 'max' => 12, 'label' => __( 'exactly 12 hub pages', 'ltt-dive-in' ) ),
 			),
 		)
 	);

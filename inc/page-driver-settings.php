@@ -424,7 +424,7 @@ function ltt_dive_in_validate_page_driver_tiles( $valid, $value, $field, $input 
 		'four_up'     => array( 4, 4 ),
 		'five_up'     => array( 5, 5 ),
 		'six_plus_up' => array( 6, 12 ),
-		'monthly'     => array( 8, 14 ),
+		'monthly'     => array( 12, 12 ),
 	);
 
 	if ( ! is_string( $layout ) || ! isset( $counts[ $layout ] ) ) {
