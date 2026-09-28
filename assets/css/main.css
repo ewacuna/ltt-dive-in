@@ -121,10 +121,6 @@ select {
     color: var(--color-text);
 }
 
-:focus-visible:not(:where(.components-button)) {
-    outline: 3px solid rgba(20, 87, 217, 0.35);
-    outline-offset: 3px;
-}
 
 .container {
     width: min(calc(100% - 2rem), var(--wide-width));

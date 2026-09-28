@@ -294,6 +294,10 @@
 							const close = lightbox.pswp.element.querySelector( '.pswp__button--close' );
 
 							if ( close ) {
+								close.classList.add( 'is-initial-focus' );
+								close.addEventListener( 'blur', function () {
+									close.classList.remove( 'is-initial-focus' );
+								}, { once: true } );
 								close.focus();
 							}
 						} );

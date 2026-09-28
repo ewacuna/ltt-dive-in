@@ -30,6 +30,9 @@
     padding: 0;
     background: transparent;
 }
+.ltt-photoswipe .pswp__button.pswp__button--close.is-initial-focus {
+    outline: none;
+}
 .ltt-photoswipe__close-icon {
     display: block;
     width: 2.375rem;
@@ -130,10 +133,7 @@
     font-size: clamp(0.875rem, 1.25vw, 1.125rem);
     line-height: 1.45;
 }
-.ltt-photoswipe .pswp__button:focus-visible {
-    outline: 0.1875rem solid #eeb040;
-    outline-offset: 0.1875rem;
-}
+
 
 @media (max-width: 767.98px) {
     .ltt-photoswipe .pswp__top-bar {
