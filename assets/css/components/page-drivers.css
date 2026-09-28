@@ -310,6 +310,7 @@
 
 .page-drivers--monthly
     .page-drivers__carousel
+    .page-drivers__grid:not(.is-filtered)
     .swiper-slide-active
     .page-drivers__card-link {
     z-index: 1;
@@ -343,6 +344,8 @@
 }
 
 .page-drivers--six-plus-up
+    .page-drivers__carousel-pagination.swiper-pagination-lock,
+.page-drivers--monthly
     .page-drivers__carousel-pagination.swiper-pagination-lock {
     display: none;
 }

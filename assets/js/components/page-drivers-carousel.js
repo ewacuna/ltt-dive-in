@@ -54,14 +54,15 @@
 		const createSwiper = function () {
 			const visibleSlides = getVisibleSlides();
 			const hasMultipleSlides = visibleSlides.length > 1;
-			const useLoop = isMonthly && hasMultipleSlides;
+			const isFiltered = 'all' !== activeTerm;
+			const useLoop = isMonthly && hasMultipleSlides && ! isFiltered;
 
 			swiper = new window.Swiper( viewport, {
 				slidesPerView: 'auto',
 				spaceBetween: 11,
 				speed: reducedMotion ? 0 : 350,
-				centeredSlides: hasMultipleSlides && ( mobileCarousel.matches || isMonthly ),
-				centerInsufficientSlides: isSixPlus,
+				centeredSlides: hasMultipleSlides && ( mobileCarousel.matches || ( isMonthly && ! isFiltered ) ),
+				centerInsufficientSlides: isSixPlus || ( isMonthly && isFiltered ),
 				loop: useLoop,
 				rewind: false,
 				watchOverflow: true,
