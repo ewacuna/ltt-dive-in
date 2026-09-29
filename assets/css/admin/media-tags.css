@@ -1,0 +1,46 @@
+/* Media Tags checklist in the media modal's attachment details. */
+
+.ltt-media-tags {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	min-width: 0;
+}
+
+.ltt-media-tags__search-label {
+	display: block;
+	margin: 0 0 4px;
+}
+
+.compat-item .ltt-media-tags__search {
+	width: 100%;
+	margin: 0 0 6px;
+}
+
+.ltt-media-tags__list {
+	max-height: 180px;
+	overflow-y: auto;
+	padding: 4px 8px;
+	border: 1px solid #dcdcde;
+	background: #fff;
+}
+
+.ltt-media-tags__option {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 0;
+}
+
+.compat-item .ltt-media-tags__option input[type="checkbox"] {
+	flex-shrink: 0;
+	margin: 0;
+}
+
+.ltt-media-tags__option[hidden] {
+	display: none;
+}
+
+.ltt-media-tags__status:empty {
+	display: none;
+}
