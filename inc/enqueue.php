@@ -57,13 +57,13 @@ function ltt_dive_in_enqueue_assets() {
 		wp_enqueue_style(
 			'ltt-dive-in-section-navigation',
 			LTT_DIVE_IN_URI . '/assets/css/components/section-navigation.css',
-			array( 'ltt-dive-in-header' ),
+			array( 'ltt-dive-in-header', 'ltt-dive-in-swiper' ),
 			file_exists( $section_style_path ) ? (string) filemtime( $section_style_path ) : LTT_DIVE_IN_VERSION
 		);
 		wp_enqueue_script(
 			'ltt-dive-in-section-navigation',
 			LTT_DIVE_IN_URI . '/assets/js/components/section-navigation.js',
-			array(),
+			array( 'ltt-dive-in-swiper' ),
 			file_exists( $section_script_path ) ? (string) filemtime( $section_script_path ) : LTT_DIVE_IN_VERSION,
 			array(
 				'strategy'  => 'defer',

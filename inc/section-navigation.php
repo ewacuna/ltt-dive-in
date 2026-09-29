@@ -48,23 +48,6 @@ function ltt_dive_in_register_section_navigation() {
 					'return_format' => 'value',
 					'ui'            => 1,
 				),
-				array(
-					'key'               => 'field_ltt_dive_in_section_navigation_label',
-					'name'              => 'ltt_dive_in_section_navigation_label',
-					'label'             => __( 'Collapsed menu label', 'ltt-dive-in' ),
-					'type'              => 'text',
-					'instructions'      => __( 'Shown on narrower screens when a section menu is selected. Leave empty for “Explore this section”.', 'ltt-dive-in' ),
-					'placeholder'       => __( 'Explore this section', 'ltt-dive-in' ),
-					'maxlength'         => 60,
-					'conditional_logic' => array(
-						array(
-							array(
-								'field'    => 'field_ltt_dive_in_section_navigation_menu',
-								'operator' => '!=empty',
-							),
-						),
-					),
-				),
 			),
 			'location' => array(
 				array(
@@ -164,13 +147,9 @@ function ltt_dive_in_get_section_navigation() {
 	);
 
 	if ( is_string( $html ) && '' !== trim( $html ) ) {
-		$collapsed_label = get_field( 'ltt_dive_in_section_navigation_label', get_queried_object_id() );
-		$collapsed_label = is_string( $collapsed_label ) ? trim( $collapsed_label ) : '';
-
 		$navigation = array(
-			'label'           => $menu->name,
-			'collapsed_label' => '' !== $collapsed_label ? $collapsed_label : __( 'Explore this section', 'ltt-dive-in' ),
-			'html'            => $html,
+			'label' => $menu->name,
+			'html'  => $html,
 		);
 	}
 

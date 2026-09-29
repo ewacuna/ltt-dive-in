@@ -1,4 +1,4 @@
-/** Show section links as a disclosure when the desktop row cannot fit. */
+/** Keep the header height current and slide the section row with Swiper on narrower screens. */
 ( function () {
 	'use strict';
 
@@ -9,99 +9,100 @@
 		return;
 	}
 
-	const toggle = section.querySelector( '.ltt-section-navigation__toggle' );
-	const menu = section.querySelector( '.ltt-section-navigation__menu' );
-	const compactQuery = window.matchMedia( '(max-width: 1399.98px)' );
-	const mobileQuery = window.matchMedia( '(max-width: 991.98px)' );
 	const updateHeight = function () {
 		site.style.setProperty( '--ltt-dive-in-header-height', header.getBoundingClientRect().height + 'px' );
 	};
 
-	if ( toggle && menu ) {
-		let activeAnimation = null;
-		const reduceMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
-		const setExpanded = function ( expanded, restoreFocus, animate ) {
-			const startHeight = menu.hidden ? 0 : menu.getBoundingClientRect().height;
-			const startOpacity = menu.hidden ? 0 : Number.parseFloat( window.getComputedStyle( menu ).opacity );
-			if ( activeAnimation ) {
-				activeAnimation.cancel();
-				activeAnimation = null;
-			}
+	const viewport = section.querySelector( '.ltt-section-navigation__viewport' );
+	const menu = viewport && viewport.querySelector( '.ltt-section-navigation__menu' );
+	if ( window.Swiper && viewport && menu ) {
+		const compactQuery = window.matchMedia( '(max-width: 1399.98px)' );
+		const reducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
+		const items = Array.from( menu.children );
+		let swiper = null;
 
-			toggle.setAttribute( 'aria-expanded', expanded ? 'true' : 'false' );
-			if ( restoreFocus ) {
-				toggle.focus();
-			}
-			menu.inert = compactQuery.matches && ! expanded;
-			if ( ! compactQuery.matches || ! animate || reduceMotion.matches || ! menu.animate ) {
-				menu.hidden = compactQuery.matches && ! expanded;
-				menu.classList.remove( 'is-animating' );
-				updateHeight();
+		const getCurrentIndex = function () {
+			return items.findIndex( function ( item ) {
+				return item.querySelector( 'a[aria-current="page"]' );
+			} );
+		};
+
+		const destroy = function () {
+			if ( ! swiper ) {
 				return;
 			}
-
-			menu.hidden = false;
-			const endHeight = expanded ? menu.scrollHeight : 0;
-			menu.classList.add( 'is-animating' );
-			const animation = menu.animate(
-				[
-					{ height: startHeight + 'px', opacity: startOpacity },
-					{ height: endHeight + 'px', opacity: expanded ? 1 : 0 },
-				],
-				{ duration: 240, easing: 'ease-in-out', fill: 'forwards' }
-			);
-			activeAnimation = animation;
-			animation.onfinish = function () {
-				if ( activeAnimation !== animation ) {
-					return;
-				}
-				menu.hidden = ! expanded;
-				animation.cancel();
-				activeAnimation = null;
-				menu.classList.remove( 'is-animating' );
-				updateHeight();
-			};
-			updateHeight();
+			swiper.destroy( true, true );
+			swiper = null;
+			section.classList.remove( 'is-swiper' );
+			viewport.classList.remove( 'swiper', 'swiper-backface-hidden' );
+			menu.classList.remove( 'swiper-wrapper' );
+			items.forEach( function ( item ) {
+				item.classList.remove( 'swiper-slide' );
+			} );
 		};
+
+		const init = function () {
+			if ( swiper ) {
+				return;
+			}
+			section.classList.add( 'is-swiper' );
+			viewport.classList.add( 'swiper' );
+			menu.classList.add( 'swiper-wrapper' );
+			items.forEach( function ( item ) {
+				item.classList.add( 'swiper-slide' );
+			} );
+
+			const currentIndex = getCurrentIndex();
+			swiper = new window.Swiper( viewport, {
+				// Swiper's a11y module would replace the list semantics of this navigation.
+				a11y: { enabled: false },
+				freeMode: { enabled: true, momentum: ! reducedMotion.matches },
+				grabCursor: true,
+				initialSlide: Math.max( currentIndex, 0 ),
+				mousewheel: { forceToAxis: true },
+				slidesOffsetAfter: 20,
+				slidesOffsetBefore: 20,
+				slidesPerView: 'auto',
+				speed: reducedMotion.matches ? 0 : 300,
+				watchOverflow: true,
+			} );
+		};
+
 		const updateMode = function () {
-			const focusInMenu = menu.contains( document.activeElement );
-			const focusOnToggle = document.activeElement === toggle;
-			toggle.hidden = ! compactQuery.matches;
-			setExpanded( false, compactQuery.matches && focusInMenu, false );
-			if ( ! compactQuery.matches && focusOnToggle ) {
-				const firstLink = menu.querySelector( 'a' );
-				if ( firstLink ) {
-					firstLink.focus();
-				}
+			if ( compactQuery.matches ) {
+				init();
+			} else {
+				destroy();
 			}
 		};
 
-		section.classList.add( 'is-enhanced' );
+		// Keep keyboard focus visible: slide to a focused link instead of letting the browser scroll the clipped viewport.
+		menu.addEventListener( 'focusin', function ( event ) {
+			if ( ! swiper ) {
+				return;
+			}
+			viewport.scrollLeft = 0;
+			const item = event.target.closest( '.swiper-slide' );
+			const index = items.indexOf( item );
+			if ( index < 0 ) {
+				return;
+			}
+			// Use Swiper's target translate, not the DOM box, so rapid Tab presses mid-transition measure correctly.
+			const left = item.offsetLeft + swiper.translate;
+			if ( left < 0 || left + item.offsetWidth > swiper.width ) {
+				swiper.slideTo( index, reducedMotion.matches ? 0 : 300 );
+			}
+		} );
+
+		// Focus scrolling happens after focusin; undo it so only Swiper's transform moves the row.
+		viewport.addEventListener( 'scroll', function () {
+			if ( swiper && 0 !== viewport.scrollLeft ) {
+				viewport.scrollLeft = 0;
+			}
+		} );
+
 		updateMode();
 		compactQuery.addEventListener( 'change', updateMode );
-		toggle.addEventListener( 'click', function () {
-			setExpanded( 'true' !== toggle.getAttribute( 'aria-expanded' ), false, true );
-		} );
-		section.addEventListener( 'keydown', function ( event ) {
-			if ( 'Escape' === event.key && compactQuery.matches && 'true' === toggle.getAttribute( 'aria-expanded' ) ) {
-				event.preventDefault();
-				event.stopPropagation();
-				setExpanded( false, true, true );
-			}
-		} );
-		menu.addEventListener( 'click', function ( event ) {
-			if ( compactQuery.matches && event.target.closest( 'a' ) ) {
-				setExpanded( false, true, false );
-			}
-		} );
-		const primaryToggle = header.querySelector( '[data-menu-button]' );
-		if ( primaryToggle ) {
-			primaryToggle.addEventListener( 'click', function () {
-				if ( mobileQuery.matches ) {
-					setExpanded( false, false, false );
-				}
-			} );
-		}
 	}
 
 	updateHeight();
