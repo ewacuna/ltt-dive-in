@@ -57,6 +57,11 @@
     mask: url("../../images/header/close-icon.svg") center / 0.75rem no-repeat;
 }
 
+/* An empty field has nothing to clear; drop the hidden glyph so it does not clip the placeholder. */
+.ltt-search-bar .ltt-search-bar__input:placeholder-shown::-webkit-search-cancel-button {
+    display: none;
+}
+
 @media (forced-colors: active) {
     .ltt-search-bar .ltt-search-bar__input::-webkit-search-cancel-button {
         background-color: ButtonText;

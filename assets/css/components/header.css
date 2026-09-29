@@ -467,6 +467,8 @@
     width: 1.5rem;
     height: 1.5rem;
     color: var(--header-cyan);
+    /* Optical nudge: center the icon on the numerals' cap height, not the line box. */
+    translate: 0 -1px;
 }
 
 .site-header__search {
