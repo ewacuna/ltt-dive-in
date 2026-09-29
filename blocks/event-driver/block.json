@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ltt-dive-in/event-driver",
+    "title": "Event Driver",
+    "category": "ltt-blocks",
+    "icon": "calendar-alt",
+    "description": "Upcoming Seeker events as a featured hero, a filterable list, or a carousel.",
+    "keywords": [ "events", "calendar", "seeker", "carousel" ],
+    "textdomain": "ltt-dive-in",
+    "style": "ltt-dive-in-event-driver",
+    "editorStyle": "ltt-dive-in-event-driver",
+    "viewScript": "ltt-dive-in-event-driver",
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "template-parts/blocks/event-driver.php"
+    },
+    "attributes": {
+        "align": { "type": "string", "default": "full" }
+    },
+    "supports": {
+        "align": [ "full" ],
+        "anchor": true,
+        "customClassName": false,
+        "html": false,
+        "multiple": true
+    }
+}

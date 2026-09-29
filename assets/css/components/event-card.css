@@ -1,0 +1,378 @@
+/*
+ * Reusable event card.
+ *
+ * `--card`: Figma “Card with Date” (node 1:3412), a navy card with the image
+ * above its content.
+ * `--tile`: Figma “Story Card – Event” (nodes 1:824 default, 1:883 hover),
+ * a full-image tile that reveals its details on hover or keyboard focus. Below
+ * 768px it uses the `--card` presentation, matching mobile node 1:11592.
+ *
+ * Gotham HTF Medium is not supplied; its roles use the available Book face.
+ * Roboto labels in the source (weekday) use the theme's Gotham stack.
+ */
+.ltt-event-card {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    background: #073959;
+    color: #ffffff;
+    font-family: "Gotham HTF", Arial, sans-serif;
+}
+
+/* Below the in-flow summary and content that share its grid cell in `--tile`. */
+.ltt-event-card__media {
+    position: relative;
+    z-index: -1;
+    overflow: hidden;
+    aspect-ratio: 335 / 249;
+    background: #06304d;
+}
+
+.ltt-event-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ltt-event-card__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+}
+
+.ltt-event-card__tag,
+.ltt-event-card__summary-tag {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0 0.8125rem 0 0;
+    background: rgba(4, 39, 66, 0.5);
+    color: #f8dfb3;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.ltt-event-card__title {
+    margin: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.0025em;
+}
+
+.ltt-event-card__link,
+.ltt-event-card__link:is(:hover, :focus, :visited) {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* The title link covers the whole card; the reminder link sits above it. */
+.ltt-event-card__link::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    content: "";
+}
+
+.ltt-event-card__link:focus-visible {
+    outline: 0;
+}
+
+.ltt-event-card:has(.ltt-event-card__link:focus-visible) {
+    outline: 3px solid #eeb040;
+    outline-offset: -3px;
+}
+
+.ltt-event-card__venue {
+    margin: 0;
+    color: #c7d1d8;
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.ltt-event-card__excerpt {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: -0.0025em;
+}
+
+.ltt-event-card__date {
+    position: absolute;
+    z-index: 1;
+    top: 1rem;
+    right: 1rem;
+    width: 6.5rem;
+    margin: 0;
+    padding: 0.75rem 0.25rem;
+    border-bottom-left-radius: 2.1875rem;
+    background: rgba(255, 255, 255, 0.75);
+    color: #073959;
+    text-align: center;
+    pointer-events: none;
+}
+
+.ltt-event-card__date time {
+    display: flex;
+    flex-direction: column;
+}
+
+.ltt-event-card__month {
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.ltt-event-card__day {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.ltt-event-card__weekday {
+    padding-top: 0.4375rem;
+    color: #525062;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.ltt-event-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+}
+
+.ltt-event-card__read-more,
+.ltt-event-card__reminder {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #eeb040;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.ltt-event-card__read-more img {
+    display: block;
+    width: 0.6875rem;
+    height: 0.625rem;
+    transform: rotate(-90deg);
+}
+
+.ltt-event-card__reminder {
+    position: relative;
+    z-index: 2;
+    min-height: 1.5rem;
+    text-decoration: none;
+}
+
+.ltt-event-card__reminder:is(:hover, :focus-visible) {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.ltt-event-card__reminder:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+.ltt-event-card__reminder img {
+    display: block;
+    width: 1.125rem;
+    height: 1.25rem;
+}
+
+.ltt-event-card--card .ltt-event-card__reminder,
+.ltt-event-card--tile .ltt-event-card__read-more {
+    display: none;
+}
+
+/* Story Card – Event: image, date, and a centered title until hover or focus. */
+.ltt-event-card--tile {
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    min-height: 33.6875rem;
+    border: 1px solid #000000;
+}
+
+.ltt-event-card--tile > * {
+    grid-area: 1 / 1;
+}
+
+.ltt-event-card--tile .ltt-event-card__media {
+    aspect-ratio: auto;
+}
+
+.ltt-event-card--tile .ltt-event-card__media::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 57, 89, 0.51), rgba(2, 22, 43, 0.51));
+    content: "";
+    transition: opacity 300ms ease-out;
+}
+
+.ltt-event-card--tile .ltt-event-card__date {
+    top: 1.125rem;
+    right: 1.125rem;
+}
+
+/* Starts where the Figma summary starts (143px); longer titles grow downward, clear of the date. */
+.ltt-event-card__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: start;
+    gap: 0.5rem;
+    margin-top: 8.9375rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: opacity 300ms ease-out;
+}
+
+.ltt-event-card__summary-tag {
+    margin: 0;
+}
+
+.ltt-event-card__summary-title {
+    font-family: "Big Caslon", Georgia, serif;
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+}
+
+.ltt-event-card--tile .ltt-event-card__content {
+    align-self: end;
+    margin: 0 1.125rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 0;
+    background: rgba(7, 57, 89, 0.8);
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+}
+
+.ltt-event-card--tile .ltt-event-card__excerpt {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    letter-spacing: 0;
+}
+
+/* The invisible reminder must not be clicked or focused before it is revealed. */
+.ltt-event-card--tile .ltt-event-card__reminder {
+    visibility: hidden;
+    transition: visibility 0s linear 300ms;
+}
+
+.ltt-event-card--tile:is(:hover, :focus-within) .ltt-event-card__media::after,
+.ltt-event-card--tile:is(:hover, :focus-within) .ltt-event-card__summary {
+    opacity: 0;
+}
+
+.ltt-event-card--tile:is(:hover, :focus-within) .ltt-event-card__content {
+    opacity: 1;
+}
+
+.ltt-event-card--tile:is(:hover, :focus-within) .ltt-event-card__reminder {
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.ltt-event-card--no-image .ltt-event-card__media::after {
+    display: none;
+}
+
+/* Touch screens have no hover; show the revealed state without interaction. */
+@media (hover: none) {
+    .ltt-event-card--tile .ltt-event-card__media::after,
+    .ltt-event-card--tile .ltt-event-card__summary {
+        opacity: 0;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__content {
+        opacity: 1;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__reminder {
+        visibility: visible;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .ltt-event-card__summary-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ltt-event-card--tile {
+        grid-template-rows: auto 1fr;
+        min-height: 0;
+        border: 0;
+    }
+
+    .ltt-event-card--tile > * {
+        grid-area: auto;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__media {
+        aspect-ratio: 335 / 249;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__media::after,
+    .ltt-event-card--tile .ltt-event-card__summary,
+    .ltt-event-card--tile .ltt-event-card__reminder {
+        display: none;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__content {
+        align-self: stretch;
+        margin: 0;
+        border: 0;
+        background: transparent;
+        opacity: 1;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__date {
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__excerpt {
+        font-size: 1rem;
+        line-height: 1.5;
+        letter-spacing: -0.0025em;
+    }
+
+    .ltt-event-card--tile .ltt-event-card__read-more {
+        display: inline-flex;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ltt-event-card *,
+    .ltt-event-card *::after {
+        transition: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .ltt-event-card {
+        border: 1px solid CanvasText;
+    }
+
+    .ltt-event-card:has(.ltt-event-card__link:focus-visible) {
+        outline-color: Highlight;
+    }
+}

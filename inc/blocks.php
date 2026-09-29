@@ -291,6 +291,60 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $video_module_path . '/block.json' ) ) {
 		register_block_type( $video_module_path );
 	}
+
+	$event_card_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/event-card.css';
+	$event_driver_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/event-driver.css';
+	$event_driver_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/event-driver.js';
+	$event_driver_path        = LTT_DIVE_IN_DIR . '/blocks/event-driver';
+
+	if ( ! wp_style_is( 'ltt-dive-in-search-bar', 'registered' ) ) {
+		$search_bar_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/search-bar.css';
+
+		// Matches the public registration in inc/enqueue.php; main.css is not a dependency in admin.
+		wp_register_style( 'ltt-dive-in-search-bar', LTT_DIVE_IN_URI . '/assets/css/components/search-bar.css', is_admin() ? array() : array( 'ltt-dive-in-style' ), file_exists( $search_bar_style_path ) ? (string) filemtime( $search_bar_style_path ) : LTT_DIVE_IN_VERSION );
+	}
+
+	wp_register_style( 'ltt-dive-in-event-card', LTT_DIVE_IN_URI . '/assets/css/components/event-card.css', array(), file_exists( $event_card_style_path ) ? (string) filemtime( $event_card_style_path ) : LTT_DIVE_IN_VERSION );
+	// Every variant is a Swiper carousel at some breakpoint, so Swiper is a direct dependency.
+	wp_register_style(
+		'ltt-dive-in-event-driver',
+		LTT_DIVE_IN_URI . '/assets/css/components/event-driver.css',
+		array( 'ltt-dive-in-swiper', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators', 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-event-card' ),
+		file_exists( $event_driver_style_path ) ? (string) filemtime( $event_driver_style_path ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script(
+		'ltt-dive-in-event-driver',
+		LTT_DIVE_IN_URI . '/assets/js/components/event-driver.js',
+		array( 'ltt-dive-in-swiper' ),
+		file_exists( $event_driver_script_path ) ? (string) filemtime( $event_driver_script_path ) : LTT_DIVE_IN_VERSION,
+		array( 'strategy' => 'defer', 'in_footer' => true )
+	);
+	wp_localize_script(
+		'ltt-dive-in-event-driver',
+		'ltt_dive_in_event_driver',
+		array(
+			'endpoint'     => rest_url( 'ltt-dive-in/v1/event-driver-events' ),
+			'carousel'     => __( 'carousel', 'ltt-dive-in' ),
+			'slide'        => __( 'slide', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}} and {{slidesLength}}; keep both placeholders. */
+			'slideLabel'   => __( '{{index}} of {{slidesLength}}', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}}; keep the placeholder. */
+			'goToEvent'    => __( 'Go to event {{index}}', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}}; keep the placeholder. */
+			'goToFeatured' => __( 'Go to featured event {{index}}', 'ltt-dive-in' ),
+			'loading'      => __( 'Loading events…', 'ltt-dive-in' ),
+			/* translators: 1: number of events shown, 2: total matching events. */
+			'showing'      => __( 'Showing %1$d of %2$d events.', 'ltt-dive-in' ),
+			/* translators: %d: number of events added. */
+			'loaded'       => __( '%d more events loaded.', 'ltt-dive-in' ),
+			'noResults'    => __( 'No events match your filters.', 'ltt-dive-in' ),
+			'error'        => __( 'Events could not be loaded. Please try again.', 'ltt-dive-in' ),
+		)
+	);
+
+	if ( file_exists( $event_driver_path . '/block.json' ) ) {
+		register_block_type( $event_driver_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
 
@@ -535,6 +589,30 @@ function ltt_dive_in_maybe_enqueue_video_module_carousel_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_video_module_carousel_assets', 5 );
+
+/**
+ * Enqueue Event Driver assets before the document head is printed.
+ *
+ * Styles enqueued while a block renders are hoisted by Core above the theme
+ * foundations, which would let Swiper's defaults override event-driver.css.
+ * Enqueueing here keeps the registered dependency order. Blocks that cannot be
+ * found in the queried post still receive their assets from block.json.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_event_driver_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( $post instanceof WP_Post && has_block( 'ltt-dive-in/event-driver', $post ) ) {
+		wp_enqueue_style( 'ltt-dive-in-event-driver' );
+		wp_enqueue_script( 'ltt-dive-in-event-driver' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_event_driver_assets', 20 );
 
 /**
  * Load shared carousel styles before block styles inside the editor canvas.

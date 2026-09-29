@@ -17,6 +17,7 @@ $surface            = isset( $args['surface'] ) && 'dark' === $args['surface'] ?
 $class_name         = isset( $args['class_name'] ) ? sanitize_html_class( $args['class_name'] ) : '';
 $native_attributes  = isset( $args['native_attributes'] ) && is_array( $args['native_attributes'] ) ? $args['native_attributes'] : array();
 $aria_controls      = isset( $args['aria_controls'] ) ? sanitize_html_class( $args['aria_controls'] ) : '';
+$name               = isset( $args['name'] ) && is_string( $args['name'] ) ? sanitize_key( $args['name'] ) : '';
 $label_id           = $id . '-label';
 $current_id         = $id . '-current';
 $menu_id            = $id . '-options';
@@ -28,7 +29,7 @@ if ( ! $options ) {
 ?>
 <label id="<?php echo esc_attr( $label_id ); ?>" class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
 <div class="ltt-select ltt-select--<?php echo esc_attr( $surface ); ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" x-data="lttSelect" x-on:click.outside="close" x-on:keydown.escape.window="close">
-	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
+	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $name ? ' name="' . esc_attr( $name ) . '"' : ''; ?><?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
 		<?php foreach ( $options as $option ) : ?>
 			<?php $option_value = isset( $option['value'] ) && is_scalar( $option['value'] ) ? (string) $option['value'] : ''; ?>
 			<?php $option_label = isset( $option['label'] ) && is_string( $option['label'] ) ? $option['label'] : ''; ?>

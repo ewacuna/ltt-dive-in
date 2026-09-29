@@ -347,11 +347,23 @@ Implementation rules:
 
 ### Events
 
-- Event content is expected to synchronize through The Events Calendar API from the Tahoe Events Calendar platform rather than being authored directly in this WordPress installation.
+- The Figma notes and the work orders describe a sync from the Tahoe Events Calendar into The Events Calendar. The project has since confirmed the [Seeker Events API](https://seeker.io/apidocs/events/) as the event source. Events are read live from Seeker on the server and are not stored in WordPress, so there are no event posts, detail pages, or FacetWP/Algolia records for events.
 - Featured events use a rotating full-width hero with date, venue, organizer metadata, up to two CTAs, arrows, and pagination dots.
 - The event grid uses cards, dropdown filtering, and load-more pagination.
 - Filter taxonomies must match the data supplied by the external feed.
 - Indexing event data in Algolia and including it in Content Trail are provisional architecture decisions.
+
+#### Event Driver block — implementation note
+
+- One ACF block, `ltt-dive-in/event-driver`, with a variant select: Hero Featured Events (`1:11652`/`1:11653`), Listed Events (`1:11591`/`1:11592`), and Events Carousel (`1:11658`/`1:11659`), all under Figma `1:11584`. The same frames appear in review node `95:87554`.
+- The Seeker API key is entered in **Settings → Events** (`manage_options`) or defined as `LTT_DIVE_IN_SEEKER_API_KEY` in `wp-config.php`, which takes precedence. A saved key is never printed back into the form, is not autoloaded, and is never sent to the browser. Changing it invalidates every cached response.
+- Requests are server-side only: `states=published`, cancelled events excluded, 15-minute cache per query, a one-day stale fallback, and a pause for the `Retry-After` period after a 429. Missing configuration, an API failure, or an empty result renders nothing publicly and an explanation in the editor preview.
+- Hero: Seeker's `featured` flag (3–6 slides, soonest first) or 3–6 events chosen by searching Seeker in the editor. The two CTAs link to the first ticket URL and to the Seeker `eventurl`, with editor-defined labels; a CTA whose URL is missing is hidden. No auto-advance.
+- Listed: Figma Story Card – Event tiles (`1:824` default, `1:883` hover) in three columns at `1400px`, two columns from `767.98px` to `1199.98px`, and a Swiper carousel of “Card with Date” cards below `768px`, as in mobile node `1:11592`. The hover reveal also opens on keyboard focus and is always open on `hover: none` devices. The Categories dropdown uses Seeker categories (the editor may limit the options). The date dropdown offers Upcoming, Today, This weekend, Next 7 days, This month, and Next month. These presets are a proposal: Figma shows only the “Upcoming” label. Filtering and Load More use `ltt-dive-in/v1/event-driver-events` and fall back to a GET form without JavaScript.
+- “Remind Me” downloads an iCalendar file with a one-hour alert from `ltt-dive-in/v1/event-calendar`. Figma does not define this behavior; confirm it with design.
+- Cards and the hero link to Seeker's external `eventurl`. Event images are Seeker's remote renditions (150/600/1024/1400px and original) and are decorative, because the title is always visible.
+- Each rendered block prints schema.org `Event` JSON-LD from the Seeker data.
+- Deviations: Roboto labels (hero meta, weekday) use Gotham; Gotham Medium roles use Book. The Figma search placeholder color `rgba(197,197,203,.85)` on `#f2f2f2` fails contrast, so grey 600 `#525062` is used. On small screens the search field sits above the dropdowns while the DOM keeps the desktop order (dropdowns, then search). The unused Relume placeholder cards in the mobile frames are not implemented.
 
 ### Content modules
 
@@ -453,7 +465,7 @@ The following must be resolved before the related production work is considered 
 - Search and filtering technology, including whether Algolia is used.
 - Final ACF field-group and page-template mapping for each editable module, including which content is reusable or global.
 - Final Gravity Forms inventory and environment-migration process, including fields, consent, confirmations, notifications, retention, spam protection, email delivery, and external feeds.
-- Event-feed API contract, cache, failure behavior, and taxonomy mapping.
+- Event detail pages, the Remind Me behavior, and the date-filter presets for the Seeker-based Event Driver.
 - OpenWeather subscription level and lake-temperature data source.
 - Weather condition icon color, size, and style, and whether the Weather module reuses the header's Meteocons set.
 - Exact motion easing and whether the proposed bounce effect is retained.

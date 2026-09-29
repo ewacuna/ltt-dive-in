@@ -195,3 +195,93 @@ function ltt_dive_in_prepare_accordion_topics( $rows ) {
 
 	return $topics;
 }
+
+/**
+ * Format an event's date and time for display.
+ *
+ * Dates are shown in the event's own timezone, which Seeker supplies.
+ *
+ * @param array $event Normalized Seeker event.
+ * @return string
+ */
+function ltt_dive_in_format_event_date( $event ) {
+	if ( empty( $event['start'] ) || ! $event['start'] instanceof DateTimeImmutable ) {
+		return '';
+	}
+
+	$start    = $event['start'];
+	$end      = isset( $event['end'] ) && $event['end'] instanceof DateTimeImmutable ? $event['end'] : null;
+	$timezone = $start->getTimezone();
+	$format   = static function ( $format, $date ) use ( $timezone ) {
+		return wp_date( $format, $date->getTimestamp(), $timezone );
+	};
+
+	if ( $end && $end->format( 'Y-m-d' ) !== $start->format( 'Y-m-d' ) ) {
+		$start_format = $end->format( 'Y' ) === $start->format( 'Y' ) ? __( 'M j', 'ltt-dive-in' ) : __( 'M j, Y', 'ltt-dive-in' );
+
+		/* translators: 1: start date, 2: end date. */
+		return sprintf( __( '%1$s – %2$s', 'ltt-dive-in' ), $format( $start_format, $start ), $format( __( 'M j, Y', 'ltt-dive-in' ), $end ) );
+	}
+
+	if ( ! empty( $event['all_day'] ) ) {
+		return $format( __( 'D, M j, Y', 'ltt-dive-in' ), $start );
+	}
+
+	/* translators: 1: event date, 2: event start time. */
+	return sprintf( __( '%1$s · %2$s', 'ltt-dive-in' ), $format( __( 'D, M j, Y', 'ltt-dive-in' ), $start ), $format( __( 'g:i A', 'ltt-dive-in' ), $start ) );
+}
+
+/**
+ * Return the machine-readable start value for an event's `time` element.
+ *
+ * @param array $event Normalized Seeker event.
+ * @return string
+ */
+function ltt_dive_in_get_event_datetime_attribute( $event ) {
+	if ( empty( $event['start'] ) || ! $event['start'] instanceof DateTimeImmutable ) {
+		return '';
+	}
+
+	return ! empty( $event['all_day'] ) ? $event['start']->format( 'Y-m-d' ) : $event['start']->format( DATE_W3C );
+}
+
+/**
+ * Return decorative image markup for an event.
+ *
+ * Seeker images are remote, so the responsive attributes are built from the
+ * renditions Seeker supplies instead of from the Media Library. The event title
+ * is always visible next to the image, so the image is decorative.
+ *
+ * @param array  $event   Normalized Seeker event.
+ * @param string $sizes   `sizes` attribute.
+ * @param string $loading `lazy` or `eager`.
+ * @return string
+ */
+function ltt_dive_in_get_event_image( $event, $sizes, $loading = 'lazy' ) {
+	$image = isset( $event['image'] ) && is_array( $event['image'] ) ? $event['image'] : array();
+
+	if ( empty( $image['src'] ) ) {
+		return '';
+	}
+
+	return sprintf(
+		'<img src="%1$s"%2$s sizes="%3$s"%4$s alt="" loading="%5$s" decoding="async"%6$s />',
+		esc_url( $image['src'] ),
+		! empty( $image['srcset'] ) ? ' srcset="' . esc_attr( $image['srcset'] ) . '"' : '',
+		esc_attr( $sizes ),
+		! empty( $image['width'] ) && ! empty( $image['height'] ) ? ' width="' . absint( $image['width'] ) . '" height="' . absint( $image['height'] ) . '"' : '',
+		'eager' === $loading ? 'eager' : 'lazy',
+		'eager' === $loading ? ' fetchpriority="high"' : ''
+	);
+}
+
+/**
+ * Return a Seeker event description shortened for cards and heroes.
+ *
+ * @param array $event Normalized Seeker event.
+ * @param int   $words Maximum words.
+ * @return string
+ */
+function ltt_dive_in_get_event_excerpt( $event, $words = 18 ) {
+	return isset( $event['description'] ) && is_string( $event['description'] ) ? wp_trim_words( $event['description'], $words, '…' ) : '';
+}
