@@ -25,7 +25,6 @@
 
 .ltt-section-navigation .ltt-section-navigation__toggle {
 	display: none;
-	-webkit-tap-highlight-color: transparent;
 	-webkit-user-select: none;
 	user-select: none;
 	width: 100%;

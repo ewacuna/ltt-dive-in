@@ -47,6 +47,8 @@
 
 html {
     scroll-behavior: smooth;
+    /* Inherited: suppress the WebKit/Blink touch overlay site-wide. Components own their hover, active, and focus-visible states. */
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {

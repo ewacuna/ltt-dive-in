@@ -251,6 +251,11 @@ Figma defines these control families:
 - Category selectors with selected and hover states.
 - Form submission buttons and text “Read More” actions.
 
+#### Touch feedback
+
+- Figma does not use the browser's native tap highlight (the translucent box iOS Safari and Android Chrome draw over a tapped link or button). It is disabled once, site-wide, on `html` in `assets/css/main.css`; the property is inherited, so it covers every link, control, and scripted container.
+- Do not re-declare `-webkit-tap-highlight-color` in component or template stylesheets. Touch feedback comes from each component's designed hover, pressed/active, and focus-visible states, which must remain visible and must not rely on the tap highlight.
+
 #### Footer FAQ CTA
 
 The approved footer FAQ CTA uses the shared dark-tertiary button treatment over the primary shade 200 footer surface: tertiary tint 200 `#79CDC4` fill, primary `#073959` text, and the shared pill geometry. Its hover state uses a white fill with primary text, and keyboard focus uses the shared Peak Gold outline. The reference label is “Frequently Asked Questions”; the label and destination remain editable through the Footer Settings link field. When the editor provides only a destination, the theme uses the reference label as its fallback.
