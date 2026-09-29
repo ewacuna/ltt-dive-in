@@ -3,6 +3,7 @@
     --header-text: #ffffff;
     --header-muted: #c7d1d8;
     --header-accent: #eeb040;
+    --header-cyan: #61c2b7;
     position: relative;
     z-index: 100;
     width: 100%;
@@ -462,9 +463,10 @@
 }
 
 .site-header__weather-icon {
-    width: 1.75rem;
-    height: 1.75rem;
-    object-fit: contain;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--header-cyan);
 }
 
 .site-header__search {

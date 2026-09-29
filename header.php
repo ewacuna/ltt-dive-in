@@ -122,9 +122,11 @@
 					<?php else : ?>
 						<span>
 					<?php endif; ?>
-						<?php if ( $weather['icon_url'] ) : ?>
-							<img class="site-header__weather-icon" src="<?php echo esc_url( $weather['icon_url'] ); ?>" alt="" width="28" height="28">
-						<?php endif; ?>
+						<?php
+						if ( $weather['icon_svg'] ) {
+							echo $weather['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG file.
+						}
+						?>
 						<span class="site-header__weather-label" aria-hidden="true"><?php echo esc_html( $weather['label'] ); ?></span>
 						<span class="screen-reader-text"><?php echo esc_html( $weather['accessible_label'] ); ?></span>
 					<?php if ( is_array( $weather_link ) && ! empty( $weather_link['url'] ) ) : ?>

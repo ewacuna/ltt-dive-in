@@ -372,6 +372,14 @@ Implementation rules:
 - Lake water temperature is not a standard OpenWeather field. It requires a separate lake-specific data source or an explicitly maintained manual source.
 - Weather data must include units, update/freshness information, understandable error states, and an accessible non-visual representation.
 
+### Weather condition icons — provisional
+
+- Figma supplies only a single snowflake for the header weather indicator, not a complete condition-icon set. The theme uses Meteocons (MIT, `monochrome` style) as the approved set; see **Weather icons** in `AGENTS.md` for file handling.
+- Header indicator: cyan `#61C2B7` on primary navy at `24px`. Both values are read from the review composition, not measured from a Figma node, and remain provisional until confirmed.
+- OpenWeather code mapping: `01` clear day/night, `02` partly cloudy day/night, `03` cloudy, `04` overcast, `09` drizzle, `10` rain, `11` thunderstorms with rain, `13` snowflake (matching the Figma header icon), `50` mist.
+- The filled snowflake is visually heavier than the other line icons at small sizes; design has not reviewed this difference.
+- The unbuilt Weather module (current conditions and forecast) also shows condition icons. Before implementing it, compare its Figma icons with this set and decide whether Meteocons is reused, extended, or replaced. Do not introduce a second weather icon set for the same conditions.
+
 ## Accessibility and inclusive behavior
 
 All implementation must meet the accessibility requirements in `AGENTS.md`, including WCAG 2.2 Level AA. Design-specific requirements include:
@@ -442,6 +450,7 @@ The following must be resolved before the related production work is considered 
 - Final Gravity Forms inventory and environment-migration process, including fields, consent, confirmations, notifications, retention, spam protection, email delivery, and external feeds.
 - Event-feed API contract, cache, failure behavior, and taxonomy mapping.
 - OpenWeather subscription level and lake-temperature data source.
+- Weather condition icon color, size, and style, and whether the Weather module reuses the header's Meteocons set.
 - Exact motion easing and whether the proposed bounce effect is retained.
 
 ## Updating this guide

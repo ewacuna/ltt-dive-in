@@ -161,16 +161,75 @@ function ltt_dive_in_get_current_weather( $force_refresh = false ) {
 }
 
 /**
+ * Map an OpenWeather icon code to a bundled Meteocons icon name.
+ *
+ * @param string $code OpenWeather icon code, such as `13d`.
+ * @return string Icon file basename, or an empty string when unmapped.
+ */
+function ltt_dive_in_get_weather_icon_name( $code ) {
+	$icons = array(
+		'01d' => 'clear-day',
+		'01n' => 'clear-night',
+		'02d' => 'partly-cloudy-day',
+		'02n' => 'partly-cloudy-night',
+		'03d' => 'cloudy',
+		'03n' => 'cloudy',
+		'04d' => 'overcast',
+		'04n' => 'overcast',
+		'09d' => 'drizzle',
+		'09n' => 'drizzle',
+		'10d' => 'rain',
+		'10n' => 'rain',
+		'11d' => 'thunderstorms-rain',
+		'11n' => 'thunderstorms-rain',
+		'13d' => 'snowflake',
+		'13n' => 'snowflake',
+		'50d' => 'mist',
+		'50n' => 'mist',
+	);
+
+	return is_string( $code ) && isset( $icons[ $code ] ) ? $icons[ $code ] : '';
+}
+
+/**
+ * Get the inline SVG markup for a bundled weather icon.
+ *
+ * Icons are Meteocons monochrome SVGs stored in the theme, so the markup is
+ * trusted and inherits the surrounding text color through `currentColor`.
+ *
+ * @param string $name Icon file basename from ltt_dive_in_get_weather_icon_name().
+ * @return string Decorative SVG markup, or an empty string when unavailable.
+ */
+function ltt_dive_in_get_weather_icon_svg( $name ) {
+	if ( ! is_string( $name ) || 1 !== preg_match( '/\A[a-z-]+\z/', $name ) ) {
+		return '';
+	}
+
+	$path = get_theme_file_path( 'assets/images/icons/weather/' . $name . '.svg' );
+
+	if ( ! is_readable( $path ) ) {
+		return '';
+	}
+
+	$svg = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local theme file.
+
+	if ( ! is_string( $svg ) || 0 !== strpos( $svg, '<svg ' ) ) {
+		return '';
+	}
+
+	return '<svg class="site-header__weather-icon" aria-hidden="true" focusable="false" ' . substr( trim( $svg ), 5 );
+}
+
+/**
  * Build display and accessible labels for the header weather indicator.
  *
- * @return array{label: string, accessible_label: string, icon_url: string}
+ * @return array{label: string, accessible_label: string, icon_svg: string}
  */
 function ltt_dive_in_get_header_weather() {
 	$weather = ltt_dive_in_get_current_weather();
 
 	if ( ! is_wp_error( $weather ) ) {
 		$label            = sprintf( '%d°F', $weather['temperature'] );
-		$icon_url         = '';
 		$accessible_label = sprintf(
 			/* translators: 1: temperature, 2: weather description, 3: update time. */
 			__( 'Current conditions in Tahoe City: %1$s, %2$s. Updated %3$s.', 'ltt-dive-in' ),
@@ -179,20 +238,16 @@ function ltt_dive_in_get_header_weather() {
 			wp_date( get_option( 'time_format' ), $weather['observed_at'] )
 		);
 
-		if ( ! empty( $weather['icon'] ) && is_string( $weather['icon'] ) ) {
-			$icon_url = sprintf( 'https://openweathermap.org/img/wn/%s@2x.png', rawurlencode( $weather['icon'] ) );
-		}
-
 		return array(
 			'label'            => $label,
 			'accessible_label' => $accessible_label,
-			'icon_url'         => $icon_url,
+			'icon_svg'         => ltt_dive_in_get_weather_icon_svg( ltt_dive_in_get_weather_icon_name( $weather['icon'] ?? '' ) ),
 		);
 	}
 
 	return array(
 		'label'            => '',
 		'accessible_label' => '',
-		'icon_url'         => '',
+		'icon_svg'         => '',
 	);
 }

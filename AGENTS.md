@@ -377,6 +377,13 @@ Do not place homepage sections, post grids, archive layouts, template-specific h
 - Prefix theme-owned control classes with `ltt-` and use the component name directly, such as `ltt-slider-navigation` or `ltt-calendar`; do not add a redundant `control` segment.
 - These stylesheets define approved variants and states only. Do not enqueue or apply a control stylesheet until the matching semantic markup, required icon assets, interaction behavior, and accessibility states are implemented.
 
+##### Weather icons
+
+- Weather condition icons are self-hosted Meteocons (MIT, `@meteocons/svg-static`, `monochrome` style) in `assets/images/icons/weather/`. Keep the bundled `LICENSE` file with them. Do not hotlink icons from OpenWeather or another weather provider.
+- `ltt_dive_in_get_weather_icon_name()` in `inc/weather.php` maps OpenWeather icon codes to icon files, and `ltt_dive_in_get_weather_icon_svg()` inlines the SVG as decorative (`aria-hidden="true"`, `focusable="false"`). The accessible weather description remains in text.
+- Icons use `currentColor`; set their color from the consuming component's CSS rather than editing the SVG files.
+- To add an icon, copy it from the same Meteocons `monochrome` set, remove unreferenced `id` attributes, prefix referenced IDs and their `url(#…)` references with `ltt-weather-{icon-name}-`, set `viewBox="16 16 96 96"`, and register it in the mapping. Do not mix other Meteocons styles or icon libraries into this set.
+
 ### Conditional stylesheet loading
 
 Register and enqueue styles from `inc/enqueue.php` through WordPress APIs. Every non-global stylesheet must load only when its template or component is used.
