@@ -49,6 +49,28 @@ function ltt_dive_in_enqueue_assets() {
 		file_exists( $header_style_path ) ? (string) filemtime( $header_style_path ) : LTT_DIVE_IN_VERSION
 	);
 
+	if ( ltt_dive_in_get_section_navigation() ) {
+		$section_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/section-navigation.css';
+		$section_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/section-navigation.js';
+
+		wp_enqueue_style(
+			'ltt-dive-in-section-navigation',
+			LTT_DIVE_IN_URI . '/assets/css/components/section-navigation.css',
+			array( 'ltt-dive-in-header' ),
+			file_exists( $section_style_path ) ? (string) filemtime( $section_style_path ) : LTT_DIVE_IN_VERSION
+		);
+		wp_enqueue_script(
+			'ltt-dive-in-section-navigation',
+			LTT_DIVE_IN_URI . '/assets/js/components/section-navigation.js',
+			array(),
+			file_exists( $section_script_path ) ? (string) filemtime( $section_script_path ) : LTT_DIVE_IN_VERSION,
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
+	}
+
 	wp_enqueue_style(
 		'ltt-dive-in-footer',
 		LTT_DIVE_IN_URI . '/assets/css/components/footer.css',

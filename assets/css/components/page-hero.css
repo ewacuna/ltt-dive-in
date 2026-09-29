@@ -12,7 +12,8 @@
 
 .page-hero {
 	/* Fill the window below the solid header, like the homepage hero. */
-	--page-hero-offset: calc(5.625rem + var(--wp-admin--admin-bar--height, 0px));
+	--page-hero-header-fallback: 5.625rem;
+	--page-hero-offset: calc(var(--ltt-dive-in-header-height, var(--page-hero-header-fallback)) + var(--wp-admin--admin-bar--height, 0px));
 	position: relative;
 	display: flex;
 	width: 100%;
@@ -133,7 +134,7 @@
 
 @media (max-width: 991.98px) {
 	.page-hero {
-		--page-hero-offset: calc(4.125rem + var(--wp-admin--admin-bar--height, 0px));
+		--page-hero-header-fallback: 4.125rem;
 	}
 }
 

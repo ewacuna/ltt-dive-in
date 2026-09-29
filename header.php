@@ -25,7 +25,7 @@
 	$header_assets_uri = LTT_DIVE_IN_URI . '/assets/images/header';
 	$weather           = ltt_dive_in_get_header_weather();
 	$weather_link      = ltt_dive_in_get_header_option( 'ltt_dive_in_header_weather_link', array() );
-	$header_classes    = is_front_page() ? 'site-header site-header--overlay' : 'site-header site-header--solid';
+	$header_classes    = is_front_page() ? 'site-header site-header--overlay' : 'site-header site-header--' . ltt_dive_in_get_page_header_background();
 	?>
 	<header
 		id="masthead"
@@ -152,4 +152,5 @@
 				<img class="menu-toggle__icon menu-toggle__icon--close" src="<?php echo esc_url( $header_assets_uri . '/close-icon.svg' ); ?>" alt="" width="25" height="25">
 			</button>
 		</div>
+		<?php get_template_part( 'template-parts/components/section-navigation', null, array( 'navigation' => ltt_dive_in_get_section_navigation() ) ); ?>
 	</header>

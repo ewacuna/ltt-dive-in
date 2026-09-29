@@ -16,6 +16,7 @@
 	}
 
 	const menuLabel = menuButton.querySelector( '[data-menu-label]' );
+	const sectionNavigation = header.querySelector( '.ltt-section-navigation' );
 	const submenuToggles = Array.from( primaryMenu.querySelectorAll( '[data-menu-toggle]' ) );
 	const defaultThemeColor = themeColor ? themeColor.getAttribute( 'content' ) : '';
 	const pageSiblings = header.parentElement ? Array.from( header.parentElement.children ).filter( function ( element ) {
@@ -39,6 +40,9 @@
 
 		primaryMenu.classList.toggle( 'has-open-submenu', topLevelOpen );
 		header.classList.toggle( 'has-open-submenu', topLevelOpen );
+		if ( sectionNavigation ) {
+			sectionNavigation.inert = topLevelOpen || ( mobileQuery.matches && 'true' === menuButton.getAttribute( 'aria-expanded' ) );
+		}
 	};
 
 	const setSubmenuExpanded = function ( toggle, expanded ) {
@@ -102,6 +106,7 @@
 		}
 
 		closeDescendantSubmenus( primaryMenu );
+		updateOpenState();
 
 		if ( restoreFocus ) {
 			menuButton.focus();
@@ -120,6 +125,9 @@
 		updateMenuOffset();
 		navigation.classList.add( 'is-open' );
 		menuButton.setAttribute( 'aria-expanded', 'true' );
+		if ( sectionNavigation ) {
+			sectionNavigation.inert = true;
+		}
 		document.body.classList.add( 'has-open-menu' );
 		setBrowserThemeColor( themeColor ? themeColor.dataset.menuThemeColor : '' );
 		pageSiblings.forEach( function ( element ) {
@@ -198,7 +206,7 @@
 
 		if ( 'Tab' === event.key && mobileQuery.matches && 'true' === menuButton.getAttribute( 'aria-expanded' ) ) {
 			const focusable = Array.from( header.querySelectorAll( 'a[href], button:not([disabled]), input:not([disabled])' ) ).filter( function ( element ) {
-				return null !== element.offsetParent;
+				return null !== element.offsetParent && ! element.closest( '[inert]' );
 			} );
 
 			if ( ! focusable.length ) {

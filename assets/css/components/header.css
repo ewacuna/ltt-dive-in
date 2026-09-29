@@ -11,6 +11,11 @@
     color: var(--header-text);
 }
 
+/* Opaque internal-page variant; keep the homepage overlay independent. */
+.site-header--gradient > .site-header__inner {
+    background: linear-gradient(180deg, #02162b 0%, #073959 100%);
+}
+
 .site-header--overlay {
     position: absolute;
     top: 0;
