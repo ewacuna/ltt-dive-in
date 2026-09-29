@@ -22,6 +22,7 @@ function ltt_dive_in_enqueue_assets() {
 	$activities_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
 	$front_page_style_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/front-page.css';
 	$page_hero_style_path   = LTT_DIVE_IN_DIR . '/assets/css/components/page-hero.css';
+	$page_hero_script_path  = LTT_DIVE_IN_DIR . '/assets/js/components/page-hero.js';
 	$page_style_path        = LTT_DIVE_IN_DIR . '/assets/css/templates/page.css';
 	$single_style_path      = LTT_DIVE_IN_DIR . '/assets/css/templates/single.css';
 	$stories_hero_path      = LTT_DIVE_IN_DIR . '/assets/css/components/stories-hero.css';
@@ -140,6 +141,17 @@ function ltt_dive_in_enqueue_assets() {
 			LTT_DIVE_IN_URI . '/assets/css/components/page-hero.css',
 			array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
 			file_exists( $page_hero_style_path ) ? (string) filemtime( $page_hero_style_path ) : LTT_DIVE_IN_VERSION
+		);
+
+		wp_enqueue_script(
+			'ltt-dive-in-page-hero',
+			LTT_DIVE_IN_URI . '/assets/js/components/page-hero.js',
+			array(),
+			file_exists( $page_hero_script_path ) ? (string) filemtime( $page_hero_script_path ) : LTT_DIVE_IN_VERSION,
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => false,
+			)
 		);
 	}
 

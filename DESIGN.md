@@ -238,6 +238,8 @@ The component catalog includes:
 - Standalone, editorial, full-bleed, episodic, and carousel video modules.
 - End-page clusters, page clusters, footer, tags, read-time metadata, and date badges.
 
+The internal mobile hero in review node `95:24452` uses a `64px` Big Caslon Medium H1 on a `375px` canvas. Its “Events / & Live / Music” lines fit at that size. The theme keeps `64px` as the mobile target and reduces it only when the widest word would exceed the available width (for example, “Meetings”); the non-JavaScript fallback favors complete words and prevents clipping at narrow widths. Editorial line separators in page titles are rendered as normal spaces so wrapping can adapt to the viewport.
+
 ### Buttons and controls
 
 Figma defines these control families:

@@ -13,7 +13,7 @@
  * @package LTT_Dive_In
  */
 
-$title         = $args['title'] ?? '';
+$title         = str_replace( array( "\r", "\n", "\u{2028}", "\u{2029}" ), ' ', (string) ( $args['title'] ?? '' ) );
 $heading_level = in_array( $args['heading_level'] ?? '', array( 'h1', 'h2' ), true ) ? $args['heading_level'] : 'h2';
 $text          = $args['text'] ?? '';
 $image_id      = absint( $args['image_id'] ?? 0 );
