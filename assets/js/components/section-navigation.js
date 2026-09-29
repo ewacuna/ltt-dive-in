@@ -27,13 +27,19 @@
 			} );
 		};
 
+		// Fade an edge only while more links sit beyond it.
+		const updateEdges = function ( instance ) {
+			section.classList.toggle( 'has-previous', ! instance.isLocked && ! instance.isBeginning );
+			section.classList.toggle( 'has-next', ! instance.isLocked && ! instance.isEnd );
+		};
+
 		const destroy = function () {
 			if ( ! swiper ) {
 				return;
 			}
 			swiper.destroy( true, true );
 			swiper = null;
-			section.classList.remove( 'is-swiper' );
+			section.classList.remove( 'is-swiper', 'has-previous', 'has-next' );
 			viewport.classList.remove( 'swiper', 'swiper-backface-hidden' );
 			menu.classList.remove( 'swiper-wrapper' );
 			items.forEach( function ( item ) {
@@ -65,6 +71,13 @@
 				slidesPerView: 'auto',
 				speed: reducedMotion.matches ? 0 : 300,
 				watchOverflow: true,
+				on: {
+					afterInit: updateEdges,
+					lock: updateEdges,
+					progress: updateEdges,
+					resize: updateEdges,
+					unlock: updateEdges,
+				},
 			} );
 		};
 

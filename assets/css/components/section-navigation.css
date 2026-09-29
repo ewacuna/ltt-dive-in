@@ -89,8 +89,41 @@
 
 	/* Swiper enhancement: the viewport spans the full bar and Swiper supplies the 20px gutters. */
 	.ltt-section-navigation.is-swiper {
+		position: relative;
 		padding-inline: 0;
 		overflow: hidden;
+	}
+
+	/*
+	 * Approved addition, not in Figma: edge fades signal more links in that direction.
+	 * 40px stays clear of link text beside Swiper's 20px offset, so focused links remain unobscured.
+	 */
+	.ltt-section-navigation.is-swiper::before,
+	.ltt-section-navigation.is-swiper::after {
+		content: "";
+		position: absolute;
+		z-index: 2;
+		top: 0;
+		bottom: 0;
+		width: 2.5rem;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 200ms ease;
+	}
+
+	.ltt-section-navigation.is-swiper::before {
+		left: 0;
+		background: linear-gradient(to right, #042742, rgba(4, 39, 66, 0));
+	}
+
+	.ltt-section-navigation.is-swiper::after {
+		right: 0;
+		background: linear-gradient(to left, #042742, rgba(4, 39, 66, 0));
+	}
+
+	.ltt-section-navigation.is-swiper.has-previous::before,
+	.ltt-section-navigation.is-swiper.has-next::after {
+		opacity: 1;
 	}
 
 	.ltt-section-navigation.is-swiper .ltt-section-navigation__menu {
@@ -122,5 +155,17 @@
 
 	.ltt-section-navigation__menu a:focus-visible {
 		outline-color: HighlightText;
+	}
+
+	.ltt-section-navigation.is-swiper::before,
+	.ltt-section-navigation.is-swiper::after {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ltt-section-navigation.is-swiper::before,
+	.ltt-section-navigation.is-swiper::after {
+		transition: none;
 	}
 }
