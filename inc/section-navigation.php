@@ -40,7 +40,7 @@ function ltt_dive_in_register_section_navigation() {
 					'name'          => 'ltt_dive_in_section_navigation_menu',
 					'label'         => __( 'Section menu', 'ltt-dive-in' ),
 					'type'          => 'select',
-					'instructions'  => __( 'Optional. Create and edit a menu in Appearance → Menus, then select it here. Only top-level links appear below the main header. Use a descriptive menu name; it also labels this navigation for screen readers. Leave empty to hide the bar. Reload this editor after creating a menu.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Optional. Create and edit a menu in Appearance → Menus, then select it here. Only top-level links appear in a bar below the page hero. Use a descriptive menu name; it also labels this navigation for screen readers. Leave empty to hide the bar. Reload this editor after creating a menu.', 'ltt-dive-in' ),
 					'choices'       => array(),
 					'allow_null'    => 1,
 					'placeholder'   => __( 'None', 'ltt-dive-in' ),

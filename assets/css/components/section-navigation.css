@@ -2,7 +2,7 @@
 .ltt-section-navigation {
 	padding-inline: 4rem;
 	background: #042742;
-	color: var(--header-text);
+	color: #ffffff;
 }
 
 .ltt-section-navigation__menu {
@@ -26,7 +26,7 @@
 	align-items: center;
 	justify-content: center;
 	padding: 0.5rem 1.125rem;
-	color: var(--header-text);
+	color: #ffffff;
 	font-size: 1rem;
 	/* Gotham Medium is not supplied; use the documented Book fallback. */
 	font-weight: 400;
@@ -38,7 +38,7 @@
 }
 
 .ltt-section-navigation__menu a[aria-current="page"] {
-	color: var(--header-accent);
+	color: #eeb040;
 	text-decoration: underline;
 	text-underline-offset: 0.2em;
 }
@@ -54,10 +54,6 @@
 .ltt-section-navigation__menu a:focus-visible {
 	outline: 2px solid #073959;
 	outline-offset: -4px;
-}
-
-.site-header.has-open-submenu .ltt-section-navigation {
-	visibility: hidden;
 }
 
 /* Review Figma 95:24452: narrower screens keep the 40px row and slide it horizontally. */
@@ -136,12 +132,6 @@
 		width: auto;
 		min-width: 12.9167rem;
 		height: auto;
-	}
-}
-
-@media (max-width: 991.98px) {
-	body.has-open-menu .ltt-section-navigation {
-		visibility: hidden;
 	}
 }
 

@@ -1,17 +1,11 @@
-/** Keep the header height current and slide the section row with Swiper on narrower screens. */
+/** Slide the section row below the page hero with Swiper on narrower screens. */
 ( function () {
 	'use strict';
 
-	const header = document.querySelector( '.site-header' );
-	const site = document.querySelector( '#page' );
-	const section = header && header.querySelector( '.ltt-section-navigation' );
-	if ( ! section || ! site ) {
+	const section = document.querySelector( '.ltt-section-navigation' );
+	if ( ! section ) {
 		return;
 	}
-
-	const updateHeight = function () {
-		site.style.setProperty( '--ltt-dive-in-header-height', header.getBoundingClientRect().height + 'px' );
-	};
 
 	const viewport = section.querySelector( '.ltt-section-navigation__viewport' );
 	const menu = viewport && viewport.querySelector( '.ltt-section-navigation__menu' );
@@ -116,15 +110,5 @@
 
 		updateMode();
 		compactQuery.addEventListener( 'change', updateMode );
-	}
-
-	updateHeight();
-	if ( 'ResizeObserver' in window ) {
-		new ResizeObserver( updateHeight ).observe( header );
-	} else {
-		window.addEventListener( 'resize', updateHeight );
-		if ( document.fonts ) {
-			document.fonts.ready.then( updateHeight );
-		}
 	}
 }() );

@@ -152,5 +152,4 @@
 				<img class="menu-toggle__icon menu-toggle__icon--close" src="<?php echo esc_url( $header_assets_uri . '/close-icon.svg' ); ?>" alt="" width="25" height="25">
 			</button>
 		</div>
-		<?php get_template_part( 'template-parts/components/section-navigation', null, array( 'navigation' => ltt_dive_in_get_section_navigation() ) ); ?>
 	</header>

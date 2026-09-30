@@ -70,10 +70,15 @@ add_action( 'acf/init', 'ltt_dive_in_register_page_hero_settings' );
 /**
  * Build the internal page hero arguments for the current post.
  *
- * @param string $scroll_target Fragment ID of the content following the hero.
+ * @param string|null $scroll_target Fragment ID of the content following the hero. Defaults to the
+ *                                   section navigation when present, otherwise the page content.
  * @return array
  */
-function ltt_dive_in_get_page_hero_args( $scroll_target = 'page-content' ) {
+function ltt_dive_in_get_page_hero_args( $scroll_target = null ) {
+	if ( null === $scroll_target ) {
+		$scroll_target = ltt_dive_in_get_section_navigation() ? 'section-navigation' : 'page-content';
+	}
+
 	$links = array();
 
 	if ( function_exists( 'get_field' ) ) {

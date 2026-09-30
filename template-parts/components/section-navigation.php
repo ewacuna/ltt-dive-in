@@ -14,7 +14,7 @@ if ( empty( $section_navigation['html'] ) ) {
 	return;
 }
 ?>
-<nav class="ltt-section-navigation" aria-label="<?php echo esc_attr( $section_navigation['label'] ); ?>">
+<nav id="section-navigation" class="ltt-section-navigation" aria-label="<?php echo esc_attr( $section_navigation['label'] ); ?>">
 	<div class="ltt-section-navigation__viewport">
 		<?php echo $section_navigation['html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the core menu renderer. ?>
 	</div>
