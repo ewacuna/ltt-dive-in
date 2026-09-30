@@ -642,11 +642,6 @@ add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_video_module_carous
  * @return void
  */
 function ltt_dive_in_maybe_enqueue_event_driver_assets() {
- * Load Features List Grid carousel assets before the document head.
- *
- * @return void
- */
-function ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets() {
 	if ( ! is_singular() ) {
 		return;
 	}
@@ -659,6 +654,19 @@ function ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_event_driver_assets', 20 );
+
+/**
+ * Load Features List Grid carousel assets before the document head.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
 	if ( ! $post instanceof WP_Post || ! has_blocks( $post->post_content ) ) {
 		return;
 	}
