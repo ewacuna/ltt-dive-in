@@ -74,7 +74,7 @@ $meta_icons = array(
 					</div>
 					<div class="event-driver__hero-content">
 						<?php if ( $tag ) : ?>
-							<p class="event-driver__tag"><?php echo esc_html( $tag ); ?></p>
+							<span class="event-driver__tag"><?php echo esc_html( $tag ); ?></span>
 						<?php endif; ?>
 						<h3 id="<?php echo esc_attr( $section_id . '-event-' . ( $index + 1 ) ); ?>" class="event-driver__hero-title"><?php echo esc_html( $event['title'] ); ?></h3>
 						<?php if ( $event['description'] ) : ?>
