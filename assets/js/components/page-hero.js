@@ -1,4 +1,4 @@
-/** Keep the Figma mobile H1 size unless a whole word needs more room. */
+/** Keep the approved mobile H1 size unless a whole word needs more room. */
 ( function () {
 	'use strict';
 
@@ -22,7 +22,7 @@
 
 		const style = window.getComputedStyle( title );
 		const rootSize = Number.parseFloat( window.getComputedStyle( document.documentElement ).fontSize );
-		const maxSize = rootSize * 4;
+		const maxSize = rootSize * 3.5;
 		const minSize = rootSize * 2.25;
 		const availableWidth = title.parentElement.getBoundingClientRect().width;
 		if ( ! availableWidth ) {
