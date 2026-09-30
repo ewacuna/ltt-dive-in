@@ -26,13 +26,13 @@ $has_cta = static function ( $link ) {
 };
 $has_actions = $has_cta( $primary_cta ) || $has_cta( $secondary_cta );
 $id = ! empty( $block['anchor'] ) ? sanitize_title( $block['anchor'] ) : wp_unique_id( 'page-cluster-' );
-$render_cta = static function ( $link, $modifier ) use ( $is_preview ) {
+$render_cta = static function ( $link, $modifier, $placement_class = '' ) use ( $is_preview ) {
 	if ( ! is_array( $link ) || empty( $link['title'] ) || empty( $link['url'] ) || ! esc_url( $link['url'] ) ) {
 		return;
 	}
 	$tag = $is_preview ? 'span' : 'a';
 	?>
-	<<?php echo esc_html( $tag ); ?> class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?>"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $link['url'] ); ?>"<?php if ( '_blank' === ( $link['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php endif; ?>><?php echo esc_html( $link['title'] ); ?></<?php echo esc_html( $tag ); ?>>
+	<<?php echo esc_html( $tag ); ?> class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?><?php echo $placement_class ? ' ' . esc_attr( $placement_class ) : ''; ?>"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $link['url'] ); ?>"<?php if ( '_blank' === ( $link['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php endif; ?>><?php echo esc_html( $link['title'] ); ?></<?php echo esc_html( $tag ); ?>>
 	<?php
 };
 $render_actions = static function () use ( $has_actions, $primary_cta, $secondary_cta, $render_cta ) {
@@ -73,7 +73,7 @@ if ( 'features' === $variant && ! $is_preview && function_exists( 'ltt_dive_in_e
 					<div class="page-cluster__copy">
 						<?php if ( ! empty( $card['title'] ) ) : ?><h3 class="page-cluster__card-title"><?php echo esc_html( $card['title'] ); ?></h3><?php endif; ?>
 						<?php if ( ! empty( $card['copy'] ) ) : ?><p class="page-cluster__card-body"><?php echo esc_html( $card['copy'] ); ?></p><?php endif; ?>
-						<?php if ( 'hub' === $variant ) { $render_cta( $card['cta'] ?? array(), 'glass' ); } ?>
+						<?php if ( 'hub' === $variant ) { $render_cta( $card['cta'] ?? array(), 'glass', 'page-cluster__card-cta' ); } ?>
 					</div>
 				</article>
 			<?php endforeach; ?>

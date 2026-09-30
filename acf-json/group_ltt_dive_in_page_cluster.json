@@ -14,24 +14,20 @@
       "default_value": "hub",
       "required": 1
     },
-    {
-      "key": "field_ltt_dive_in_page_cluster_label",
-      "label": "Label",
-      "name": "ltt_dive_in_page_cluster_label",
-      "type": "text"
-    },
+
     {
       "key": "field_ltt_dive_in_page_cluster_title",
-      "label": "Title",
+      "label": "Heading",
       "name": "ltt_dive_in_page_cluster_title",
       "type": "text",
       "required": 1
     },
     {
       "key": "field_ltt_dive_in_page_cluster_body",
-      "label": "Body",
+      "label": "Introduction",
       "name": "ltt_dive_in_page_cluster_body",
       "type": "textarea",
+      "maxlength": 300,
       "rows": 3,
       "new_lines": "",
       "conditional_logic": [
@@ -44,16 +40,22 @@
         ]
       ]
     },
+        {
+      "key": "field_ltt_dive_in_page_cluster_label",
+      "label": "Category Tag",
+      "name": "ltt_dive_in_page_cluster_label",
+      "type": "text"
+    },
     {
       "key": "field_ltt_dive_in_page_cluster_primary_cta",
-      "label": "Primary CTA",
+      "label": "Primary button",
       "name": "ltt_dive_in_page_cluster_primary_cta",
       "type": "link",
       "return_format": "array"
     },
     {
       "key": "field_ltt_dive_in_page_cluster_secondary_cta",
-      "label": "Secondary CTA",
+      "label": "Secondary button",
       "name": "ltt_dive_in_page_cluster_secondary_cta",
       "type": "link",
       "return_format": "array"
@@ -76,14 +78,14 @@
           "type": "image",
           "required": 1,
           "return_format": "id",
-          "preview_size": "medium",
-          "instructions": "Used as a background in Hub Driver and a content image in Features List Grid. Add alternative text in the Media Library for informative images."
+          "preview_size": "medium"
         },
         {
           "key": "field_ltt_dive_in_page_cluster_card_title",
           "name": "title",
           "label": "Title",
           "type": "text",
+          "maxlength": 50,
           "required": 1
         },
         {
@@ -92,13 +94,14 @@
           "label": "Short copy",
           "type": "textarea",
           "rows": 3,
+          "maxlength": 150,
           "new_lines": "",
           "required": 1
         },
         {
           "key": "field_ltt_dive_in_page_cluster_card_cta",
           "name": "cta",
-          "label": "Optional CTA",
+          "label": "Button",
           "type": "link",
           "return_format": "array",
           "conditional_logic": [
@@ -111,8 +114,7 @@
             ]
           ]
         }
-      ],
-      "instructions": "These four cards are shared between both variants. Individual CTAs are only shown in Hub Driver."
+      ]
     }
   ],
   "location": [
