@@ -497,6 +497,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .page-drivers--monthly
+        .page-drivers__carousel
+        .page-drivers__grid:not(.is-filtered)
+        .swiper-slide-active
+        .page-drivers__card-link {
+        height: 21.0625rem;
+    }
+
     .page-drivers__filter,
     .page-drivers__card,
     .page-drivers--monthly .page-drivers__carousel .page-drivers__card,
