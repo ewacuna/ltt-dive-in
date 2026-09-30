@@ -1,15 +1,3 @@
-/*
- * Reusable event card.
- *
- * `--card`: Figma “Card with Date” (node 1:3412), a navy card with the image
- * above its content.
- * `--tile`: Figma “Story Card – Event” (nodes 1:824 default, 1:883 hover),
- * a full-image tile that reveals its details on hover or keyboard focus. Below
- * 768px it uses the `--card` presentation, matching mobile node 1:11592.
- *
- * Gotham HTF Medium is not supplied; its roles use the available Book face.
- * Roboto labels in the source (weekday) use the theme's Gotham stack.
- */
 .ltt-event-card {
     position: relative;
     isolation: isolate;
@@ -21,7 +9,6 @@
     font-family: "Gotham HTF", Arial, sans-serif;
 }
 
-/* Below the in-flow summary and content that share its grid cell in `--tile`. */
 .ltt-event-card__media {
     position: relative;
     z-index: -1;
@@ -75,7 +62,6 @@
     text-decoration: none;
 }
 
-/* The title link covers the whole card; the reminder link sits above it. */
 .ltt-event-card__link::after {
     position: absolute;
     z-index: 1;
@@ -198,7 +184,6 @@
     display: none;
 }
 
-/* Story Card – Event: image, date, and a centered title until hover or focus. */
 .ltt-event-card--tile {
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
@@ -227,7 +212,6 @@
     right: 1.125rem;
 }
 
-/* Starts where the Figma summary starts (143px); longer titles grow downward, clear of the date. */
 .ltt-event-card__summary {
     display: flex;
     flex-direction: column;
@@ -269,7 +253,6 @@
     letter-spacing: 0;
 }
 
-/* The invisible reminder must not be clicked or focused before it is revealed. */
 .ltt-event-card--tile .ltt-event-card__reminder {
     visibility: hidden;
     transition: visibility 0s linear 300ms;
@@ -293,7 +276,6 @@
     display: none;
 }
 
-/* Touch screens have no hover; show the revealed state without interaction. */
 @media (hover: none) {
     .ltt-event-card--tile .ltt-event-card__media::after,
     .ltt-event-card--tile .ltt-event-card__summary {

@@ -94,11 +94,6 @@
     --search-bar-border: #073959;
 }
 
-/*
- * Search & Filters field (Figma node 1:1796). The Figma placeholder color
- * rgba(197, 197, 203, 0.85) fails text contrast on #f2f2f2, so the component's
- * grey 600 placeholder is kept.
- */
 .ltt-search-bar--filter {
     --search-bar-background: #f2f2f2;
     --search-bar-border: #61c2b7;
