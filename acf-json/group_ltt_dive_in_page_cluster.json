@@ -1,0 +1,133 @@
+{
+  "key": "group_ltt_dive_in_page_cluster",
+  "title": "LTT Dive In — Page Cluster",
+  "fields": [
+    {
+      "key": "field_ltt_dive_in_page_cluster_variant",
+      "label": "Variant",
+      "name": "ltt_dive_in_page_cluster_variant",
+      "type": "select",
+      "choices": {
+        "hub": "Hub Driver",
+        "features": "Features List Grid"
+      },
+      "default_value": "hub",
+      "required": 1
+    },
+    {
+      "key": "field_ltt_dive_in_page_cluster_label",
+      "label": "Label",
+      "name": "ltt_dive_in_page_cluster_label",
+      "type": "text"
+    },
+    {
+      "key": "field_ltt_dive_in_page_cluster_title",
+      "label": "Title",
+      "name": "ltt_dive_in_page_cluster_title",
+      "type": "text",
+      "required": 1
+    },
+    {
+      "key": "field_ltt_dive_in_page_cluster_body",
+      "label": "Body",
+      "name": "ltt_dive_in_page_cluster_body",
+      "type": "textarea",
+      "rows": 3,
+      "new_lines": "",
+      "conditional_logic": [
+        [
+          {
+            "field": "field_ltt_dive_in_page_cluster_variant",
+            "operator": "==",
+            "value": "hub"
+          }
+        ]
+      ]
+    },
+    {
+      "key": "field_ltt_dive_in_page_cluster_primary_cta",
+      "label": "Primary CTA",
+      "name": "ltt_dive_in_page_cluster_primary_cta",
+      "type": "link",
+      "return_format": "array"
+    },
+    {
+      "key": "field_ltt_dive_in_page_cluster_secondary_cta",
+      "label": "Secondary CTA",
+      "name": "ltt_dive_in_page_cluster_secondary_cta",
+      "type": "link",
+      "return_format": "array"
+    },
+    {
+      "key": "field_ltt_dive_in_page_cluster_cards",
+      "label": "Cards",
+      "name": "ltt_dive_in_page_cluster_cards",
+      "type": "repeater",
+      "required": 1,
+      "min": 4,
+      "max": 4,
+      "layout": "block",
+      "button_label": "Add card",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_page_cluster_card_image",
+          "name": "image",
+          "label": "Image",
+          "type": "image",
+          "required": 1,
+          "return_format": "id",
+          "preview_size": "medium",
+          "instructions": "Used as a background in Hub Driver and a content image in Features List Grid. Add alternative text in the Media Library for informative images."
+        },
+        {
+          "key": "field_ltt_dive_in_page_cluster_card_title",
+          "name": "title",
+          "label": "Title",
+          "type": "text",
+          "required": 1
+        },
+        {
+          "key": "field_ltt_dive_in_page_cluster_card_copy",
+          "name": "copy",
+          "label": "Short copy",
+          "type": "textarea",
+          "rows": 3,
+          "new_lines": "",
+          "required": 1
+        },
+        {
+          "key": "field_ltt_dive_in_page_cluster_card_cta",
+          "name": "cta",
+          "label": "Optional CTA",
+          "type": "link",
+          "return_format": "array",
+          "conditional_logic": [
+            [
+              {
+                "field": "field_ltt_dive_in_page_cluster_variant",
+                "operator": "==",
+                "value": "hub"
+              }
+            ]
+          ]
+        }
+      ],
+      "instructions": "These four cards are shared between both variants. Individual CTAs are only shown in Hub Driver."
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "ltt-dive-in/page-cluster"
+      }
+    ]
+  ],
+  "active": true,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "show_in_rest": 0
+}

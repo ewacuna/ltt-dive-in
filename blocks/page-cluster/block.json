@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/page-cluster",
+  "title": "Page Cluster",
+  "category": "ltt-blocks",
+  "icon": "screenoptions",
+  "description": "Manually populated Hub Driver and Features List Grid.",
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-page-cluster",
+  "editorStyle": "ltt-dive-in-page-cluster",
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "template-parts/blocks/page-cluster.php"
+  },
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": "full"
+    }
+  },
+  "supports": {
+    "align": [
+      "full"
+    ],
+    "anchor": true,
+    "customClassName": false,
+    "html": false
+  }
+}

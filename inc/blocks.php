@@ -139,6 +139,21 @@ function ltt_dive_in_register_blocks() {
 
 	ltt_dive_in_register_block_assets();
 
+	$page_cluster_style = LTT_DIVE_IN_DIR . '/assets/css/components/page-cluster.css';
+	$page_cluster_script = LTT_DIVE_IN_DIR . '/assets/js/components/page-cluster.js';
+	wp_register_style( 'ltt-dive-in-page-cluster', LTT_DIVE_IN_URI . '/assets/css/components/page-cluster.css', array( 'ltt-dive-in-buttons', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators' ), (string) filemtime( $page_cluster_style ) );
+	wp_register_script( 'ltt-dive-in-page-cluster', LTT_DIVE_IN_URI . '/assets/js/components/page-cluster.js', array( 'ltt-dive-in-swiper' ), (string) filemtime( $page_cluster_script ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_localize_script(
+		'ltt-dive-in-page-cluster',
+		'ltt_dive_in_page_cluster',
+		array(
+			'goToFeature' => __( 'Go to feature %d', 'ltt-dive-in' ),
+			'previous'    => __( 'Previous feature', 'ltt-dive-in' ),
+			'next'        => __( 'Next feature', 'ltt-dive-in' ),
+		)
+	);
+	register_block_type( LTT_DIVE_IN_DIR . '/blocks/page-cluster' );
+
 	wp_register_style( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/css/components/page-drivers.css', array( 'ltt-dive-in-buttons', 'ltt-dive-in-select' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_script( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/js/components/page-drivers.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_register_style( 'ltt-dive-in-swiper', LTT_DIVE_IN_URI . '/assets/css/vendor/swiper-bundle.min.css', array(), file_exists( $carousel_style_path ) ? (string) filemtime( $carousel_style_path ) : LTT_DIVE_IN_VERSION );
@@ -441,6 +456,16 @@ function ltt_dive_in_enqueue_video_module_carousel_assets() {
 }
 
 /**
+ * Load Swiper only for the Features List Grid variant of Page Cluster.
+ *
+ * @return void
+ */
+function ltt_dive_in_enqueue_page_cluster_carousel_assets() {
+	wp_enqueue_style( 'ltt-dive-in-swiper' );
+	wp_enqueue_script( 'ltt-dive-in-page-cluster' );
+}
+
+/**
  * Determine whether a block tree contains a block matching a callback.
  *
  * @param array[] $blocks Parsed blocks.
@@ -519,6 +544,22 @@ function ltt_dive_in_video_module_uses_carousel( $block ) {
 	$variant = isset( $block['attrs']['data']['ltt_dive_in_video_module_variant'] ) ? $block['attrs']['data']['ltt_dive_in_video_module_variant'] : '';
 
 	return 'carousel' === $variant;
+}
+
+/**
+ * Determine whether a parsed Page Cluster block uses the mobile carousel.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_page_cluster_uses_carousel( $block ) {
+	if ( ! is_array( $block ) || 'ltt-dive-in/page-cluster' !== ( $block['blockName'] ?? '' ) ) {
+		return false;
+	}
+
+	$variant = $block['attrs']['data']['ltt_dive_in_page_cluster_variant'] ?? '';
+
+	return 'features' === $variant;
 }
 
 /**
@@ -601,6 +642,11 @@ add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_video_module_carous
  * @return void
  */
 function ltt_dive_in_maybe_enqueue_event_driver_assets() {
+ * Load Features List Grid carousel assets before the document head.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets() {
 	if ( ! is_singular() ) {
 		return;
 	}
@@ -613,6 +659,15 @@ function ltt_dive_in_maybe_enqueue_event_driver_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_event_driver_assets', 20 );
+	if ( ! $post instanceof WP_Post || ! has_blocks( $post->post_content ) ) {
+		return;
+	}
+
+	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_page_cluster_uses_carousel' ) ) {
+		ltt_dive_in_enqueue_page_cluster_carousel_assets();
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets', 5 );
 
 /**
  * Load shared carousel styles before block styles inside the editor canvas.

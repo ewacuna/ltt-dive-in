@@ -14,11 +14,7 @@
     cursor: pointer;
 }
 
-.ltt-slider-navigation:is(:hover, :focus-visible) {
-    background: #eeb040;
-    border-color: #eeb040;
-    color: #073959;
-}
+
 .ltt-slider-navigation--white {
     --slider-bg: #ffffff;
     --slider-color: #073959;
