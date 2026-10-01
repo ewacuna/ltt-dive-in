@@ -188,7 +188,7 @@
                     "instructions": "Required title for this active item.",
                     "required": 0,
                     "conditional_logic": 0,
-                    "maxlength": 110
+                    "maxlength": 60
                 },
                 {
                     "key": "field_ltt_dive_in_feature_image_driver_item_show_body",
@@ -208,7 +208,7 @@
                     "type": "textarea",
                     "required": 0,
                     "conditional_logic": 0,
-                    "maxlength": 360,
+                    "maxlength": 250,
                     "rows": 4,
                     "new_lines": ""
                 },
