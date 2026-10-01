@@ -51,6 +51,7 @@
 
 			if ( grid ) {
 				grid.classList.toggle( 'is-filtered', 'all' !== termId );
+				grid.removeAttribute( 'data-visible-count' );
 			}
 
 			filters.forEach( function ( filter ) {
@@ -75,6 +76,10 @@
 					visibleCount += 1;
 				}
 			} );
+
+			if ( grid && ! isCarousel && 'all' !== termId && visibleCount > 0 && visibleCount <= 3 ) {
+				grid.dataset.visibleCount = String( visibleCount );
+			}
 
 			if ( status && strings.destinationSingular && strings.destinationPlural ) {
 				status.textContent = visibleCount + ' ' + ( 1 === visibleCount ? strings.destinationSingular : strings.destinationPlural );

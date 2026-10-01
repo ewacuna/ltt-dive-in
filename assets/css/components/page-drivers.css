@@ -257,6 +257,18 @@
     height: 100%;
 }
 
+.page-drivers__grid.is-filtered[data-visible-count="1"] {
+    grid-template-columns: 1fr;
+}
+
+.page-drivers__grid.is-filtered[data-visible-count="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page-drivers__grid.is-filtered[data-visible-count="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .page-drivers--six-plus-up,
 .page-drivers--monthly {
     --page-driver-columns: 6;
@@ -424,6 +436,10 @@
     .page-drivers--one-up .page-drivers__grid {
         grid-template-columns: 1fr;
     }
+
+    .page-drivers .page-drivers__grid.is-filtered[data-visible-count="3"] {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -455,6 +471,10 @@
     .page-drivers--five-up .page-drivers__grid,
     .page-drivers--six-plus-up .page-drivers__grid,
     .page-drivers--monthly .page-drivers__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-drivers .page-drivers__grid.is-filtered[data-visible-count] {
         grid-template-columns: 1fr;
     }
 

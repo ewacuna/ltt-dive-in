@@ -78,33 +78,8 @@
 			}
 
 			event.preventDefault();
-
-			const instance = swiper;
-			let loopRestored = false;
-			const restoreLoop = function () {
-				if ( loopRestored || instance.destroyed ) {
-					return;
-				}
-
-				loopRestored = true;
-				instance.params.loop = true;
-				instance.loopCreate( targetIndex );
-				instance.slideTo( instance.getSlideIndexByData( targetIndex ), 0, false, true );
-				updatePaginationState( instance );
-			};
-
-			instance.loopDestroy();
-			instance.params.loop = false;
-			instance.slideTo( currentIndex, 0, false, true );
-			// Commit the normalized slide order before starting the visible transition.
-			instance.wrapperEl.getBoundingClientRect();
-
-			if ( false === instance.slideTo( targetIndex ) || reducedMotion ) {
-				restoreLoop();
-				return;
-			}
-
-			instance.once( 'transitionEnd', restoreLoop );
+			// Keep looped edge slides mounted throughout the dot transition.
+			swiper.slideToLoop( targetIndex );
 		};
 
 		const createSwiper = function () {
