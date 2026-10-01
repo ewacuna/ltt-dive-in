@@ -626,7 +626,9 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
 
     .feature-image-driver--mobile-background-light
         .feature-image-driver__stacked-card-toggle {
-        position: absolute;
+        position: fixed;
+        top: 0;
+        left: 0;
         display: block;
         width: 1px;
         height: 1px;
