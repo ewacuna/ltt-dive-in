@@ -25,6 +25,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/section-navigation.php';
 require_once LTT_DIVE_IN_DIR . '/inc/weather.php';
 require_once LTT_DIVE_IN_DIR . '/inc/footer-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-driver-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/page-classification.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-cluster-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/feature-image-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/static-image-cluster-settings.php';
