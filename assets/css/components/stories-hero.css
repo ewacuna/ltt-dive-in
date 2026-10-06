@@ -73,6 +73,141 @@
     line-height: 1.45;
 }
 
+/*
+ * "Show Summary" disclosure (Figma "EXPANDED" instance: Gotham 18px,
+ * primary #073959, 10px gap, 40px row, closed/open expand icons).
+ * Figma has no inspectable open state; the panel values are measured from
+ * the 1440px review composition and use existing tokens. Gotham Medium is
+ * not available, so Book stands in as elsewhere here.
+ */
+.stories-hero__summary {
+    --summary-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.625rem;
+}
+
+.stories-hero__summary-panel {
+    width: 100%;
+}
+
+.stories-hero__summary-panel[hidden] {
+    display: none;
+}
+
+/*
+ * accordion.js keeps the panel in the layout once ready. The height eases
+ * open while the box fades and settles into place; closing fades it out
+ * first so the text is never clipped mid-read.
+ */
+.stories-hero__summary.is-ready .stories-hero__summary-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+        grid-template-rows 450ms var(--summary-ease),
+        margin-bottom 450ms var(--summary-ease);
+}
+
+.stories-hero__summary.is-ready .stories-hero__summary-panel[aria-hidden="false"] {
+    margin-bottom: 0.625rem;
+    grid-template-rows: 1fr;
+}
+
+.stories-hero__summary-clip {
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
+.stories-hero__summary.is-ready .stories-hero__summary-clip {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition:
+        opacity 200ms ease,
+        transform 450ms var(--summary-ease);
+}
+
+.stories-hero__summary.is-ready .stories-hero__summary-panel[aria-hidden="false"] .stories-hero__summary-clip {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity 350ms ease 100ms,
+        transform 450ms var(--summary-ease);
+}
+
+.stories-hero__summary-text {
+    margin: 0;
+    padding: 2rem 2.25rem;
+    background: #073959;
+    color: #ffffff;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.stories-hero__summary-label {
+    color: #eeb040;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.stories-hero__summary-toggle {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0 0.25rem;
+    border: 0;
+    background: none;
+    color: #073959;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+.stories-hero__summary-toggle:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+.stories-hero__summary-hide,
+.stories-hero__summary-toggle[aria-expanded="true"] .stories-hero__summary-show {
+    display: none;
+}
+
+.stories-hero__summary-toggle[aria-expanded="true"] .stories-hero__summary-hide {
+    display: inline;
+}
+
+.stories-hero__summary-icon {
+    position: relative;
+    display: block;
+    width: 1.3125rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+}
+
+/* Closed: faint up chevron (Figma "EXPANDED" instance). Open: the up chevron strengthens. */
+.stories-hero__summary-icon img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transition: opacity 300ms ease;
+}
+
+.stories-hero__summary-icon-open,
+.stories-hero__summary-toggle[aria-expanded="true"] .stories-hero__summary-icon-closed {
+    opacity: 0;
+}
+
+.stories-hero__summary-toggle[aria-expanded="true"] .stories-hero__summary-icon-open {
+    opacity: 1;
+}
+
 /* Full-bleed image: cancel the section's side padding. */
 .stories-hero__media {
     margin-inline: -4rem;
@@ -109,11 +244,45 @@
         line-height: 1.5;
     }
 
+    .stories-hero__summary {
+        align-items: flex-start;
+    }
+
+    .stories-hero__summary-toggle {
+        padding-left: 0;
+    }
+
+    .stories-hero__summary-text {
+        padding: 1.5rem 1.25rem;
+        font-size: 1rem;
+        line-height: 1.6;
+        text-align: left;
+    }
+
     .stories-hero__media {
         margin-inline: -1.25rem;
     }
 
     .stories-hero__image {
         aspect-ratio: 375 / 252;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stories-hero__summary.is-ready .stories-hero__summary-panel,
+    .stories-hero__summary.is-ready .stories-hero__summary-clip,
+    .stories-hero__summary.is-ready .stories-hero__summary-panel[aria-hidden="false"] .stories-hero__summary-clip,
+    .stories-hero__summary-icon img {
+        transition: none;
+    }
+
+    .stories-hero__summary.is-ready .stories-hero__summary-clip {
+        transform: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .stories-hero__summary-text {
+        border: 1px solid CanvasText;
     }
 }

@@ -133,6 +133,11 @@ function ltt_dive_in_enqueue_assets() {
 			array( 'ltt-dive-in-style' ),
 			file_exists( $stories_hero_path ) ? (string) filemtime( $stories_hero_path ) : LTT_DIVE_IN_VERSION
 		);
+
+		// The hero's "Show Summary" disclosure reuses the shared accordion script.
+		if ( '' !== ltt_dive_in_get_ai_summary( get_queried_object_id() ) ) {
+			wp_enqueue_script( 'ltt-dive-in-accordion' );
+		}
 	}
 
 	if ( ltt_dive_in_has_page_hero() ) {

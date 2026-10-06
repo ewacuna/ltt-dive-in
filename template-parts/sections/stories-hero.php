@@ -23,6 +23,8 @@ $image_id = get_post_thumbnail_id();
 		<?php if ( has_excerpt() ) : ?>
 			<p class="stories-hero__text"><?php echo esc_html( get_the_excerpt() ); ?></p>
 		<?php endif; ?>
+
+		<?php get_template_part( 'template-parts/content/ai-summary' ); ?>
 	</header>
 
 	<?php if ( $image_id ) : ?>

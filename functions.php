@@ -38,4 +38,6 @@ require_once LTT_DIVE_IN_DIR . '/inc/media-tags.php';
 require_once LTT_DIVE_IN_DIR . '/inc/seeker-events.php';
 require_once LTT_DIVE_IN_DIR . '/inc/event-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/event-driver.php';
+require_once LTT_DIVE_IN_DIR . '/inc/ai-summary.php';
+require_once LTT_DIVE_IN_DIR . '/inc/ai-summary-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/blocks.php';
