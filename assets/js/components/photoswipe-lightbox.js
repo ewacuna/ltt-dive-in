@@ -10,6 +10,18 @@
 		return '<img class="' + className + '" src="' + url + '" alt="" aria-hidden="true">';
 	};
 
+	const getSameOriginModuleUrl = function ( moduleUrl ) {
+		const url = new URL( moduleUrl, window.location.href );
+
+		// Dynamic imports require CORS when WordPress's canonical host differs from the current local alias.
+		if ( url.origin !== window.location.origin ) {
+			url.protocol = window.location.protocol;
+			url.host = window.location.host;
+		}
+
+		return url.href;
+	};
+
 	const getInspiredPadding = function ( viewportSize ) {
 		const mobile = window.matchMedia( '(max-width: 767.98px)' ).matches;
 		const horizontal = mobile ? 32 : Math.max( 16, ( viewportSize.x - 1152 ) / 2 );
@@ -39,6 +51,41 @@
 		);
 	};
 
+	const positionMobileControls = function ( pswp, imageTop ) {
+		const root = pswp.element;
+
+		if ( ! window.matchMedia( '(max-width: 767.98px)' ).matches ) {
+			root.style.removeProperty( '--ltt-photoswipe-controls-top' );
+			return false;
+		}
+
+		if ( ! Number.isFinite( imageTop ) ) {
+			const slide = pswp.currSlide;
+			const image = slide && slide.container ? slide.container.querySelector( '.pswp__img' ) : null;
+
+			if ( ! image ) {
+				return false;
+			}
+
+			const rootRect = root.getBoundingClientRect();
+			const imageRect = image.getBoundingClientRect();
+
+			if ( ! imageRect.width || ! imageRect.height ) {
+				return false;
+			}
+
+			imageTop = imageRect.top - rootRect.top;
+		}
+
+		const controlsHeight = 38;
+		const imageGap = 24;
+		const controlsTop = Math.max( 12, imageTop - controlsHeight - imageGap );
+
+		root.style.setProperty( '--ltt-photoswipe-controls-top', controlsTop + 'px' );
+
+		return true;
+	};
+
 	const normalizeImages = function ( images ) {
 		return images.map( function ( image ) {
 			return {
@@ -46,6 +93,7 @@
 				srcset: image.srcset || '',
 				width: Number( image.width ) || 1,
 				height: Number( image.height ) || 1,
+				thumbCropped: true,
 				alt: image.alt || '',
 				title: image.title || '',
 				description: image.description || '',
@@ -65,8 +113,8 @@
 
 	document.querySelectorAll( '[data-ltt-photoswipe]' ).forEach( function ( cluster ) {
 		const source = cluster.querySelector( '[data-ltt-photoswipe-data]' );
-		const lightboxModule = cluster.dataset.photoswipeLightboxModule;
-		const coreModule = cluster.dataset.photoswipeCoreModule;
+		const lightboxModule = cluster.dataset.photoswipeLightboxModule ? getSameOriginModuleUrl( cluster.dataset.photoswipeLightboxModule ) : '';
+		const coreModule = cluster.dataset.photoswipeCoreModule ? getSameOriginModuleUrl( cluster.dataset.photoswipeCoreModule ) : '';
 		const inspired = 'true' === cluster.dataset.photoswipeInspired;
 		const locationIcon = cluster.dataset.photoswipeLocationIcon || '';
 		let images = source ? parseImages( source ) : [];
@@ -143,11 +191,8 @@
 			const imageBottom = rootRect.height - padding.bottom;
 			const imageCenter = padding.top + ( imageBottom - padding.top ) / 2;
 
-			root.style.setProperty( '--ltt-photoswipe-image-top', padding.top + 'px' );
-			root.style.setProperty( '--ltt-photoswipe-image-right', padding.right + 'px' );
-			root.style.setProperty( '--ltt-photoswipe-image-bottom', padding.bottom + 'px' );
-			root.style.setProperty( '--ltt-photoswipe-image-left', padding.left + 'px' );
 			root.style.setProperty( '--ltt-photoswipe-image-center', imageCenter + 'px' );
+			positionMobileControls( pswp, padding.top );
 			caption.style.left = padding.left + 'px';
 			caption.style.right = padding.right + 'px';
 			caption.style.top = padding.top + 'px';
@@ -239,6 +284,64 @@
 						} );
 
 						if ( inspired ) {
+							let frameMask;
+
+							const setFrameMask = function ( pswp, thumbnail, animate ) {
+								if ( ! frameMask || ! pswp.element ) {
+									return;
+								}
+
+								const rootRect = pswp.element.getBoundingClientRect();
+								const padding = getInspiredPadding( { x: rootRect.width, y: rootRect.height } );
+								const thumb = thumbnail ? getThumb( pswp.currIndex ) : null;
+								const thumbRect = thumb ? thumb.getBoundingClientRect() : null;
+								const insets = thumbRect && thumbRect.width && thumbRect.height
+									? [
+										thumbRect.top - rootRect.top,
+										rootRect.right - thumbRect.right,
+										rootRect.bottom - thumbRect.bottom,
+										thumbRect.left - rootRect.left,
+									]
+									: [ padding.top, padding.right, padding.bottom, padding.left ];
+								const duration = pswp.element.style.getPropertyValue( '--pswp-transition-duration' ).trim() || '0ms';
+
+								frameMask.style.transition = animate ? 'clip-path ' + duration + ' ' + pswp.options.easing : 'none';
+								frameMask.style.setProperty( '--ltt-photoswipe-frame-clip', 'inset(' + insets.map( function ( inset ) { return inset + 'px'; } ).join( ' ' ) + ')' );
+							};
+
+							lightbox.on( 'initialLayout', function () {
+								const pswp = lightbox.pswp;
+
+								// Keep the crop in viewport coordinates while PhotoSwipe transforms its image container.
+								frameMask = document.createElement( 'div' );
+								frameMask.className = 'ltt-photoswipe__frame-mask';
+								pswp.container.before( frameMask );
+								frameMask.append( pswp.container );
+								setFrameMask( pswp, true, false );
+							} );
+
+							lightbox.on( 'initialZoomIn', function () {
+								setFrameMask( lightbox.pswp, false, true );
+							} );
+
+							lightbox.on( 'initialZoomInEnd', function () {
+								const pswp = lightbox.pswp;
+
+								setFrameMask( pswp, false, false );
+							} );
+
+							lightbox.on( 'initialZoomOut', function () {
+								setFrameMask( lightbox.pswp, true, true );
+							} );
+
+							lightbox.on( 'close', function () {
+								lightbox.pswp.element.classList.remove( 'ltt-photoswipe--content-ready' );
+							} );
+
+							lightbox.on( 'resize', function () {
+								setFrameMask( lightbox.pswp, false, false );
+							} );
+
 							lightbox.on( 'uiRegister', function () {
 								let caption;
 								let location;
@@ -292,6 +395,36 @@
 
 						lightbox.on( 'afterInit', function () {
 							const close = lightbox.pswp.element.querySelector( '.pswp__button--close' );
+							const pswp = lightbox.pswp;
+							let controlsFrame;
+							let revealReady = false;
+
+							const updateControls = function ( imageTop, revealControls ) {
+								revealReady = revealReady || Boolean( revealControls );
+								window.cancelAnimationFrame( controlsFrame );
+								controlsFrame = window.requestAnimationFrame( function () {
+									const controlsPositioned = positionMobileControls( pswp, imageTop );
+
+									if ( revealReady ) {
+										if ( inspired ) {
+											pswp.element.classList.add( 'ltt-photoswipe--content-ready' );
+										}
+
+										if ( controlsPositioned || ! window.matchMedia( '(max-width: 767.98px)' ).matches ) {
+											pswp.element.classList.add( 'ltt-photoswipe--controls-ready' );
+										}
+									}
+								} );
+							};
+
+							updateControls();
+							pswp.on( 'change', function () { updateControls(); } );
+							pswp.on( 'resize', function () { updateControls(); } );
+							pswp.on( 'initialZoomInEnd', function () { updateControls( undefined, true ); } );
+							pswp.on( 'close', function () {
+								revealReady = false;
+								window.cancelAnimationFrame( controlsFrame );
+							} );
 
 							if ( close ) {
 								close.classList.add( 'is-initial-focus' );
@@ -303,13 +436,30 @@
 						} );
 
 						lightbox.on( 'close', function () {
+							lightbox.pswp.element.classList.add( 'ltt-photoswipe--closing' );
 							const returnTarget = trigger;
+							const viewport = cluster.querySelector( '.static-image-cluster__carousel-viewport' );
+							const swiper = viewport && viewport.swiper ? viewport.swiper : null;
+							const a11yParams = swiper && swiper.params ? swiper.params.a11y : null;
+							const scrollOnFocus = a11yParams ? a11yParams.scrollOnFocus : undefined;
 
 							swipeStart = undefined;
 
 							window.setTimeout( function () {
-								if ( returnTarget && document.contains( returnTarget ) ) {
-									returnTarget.focus();
+								if ( ! returnTarget || ! document.contains( returnTarget ) ) {
+									return;
+								}
+
+								if ( a11yParams ) {
+									a11yParams.scrollOnFocus = false;
+								}
+
+								try {
+									returnTarget.focus( { preventScroll: true } );
+								} finally {
+									if ( a11yParams ) {
+										a11yParams.scrollOnFocus = scrollOnFocus;
+									}
 								}
 							}, reduceMotion ? 0 : 350 );
 						} );
