@@ -130,6 +130,29 @@
 			return cluster.querySelector( '[data-ltt-photoswipe-trigger][data-image-index="' + index + '"] img' );
 		};
 
+		const syncCarouselToImage = function ( index ) {
+			const viewport = cluster.querySelector( '.static-image-cluster__carousel-viewport' );
+			const carousel = viewport ? viewport.closest( '[data-static-image-cluster-carousel]' ) : null;
+			const swiper = viewport && viewport.swiper ? viewport.swiper : null;
+			const target = cluster.querySelector( '[data-ltt-photoswipe-trigger][data-image-index="' + index + '"]' );
+
+			if ( ! carousel || ! swiper || swiper.destroyed || ! target ) {
+				return null;
+			}
+
+			const viewportRect = viewport.getBoundingClientRect();
+			const targetRect = target.getBoundingClientRect();
+			const isFullyVisible = targetRect.left >= viewportRect.left && targetRect.right <= viewportRect.right;
+
+			if ( ! isFullyVisible ) {
+				carousel.classList.add( 'is-carousel-engaged' );
+				swiper.update();
+				swiper.slideTo( index, 0 );
+			}
+
+			return target;
+		};
+
 		const getTouchPoint = function ( event ) {
 			if ( event.type && event.type.endsWith( 'cancel' ) ) {
 				return null;
@@ -427,6 +450,7 @@
 
 							updateControls();
 							pswp.on( 'change', function () { updateControls(); } );
+							pswp.on( 'change', function () { syncCarouselToImage( pswp.currIndex ); } );
 							pswp.on( 'resize', function () { updateControls(); } );
 							pswp.on( 'initialZoomInEnd', function () { updateControls( undefined, true ); } );
 							pswp.on( 'close', function () {
@@ -445,7 +469,7 @@
 
 						lightbox.on( 'close', function () {
 							lightbox.pswp.element.classList.add( 'ltt-photoswipe--closing' );
-							const returnTarget = trigger;
+							const returnTarget = syncCarouselToImage( lightbox.pswp.currIndex ) || trigger;
 							const viewport = cluster.querySelector( '.static-image-cluster__carousel-viewport' );
 							const swiper = viewport && viewport.swiper ? viewport.swiper : null;
 							const a11yParams = swiper && swiper.params ? swiper.params.a11y : null;
