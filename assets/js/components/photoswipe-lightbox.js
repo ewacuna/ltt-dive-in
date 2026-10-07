@@ -218,6 +218,7 @@
 								zoom: false,
 								paddingFn: inspired ? getInspiredPadding : undefined,
 								initialZoomLevel: inspired ? getInspiredInitialZoom : undefined,
+								pinchToClose: ! inspired,
 								loop: true,
 								showHideAnimationType: reduceMotion ? 'none' : 'zoom',
 								returnFocus: false,
@@ -285,6 +286,13 @@
 
 						if ( inspired ) {
 							let frameMask;
+
+							lightbox.on( 'zoomLevelsUpdate', function ( event ) {
+								const zoomLevels = event.zoomLevels;
+
+								zoomLevels.min = zoomLevels.initial;
+								zoomLevels.secondary = Math.max( zoomLevels.secondary, zoomLevels.initial );
+							} );
 
 							const setFrameMask = function ( pswp, thumbnail, animate ) {
 								if ( ! frameMask || ! pswp.element ) {
