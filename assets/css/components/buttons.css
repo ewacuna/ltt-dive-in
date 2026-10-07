@@ -116,6 +116,14 @@
     --ltt-button-hover-color: #073959;
 }
 
+.ltt-button:focus:not(:focus-visible) {
+    color: var(--ltt-button-color);
+}
+
+.ltt-button:focus:not(:focus-visible):hover {
+    color: var(--ltt-button-hover-color);
+}
+
 .ltt-button--glass[aria-disabled="true"],
 .ltt-button--glass:disabled,
 .ltt-button--dark-standard[aria-disabled="true"],
