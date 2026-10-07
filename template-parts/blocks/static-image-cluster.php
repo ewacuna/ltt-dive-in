@@ -208,15 +208,22 @@ $get_mobile_image_source = static function ( $index ) use ( $variant ) {
 	return 'full';
 };
 
-$render_image = static function ( $image, $sizes, $mobile_source ) {
+$render_image = static function ( $image, $sizes, $mobile_source ) use ( $variant ) {
+	$image_attributes = array(
+		'alt'   => $image['alt'],
+		'sizes' => $sizes,
+	);
+
+	if ( 'inspired' === $variant ) {
+		// Paint the complete initial mobile grid immediately in iOS WebKit.
+		$image_attributes['loading'] = 'eager';
+	}
+
 	$image_html = wp_get_attachment_image(
 		$image['id'],
 		'large',
 		false,
-		array(
-			'alt'   => $image['alt'],
-			'sizes' => $sizes,
-		)
+		$image_attributes
 	);
 
 	if ( 'half' === $mobile_source ) {

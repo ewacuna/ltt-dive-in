@@ -590,13 +590,14 @@
         aspect-ratio: auto;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         grid-template-rows: none;
+        grid-auto-rows: calc((100vw - 1.375rem) / 3);
     }
 
     .static-image-cluster__inspired-batch
         .static-image-cluster__item:nth-child(n) {
         grid-column: auto;
         grid-row: auto;
-        aspect-ratio: 1;
+        aspect-ratio: auto;
     }
 
     .static-image-cluster--inspired .static-image-cluster__inspired-title {

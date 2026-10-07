@@ -157,7 +157,8 @@ function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total ) {
 		array(
 			'alt'      => $image['alt'],
 			'sizes'    => '(max-width: 767.98px) calc((100vw - 22px) / 3), ' . $desktop_width,
-			'loading'  => 'lazy',
+			// The user-requested batch is inserted into the visible grid.
+			'loading'  => 'eager',
 			'decoding' => 'async',
 		)
 	);
