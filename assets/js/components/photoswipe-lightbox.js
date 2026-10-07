@@ -130,7 +130,7 @@
 			return cluster.querySelector( '[data-ltt-photoswipe-trigger][data-image-index="' + index + '"] img' );
 		};
 
-		const syncCarouselToImage = function ( index ) {
+		const syncCarouselToImage = function ( index, alignSnap ) {
 			const viewport = cluster.querySelector( '.static-image-cluster__carousel-viewport' );
 			const carousel = viewport ? viewport.closest( '[data-static-image-cluster-carousel]' ) : null;
 			const swiper = viewport && viewport.swiper ? viewport.swiper : null;
@@ -144,7 +144,7 @@
 			const targetRect = target.getBoundingClientRect();
 			const isFullyVisible = targetRect.left >= viewportRect.left && targetRect.right <= viewportRect.right;
 
-			if ( ! isFullyVisible ) {
+			if ( ! isFullyVisible || ( alignSnap && swiper.activeIndex !== index ) ) {
 				carousel.classList.add( 'is-carousel-engaged' );
 				swiper.update();
 				swiper.slideTo( index, 0 );
@@ -429,6 +429,7 @@
 							const pswp = lightbox.pswp;
 							let controlsFrame;
 							let revealReady = false;
+							let openingFinished = false;
 
 							const updateControls = function ( imageTop, revealControls ) {
 								revealReady = revealReady || Boolean( revealControls );
@@ -450,9 +451,13 @@
 
 							updateControls();
 							pswp.on( 'change', function () { updateControls(); } );
-							pswp.on( 'change', function () { syncCarouselToImage( pswp.currIndex ); } );
+							pswp.on( 'change', function () { syncCarouselToImage( pswp.currIndex, openingFinished ); } );
 							pswp.on( 'resize', function () { updateControls(); } );
-							pswp.on( 'initialZoomInEnd', function () { updateControls( undefined, true ); } );
+							pswp.on( 'initialZoomInEnd', function () {
+								openingFinished = true;
+								updateControls( undefined, true );
+								syncCarouselToImage( pswp.currIndex, true );
+							} );
 							pswp.on( 'close', function () {
 								revealReady = false;
 								window.cancelAnimationFrame( controlsFrame );
@@ -469,7 +474,7 @@
 
 						lightbox.on( 'close', function () {
 							lightbox.pswp.element.classList.add( 'ltt-photoswipe--closing' );
-							const returnTarget = syncCarouselToImage( lightbox.pswp.currIndex ) || trigger;
+							const returnTarget = syncCarouselToImage( lightbox.pswp.currIndex, true ) || trigger;
 							const viewport = cluster.querySelector( '.static-image-cluster__carousel-viewport' );
 							const swiper = viewport && viewport.swiper ? viewport.swiper : null;
 							const a11yParams = swiper && swiper.params ? swiper.params.a11y : null;
