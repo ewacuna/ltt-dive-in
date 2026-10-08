@@ -28,6 +28,9 @@
 }
 
 .content-module--side_by_side {
+	display: flex;
+	align-items: center;
+	min-height: 17.625rem;
 	padding-block: 3.125rem;
 }
 
@@ -151,7 +154,7 @@
 .content-module__side-by-side {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	align-items: start;
+	align-items: center;
 	column-gap: 5rem;
 	row-gap: 2rem;
 }
