@@ -9,14 +9,23 @@
  *
  * @var array $block      Block settings and attributes.
  * @var bool  $is_preview Whether the block is being rendered in the editor.
+ * @var array $args       Optional Content Module rows and block context.
  */
 
 if ( ! defined( 'ABSPATH' ) || ! function_exists( 'get_field' ) ) {
 	return;
 }
 
-$is_preview   = ! empty( $is_preview );
-$testimonials = ltt_dive_in_prepare_testimonials( get_field( 'ltt_dive_in_testimonials_items' ) );
+$context      = isset( $args ) && is_array( $args ) ? $args : array();
+$is_preview   = array_key_exists( 'is_preview', $context ) ? (bool) $context['is_preview'] : ! empty( $is_preview );
+$rows         = array_key_exists( 'rows', $context ) ? $context['rows'] : get_field( 'ltt_dive_in_testimonials_items' );
+$testimonials = ltt_dive_in_prepare_testimonials( $rows );
+
+if ( isset( $context['block'] ) && is_array( $context['block'] ) ) {
+	$block = $context['block'];
+} elseif ( ! isset( $block ) || ! is_array( $block ) ) {
+	$block = array();
+}
 
 if ( ! $testimonials ) {
 	if ( $is_preview ) {
@@ -27,8 +36,20 @@ if ( ! $testimonials ) {
 }
 
 $has_carousel = count( $testimonials ) > 1;
-$id           = ! empty( $block['anchor'] ) ? sanitize_html_class( $block['anchor'] ) : 'testimonials-' . sanitize_html_class( $block['id'] );
+$block_id     = ! empty( $block['id'] ) ? $block['id'] : wp_unique_id();
 $classes      = array( 'testimonials' );
+
+if ( ! empty( $context['id'] ) ) {
+	$id = sanitize_html_class( $context['id'] );
+} elseif ( ! empty( $block['anchor'] ) ) {
+	$id = sanitize_html_class( $block['anchor'] );
+} else {
+	$id = 'testimonials-' . sanitize_html_class( $block_id );
+}
+
+// The block metadata supplies this handle normally; this also covers dynamic
+// Content Module rendering outside the queried post's parsed block tree.
+wp_enqueue_style( 'ltt-dive-in-testimonials' );
 
 if ( ! empty( $block['align'] ) && 'full' === $block['align'] ) {
 	$classes[] = 'alignfull';

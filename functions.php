@@ -34,6 +34,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/activity-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/team-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/testimonial-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/video-module-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/content-module-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/media-tags.php';
 require_once LTT_DIVE_IN_DIR . '/inc/seeker-events.php';
 require_once LTT_DIVE_IN_DIR . '/inc/event-driver-settings.php';

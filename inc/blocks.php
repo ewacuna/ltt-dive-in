@@ -133,6 +133,9 @@ function ltt_dive_in_register_blocks() {
 	$accordion_path                    = LTT_DIVE_IN_DIR . '/blocks/faq';
 	$team_style_path                   = LTT_DIVE_IN_DIR . '/assets/css/components/meet-the-team.css';
 	$team_path                         = LTT_DIVE_IN_DIR . '/blocks/team';
+	$content_module_style_path         = LTT_DIVE_IN_DIR . '/assets/css/components/content-module.css';
+	$content_module_script_path        = LTT_DIVE_IN_DIR . '/assets/js/components/content-module.js';
+	$content_module_path               = LTT_DIVE_IN_DIR . '/blocks/content-module';
 	$video_module_style_path           = LTT_DIVE_IN_DIR . '/assets/css/components/video-module.css';
 	$video_module_script_path          = LTT_DIVE_IN_DIR . '/assets/js/components/video-module.js';
 	$video_module_path                 = LTT_DIVE_IN_DIR . '/blocks/video-module';
@@ -247,6 +250,24 @@ function ltt_dive_in_register_blocks() {
 
 	if ( file_exists( $team_path . '/block.json' ) ) {
 		register_block_type( $team_path );
+	}
+
+	wp_register_style(
+		'ltt-dive-in-content-module',
+		LTT_DIVE_IN_URI . '/assets/css/components/content-module.css',
+		array( 'ltt-dive-in-buttons' ),
+		file_exists( $content_module_style_path ) ? (string) filemtime( $content_module_style_path ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script(
+		'ltt-dive-in-content-module',
+		LTT_DIVE_IN_URI . '/assets/js/components/content-module.js',
+		array(),
+		file_exists( $content_module_script_path ) ? (string) filemtime( $content_module_script_path ) : LTT_DIVE_IN_VERSION,
+		array( 'in_footer' => true )
+	);
+
+	if ( file_exists( $content_module_path . '/block.json' ) ) {
+		register_block_type( $content_module_path );
 	}
 
 	$testimonials_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/testimonials.css';
@@ -376,7 +397,19 @@ function ltt_dive_in_enqueue_testimonials_carousel_assets() {
 }
 
 /**
- * Determine whether a parsed Testimonials block renders as a carousel.
+ * Determine whether a Content Module block uses the Testimonials variant.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_content_module_uses_testimonials( $block ) {
+	return is_array( $block )
+		&& 'ltt-dive-in/content-module' === ( $block['blockName'] ?? '' )
+		&& 'testimonial_block' === ( $block['attrs']['data']['ltt_dive_in_content_module_variant'] ?? '' );
+}
+
+/**
+ * Determine whether a parsed Testimonials or Content Module block has a carousel.
  *
  * ACF stores the repeater row count under the field name, so rows skipped at
  * render time for missing content can make this a harmless over-match.
@@ -385,36 +418,48 @@ function ltt_dive_in_enqueue_testimonials_carousel_assets() {
  * @return bool
  */
 function ltt_dive_in_testimonials_uses_carousel( $block ) {
-	if ( ! is_array( $block ) || 'ltt-dive-in/testimonials' !== ( $block['blockName'] ?? '' ) ) {
+	if ( ! is_array( $block ) ) {
 		return false;
 	}
 
-	$count = $block['attrs']['data']['ltt_dive_in_testimonials_items'] ?? 0;
+	if ( ltt_dive_in_content_module_uses_testimonials( $block ) ) {
+		$count = $block['attrs']['data']['ltt_dive_in_content_module_testimonials'] ?? 0;
+	} elseif ( 'ltt-dive-in/testimonials' === ( $block['blockName'] ?? '' ) ) {
+		$count = $block['attrs']['data']['ltt_dive_in_testimonials_items'] ?? 0;
+	} else {
+		return false;
+	}
 
 	return is_numeric( $count ) && (int) $count > 1;
 }
 
 /**
- * Enqueue Testimonials carousel assets before the document head is printed.
+ * Enqueue Content Module testimonial styles and carousel assets before the head.
  *
  * @return void
  */
-function ltt_dive_in_maybe_enqueue_testimonials_carousel_assets() {
+function ltt_dive_in_maybe_enqueue_testimonials_assets() {
 	if ( ! is_singular() ) {
 		return;
 	}
 
 	$post = get_queried_object();
 
-	if ( ! $post instanceof WP_Post || ! has_block( 'ltt-dive-in/testimonials', $post ) ) {
+	if ( ! $post instanceof WP_Post || ( ! has_block( 'ltt-dive-in/testimonials', $post ) && ! has_block( 'ltt-dive-in/content-module', $post ) ) ) {
 		return;
 	}
 
-	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_testimonials_uses_carousel' ) ) {
+	$blocks = parse_blocks( $post->post_content );
+
+	if ( ltt_dive_in_block_tree_contains( $blocks, 'ltt_dive_in_content_module_uses_testimonials' ) ) {
+		wp_enqueue_style( 'ltt-dive-in-testimonials' );
+	}
+
+	if ( ltt_dive_in_block_tree_contains( $blocks, 'ltt_dive_in_testimonials_uses_carousel' ) ) {
 		ltt_dive_in_enqueue_testimonials_carousel_assets();
 	}
 }
-add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_testimonials_carousel_assets', 20 );
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_testimonials_assets', 20 );
 
 /**
  * Load carousel assets only on pages that render a carousel Up Driver.

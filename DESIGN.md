@@ -1,7 +1,7 @@
 # Lake Tahoe Travel Design Guide
 
 - Status: initial implementation reference
-- Last verified against Figma: 2026-09-13
+- Last verified against Figma: 2026-10-08
 - Design source: [Lake Tahoe Travel — New Site Design — Dev Access](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=0-1&m=dev)
 
 ## Purpose and authority
@@ -367,12 +367,15 @@ Implementation rules:
 
 ### Content modules
 
+- Newsletter Sign Up: [desktop](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=1-11841&m=dev) and [mobile](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=1-11842&m=dev): the Gravity Form and the existing heading and description sit on the left; an optional editorial heading, description, and link CTA sit on the right. On mobile, the form column precedes the centered editorial panel. Use the theme's Gotham face for the right heading at every size. The glass CTA is used over photography and the primary outline CTA is used when no background image is selected.
+- Meetings Request Contact: [desktop](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=1-11835&m=dev) and [mobile](https://www.figma.com/design/ojSvaH9s0cyWEnxWdk3ksH/DevOps-090726Copy-LAKE-TAHOE-TRAVEL---NEW-SITE-DESIGN---DEV-ACCESS--?node-id=1-11834&m=dev): copy sits on the left and the Gravity Form on the right at desktop; they stack in that order on mobile. The expected form has email and phone fields, a consent checkbox, and supporting copy. Email and phone share one desktop row, then stack on mobile. Newsletter forms use email and ZIP Code fields, a consent checkbox, and supporting copy. On desktop, place the submit control before the consent field in DOM and keyboard order, with consent to its right. On mobile, place consent before the submit control in both DOM and keyboard order. On image backgrounds, inputs and the checkbox share Figma's `rgba(2, 22, 43, 0.1)` fill, `rgba(199, 209, 216, 0.5)` border, 4px downward shadow and the theme's 4px glass blur; the submit button is white with a navy border. Gravity Forms owns the labels, consent language, supporting copy, validation, and submission; retain visible field labels even where Figma uses placeholder-style examples.
+- Both variants use the selected Media Library image as a decorative full-bleed background. Their navy gradient overlay uses 65% opacity, matching the documented contrast treatment for Page Cluster imagery. An absent image retains a white background.
 - Side-by-side modules pair text and CTAs with an image and allow zero to three CTAs.
-- Icon blocks contain two to four icon blurbs.
-- Stats modules contain two to four large values and labels, on white or color backgrounds.
+- Icon blocks contain two to four icon blurbs. Each blurb uses a required SVG attachment from the Media Library, displayed decoratively in a contained 93 × 93 px area. Safe SVG is the approved upload dependency and must be active; version 2.5.1 is installed in Local. Configure its Media settings to allow Administrators and Editors. Safe SVG sanitizes normal WordPress uploads; the theme does not add an SVG MIME allowance. Legacy icon values that are not attachment IDs have no bundled-file fallback and must be replaced with a Media Library SVG. SVG upload requires WordPress 6.9 or newer; the theme itself continues to support WordPress 6.6+.
+- Stats modules contain a header heading and copy plus two to four values and labels. The editor background selector uses the eight Stats swatches in Figma Color (`1:11913`): Navy `#003A5C`, Peak Gold `#EEB040`, Burgundy `#5E3236`, Red `#9E3F3D`, Forest Green `#296154`, Green `#4FA154`, Blue `#397398`, and Crystal Clear Cyan `#61C2B7`. Leaving the selector empty renders white. These are local Stats colors; the site's confirmed primary navy token remains `#073959`. The background image field is always available and any selected image takes priority over the color. The retired Photo selector value is normalized to empty, while existing image values continue to render. Four-value rows use a smaller number size at desktop widths so values like `6,225` stay on one line; they become two columns at `1199.98px` and one column on small screens.
 - Copy blocks, copy lists, and comparison tables are text-driven without imagery.
-- Newsletter signup is a real Gravity Forms submission/lead-capture component, not a navigation CTA. Gravity Forms owns its fields, validation, consent, confirmation, notifications, and entries; the theme owns its approved placement and visual treatment.
-- Comparison tables are static structured data with icon/label headers, rows, and a final CTA; the shown design is neither sortable nor interactive.
+- Newsletter signup is a real Gravity Forms submission/lead-capture component. Gravity Forms owns its fields, validation, consent, confirmation, notifications, and entries; the theme owns its approved placement and visual treatment. The optional editorial CTA beside the form is a separate ACF link.
+- Comparison tables have an optional `Feature column heading` above the feature labels, styled at `1.125rem` (18px). They have two to four editable comparison columns, each with a required SVG and label plus an optional short description; the short description uses the column-label styles at `0.875rem` (14px). Tables have one to five feature rows, and each row displays one cell for every active comparison column. Reordering a column in the editor keeps its cell values with that heading and is available through keyboard-accessible Up and Down controls. The front-end table is static and has an optional final CTA; four-column tables use a keyboard-focusable horizontal scroll region on narrow screens, while two- and three-column tables keep the existing stacked mobile treatment. Existing columns without a saved SVG remain blank until the editor chooses an icon. Safe SVG is the approved upload dependency.
 
 ### Page Cluster (C-13)
 
@@ -388,6 +391,7 @@ Implementation rules:
 - The four-up feature pattern expands the selected or hovered card.
 - Inspired-gallery copy appears after activation on both desktop and mobile.
 - Figma presents two gallery-expansion ideas; the final expansion pattern remains open.
+- On mobile, the PhotoSwipe counter and close control sit 24px above the active image frame, inside the image's horizontal gutters; their vertical position follows the displayed image rather than the viewport edge.
 - Non-clickable clusters must not expose misleading link or button semantics.
 
 ### Weather module — data dependencies open

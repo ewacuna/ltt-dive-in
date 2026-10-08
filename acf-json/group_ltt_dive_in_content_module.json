@@ -1,0 +1,604 @@
+{
+  "key": "group_ltt_dive_in_content_module",
+  "title": "LTT Dive In — Content Module",
+  "fields": [
+    {
+      "key": "field_ltt_dive_in_content_module_variant",
+      "label": "Variant",
+      "name": "ltt_dive_in_content_module_variant",
+      "type": "select",
+      "instructions": "Choose the approved Content Module layout. Only the matching fields are shown below.",
+      "required": 1,
+      "choices": {
+        "side_by_side": "Side by Side",
+        "copy_block": "Copy Block",
+        "icon_block": "Icon Block",
+        "newsletter_signup": "Newsletter Sign Up",
+        "meetings_request": "Meetings Request",
+        "stats": "Stats",
+        "comparison_table": "Comparison Table",
+        "testimonial_block": "Testimonial Block"
+      },
+      "default_value": "side_by_side",
+      "return_format": "value",
+      "ui": 1,
+      "ajax": 0,
+      "allow_null": 0
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_side_title",
+      "label": "Heading",
+      "name": "ltt_dive_in_content_module_side_title",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"side_by_side"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_side_body",
+      "label": "Body copy",
+      "name": "ltt_dive_in_content_module_side_body",
+      "type": "textarea",
+      "required": 1,
+      "rows": 5,
+      "maxlength": 1200,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"side_by_side"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_side_background",
+      "label": "Background image",
+      "name": "ltt_dive_in_content_module_side_background",
+      "type": "image",
+      "instructions": "Optional. Leave empty for a white background. The image is decorative and receives a contrast overlay.",
+      "return_format": "id",
+      "preview_size": "medium",
+      "library": "all",
+      "mime_types": "jpg,jpeg,png,webp",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"side_by_side"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_side_ctas",
+      "label": "Calls to action",
+      "name": "ltt_dive_in_content_module_side_ctas",
+      "type": "repeater",
+      "instructions": "Add zero to three buttons. Each needs a meaningful label and destination.",
+      "min": 0,
+      "max": 3,
+      "layout": "block",
+      "button_label": "Add button",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_side_cta_link",
+          "label": "Button",
+          "name": "link",
+          "type": "link",
+          "required": 1,
+          "return_format": "array",
+          "parent_repeater": "field_ltt_dive_in_content_module_side_ctas"
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"side_by_side"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_copy_content",
+      "label": "Rich text content",
+      "name": "ltt_dive_in_content_module_copy_content",
+      "type": "wysiwyg",
+      "instructions": "Use semantic headings, lists, links, and inline images as needed.",
+      "required": 1,
+      "tabs": "all",
+      "toolbar": "full",
+      "media_upload": 1,
+      "delay": 0,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"copy_block"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_icon_heading",
+      "label": "Heading",
+      "name": "ltt_dive_in_content_module_icon_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"icon_block"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_icon_intro",
+      "label": "Introduction",
+      "name": "ltt_dive_in_content_module_icon_intro",
+      "type": "textarea",
+      "rows": 4,
+      "maxlength": 600,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"icon_block"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_icon_cta",
+      "label": "Header call to action",
+      "name": "ltt_dive_in_content_module_icon_cta",
+      "type": "link",
+      "instructions": "Optional button shown with the section introduction.",
+      "return_format": "array",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"icon_block"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_icon_blurbs",
+      "label": "Icon blurbs",
+      "name": "ltt_dive_in_content_module_icon_blurbs",
+      "type": "repeater",
+      "instructions": "Add two to four items. Upload or select an SVG for each blurb.",
+      "required": 1,
+      "min": 2,
+      "max": 4,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_content_module_icon_blurb_title",
+      "button_label": "Add blurb",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_icon_blurb_icon",
+          "label": "Icon",
+          "name": "icon",
+          "type": "file",
+          "instructions": "Upload or select an SVG icon. Use square artwork designed for the 93 × 93 px icon area.",
+          "required": 1,
+          "return_format": "id",
+          "library": "all",
+          "mime_types": "svg",
+          "parent_repeater": "field_ltt_dive_in_content_module_icon_blurbs"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_icon_blurb_title",
+          "label": "Title",
+          "name": "title",
+          "type": "text",
+          "required": 1,
+          "maxlength": 100,
+          "parent_repeater": "field_ltt_dive_in_content_module_icon_blurbs"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_icon_blurb_copy",
+          "label": "Short copy",
+          "name": "copy",
+          "type": "textarea",
+          "required": 1,
+          "rows": 3,
+          "maxlength": 280,
+          "new_lines": "",
+          "parent_repeater": "field_ltt_dive_in_content_module_icon_blurbs"
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"icon_block"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_heading",
+      "label": "Form panel heading",
+      "name": "ltt_dive_in_content_module_newsletter_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_copy",
+      "label": "Form panel description",
+      "name": "ltt_dive_in_content_module_newsletter_copy",
+      "type": "textarea",
+      "required": 1,
+      "rows": 4,
+      "maxlength": 600,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_aside_heading",
+      "label": "Right panel heading",
+      "name": "ltt_dive_in_content_module_newsletter_aside_heading",
+      "type": "text",
+      "instructions": "Optional heading displayed beside the newsletter form.",
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_aside_copy",
+      "label": "Right panel description",
+      "name": "ltt_dive_in_content_module_newsletter_aside_copy",
+      "type": "textarea",
+      "instructions": "Optional description displayed beneath the right panel heading.",
+      "rows": 4,
+      "maxlength": 600,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_aside_cta",
+      "label": "Right panel call to action",
+      "name": "ltt_dive_in_content_module_newsletter_aside_cta",
+      "type": "link",
+      "instructions": "Optional link displayed as a glass button beneath the right panel description.",
+      "return_format": "array",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_background",
+      "label": "Background image",
+      "name": "ltt_dive_in_content_module_newsletter_background",
+      "type": "image",
+      "instructions": "Optional. Leave empty for a white background. The image is decorative and receives a contrast overlay.",
+      "return_format": "id",
+      "preview_size": "medium",
+      "library": "all",
+      "mime_types": "jpg,jpeg,png,webp",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_newsletter_form",
+      "label": "Newsletter form",
+      "name": "ltt_dive_in_content_module_newsletter_form",
+      "type": "select",
+      "instructions": "Select an active Gravity Form with its newsletter and Mailchimp feed configured.",
+      "required": 1,
+      "choices": {},
+      "return_format": "value",
+      "ui": 1,
+      "ajax": 0,
+      "allow_null": 1,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_meetings_heading",
+      "label": "Heading",
+      "name": "ltt_dive_in_content_module_meetings_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"meetings_request"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_meetings_copy",
+      "label": "Description",
+      "name": "ltt_dive_in_content_module_meetings_copy",
+      "type": "textarea",
+      "required": 1,
+      "rows": 4,
+      "maxlength": 600,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"meetings_request"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_meetings_background",
+      "label": "Background image",
+      "name": "ltt_dive_in_content_module_meetings_background",
+      "type": "image",
+      "instructions": "Optional. Leave empty for a white background. The image is decorative and receives a contrast overlay.",
+      "return_format": "id",
+      "preview_size": "medium",
+      "library": "all",
+      "mime_types": "jpg,jpeg,png,webp",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"meetings_request"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_meetings_form",
+      "label": "Meetings request form",
+      "name": "ltt_dive_in_content_module_meetings_form",
+      "type": "select",
+      "instructions": "Select the active Gravity Form configured for meeting requests.",
+      "required": 1,
+      "choices": {},
+      "return_format": "value",
+      "ui": 1,
+      "ajax": 0,
+      "allow_null": 1,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"meetings_request"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_stats_heading",
+      "label": "Heading",
+      "name": "ltt_dive_in_content_module_stats_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_stats_intro",
+      "label": "Header copy",
+      "name": "ltt_dive_in_content_module_stats_intro",
+      "type": "textarea",
+      "rows": 4,
+      "maxlength": 600,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_stats_background_color",
+      "label": "Background color",
+      "name": "ltt_dive_in_content_module_stats_background_color",
+      "type": "select",
+      "instructions": "Leave empty for white, or choose a Figma color. A selected background image always takes priority over this color.",
+      "choices": {
+        "white": "White",
+        "navy": "Deep Navy",
+        "gold": "Peak Gold",
+        "burgundy": "Burgundy",
+        "red": "Red",
+        "forest": "Forest Green",
+        "green": "Green",
+        "blue": "Blue",
+        "cyan": "Crystal Clear Cyan"
+      },
+      "default_value": "",
+      "return_format": "value",
+      "ui": 1,
+      "allow_null": 1,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_stats_background",
+      "label": "Background image",
+      "name": "ltt_dive_in_content_module_stats_background",
+      "type": "image",
+      "instructions": "Optional photo background. The image is decorative, receives a contrast overlay, and takes priority over the selected background color.",
+      "return_format": "id",
+      "preview_size": "medium",
+      "library": "all",
+      "mime_types": "jpg,jpeg,png,webp",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_stats",
+      "label": "Stats",
+      "name": "ltt_dive_in_content_module_stats",
+      "type": "repeater",
+      "instructions": "Add between two and four statistics.",
+      "required": 1,
+      "min": 2,
+      "max": 4,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_content_module_stat_number",
+      "button_label": "Add stat",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_stat_number",
+          "label": "Number or value",
+          "name": "number",
+          "type": "text",
+          "required": 1,
+          "maxlength": 30,
+          "parent_repeater": "field_ltt_dive_in_content_module_stats"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_stat_label",
+          "label": "Label",
+          "name": "label",
+          "type": "text",
+          "required": 1,
+          "maxlength": 120,
+          "parent_repeater": "field_ltt_dive_in_content_module_stats"
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_comparison_heading",
+      "label": "Heading",
+      "name": "ltt_dive_in_content_module_comparison_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_comparison_intro",
+      "label": "Introduction",
+      "name": "ltt_dive_in_content_module_comparison_intro",
+      "type": "textarea",
+      "rows": 4,
+      "maxlength": 600,
+      "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_comparison_feature_heading",
+      "label": "Feature column heading",
+      "name": "ltt_dive_in_content_module_comparison_feature_heading",
+      "type": "text",
+      "instructions": "Optional heading shown above the feature labels in the first table column.",
+      "maxlength": 80,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_comparison_columns",
+      "label": "Comparison columns",
+      "name": "ltt_dive_in_content_module_comparison_columns",
+      "type": "repeater",
+      "instructions": "Add two to four columns. Each column needs a label and an SVG icon from the Media Library; the short description is optional.",
+      "required": 1,
+      "min": 2,
+      "max": 4,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_content_module_comparison_column_label",
+      "button_label": "Add column",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_column_label",
+          "label": "Column label",
+          "name": "label",
+          "type": "text",
+          "required": 1,
+          "maxlength": 60,
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_columns"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_column_short_description",
+          "label": "Short description",
+          "name": "short_description",
+          "type": "text",
+          "maxlength": 160,
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_columns"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_column_icon",
+          "label": "Column icon (SVG)",
+          "name": "icon",
+          "type": "file",
+          "instructions": "Choose an SVG from the Media Library for each comparison column.",
+          "required": 1,
+          "return_format": "id",
+          "library": "all",
+          "mime_types": "svg",
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_columns"
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_comparison_rows",
+      "label": "Comparison rows",
+      "name": "ltt_dive_in_content_module_comparison_rows",
+      "type": "repeater",
+      "instructions": "Add one to five feature rows. Each row has one cell for every active comparison column.",
+      "required": 1,
+      "min": 1,
+      "max": 5,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_content_module_comparison_row_label",
+      "button_label": "Add comparison row",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_row_label",
+          "label": "Feature label",
+          "name": "label",
+          "type": "text",
+          "required": 1,
+          "maxlength": 100,
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_rows"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_cell_one",
+          "label": "First comparison column",
+          "name": "column_one",
+          "type": "group",
+          "layout": "block",
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_rows",
+          "sub_fields": [
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_one_type","label":"Cell content","name":"type","type":"select","required":1,"choices":{"text":"Text value","included":"Included","not_included":"Not included"},"default_value":"text","return_format":"value","ui":1},
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_one_text","label":"Text","name":"text","type":"text","maxlength":80,"conditional_logic":[[{"field":"field_ltt_dive_in_content_module_comparison_cell_one_type","operator":"==","value":"text"}]]}
+          ]
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_cell_two",
+          "label": "Second comparison column",
+          "name": "column_two",
+          "type": "group",
+          "layout": "block",
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_rows",
+          "sub_fields": [
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_two_type","label":"Cell content","name":"type","type":"select","required":1,"choices":{"text":"Text value","included":"Included","not_included":"Not included"},"default_value":"text","return_format":"value","ui":1},
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_two_text","label":"Text","name":"text","type":"text","maxlength":80,"conditional_logic":[[{"field":"field_ltt_dive_in_content_module_comparison_cell_two_type","operator":"==","value":"text"}]]}
+          ]
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_cell_three",
+          "label": "Third comparison column",
+          "name": "column_three",
+          "type": "group",
+          "layout": "block",
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_rows",
+          "sub_fields": [
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_three_type","label":"Cell content","name":"type","type":"select","required":1,"choices":{"text":"Text value","included":"Included","not_included":"Not included"},"default_value":"text","return_format":"value","ui":1},
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_three_text","label":"Text","name":"text","type":"text","maxlength":80,"conditional_logic":[[{"field":"field_ltt_dive_in_content_module_comparison_cell_three_type","operator":"==","value":"text"}]]}
+          ]
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_comparison_cell_four",
+          "label": "Fourth comparison column",
+          "name": "column_four",
+          "type": "group",
+          "layout": "block",
+          "parent_repeater": "field_ltt_dive_in_content_module_comparison_rows",
+          "sub_fields": [
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_four_type","label":"Cell content","name":"type","type":"select","required":1,"choices":{"text":"Text value","included":"Included","not_included":"Not included"},"default_value":"text","return_format":"value","ui":1},
+            {"key":"field_ltt_dive_in_content_module_comparison_cell_four_text","label":"Text","name":"text","type":"text","maxlength":80,"conditional_logic":[[{"field":"field_ltt_dive_in_content_module_comparison_cell_four_type","operator":"==","value":"text"}]]}
+          ]
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_comparison_cta",
+      "label": "Table call to action",
+      "name": "ltt_dive_in_content_module_comparison_cta",
+      "type": "link",
+      "instructions": "Optional button displayed below the table.",
+      "return_format": "array",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_testimonials",
+      "label": "Testimonials",
+      "name": "ltt_dive_in_content_module_testimonials",
+      "type": "repeater",
+      "instructions": "Add between one and ten testimonials. With two or more, visitors browse them one at a time with arrow and dot controls.",
+      "required": 1,
+      "min": 1,
+      "max": 10,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_content_module_testimonial_item_name",
+      "button_label": "Add testimonial",
+      "rows_per_page": 20,
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_testimonial_item_quote",
+          "label": "Quote",
+          "name": "quote",
+          "type": "textarea",
+          "instructions": "Enter the quote without quotation marks; they are added automatically.",
+          "required": 1,
+          "maxlength": 400,
+          "rows": 4,
+          "new_lines": "",
+          "parent_repeater": "field_ltt_dive_in_content_module_testimonials"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_testimonial_item_photo",
+          "label": "Photo",
+          "name": "photo",
+          "type": "image",
+          "instructions": "Optional square portrait. The photo is decorative because the person's name appears below it.",
+          "return_format": "id",
+          "preview_size": "thumbnail",
+          "library": "all",
+          "mime_types": "jpg,jpeg,png,webp",
+          "parent_repeater": "field_ltt_dive_in_content_module_testimonials"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_testimonial_item_name",
+          "label": "Name",
+          "name": "name",
+          "type": "text",
+          "required": 1,
+          "maxlength": 80,
+          "parent_repeater": "field_ltt_dive_in_content_module_testimonials"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_testimonial_item_role",
+          "label": "Role or location",
+          "name": "role",
+          "type": "text",
+          "instructions": "Optional, for example a job title and town.",
+          "maxlength": 100,
+          "parent_repeater": "field_ltt_dive_in_content_module_testimonials"
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"testimonial_block"}]]
+    }
+  ],
+  "location": [[{"param":"block","operator":"==","value":"ltt-dive-in/content-module"}]],
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "active": true,
+  "show_in_rest": 0,
+  "modified": 1791479544
+}
