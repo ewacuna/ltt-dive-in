@@ -115,7 +115,7 @@ $meta_icons = array(
 	</div>
 	<?php if ( $has_controls ) : ?>
 		<div class="event-driver__hero-controls">
-			<button class="event-driver__hero-control event-driver__hero-control--previous ltt-slider-navigation ltt-slider-navigation--image" type="button" data-event-driver-previous aria-label="<?php esc_attr_e( 'Previous featured event', 'ltt-dive-in' ); ?>"<?php echo $is_preview ? ' disabled' : ''; ?>>
+			<button class="event-driver__hero-control event-driver__hero-control--previous ltt-slider-navigation ltt-slider-navigation--image ltt-slider-navigation--previous" type="button" data-event-driver-previous aria-label="<?php esc_attr_e( 'Previous featured event', 'ltt-dive-in' ); ?>"<?php echo $is_preview ? ' disabled' : ''; ?>>
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-previous.svg' ) ); ?>" alt="" aria-hidden="true" />
 			</button>
 			<div class="event-driver__hero-pagination ltt-carousel-indicators" data-event-driver-pagination>
@@ -123,7 +123,7 @@ $meta_icons = array(
 					<span class="ltt-carousel-indicator<?php echo 0 === $index ? ' is-active' : ''; ?>" aria-hidden="true"></span>
 				<?php endforeach; ?>
 			</div>
-			<button class="event-driver__hero-control event-driver__hero-control--next ltt-slider-navigation ltt-slider-navigation--image" type="button" data-event-driver-next aria-label="<?php esc_attr_e( 'Next featured event', 'ltt-dive-in' ); ?>"<?php echo $is_preview ? ' disabled' : ''; ?>>
+			<button class="event-driver__hero-control event-driver__hero-control--next ltt-slider-navigation ltt-slider-navigation--image ltt-slider-navigation--next" type="button" data-event-driver-next aria-label="<?php esc_attr_e( 'Next featured event', 'ltt-dive-in' ); ?>"<?php echo $is_preview ? ' disabled' : ''; ?>>
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-next.svg' ) ); ?>" alt="" aria-hidden="true" />
 			</button>
 		</div>

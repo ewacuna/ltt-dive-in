@@ -302,6 +302,8 @@ Figma defines these control families:
 - Category selectors with selected and hover states.
 - Form submission buttons and text “Read More” actions.
 
+Carousel arrow controls use a `24px × 24px` icon inside the shared circular button. The Figma back-arrow frame (`1:44661`) uses asymmetric horizontal padding, so the previous arrow is optically shifted `2px` left and the next arrow `2px` right. Apply the same icon size and directional correction to every slider, including mask-based and image-based arrows.
+
 #### Touch feedback
 
 - Figma does not use the browser's native tap highlight (the translucent box iOS Safari and Android Chrome draw over a tapped link or button). It is disabled once, site-wide, on `html` in `assets/css/main.css`; the property is inherited, so it covers every link, control, and scripted container.

@@ -154,18 +154,11 @@
 }
 
 .event-driver .event-driver__hero-control img {
-    width: 1.125rem;
+    width: 1.5rem;
     max-width: none;
-    height: 1.3125rem;
+    height: 1.5rem;
+    object-fit: contain;
     flex: 0 0 auto;
-}
-
-.event-driver__hero-control--previous img {
-    transform: translateX(-0.125rem);
-}
-
-.event-driver__hero-control--next img {
-    transform: translateX(0.125rem);
 }
 
 .event-driver__hero-control--previous {

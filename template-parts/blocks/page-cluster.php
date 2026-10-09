@@ -84,8 +84,8 @@ if ( 'features' === $variant && ! $is_preview && function_exists( 'ltt_dive_in_e
 				<div class="page-cluster__controls" hidden>
 					<div class="page-cluster__pagination ltt-carousel-indicators" data-cluster-pagination aria-label="<?php esc_attr_e( 'Choose a feature', 'ltt-dive-in' ); ?>"></div>
 					<div class="page-cluster__arrows">
-						<button type="button" class="ltt-slider-navigation ltt-slider-navigation--white" data-cluster-previous aria-controls="<?php echo esc_attr( $id ); ?>-cards" aria-label="<?php esc_attr_e( 'Previous feature', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
-						<button type="button" class="ltt-slider-navigation ltt-slider-navigation--white" data-cluster-next aria-controls="<?php echo esc_attr( $id ); ?>-cards" aria-label="<?php esc_attr_e( 'Next feature', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
+						<button type="button" class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" data-cluster-previous aria-controls="<?php echo esc_attr( $id ); ?>-cards" aria-label="<?php esc_attr_e( 'Previous feature', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
+						<button type="button" class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--next" data-cluster-next aria-controls="<?php echo esc_attr( $id ); ?>-cards" aria-label="<?php esc_attr_e( 'Next feature', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
 					</div>
 				</div>
 			<?php endif; ?>

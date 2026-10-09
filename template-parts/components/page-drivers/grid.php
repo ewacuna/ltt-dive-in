@@ -118,10 +118,10 @@ $status_id  = $section_id . '-filter-status';
 		</div>
 		<?php if ( $is_carousel ) : ?>
 				</div>
-				<button class="page-drivers__carousel-control page-drivers__carousel-control--previous ltt-slider-navigation ltt-slider-navigation--image" type="button" data-page-driver-carousel-previous aria-label="<?php esc_attr_e( 'Previous destinations', 'ltt-dive-in' ); ?>">
+				<button class="page-drivers__carousel-control page-drivers__carousel-control--previous ltt-slider-navigation ltt-slider-navigation--image ltt-slider-navigation--previous" type="button" data-page-driver-carousel-previous aria-label="<?php esc_attr_e( 'Previous destinations', 'ltt-dive-in' ); ?>">
 					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-previous.svg' ) ); ?>" alt="" aria-hidden="true" />
 				</button>
-				<button class="page-drivers__carousel-control page-drivers__carousel-control--next ltt-slider-navigation ltt-slider-navigation--image" type="button" data-page-driver-carousel-next aria-label="<?php esc_attr_e( 'Next destinations', 'ltt-dive-in' ); ?>">
+				<button class="page-drivers__carousel-control page-drivers__carousel-control--next ltt-slider-navigation ltt-slider-navigation--image ltt-slider-navigation--next" type="button" data-page-driver-carousel-next aria-label="<?php esc_attr_e( 'Next destinations', 'ltt-dive-in' ); ?>">
 					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-next.svg' ) ); ?>" alt="" aria-hidden="true" />
 				</button>
 				<div class="page-drivers__carousel-pagination ltt-carousel-indicators" data-page-driver-carousel-pagination></div>

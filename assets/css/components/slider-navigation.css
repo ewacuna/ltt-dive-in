@@ -31,16 +31,17 @@
 }
 .ltt-slider-navigation--image img {
     display: block;
-    width: 1.125rem;
-    height: 1.3125rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
 }
 .ltt-slider-navigation--color {
     --slider-border: #ffffff;
 }
 .ltt-slider-navigation__icon {
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 /*
@@ -60,4 +61,15 @@
 }
 .ltt-slider-navigation__icon--next {
     --slider-navigation-icon: url("../../images/icons/carousel-arrow-next.svg");
+}
+
+/* Optical alignment follows Figma's asymmetric 12px/16px arrow padding. */
+.ltt-slider-navigation--previous > .ltt-slider-navigation__icon,
+.ltt-slider-navigation--previous > img {
+    translate: -0.125rem 0;
+}
+
+.ltt-slider-navigation--next > .ltt-slider-navigation__icon,
+.ltt-slider-navigation--next > img {
+    translate: 0.125rem 0;
 }

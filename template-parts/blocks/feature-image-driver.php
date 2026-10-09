@@ -176,10 +176,10 @@ $link_tag   = $is_preview ? 'div' : 'a';
 			</div>
 		</div>
 		<?php if ( count( $items ) > 1 ) : ?>
-			<button class="feature-image-driver__carousel-control feature-image-driver__carousel-control--previous ltt-slider-navigation ltt-slider-navigation--image" type="button" data-feature-image-driver-previous aria-label="<?php esc_attr_e( 'Previous feature', 'ltt-dive-in' ); ?>">
+			<button class="feature-image-driver__carousel-control feature-image-driver__carousel-control--previous ltt-slider-navigation ltt-slider-navigation--image ltt-slider-navigation--previous" type="button" data-feature-image-driver-previous aria-label="<?php esc_attr_e( 'Previous feature', 'ltt-dive-in' ); ?>">
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-previous.svg' ) ); ?>" alt="" aria-hidden="true" />
 			</button>
-			<button class="feature-image-driver__carousel-control feature-image-driver__carousel-control--next ltt-slider-navigation ltt-slider-navigation--image" type="button" data-feature-image-driver-next aria-label="<?php esc_attr_e( 'Next feature', 'ltt-dive-in' ); ?>">
+			<button class="feature-image-driver__carousel-control feature-image-driver__carousel-control--next ltt-slider-navigation ltt-slider-navigation--image ltt-slider-navigation--next" type="button" data-feature-image-driver-next aria-label="<?php esc_attr_e( 'Next feature', 'ltt-dive-in' ); ?>">
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-next.svg' ) ); ?>" alt="" aria-hidden="true" />
 			</button>
 			<div class="feature-image-driver__carousel-pagination ltt-carousel-indicators" data-feature-image-driver-pagination>

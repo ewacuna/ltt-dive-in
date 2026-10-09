@@ -63,8 +63,8 @@ if ( $has_carousel && ! $is_preview && function_exists( 'ltt_dive_in_enqueue_tes
 <section id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" aria-label="<?php esc_attr_e( 'Testimonials', 'ltt-dive-in' ); ?>"<?php echo $has_carousel ? ' data-testimonials-carousel' : ''; ?>>
 	<div class="testimonials__container">
 		<?php if ( $has_carousel ) : ?>
-			<button class="testimonials__control testimonials__control--previous ltt-slider-navigation ltt-slider-navigation--white" type="button" data-testimonials-previous aria-label="<?php esc_attr_e( 'Previous testimonial', 'ltt-dive-in' ); ?>" hidden>
-				<span class="testimonials__control-icon ltt-slider-navigation__icon" aria-hidden="true"></span>
+			<button class="testimonials__control testimonials__control--previous ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-testimonials-previous aria-label="<?php esc_attr_e( 'Previous testimonial', 'ltt-dive-in' ); ?>" hidden>
+				<span class="testimonials__control-icon ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span>
 			</button>
 		<?php endif; ?>
 
@@ -90,8 +90,8 @@ if ( $has_carousel && ! $is_preview && function_exists( 'ltt_dive_in_enqueue_tes
 		</div>
 
 		<?php if ( $has_carousel ) : ?>
-			<button class="testimonials__control testimonials__control--next ltt-slider-navigation ltt-slider-navigation--white" type="button" data-testimonials-next aria-label="<?php esc_attr_e( 'Next testimonial', 'ltt-dive-in' ); ?>" hidden>
-				<span class="testimonials__control-icon ltt-slider-navigation__icon" aria-hidden="true"></span>
+			<button class="testimonials__control testimonials__control--next ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--next" type="button" data-testimonials-next aria-label="<?php esc_attr_e( 'Next testimonial', 'ltt-dive-in' ); ?>" hidden>
+				<span class="testimonials__control-icon ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span>
 			</button>
 			<div class="testimonials__pagination ltt-carousel-indicators" data-testimonials-pagination hidden></div>
 		<?php endif; ?>

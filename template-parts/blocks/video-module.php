@@ -217,8 +217,8 @@ $render_copy = static function ( $item, $heading_id = '' ) use ( $render_cta ) {
 				<div class="video-module__carousel-footer">
 					<div class="video-module__carousel-pagination ltt-carousel-indicators" data-video-carousel-pagination></div>
 					<div class="video-module__carousel-controls">
-						<button class="ltt-slider-navigation ltt-slider-navigation--white" type="button" data-video-carousel-previous aria-label="<?php esc_attr_e( 'Previous video', 'ltt-dive-in' ); ?>" hidden><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
-						<button class="ltt-slider-navigation" type="button" data-video-carousel-next aria-label="<?php esc_attr_e( 'Next video', 'ltt-dive-in' ); ?>" hidden><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
+						<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-video-carousel-previous aria-label="<?php esc_attr_e( 'Previous video', 'ltt-dive-in' ); ?>" hidden><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
+						<button class="ltt-slider-navigation ltt-slider-navigation--next" type="button" data-video-carousel-next aria-label="<?php esc_attr_e( 'Next video', 'ltt-dive-in' ); ?>" hidden><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
 					</div>
 				</div>
 			<?php endif; ?>

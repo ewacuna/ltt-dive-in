@@ -113,20 +113,6 @@
     display: none;
 }
 
-.testimonials__control-icon {
-    background-color: currentColor;
-    -webkit-mask: var(--testimonials-control-icon) center / contain no-repeat;
-    mask: var(--testimonials-control-icon) center / contain no-repeat;
-}
-
-.testimonials__control--previous .testimonials__control-icon {
-    --testimonials-control-icon: url("../../images/icons/carousel-arrow-previous.svg");
-}
-
-.testimonials__control--next .testimonials__control-icon {
-    --testimonials-control-icon: url("../../images/icons/carousel-arrow-next.svg");
-}
-
 .testimonials[data-testimonials-carousel] .testimonials__pagination {
     grid-column: 2;
     justify-self: center;

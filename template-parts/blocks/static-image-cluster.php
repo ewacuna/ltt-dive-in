@@ -309,8 +309,8 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 			<div class="static-image-cluster__carousel-controls">
 				<div class="static-image-cluster__carousel-pagination ltt-carousel-indicators" data-static-image-cluster-carousel-pagination aria-label="<?php esc_attr_e( 'Choose an image', 'ltt-dive-in' ); ?>"></div>
 				<div class="static-image-cluster__carousel-navigation">
-					<button class="ltt-slider-navigation ltt-slider-navigation--white" type="button" data-static-image-cluster-carousel-previous aria-label="<?php esc_attr_e( 'Previous images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
-					<button class="ltt-slider-navigation ltt-slider-navigation--white" type="button" data-static-image-cluster-carousel-next aria-label="<?php esc_attr_e( 'Next images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
+					<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-static-image-cluster-carousel-previous aria-label="<?php esc_attr_e( 'Previous images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
+					<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--next" type="button" data-static-image-cluster-carousel-next aria-label="<?php esc_attr_e( 'Next images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
 				</div>
 			</div>
 		<?php endif; ?>

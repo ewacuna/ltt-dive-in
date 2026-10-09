@@ -165,8 +165,8 @@ $show_filters  = $show_category || $config['show_date'] || $config['show_search'
 			<div class="event-driver__carousel-footer" data-event-driver-controls hidden>
 				<div class="event-driver__pagination ltt-carousel-indicators" data-event-driver-pagination></div>
 				<div class="event-driver__carousel-controls">
-					<button class="ltt-slider-navigation ltt-slider-navigation--white" type="button" data-event-driver-previous aria-label="<?php esc_attr_e( 'Previous events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
-					<button class="ltt-slider-navigation" type="button" data-event-driver-next aria-label="<?php esc_attr_e( 'Next events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
+					<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-event-driver-previous aria-label="<?php esc_attr_e( 'Previous events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
+					<button class="ltt-slider-navigation ltt-slider-navigation--next" type="button" data-event-driver-next aria-label="<?php esc_attr_e( 'Next events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
 				</div>
 			</div>
 
