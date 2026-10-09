@@ -421,6 +421,10 @@
 .utility-navigation a:focus-visible,
 .utility-navigation .current-menu-item > a {
     color: var(--header-accent);
+}
+
+/* The current page keeps an underline so its state is not conveyed by color alone. */
+.utility-navigation .current-menu-item > a {
     text-decoration: underline;
     text-underline-offset: 0.2em;
 }

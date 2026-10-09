@@ -428,8 +428,6 @@
 .site-footer__menu a:hover,
 .site-footer__menu a:focus-visible {
     color: var(--footer-gold);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
 }
 
 .site-footer__credits {
