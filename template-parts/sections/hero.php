@@ -66,7 +66,7 @@ if ( ! $title ) {
 	</div>
 
 	<?php if ( $scroll_target ) : ?>
-		<a class="page-hero__scroll" href="#<?php echo esc_attr( $scroll_target ); ?>">
+		<a class="page-hero__scroll" href="#<?php echo esc_attr( $scroll_target ); ?>" x-data="lttScrollLink" x-on:click="scroll">
 			<span><?php esc_html_e( 'Scroll for more', 'ltt-dive-in' ); ?></span>
 			<img src="<?php echo esc_url( LTT_DIVE_IN_URI . '/assets/images/header/scroll-arrow.svg' ); ?>" alt="" width="14" height="12">
 		</a>

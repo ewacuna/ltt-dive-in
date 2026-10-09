@@ -27,6 +27,7 @@ function ltt_dive_in_enqueue_assets() {
 	$single_style_path      = LTT_DIVE_IN_DIR . '/assets/css/templates/single.css';
 	$stories_hero_path      = LTT_DIVE_IN_DIR . '/assets/css/components/stories-hero.css';
 	$select_script_path     = LTT_DIVE_IN_DIR . '/assets/js/components/select.js';
+	$scroll_link_path       = LTT_DIVE_IN_DIR . '/assets/js/components/scroll-link.js';
 	$script_path            = LTT_DIVE_IN_DIR . '/assets/js/main.js';
 
 	wp_enqueue_style(
@@ -171,10 +172,27 @@ function ltt_dive_in_enqueue_assets() {
 		)
 	);
 
+	$alpine_deps = array( 'ltt-dive-in-select' );
+
+	// Hero "Scroll for more" links; Alpine components must register before Alpine starts.
+	if ( is_front_page() || ltt_dive_in_has_page_hero() ) {
+		wp_register_script(
+			'ltt-dive-in-scroll-link',
+			LTT_DIVE_IN_URI . '/assets/js/components/scroll-link.js',
+			array(),
+			file_exists( $scroll_link_path ) ? (string) filemtime( $scroll_link_path ) : LTT_DIVE_IN_VERSION,
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => false,
+			)
+		);
+		$alpine_deps[] = 'ltt-dive-in-scroll-link';
+	}
+
 	wp_enqueue_script(
 		'ltt-dive-in-alpine',
 		LTT_DIVE_IN_URI . '/assets/js/vendor/alpine.min.js',
-		array( 'ltt-dive-in-select' ),
+		$alpine_deps,
 		'3.17.2',
 		array(
 			'strategy'  => 'defer',

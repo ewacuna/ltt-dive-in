@@ -88,7 +88,7 @@ $hero_links = array_filter(
 	</div>
 
 	<?php if ( $scroll_label ) : ?>
-		<a class="home-hero__scroll" href="#front-page-content">
+		<a class="home-hero__scroll" href="#front-page-content" x-data="lttScrollLink" x-on:click="scroll">
 			<span><?php echo esc_html( $scroll_label ); ?></span>
 			<img src="<?php echo esc_url( $hero_assets_uri . '/scroll-arrow.svg' ); ?>" alt="" width="14" height="12">
 		</a>
