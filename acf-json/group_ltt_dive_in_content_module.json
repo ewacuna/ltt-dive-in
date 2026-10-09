@@ -238,6 +238,18 @@
       "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}]]
     },
     {
+      "key": "field_ltt_dive_in_content_module_form_disclosure",
+      "label": "Form supporting text",
+      "name": "ltt_dive_in_content_module_form_disclosure",
+      "type": "text",
+      "required": 0,
+      "maxlength": 200,
+      "conditional_logic": [
+        [{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"newsletter_signup"}],
+        [{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"meetings_request"}]
+      ]
+    },
+    {
       "key": "field_ltt_dive_in_content_module_meetings_heading",
       "label": "Heading",
       "name": "ltt_dive_in_content_module_meetings_heading",

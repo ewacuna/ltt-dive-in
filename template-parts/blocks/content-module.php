@@ -129,6 +129,39 @@ $render_copy = static function ( $copy, $class = '' ) use ( $get_text ) {
 	}
 };
 
+$render_form_disclosure = static function ( $copy ) {
+	if ( ! is_string( $copy ) || '' === trim( $copy ) ) {
+		return;
+	}
+
+	$copy = trim( $copy );
+
+	if ( false !== strpos( $copy, '<' ) ) {
+		$disclosure = wp_kses_post( $copy );
+	} else {
+		$parts      = preg_split( '/(\[[^\]]+\]\([^)]+\))/', $copy, -1, PREG_SPLIT_DELIM_CAPTURE );
+		$disclosure = '';
+
+		foreach ( $parts as $part ) {
+			if ( preg_match( '/^\[([^\]]+)\]\(([^)]+)\)$/', $part, $matches ) ) {
+				$url = esc_url( trim( $matches[2] ) );
+
+				if ( $url ) {
+					$disclosure .= '<a href="' . $url . '">' . esc_html( $matches[1] ) . '</a>';
+				} else {
+					$disclosure .= esc_html( $part );
+				}
+			} else {
+				$disclosure .= esc_html( $part );
+			}
+		}
+
+		$disclosure = '<p>' . $disclosure . '</p>';
+	}
+
+	echo '<div class="content-module__form-disclosure">' . $disclosure . '</div>';
+};
+
 $form_id = 0;
 
 if ( in_array( $variant, array( 'newsletter_signup', 'meetings_request' ), true ) ) {
@@ -271,6 +304,7 @@ if ( $heading ) {
 				</div>
 				<div class="content-module__form content-module__form--newsletter" data-content-module-form>
 					<?php gravity_form( $form_id, false, false, false, null, true, 0, true ); ?>
+					<?php $render_form_disclosure( get_field( 'ltt_dive_in_content_module_form_disclosure', false, false ) ); ?>
 				</div>
 			</div>
 			<?php if ( $has_newsletter_aside ) : ?>
@@ -292,6 +326,7 @@ if ( $heading ) {
 			</div>
 			<div class="content-module__form content-module__form--meetings" data-content-module-form>
 				<?php gravity_form( $form_id, false, false, false, null, true, 0, true ); ?>
+				<?php $render_form_disclosure( get_field( 'ltt_dive_in_content_module_form_disclosure', false, false ) ); ?>
 			</div>
 		</div>
 

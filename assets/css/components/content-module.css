@@ -167,6 +167,11 @@
 	gap: 2rem;
 }
 
+.content-module--side_by_side.content-module--image-background .content-module__side-detail > .content-module__copy {
+	font-family: "Roboto", Arial, sans-serif;
+	font-weight: 400;
+}
+
 .content-module__side-detail .content-module__actions {
 	margin-top: 0.5rem;
 }
@@ -356,6 +361,28 @@
 	min-width: 0;
 }
 
+.content-module__form-disclosure {
+	margin-block-start: 0.75rem;
+	color: inherit;
+	font-family: "Gotham HTF", Arial, sans-serif;
+	font-size: 0.75rem;
+	line-height: 1.45;
+}
+
+.content-module__form-disclosure > :first-child {
+	margin-block-start: 0;
+}
+
+.content-module__form-disclosure > :last-child {
+	margin-block-end: 0;
+}
+
+.content-module__form-disclosure a {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
 .content-module__lead-capture--meetings .content-module__form {
 	justify-self: end;
 }
@@ -399,6 +426,11 @@
 	font-family: "Gotham HTF", Arial, sans-serif;
 	font-size: 0.75rem;
 	line-height: 1.45;
+}
+
+.content-module__form--newsletter .content-module__form-consent-group label {
+	font-family: "Roboto", Arial, sans-serif;
+	font-weight: 400;
 }
 
 .content-module--image-background .content-module__form .gform-theme--framework {
@@ -977,6 +1009,10 @@
 	.content-module__lead-capture--newsletter.content-module__lead-capture--no-aside,
 	.content-module__lead-capture--meetings {
 		gap: 1.5rem;
+	}
+
+	.content-module__lead-capture--newsletter.content-module__lead-capture--has-aside {
+		gap: 5rem;
 	}
 
 	.content-module__side-detail,
