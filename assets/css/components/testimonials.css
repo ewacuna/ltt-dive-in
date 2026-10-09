@@ -58,7 +58,7 @@
     padding: 0;
     border: 0;
     font-size: 2rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.1;
 }
 
@@ -92,13 +92,13 @@
 
 .testimonials__name {
     font-size: 1.125rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.45;
 }
 
 .testimonials__role {
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.45;
 }
 

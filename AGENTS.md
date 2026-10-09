@@ -369,7 +369,7 @@ Do not place homepage sections, post grids, archive layouts, template-specific h
 - The reusable Alpine state is `lttSelect`; it must not contain taxonomy, block, or filtering-specific data attributes. A consuming component listens for the native select's standard `change` event.
 - Use the `light` or `dark` surface argument. The component selects `select-toggle.svg` for light surfaces and `select-toggle-dark.svg` for dark surfaces; do not hard-code either icon in a consuming block.
 - Keep the native `<select>` in the markup as the no-JavaScript fallback. The reusable component owns its focus indicator, menu, icon state, and reduced-motion behavior; a consuming block owns only placement.
-- Figma calls for Gotham Medium in CTAs, but the theme currently has only Gotham Book `400` and Bold `700`. Do not synthesize or mislabel `500`; use the documented available face until the licensed Medium file is supplied.
+- Figma calls for Gotham HTF Medium in CTAs; use `font-weight: 500`, which loads `Gotham-Medium.woff2`.
 
 ##### Shared controls
 
@@ -417,8 +417,8 @@ If an editor-visible pattern or component needs additional parity, add its focus
 
 - Self-host fonts from `assets/fonts/`; do not use CSS `@import`, Google Fonts, or another third-party font request.
 - Prefer WOFF2 and declare faces once at the top of the global `assets/css/main.css` because typography is a site-wide foundation.
-- The available Gotham files are Book `400` and Bold `700`. Do not label Book as Medium `500`, synthesize a missing weight, or point `500` at the Bold file.
-- Preload only the regular Gotham Book face used for body content. Allow Bold to load on demand unless measurement proves it is consistently critical above the fold.
+- The available Gotham files are Book `400`, Medium `500`, and Bold `700`. Figma's Gotham text styles use Medium. Do not label one weight as another or synthesize a missing weight.
+- Preload only the regular Gotham Book face used for body content. Allow Medium and Bold to load on demand unless measurement proves either is consistently critical above the fold.
 - Keep `font-display: swap` so text remains visible while the font loads and always provide a system-font fallback stack.
 - Use the WordPress `wp_preload_resources` filter for preload markup. Do not hard-code preload tags in `header.php`.
 - Do not base64-embed fonts in CSS; it prevents independent caching and increases stylesheet transfer size.

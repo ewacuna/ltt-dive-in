@@ -127,7 +127,7 @@
 	color: inherit;
 	font-family: "Gotham HTF", Arial, sans-serif;
 	font-size: 1.125rem;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 1.45;
 }
 
@@ -269,7 +269,7 @@
 	color: inherit;
 	font-family: "Gotham HTF", Arial, sans-serif;
 	font-size: 2rem;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 1.2;
 	text-wrap: pretty;
 }
@@ -570,7 +570,7 @@
 	color: #073959;
 	font-family: "Gotham HTF", Arial, sans-serif;
 	font-size: 0.875rem;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 1.45;
 	cursor: pointer;
 }
@@ -792,7 +792,7 @@
 
 .content-module__table thead th {
 	padding-block: 1.5rem;
-	font-weight: 400;
+	font-weight: 500;
 }
 
 .content-module__table .content-module__feature-heading,
@@ -841,7 +841,7 @@
 .content-module__feature-label {
 	display: block;
 	font-size: 1.125rem;
-	font-weight: 400;
+	font-weight: 500;
 }
 
 .content-module__comparison-icon {
@@ -853,7 +853,7 @@
 
 .content-module__table .content-module__row-heading {
 	font-size: 1rem;
-	font-weight: 400;
+	font-weight: 500;
 }
 
 .content-module__cell {

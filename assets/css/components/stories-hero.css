@@ -3,7 +3,7 @@
  * Header": Stories Hero Desktop 95:86676 / Mobile 95:86677).
  *
  * A white block below the site header, not anchored to the navigation like
- * the Internal Page Hero. Gotham Medium is not available, so Book stands in.
+ * the Internal Page Hero.
  */
 .stories-hero {
     display: flex;
@@ -69,7 +69,7 @@
     width: min(100%, 56.5625rem);
     margin: 0.25rem 0 0;
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.45;
 }
 
@@ -77,8 +77,7 @@
  * "Show Summary" disclosure (Figma "EXPANDED" instance: Gotham 18px,
  * primary #073959, 10px gap, 40px row, closed/open expand icons).
  * Figma has no inspectable open state; the panel values are measured from
- * the 1440px review composition and use existing tokens. Gotham Medium is
- * not available, so Book stands in as elsewhere here.
+ * the 1440px review composition and use existing tokens.
  */
 .stories-hero__summary {
     --summary-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -149,7 +148,7 @@
 
 .stories-hero__summary-label {
     color: #eeb040;
-    font-weight: 700;
+    font-weight: 500;
     text-transform: uppercase;
 }
 
@@ -165,7 +164,7 @@
     cursor: pointer;
     font-family: inherit;
     font-size: 1.125rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.45;
 }
 

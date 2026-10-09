@@ -86,7 +86,7 @@
 	margin: 1.5rem auto 0;
 	color: #ffffff;
 	font-size: 0.875rem;
-	font-weight: 700;
+	font-weight: 500;
 	line-height: 1.45;
 }
 
@@ -115,7 +115,7 @@
 	border-radius: 2.5rem;
 	color: #ffffff;
 	font-size: 0.875rem;
-	font-weight: 700;
+	font-weight: 500;
 	line-height: 1.45;
 	text-decoration: none;
 }
@@ -208,7 +208,7 @@
 
 	.home-hero__description {
 		margin-top: 3rem;
-		font-weight: 700;
+		font-weight: 500;
 	}
 
 	.home-hero__actions {

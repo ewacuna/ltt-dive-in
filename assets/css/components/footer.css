@@ -45,7 +45,7 @@
     color: var(--footer-heading);
     font-family: var(--font-sans);
     font-size: 2rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1;
 }
 
@@ -173,7 +173,7 @@
     color: #f8dfb3;
     font-family: var(--font-sans);
     font-size: 0.75rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.45;
 }
 
@@ -258,7 +258,7 @@
     background: transparent !important;
     color: #ffffff !important;
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .site-footer__newsletter-form button:hover,

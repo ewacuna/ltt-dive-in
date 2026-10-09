@@ -64,7 +64,7 @@
 
 .global-accordion__description {
 	font-size: 1rem;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 1.45;
 }
 
@@ -76,7 +76,7 @@
 	background: rgba(4, 39, 66, 0.15);
 	color: #06304d;
 	font-size: 0.875rem;
-	font-weight: 700;
+	font-weight: 500;
 	letter-spacing: 0.02em;
 	line-height: 1.45;
 	text-transform: uppercase;
@@ -226,7 +226,7 @@
 	margin-top: 1rem;
 	color: var(--accordion-focus);
 	font-size: 0.875rem;
-	font-weight: 700;
+	font-weight: 500;
 	line-height: 1.45;
 	text-decoration: none;
 }
@@ -261,7 +261,7 @@
 	color: var(--accordion-text);
 	font-family: inherit;
 	font-size: 0.875rem;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 1.45;
 	text-align: center;
 }

@@ -35,7 +35,7 @@
     background: rgba(4, 39, 66, 0.15);
     color: #06304d;
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: 0.02em;
     line-height: 1.45;
     text-transform: uppercase;
@@ -73,7 +73,7 @@
 .meet-the-team__contact-title {
     margin: 0;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.1;
 }
 
@@ -128,7 +128,7 @@
 .meet-the-team__role {
     margin: 0;
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: -0.0025em;
     line-height: 1.2;
 }

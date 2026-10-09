@@ -203,7 +203,7 @@ add_action( 'wp_enqueue_scripts', 'ltt_dive_in_enqueue_assets' );
 /**
  * Preload fonts used above the fold.
  *
- * Bold is intentionally left on demand. Big Caslon is limited to templates
+ * Medium and Bold are intentionally left on demand. Big Caslon is limited to templates
  * whose hero uses it immediately, including the Stories Hero on posts.
  *
  * @param array[] $preload_resources Resources and attributes to preload.

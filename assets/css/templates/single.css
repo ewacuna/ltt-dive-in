@@ -64,24 +64,23 @@
     line-height: 1.1;
 }
 
-/* Gotham Medium is not available; Bold is the documented substitute. */
 .single-main .entry-content h3 {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: -0.005em;
     line-height: 1.2;
 }
 
 .single-main .entry-content h4 {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: -0.0025em;
     line-height: 1.25;
 }
 
 .single-main .entry-content :is(h5, h6) {
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.45;
 }
 
@@ -133,7 +132,7 @@
 .single-main__navigation .post-navigation__label {
     color: #525062;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: 0.05em;
     line-height: 1.45;
     text-transform: uppercase;
@@ -141,7 +140,7 @@
 
 .single-main__navigation .post-navigation__title {
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.45;
     text-decoration: underline;
 }
