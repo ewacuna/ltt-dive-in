@@ -68,6 +68,7 @@ body {
     /* Figma's Gotham text styles are Medium; Book and Bold are per-component exceptions. */
     font-weight: 500;
     line-height: 1.65;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
