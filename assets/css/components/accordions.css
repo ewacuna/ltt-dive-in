@@ -228,8 +228,7 @@
 	font-size: 0.875rem;
 	font-weight: 700;
 	line-height: 1.45;
-	text-decoration: underline;
-	text-underline-offset: 0.2em;
+	text-decoration: none;
 }
 
 .global-accordion__answer-link:hover,
