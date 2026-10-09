@@ -603,6 +603,14 @@
 	color: #ffffff !important;
 }
 
+.content-module .content-module__lead-capture .content-module__form--newsletter .gform_wrapper .gform_footer :is(input[type="submit"], button[type="submit"]).gform_button:disabled {
+	border-color: #073959 !important;
+	background: #ffffff !important;
+	color: #073959 !important;
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
 .content-module__form .gform_button:focus-visible {
 	outline: 3px solid #eeb040;
 	outline-offset: 3px;
@@ -625,6 +633,76 @@
 	background: #f3f3f4;
 	box-shadow: none;
 	color: #073959;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors {
+	--gf-form-validation-border-color-focus: #ffffff;
+	--gf-form-validation-heading-color: #ffffff;
+	--gf-form-validation-heading-icon-bg-color: transparent;
+	--gf-form-validation-heading-icon-border-color: #ffffff;
+	--gf-form-validation-heading-icon-color: #ffffff;
+	--gf-form-validation-summary-color: #ffffff;
+	border: 1px solid rgba(199, 209, 216, 0.5) !important;
+	border-radius: 0.3125rem !important;
+	background: rgba(2, 22, 43, 0.1) !important;
+	box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25) !important;
+	-webkit-backdrop-filter: blur(0.25rem) !important;
+	backdrop-filter: blur(0.25rem) !important;
+	color: #ffffff !important;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors:focus,
+.content-module--image-background .content-module__form .gform_validation_errors:focus-visible {
+	border-color: rgba(199, 209, 216, 0.5) !important;
+	outline: none !important;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors ol a:focus,
+.content-module--image-background .content-module__form .gform_validation_errors ol a:focus-visible {
+	border-color: transparent !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors ol a:focus-visible {
+	text-decoration-thickness: 0.14em;
+	text-underline-offset: 0.2em;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors * {
+	color: #ffffff !important;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors .gform-icon {
+	border-color: #ffffff !important;
+	background-color: transparent !important;
+	color: #ffffff !important;
+}
+
+.content-module--image-background .content-module__form .gform_validation_errors :is(svg, svg *) {
+	fill: #ffffff !important;
+	stroke: #ffffff !important;
+}
+
+.content-module--image-background .content-module__form :is(.gfield_validation_message, .validation_message) {
+	color: #ffffff !important;
+	padding: 0.5rem 0.75rem !important;
+	border: 1px solid #ffffff !important;
+	border-radius: 0.3125rem !important;
+	background: transparent !important;
+}
+
+.content-module__form--newsletter .gfield_error :is(.gfield_validation_message, .validation_message) {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	clip: rect(0, 0, 0, 0) !important;
+	clip-path: inset(50%) !important;
+	white-space: nowrap !important;
+	border: 0 !important;
 }
 
 .content-module__form .gform_confirmation_message {

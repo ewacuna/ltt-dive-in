@@ -29,6 +29,71 @@
 	}
 
 	/**
+	 * Disable a newsletter form's submit button until every consent checkbox is checked.
+	 *
+	 * @param {Element} root Content Module newsletter form wrapper.
+	 * @return {void}
+	 */
+	function updateNewsletterSubmitState( root ) {
+		Array.prototype.forEach.call( root.querySelectorAll( '.gform_wrapper' ), function ( wrapper ) {
+			var submitButton = wrapper.querySelector( '.gform_footer .gform_button' );
+			var consentFields = Array.prototype.filter.call( wrapper.querySelectorAll( consentFieldSelector ), isConsentField );
+			var consentInputs = [];
+
+			if ( ! submitButton ) {
+				return;
+			}
+
+			consentFields.forEach( function ( field ) {
+				consentInputs = consentInputs.concat( Array.prototype.slice.call( field.querySelectorAll( 'input[type="checkbox"]' ) ) );
+			} );
+
+			if ( ! consentInputs.length ) {
+				submitButton.disabled = false;
+				return;
+			}
+
+			submitButton.disabled = ! consentInputs.every( function ( input ) {
+				return input.checked;
+			} );
+		} );
+	}
+
+	/**
+	 * Set up the newsletter consent listener once, including after Gravity Forms re-renders.
+	 *
+	 * @param {Element} root Content Module newsletter form wrapper.
+	 * @return {void}
+	 */
+	function initializeNewsletterConsent( root ) {
+		if ( ! root.matches( '.content-module__form--newsletter' ) ) {
+			return;
+		}
+
+		if ( 'true' !== root.dataset.consentSubmitEnhancementInitialized ) {
+			root.dataset.consentSubmitEnhancementInitialized = 'true';
+			root.addEventListener( 'change', function ( event ) {
+				if ( event.target.matches && event.target.matches( 'input[type="checkbox"]' ) ) {
+					updateNewsletterSubmitState( root );
+				}
+			} );
+		}
+
+		updateNewsletterSubmitState( root );
+	}
+
+	/**
+	 * Initialize consent positioning and the newsletter submit state for a form root.
+	 *
+	 * @param {Element} root Content Module form wrapper.
+	 * @return {void}
+	 */
+	function initializeFormRoot( root ) {
+		placeConsentForViewport( root );
+		initializeNewsletterConsent( root );
+	}
+
+	/**
 	 * Place consent fields beside the submit control on desktop and above it on mobile.
 	 *
 	 * @param {Element} root Content Module form wrapper.
@@ -91,10 +156,10 @@
 		}
 
 		if ( node.matches( formRootSelector ) ) {
-			placeConsentForViewport( node );
+			initializeFormRoot( node );
 		}
 
-		Array.prototype.forEach.call( node.querySelectorAll( formRootSelector ), placeConsentForViewport );
+		Array.prototype.forEach.call( node.querySelectorAll( formRootSelector ), initializeFormRoot );
 	}
 
 	/**
@@ -104,7 +169,7 @@
 	 */
 	function initialize() {
 		function updateConsentPositions() {
-			Array.prototype.forEach.call( document.querySelectorAll( formRootSelector ), placeConsentForViewport );
+			Array.prototype.forEach.call( document.querySelectorAll( formRootSelector ), initializeFormRoot );
 		}
 
 		updateConsentPositions();
@@ -126,7 +191,7 @@
 				var root = target && target.closest ? target.closest( formRootSelector ) : null;
 
 				if ( root ) {
-					placeConsentForViewport( root );
+					initializeFormRoot( root );
 					return;
 				}
 
