@@ -170,6 +170,7 @@
 .content-module--side_by_side.content-module--image-background .content-module__side-detail > .content-module__copy {
 	font-family: "Roboto", Arial, sans-serif;
 	font-weight: 400;
+	line-height: 1.5;
 }
 
 .content-module__side-detail .content-module__actions {
@@ -428,9 +429,10 @@
 	line-height: 1.45;
 }
 
-.content-module__form--newsletter .content-module__form-consent-group label {
+.content-module__form .content-module__form-consent-group label {
 	font-family: "Roboto", Arial, sans-serif;
 	font-weight: 400;
+	line-height: 1.5;
 }
 
 .content-module--image-background .content-module__form .gform-theme--framework {
@@ -1066,11 +1068,22 @@
 
 	.content-module__icon-title {
 		font-size: 1.5rem;
+		font-family: "Roboto", Arial, sans-serif;
+		font-weight: 700;
+		line-height: 1.3;
 	}
 
 	.content-module__icon-copy {
 		font-size: 1rem;
+		font-family: "Roboto", Arial, sans-serif;
+		font-weight: 400;
 		line-height: 1.5;
+	}
+
+	.content-module--side_by_side.content-module--image-background .content-module__side-detail > .content-module__copy {
+		font-family: "Gotham HTF", Arial, sans-serif;
+		font-weight: 500;
+		line-height: 1.45;
 	}
 
 	.content-module__lead-capture {
@@ -1090,6 +1103,31 @@
 	.content-module__newsletter-aside-heading {
 		font-size: 2.25rem;
 		letter-spacing: 0.045rem;
+	}
+
+	.content-module__newsletter-aside-heading {
+		font-family: "Roboto", Arial, sans-serif;
+		font-weight: 700;
+		line-height: 1.2;
+		letter-spacing: 0;
+	}
+
+	.content-module__form--newsletter :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+		font-family: "Roboto", Arial, sans-serif;
+		font-weight: 400;
+		line-height: 1.5;
+	}
+
+	.content-module__form-disclosure {
+		font-family: "Roboto", Arial, sans-serif;
+		font-weight: 400;
+		line-height: 1.5;
+	}
+
+	.content-module--meetings_request .content-module__lead-copy .content-module__copy {
+		font-family: "Roboto", Arial, sans-serif;
+		font-weight: 400;
+		line-height: 1.5;
 	}
 
 	.content-module__newsletter-aside {
@@ -1114,6 +1152,10 @@
 		width: 100% !important;
 		inline-size: 100% !important;
 		flex: 0 0 100%;
+		font-family: "Roboto", Arial, sans-serif !important;
+		font-size: 1rem !important;
+		font-weight: 400 !important;
+		line-height: 1.5 !important;
 	}
 
 	.content-module__form .gform_fields > .gfield--width-half,
@@ -1226,6 +1268,13 @@
 		padding: 1rem 0.5rem;
 		font-size: 0.875rem;
 		overflow-wrap: anywhere;
+	}
+
+	.content-module__table td.content-module__cell {
+		font-family: "Roboto", Arial, sans-serif;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.5;
 	}
 
 	.content-module__table--columns-2 tbody td:nth-of-type(1),
