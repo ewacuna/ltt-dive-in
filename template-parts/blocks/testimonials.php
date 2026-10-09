@@ -90,7 +90,7 @@ if ( $has_carousel && ! $is_preview && function_exists( 'ltt_dive_in_enqueue_tes
 		</div>
 
 		<?php if ( $has_carousel ) : ?>
-			<button class="testimonials__control testimonials__control--next ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--next" type="button" data-testimonials-next aria-label="<?php esc_attr_e( 'Next testimonial', 'ltt-dive-in' ); ?>" hidden>
+			<button class="testimonials__control testimonials__control--next ltt-slider-navigation ltt-slider-navigation--next" type="button" data-testimonials-next aria-label="<?php esc_attr_e( 'Next testimonial', 'ltt-dive-in' ); ?>" hidden>
 				<span class="testimonials__control-icon ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span>
 			</button>
 			<div class="testimonials__pagination ltt-carousel-indicators" data-testimonials-pagination hidden></div>

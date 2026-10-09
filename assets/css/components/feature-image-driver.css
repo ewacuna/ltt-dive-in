@@ -206,11 +206,11 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
     position: absolute;
     z-index: 3;
     bottom: 2.125rem;
-    background: transparent;
 }
 
 .feature-image-driver__carousel-control--previous {
     left: 4rem;
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .feature-image-driver__carousel-control--next {

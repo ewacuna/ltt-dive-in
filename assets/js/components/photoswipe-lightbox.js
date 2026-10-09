@@ -10,6 +10,10 @@
 		return '<img class="' + className + '" src="' + url + '" alt="" aria-hidden="true">';
 	};
 
+	const getArrowMarkup = function () {
+		return '<span class="ltt-photoswipe__arrow-icon" aria-hidden="true"></span>';
+	};
+
 	const getSameOriginModuleUrl = function ( moduleUrl ) {
 		const url = new URL( moduleUrl, window.location.href );
 
@@ -235,8 +239,8 @@
 								dataSource: images,
 								pswpModule: function () { return import( coreModule ); },
 								mainClass: 'ltt-photoswipe' + ( inspired ? ' ltt-photoswipe--inspired' : '' ),
-								arrowPrevSVG: getIconMarkup( cluster.dataset.photoswipeArrowIcon || '', 'ltt-photoswipe__arrow-icon' ),
-								arrowNextSVG: getIconMarkup( cluster.dataset.photoswipeArrowIcon || '', 'ltt-photoswipe__arrow-icon' ),
+								arrowPrevSVG: getArrowMarkup(),
+								arrowNextSVG: getArrowMarkup(),
 								closeSVG: getIconMarkup( cluster.dataset.photoswipeCloseIcon || '', 'ltt-photoswipe__close-icon' ),
 								zoom: false,
 								paddingFn: inspired ? getInspiredPadding : undefined,

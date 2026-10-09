@@ -271,6 +271,8 @@ Typography verified against the Page Drivers board (`1:10721`) on 2026-10-09:
 
 The active filter uses weight `700` in the theme so its selected state is not conveyed by color alone; Figma uses Gotham Medium `500`.
 
+Page Driver carousel arrows use the shared glass control. On hover, the circular control uses a 50% Peak Gold (`#EEB040`) fill with a 4px backdrop blur; its gold border and white arrow remain visible. Keyboard focus uses the same glass fill and a white focus outline.
+
 ### Feature image drivers
 
 Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:
@@ -303,6 +305,10 @@ Figma defines these control families:
 - Form submission buttons and text “Read More” actions.
 
 Carousel arrow controls use a `24px × 24px` icon inside the shared circular button. The Figma back-arrow frame (`1:44661`) uses asymmetric horizontal padding, so the previous arrow is optically shifted `2px` left and the next arrow `2px` right. Apply the same icon size and directional correction to every slider, including mask-based and image-based arrows.
+
+The solid carousel pair is `45px × 46px` in Figma (`1:44639`, `1:44594`). It is shared by Testimonials, Video Carousel, Events Carousel and Listed Events, the 5+ Gallery, and Features List Grid. Previous: white fill, navy arrow, black border; hover/focus: Crystal Clear Cyan (`#61C2B7`) fill and tertiary shade 50 (`#C0E7E2`) border. Next: navy fill, white arrow, white border; hover/focus: navy fill, Peak Gold (`#EEB040`) arrow and primary shade 50 (`#C7D1D8`) border. Focus-visible adds a contrasting outline.
+
+Image-overlay arrows (`1:44632`, `1:44660`) are `45px × 46px`, with a 30% `#02162B` fill, 50% white border, white arrow, and 4px blur. Hover/focus uses 50% Peak Gold fill and a solid Peak Gold border, keeping the arrow white. Floating previous arrows in Page Drivers and Feature Image Carousel have the additional `0 4px 4px rgba(0,0,0,0.15)` shadow; the Event Hero uses that shadow on mobile. The gallery lightbox example uses a different previous glass state: 5% black fill and white border, changing to 80% white fill with a navy arrow and no border; its next arrow uses the gold image-overlay hover.
 
 #### Touch feedback
 

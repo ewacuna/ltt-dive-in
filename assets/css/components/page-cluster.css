@@ -25,8 +25,7 @@
 .page-cluster__pagination { gap: 0.5rem; }
 .page-cluster__pagination .ltt-carousel-indicator { width: 0.5rem; height: 0.5rem; min-height: auto; }
 .page-cluster__arrows button:disabled { opacity: 0.45; cursor: default; }
-.page-cluster--features .page-cluster__arrows .ltt-slider-navigation:is(:hover, :focus-visible):not(:disabled) { background: #073959; border-color: #073959; color: #fff; }
-.page-cluster__grid:focus-visible, .page-cluster__arrows button:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }
+.page-cluster__grid:focus-visible { outline: 3px solid #eeb040; outline-offset: 3px; }
 .page-cluster--hub { padding-top: 1.25rem; padding-bottom: 0; }
 .page-cluster--hub .page-cluster__header { margin-bottom: 2.5rem; }
 .page-cluster--hub .page-cluster__actions { margin-bottom: 2.5rem; }

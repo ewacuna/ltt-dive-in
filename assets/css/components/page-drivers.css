@@ -328,13 +328,13 @@
 .page-drivers__carousel-control {
     position: absolute;
     z-index: 2;
-    background: transparent;
     min-height: 0;
     bottom: 8rem;
 }
 
 .page-drivers__carousel-control--previous {
     left: 0.5rem;
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .page-drivers__carousel-control--next {

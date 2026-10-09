@@ -156,7 +156,6 @@ $button_classes = array( 'primary-outline', 'secondary-outline', 'primary-outlin
 $photoswipe_lightbox_url = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe-lightbox.esm.js' );
 $photoswipe_core_url     = get_theme_file_uri( 'assets/vendor/photoswipe/photoswipe.esm.js' );
 $close_icon_url          = get_theme_file_uri( 'assets/images/header/close-icon.svg' );
-$arrow_icon_url          = get_theme_file_uri( 'assets/images/icons/lightbox-arrow.svg' );
 $location_icon_url       = get_theme_file_uri( 'assets/images/icons/location.svg' );
 $get_image_sizes = static function ( $index ) use ( $variant ) {
 	if ( in_array( $variant, array( 'hero_caption', 'one_up' ), true ) ) {
@@ -247,7 +246,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 };
 ?>
 
-<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $shows_header && $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-arrow-icon="<?php echo esc_url( $arrow_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
+<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $shows_header && $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
 	<div class="static-image-cluster__container"<?php echo 'five_plus' === $variant ? ' data-static-image-cluster-carousel' : ''; ?>>
 		<?php if ( $shows_header && ( $heading || $intro || $ctas ) ) : ?>
 			<header class="static-image-cluster__header">
@@ -310,7 +309,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 				<div class="static-image-cluster__carousel-pagination ltt-carousel-indicators" data-static-image-cluster-carousel-pagination aria-label="<?php esc_attr_e( 'Choose an image', 'ltt-dive-in' ); ?>"></div>
 				<div class="static-image-cluster__carousel-navigation">
 					<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-static-image-cluster-carousel-previous aria-label="<?php esc_attr_e( 'Previous images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
-					<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--next" type="button" data-static-image-cluster-carousel-next aria-label="<?php esc_attr_e( 'Next images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
+					<button class="ltt-slider-navigation ltt-slider-navigation--next" type="button" data-static-image-cluster-carousel-next aria-label="<?php esc_attr_e( 'Next images', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
 				</div>
 			</div>
 		<?php endif; ?>

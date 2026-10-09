@@ -208,6 +208,20 @@
     width: 2.8125rem;
 }
 
+.video-module--carousel
+    .video-module__carousel-controls
+    .ltt-slider-navigation--white:focus-visible {
+    outline: 3px solid var(--video-module-navy);
+    outline-offset: 3px;
+}
+
+.video-module--carousel
+    .video-module__carousel-controls
+    .ltt-slider-navigation:not(.ltt-slider-navigation--white):focus-visible {
+    outline: 3px solid var(--video-module-cyan);
+    outline-offset: 3px;
+}
+
 .video-module__carousel-pagination.swiper-pagination-horizontal {
     width: auto;
 }

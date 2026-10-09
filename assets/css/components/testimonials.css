@@ -102,10 +102,20 @@
     line-height: 1.45;
 }
 
-/* Placement and the 44px target size; the shared component owns states. */
+/* Placement; the shared component owns colors and interaction states. */
 .testimonials .testimonials__control {
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.8125rem;
+    height: 2.875rem;
+}
+
+.testimonials .testimonials__control--previous:focus-visible {
+    outline: 3px solid #073959;
+    outline-offset: 3px;
+}
+
+.testimonials .testimonials__control--next:focus-visible {
+    outline: 3px solid #61c2b7;
+    outline-offset: 3px;
 }
 
 .testimonials__control[hidden],

@@ -213,13 +213,6 @@
     gap: 1rem;
 }
 
-.static-image-cluster__carousel-navigation
-    .ltt-slider-navigation:is(:hover, :focus-visible) {
-    border-color: #073959;
-    background: #073959;
-    color: #ffffff;
-}
-
 .static-image-cluster--staggered_four .static-image-cluster__gallery {
     width: 100vw;
     display: block;
