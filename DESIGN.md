@@ -126,7 +126,7 @@ Verified on 2026-10-09 against the dev-access style sheet (`1:3`) and nine deskt
 | Stat numbers | Gotham HTF Book `96px` | `.content-module__stat-number`, `400` |
 | Inline emphasis | Gotham HTF Bold | `strong`/`b` (`bolder` from Medium) |
 
-Deliberate deviations: the selected Page Driver filter and accordion topic use `700` in addition to their fill so selection is not communicated by color alone, although Figma keeps the selected label Medium. Gravity Forms error messages, the PhotoSwipe lightbox, and Relume placeholder text (such as the Short Feature Driver title, `1:11346`) have no Gotham specification in Figma and keep their existing weights.
+Deliberate deviations: the selected Page Driver filter and accordion topic use `700` in addition to their fill so selection is not communicated by color alone, although Figma keeps the selected label Medium. Short Feature Driver typography is a Roboto exception; see its component values below. Gravity Forms error messages and the PhotoSwipe lightbox have no Gotham specification in Figma and keep their existing weights.
 
 ### Annotated implementation scale
 
@@ -254,6 +254,42 @@ The component catalog includes:
 - End-page clusters, page clusters, footer, tags, read-time metadata, and date badges.
 
 The internal mobile hero in review node `95:24452` uses a `64px` Big Caslon Medium H1 on a `375px` canvas. On 2026-09-29 the client approved reducing mobile font sizes slightly at the theme's discretion, so at `767.98px` and narrower the theme uses `56px` as the mobile target and reduces it further only when the widest word would exceed the available width (for example, “Meetings”); the non-JavaScript fallback favors complete words and prevents clipping at narrow widths. Editorial line separators in page titles are rendered as normal spaces so wrapping can adapt to the viewport.
+
+### Page drivers
+
+Typography verified against the Page Drivers board (`1:10721`) on 2026-10-09:
+
+| Variant and element | Desktop (`≥768px`) | Mobile (`≤767.98px`) |
+| --- | --- | --- |
+| Section heading and intro | Big Caslon Medium `48px`, `2%` tracking; Gotham HTF Medium `18px` / `145%` | Big Caslon Medium `48px`, `2%` tracking; Gotham HTF Medium `18px` / `145%` |
+| Tag / filter | Gotham HTF Medium `18px` tag; `14px` filters | Gotham HTF Medium `14px` tag and filters |
+| One-up and two-up card | Gotham HTF Medium `32px` title; `14px` excerpt | Gotham HTF Medium `20px` title; `12px` excerpt |
+| Four-up card | Gotham HTF Medium `32px` title; `14px` excerpt | Gotham HTF Medium `32px` title; `14px` excerpt |
+| Five-up card | Gotham HTF Medium `24px` title; `14px` excerpt | Roboto Bold `24px` title; Roboto Regular `16px` excerpt and CTA, `130%` / `150%` line heights |
+| Six-plus carousel card | Gotham HTF Medium `24px` title; `14px` excerpt | Gotham HTF Medium `20px` title; `12px` excerpt |
+| Monthly carousel card | Gotham HTF Medium `32px` title; `18px` excerpt | Gotham HTF Medium `20px` title; `12px` excerpt |
+
+The active filter uses weight `700` in the theme so its selected state is not conveyed by color alone; Figma uses Gotham Medium `500`.
+
+### Feature image drivers
+
+Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:
+
+| Variant and element | Desktop (`≥768px`) | Mobile (`≤767.98px`) |
+| --- | --- | --- |
+| Feature Driver Single and Carousel title | Big Caslon Medium `48px`, `1` line height, `2%` tracking | Big Caslon Medium `36px`, `1` line height, `2%` tracking |
+| Feature Driver Single and Carousel body | Gotham HTF Medium `18px`, `145%` | Gotham HTF Medium `14px`, `145%` |
+| Feature Driver Single and Carousel CTA | Gotham HTF Medium `14px`, `145%` | Gotham HTF Medium `14px`, `145%` |
+| Short Feature Driver title | Roboto Bold `48px`, `120%` | Roboto Bold `36px`, `120%` |
+| Short Feature Driver body | Roboto Regular `18px`, `150%` | Roboto Regular `16px`, `150%` |
+| Short Feature Driver CTA | Roboto Regular `16px`, `150%` | Roboto Regular `16px`, `150%` |
+| Stacked section title | Big Caslon Medium `48px`, `1` line height, `2%` tracking | Big Caslon Medium `36px`, `1` line height, `2%` tracking |
+| Stacked intro | Gotham HTF Medium `18px`, `145%` | Gotham HTF Medium `16px`, `145%` |
+| Stacked card title | Gotham HTF Medium `32px` | Gotham HTF Medium `24px`, `-0.25%` tracking |
+| Stacked card body | Roboto Regular `18px`, `150%` | Gotham HTF Medium `14px`, `145%` in the default card; Roboto Regular `16px`, `150%` in the expanded mobile-background-light state |
+| Stacked card CTA | Gotham HTF Medium `14px`, `145%` | Gotham HTF Medium `14px`, `145%` |
+
+Use the shared CTA component for button geometry and states; only the Short Feature Driver CTA overrides its typography to the documented Roboto style.
 
 ### Buttons and controls
 
