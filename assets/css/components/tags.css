@@ -1,0 +1,45 @@
+/*
+ * Category tag (Figma typography board, CATEGORY TAG - WHITE BG / DARK BG).
+ * Components own only placement and the approved desktop size override.
+ *
+ * `line-height: normal` reproduces Figma's auto line height from Gotham
+ * Medium's own metrics, so the 14px tag is 23px tall with the caps optically
+ * centered. A fixed line height or another Gotham weight shifts the caps.
+ */
+/*
+ * Block styles can print before this file, so the properties a component may
+ * override for placement or size carry zero specificity.
+ */
+:where(.ltt-tag) {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ltt-tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0 0.8125rem 0 0;
+    background: rgba(4, 39, 66, 0.15);
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* Photo and dark navy surfaces. */
+.ltt-tag--dark {
+    background: rgba(4, 39, 66, 0.5);
+    color: #f8dfb3;
+}
+
+@media (forced-colors: active) {
+    .ltt-tag {
+        border: 1px solid CanvasText;
+    }
+}

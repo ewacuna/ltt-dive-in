@@ -21,7 +21,7 @@ if ( empty( $config['heading'] ) ) {
 <header class="event-driver__header">
 	<div class="event-driver__intro">
 		<?php if ( $config['tag'] ) : ?>
-			<p class="event-driver__tag event-driver__tag--light"><?php echo esc_html( $config['tag'] ); ?></p>
+			<p class="event-driver__tag event-driver__tag--light ltt-tag"><?php echo esc_html( $config['tag'] ); ?></p>
 		<?php endif; ?>
 		<h2 id="<?php echo esc_attr( $heading_id ); ?>" class="event-driver__heading"><?php echo esc_html( $config['heading'] ); ?></h2>
 		<?php if ( $config['intro'] ) : ?>

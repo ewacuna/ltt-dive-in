@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function ltt_dive_in_register_block_assets() {
 	$style_path            = LTT_DIVE_IN_DIR . '/assets/css/main.css';
 	$buttons_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/buttons.css';
+	$tags_style_path       = LTT_DIVE_IN_DIR . '/assets/css/components/tags.css';
 	$select_style_path     = LTT_DIVE_IN_DIR . '/assets/css/components/select.css';
 	$category_selection_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/category-selection.css';
 	$activities_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/home-activities.css';
@@ -43,6 +44,15 @@ function ltt_dive_in_register_block_assets() {
 			LTT_DIVE_IN_URI . '/assets/css/components/buttons.css',
 			$foundation_dependencies,
 			file_exists( $buttons_style_path ) ? (string) filemtime( $buttons_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	if ( ! wp_style_is( 'ltt-dive-in-tags', 'registered' ) ) {
+		wp_register_style(
+			'ltt-dive-in-tags',
+			LTT_DIVE_IN_URI . '/assets/css/components/tags.css',
+			$foundation_dependencies,
+			file_exists( $tags_style_path ) ? (string) filemtime( $tags_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
 
@@ -157,7 +167,7 @@ function ltt_dive_in_register_blocks() {
 	);
 	register_block_type( LTT_DIVE_IN_DIR . '/blocks/page-cluster' );
 
-	wp_register_style( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/css/components/page-drivers.css', array( 'ltt-dive-in-buttons', 'ltt-dive-in-select' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_style( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/css/components/page-drivers.css', array( 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-tags' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_script( 'ltt-dive-in-page-drivers', LTT_DIVE_IN_URI . '/assets/js/components/page-drivers.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_register_style( 'ltt-dive-in-swiper', LTT_DIVE_IN_URI . '/assets/css/vendor/swiper-bundle.min.css', array(), file_exists( $carousel_style_path ) ? (string) filemtime( $carousel_style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_style( 'ltt-dive-in-slider-navigation', LTT_DIVE_IN_URI . '/assets/css/components/slider-navigation.css', array(), file_exists( $slider_navigation_style_path ) ? (string) filemtime( $slider_navigation_style_path ) : LTT_DIVE_IN_VERSION );
@@ -170,7 +180,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style(
 		'ltt-dive-in-feature-image-driver',
 		LTT_DIVE_IN_URI . '/assets/css/components/feature-image-driver.css',
-		array( 'ltt-dive-in-buttons' ),
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags' ),
 		file_exists( $feature_image_style_path ) ? (string) filemtime( $feature_image_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script( 'ltt-dive-in-feature-image-driver-carousel', LTT_DIVE_IN_URI . '/assets/js/components/feature-image-driver-carousel.js', array( 'ltt-dive-in-swiper' ), file_exists( $feature_image_carousel_init_path ) ? (string) filemtime( $feature_image_carousel_init_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
@@ -226,7 +236,7 @@ function ltt_dive_in_register_blocks() {
 		wp_register_style(
 			'ltt-dive-in-home-activities',
 			LTT_DIVE_IN_URI . '/assets/css/components/home-activities.css',
-			array( 'ltt-dive-in-buttons' ),
+			array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags' ),
 			file_exists( $activities_style_path ) ? (string) filemtime( $activities_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
@@ -243,7 +253,7 @@ function ltt_dive_in_register_blocks() {
 		wp_register_style(
 			'ltt-dive-in-team',
 			LTT_DIVE_IN_URI . '/assets/css/components/meet-the-team.css',
-			array( 'ltt-dive-in-buttons' ),
+			array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags' ),
 			file_exists( $team_style_path ) ? (string) filemtime( $team_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}
@@ -300,7 +310,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style(
 		'ltt-dive-in-video-module',
 		LTT_DIVE_IN_URI . '/assets/css/components/video-module.css',
-		array( 'ltt-dive-in-buttons', 'ltt-dive-in-category-selection', 'ltt-dive-in-slider-navigation' ),
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-category-selection', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-tags' ),
 		file_exists( $video_module_style_path ) ? (string) filemtime( $video_module_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script(
@@ -340,7 +350,7 @@ function ltt_dive_in_register_blocks() {
 		wp_register_style( 'ltt-dive-in-search-bar', LTT_DIVE_IN_URI . '/assets/css/components/search-bar.css', is_admin() ? array() : array( 'ltt-dive-in-style' ), file_exists( $search_bar_style_path ) ? (string) filemtime( $search_bar_style_path ) : LTT_DIVE_IN_VERSION );
 	}
 
-	wp_register_style( 'ltt-dive-in-event-card', LTT_DIVE_IN_URI . '/assets/css/components/event-card.css', array(), file_exists( $event_card_style_path ) ? (string) filemtime( $event_card_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_style( 'ltt-dive-in-event-card', LTT_DIVE_IN_URI . '/assets/css/components/event-card.css', array( 'ltt-dive-in-tags' ), file_exists( $event_card_style_path ) ? (string) filemtime( $event_card_style_path ) : LTT_DIVE_IN_VERSION );
 	// Every variant is a Swiper carousel at some breakpoint, so Swiper is a direct dependency.
 	wp_register_style(
 		'ltt-dive-in-event-driver',

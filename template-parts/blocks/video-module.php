@@ -173,7 +173,7 @@ $render_player = static function ( $item, $label, $preview = false, $modal = fal
 
 $render_copy = static function ( $item, $heading_id = '' ) use ( $render_cta ) {
 	if ( $item['tag'] ) {
-		echo '<p class="video-module__tag">' . esc_html( $item['tag'] ) . '</p>';
+		echo '<p class="video-module__tag ltt-tag">' . esc_html( $item['tag'] ) . '</p>';
 	}
 
 	$id = $heading_id ? ' id="' . esc_attr( $heading_id ) . '"' : '';
@@ -233,7 +233,7 @@ $render_copy = static function ( $item, $heading_id = '' ) use ( $render_cta ) {
 		?>
 		<div class="video-module__container video-module__episodes">
 			<header class="video-module__episodes-header">
-				<?php if ( $eyebrow ) : ?><p class="video-module__tag"><?php echo esc_html( $eyebrow ); ?></p><?php endif; ?>
+				<?php if ( $eyebrow ) : ?><p class="video-module__tag ltt-tag"><?php echo esc_html( $eyebrow ); ?></p><?php endif; ?>
 				<h2 id="<?php echo esc_attr( $section_id . '-title' ); ?>" class="video-module__title"><?php echo esc_html( $heading ? $heading : $items[0]['title'] ); ?></h2>
 				<?php if ( $intro ) : ?><p class="video-module__intro"><?php echo esc_html( $intro ); ?></p><?php endif; ?>
 			</header>
@@ -256,7 +256,7 @@ $render_copy = static function ( $item, $heading_id = '' ) use ( $render_cta ) {
 				<?php foreach ( array_slice( $items, 1 ) as $item ) : ?>
 					<article class="video-module__episode" data-video-episode="<?php echo esc_attr( sanitize_title( $item['tag'] ) ); ?>">
 						<div class="video-module__episode-copy">
-							<div class="video-module__meta"><?php if ( $item['tag'] ) : ?><span class="video-module__tag"><?php echo esc_html( $item['tag'] ); ?></span><?php endif; ?><?php if ( $item['duration'] ) : ?><span class="video-module__duration"><?php echo esc_html( $item['duration'] ); ?></span><?php endif; ?></div>
+							<div class="video-module__meta"><?php if ( $item['tag'] ) : ?><span class="video-module__tag ltt-tag"><?php echo esc_html( $item['tag'] ); ?></span><?php endif; ?><?php if ( $item['duration'] ) : ?><span class="video-module__duration"><?php echo esc_html( $item['duration'] ); ?></span><?php endif; ?></div>
 							<h3 class="video-module__episode-title"><?php echo esc_html( $item['title'] ); ?></h3>
 							<?php if ( $item['body'] ) : ?><div class="video-module__episode-body"><?php echo wp_kses_post( wpautop( $item['body'] ) ); ?></div><?php endif; ?>
 						</div>

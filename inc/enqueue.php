@@ -105,7 +105,7 @@ function ltt_dive_in_enqueue_assets() {
 		wp_enqueue_style(
 			'ltt-dive-in-home-activities',
 			LTT_DIVE_IN_URI . '/assets/css/components/home-activities.css',
-			array( 'ltt-dive-in-buttons' ),
+			array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags' ),
 			file_exists( $activities_style_path ) ? (string) filemtime( $activities_style_path ) : LTT_DIVE_IN_VERSION
 		);
 	}

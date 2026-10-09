@@ -44,7 +44,7 @@ if ( $wrapper ) {
 
 	<?php if ( 'tile' === $style ) : ?>
 		<div class="ltt-event-card__summary" aria-hidden="true">
-			<span class="ltt-event-card__summary-tag"><?php esc_html_e( 'Event', 'ltt-dive-in' ); ?></span>
+			<span class="ltt-event-card__summary-tag ltt-tag ltt-tag--dark"><?php esc_html_e( 'Event', 'ltt-dive-in' ); ?></span>
 			<span class="ltt-event-card__summary-title"><?php echo esc_html( $event['title'] ); ?></span>
 		</div>
 	<?php endif; ?>
@@ -59,7 +59,7 @@ if ( $wrapper ) {
 
 	<div class="ltt-event-card__content">
 		<?php if ( $tag ) : ?>
-			<p class="ltt-event-card__tag"><?php echo esc_html( $tag ); ?></p>
+			<p class="ltt-event-card__tag ltt-tag ltt-tag--dark"><?php echo esc_html( $tag ); ?></p>
 		<?php endif; ?>
 
 		<h3 class="ltt-event-card__title">

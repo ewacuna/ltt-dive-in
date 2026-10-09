@@ -36,7 +36,7 @@ foreach ( $activities as $activity ) {
 		<header class="home-activities__header">
 			<div class="home-activities__intro">
 				<?php if ( $section_tag ) : ?>
-					<p class="home-activities__tag"><?php echo esc_html( $section_tag ); ?></p>
+					<p class="home-activities__tag ltt-tag"><?php echo esc_html( $section_tag ); ?></p>
 				<?php endif; ?>
 				<h2 id="home-activities-title" class="home-activities__title"><?php echo esc_html( $section_title ); ?></h2>
 				<p class="home-activities__copy"><?php echo esc_html( $section_copy ); ?></p>

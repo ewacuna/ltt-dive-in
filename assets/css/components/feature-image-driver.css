@@ -87,20 +87,6 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
     pointer-events: auto;
 }
 
-.feature-image-driver__tag {
-    display: inline-flex;
-    align-items: center;
-    min-height: 1.625rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0 0.8125rem 0 0;
-    background: rgba(4, 39, 66, 0.5);
-    color: #f8dfb3;
-    font-size: 0.875rem;
-    line-height: 1;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-}
-
 .feature-image-driver__title,
 .feature-image-driver__stacked-title {
     margin: 0;
@@ -291,8 +277,6 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
 
 .feature-image-driver__tag--light {
     margin: 0 0 1rem;
-    background: rgba(4, 39, 66, 0.15);
-    color: #06304d;
 }
 
 .feature-image-driver__stacked-copy {

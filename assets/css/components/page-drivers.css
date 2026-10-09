@@ -15,11 +15,6 @@
     color: #ffffff;
 }
 
-.page-drivers--dark .page-drivers__tag {
-    background: rgba(4, 39, 66, 0.5);
-    color: #f8dfb3;
-}
-
 .page-drivers--dark .page-drivers__filter {
     color: #ffffff;
 }
@@ -38,17 +33,9 @@
     text-align: center;
 }
 
+/* DESIGN.md: the Page Drivers tag is 18px at desktop and 14px on mobile. */
 .page-drivers__tag {
-    margin: 0;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0 0.8125rem 0 0;
-    background: rgba(4, 39, 66, 0.15);
-    color: #06304d;
     font-size: 1.125rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    line-height: 1.45;
-    text-transform: uppercase;
 }
 
 .page-drivers__heading {

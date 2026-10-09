@@ -31,7 +31,7 @@ $status_id  = $section_id . '-filter-status';
 	<div class="page-drivers__container">
 		<header class="page-drivers__header">
 			<?php if ( $tag ) : ?>
-				<p class="page-drivers__tag"><?php echo esc_html( $tag ); ?></p>
+				<p class="page-drivers__tag ltt-tag<?php echo 'dark' === $surface ? ' ltt-tag--dark' : ''; ?>"><?php echo esc_html( $tag ); ?></p>
 			<?php endif; ?>
 			<h2 id="<?php echo esc_attr( $heading_id ); ?>" class="page-drivers__heading"><?php echo esc_html( $heading ); ?></h2>
 			<?php if ( $intro ) : ?>

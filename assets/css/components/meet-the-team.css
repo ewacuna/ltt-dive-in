@@ -28,19 +28,6 @@
     gap: 1rem;
 }
 
-.meet-the-team__tag {
-    margin: 0;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0 0.8125rem 0 0;
-    background: rgba(4, 39, 66, 0.15);
-    color: #06304d;
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    line-height: 1.45;
-    text-transform: uppercase;
-}
-
 .meet-the-team__title,
 .meet-the-team__name {
     margin: 0;
@@ -287,10 +274,6 @@
 }
 
 @media (forced-colors: active) {
-    .meet-the-team__tag {
-        border: 1px solid CanvasText;
-    }
-
     .meet-the-team__social-icon {
         background-color: LinkText;
         forced-color-adjust: none;

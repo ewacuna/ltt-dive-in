@@ -365,6 +365,7 @@ Implementation rules:
 - Story cards may be image-only with overlay text, expanded with a translucent information panel, or event-specific with a date badge and reminder action.
 - The adaptive story-card example preserves the essential image, tag, heading, summary, and action at smaller widths.
 - Tags and read-time metadata appear on both light and image backgrounds; use the matching contrast-safe variant.
+- Category tags were verified on 2026-10-09 against the typography board (`95:96786` white background, `95:96909` dark background, `95:96779` tag + read time): Gotham HTF Medium `500`, `14px`, Figma auto (`normal`) line height, `0.28px` tracking, uppercase, `4px 12px` padding, `13px` top-right radius, `23px` total height. Light surfaces use `rgba(4, 39, 66, 0.15)` with primary `#073959` text; photo and dark navy surfaces use `rgba(4, 39, 66, 0.5)` with secondary 25 `#F8DFB3` text. Every theme tag uses the shared `ltt-tag` / `ltt-tag--dark` classes in `assets/css/components/tags.css`; components set only placement and the approved Page Drivers desktop `18px` size. Keep the `normal` line height: Gotham Medium's metrics center the caps, while a fixed line height or a Book/Bold face shifts them vertically.
 - Inspiration panels use destination imagery and can reveal descriptive copy and location. Mobile examples include explicit close controls.
 - The middle inspiration panel example represents a hover/revealed state with a top CTA.
 - Revealed panel copy must work on click/tap and keyboard activation, not hover alone.

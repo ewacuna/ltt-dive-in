@@ -49,7 +49,7 @@ if ( ! empty( $block['align'] ) && 'full' === $block['align'] ) {
 		<header class="meet-the-team__header">
 			<div class="meet-the-team__intro">
 				<?php if ( $tag ) : ?>
-					<p class="meet-the-team__tag"><?php echo esc_html( $tag ); ?></p>
+					<p class="meet-the-team__tag ltt-tag"><?php echo esc_html( $tag ); ?></p>
 				<?php endif; ?>
 				<h2 id="<?php echo esc_attr( $id . '-title' ); ?>" class="meet-the-team__title"><?php echo esc_html( $heading ); ?></h2>
 				<?php if ( $intro ) : ?>

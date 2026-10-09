@@ -137,7 +137,7 @@ $link_tag   = $is_preview ? 'div' : 'a';
 			<span class="feature-image-driver__overlay" aria-hidden="true"></span>
 			<span class="feature-image-driver__content">
 				<?php if ( $item['tag'] && 'short' !== $variant ) : ?>
-					<span class="feature-image-driver__tag"><?php echo esc_html( $item['tag'] ); ?></span>
+					<span class="feature-image-driver__tag ltt-tag ltt-tag--dark"><?php echo esc_html( $item['tag'] ); ?></span>
 				<?php endif; ?>
 				<h2 id="<?php echo esc_attr( $section_id . '-title' ); ?>" class="feature-image-driver__title"><?php echo esc_html( $item['title'] ); ?></h2>
 				<?php if ( $item['body'] ) : ?>
@@ -162,7 +162,7 @@ $link_tag   = $is_preview ? 'div' : 'a';
 						<span class="feature-image-driver__overlay" aria-hidden="true"></span>
 						<span class="feature-image-driver__content">
 							<?php if ( $item['tag'] ) : ?>
-								<span class="feature-image-driver__tag"><?php echo esc_html( $item['tag'] ); ?></span>
+								<span class="feature-image-driver__tag ltt-tag ltt-tag--dark"><?php echo esc_html( $item['tag'] ); ?></span>
 							<?php endif; ?>
 							<h2 class="feature-image-driver__title"><?php echo esc_html( $item['title'] ); ?></h2>
 							<?php if ( $item['body'] ) : ?>
@@ -208,7 +208,7 @@ $link_tag   = $is_preview ? 'div' : 'a';
 				<header class="feature-image-driver__stacked-header">
 					<div class="feature-image-driver__stacked-intro">
 						<?php if ( $stacked_tag ) : ?>
-							<p class="feature-image-driver__tag feature-image-driver__tag--light"><?php echo esc_html( $stacked_tag ); ?></p>
+							<p class="feature-image-driver__tag feature-image-driver__tag--light ltt-tag"><?php echo esc_html( $stacked_tag ); ?></p>
 						<?php endif; ?>
 						<?php if ( $stacked_heading ) : ?>
 							<h2 id="<?php echo esc_attr( $section_id . '-title' ); ?>" class="feature-image-driver__stacked-title"><?php echo esc_html( $stacked_heading ); ?></h2>

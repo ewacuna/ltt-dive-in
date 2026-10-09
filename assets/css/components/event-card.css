@@ -31,19 +31,8 @@
     padding: 1.5rem;
 }
 
-.ltt-event-card__tag,
-.ltt-event-card__summary-tag {
-    display: inline-flex;
-    align-items: center;
+.ltt-event-card__tag {
     margin: 0 0 1rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0 0.8125rem 0 0;
-    background: rgba(4, 39, 66, 0.5);
-    color: #f8dfb3;
-    font-size: 0.875rem;
-    line-height: 1.2;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
 }
 
 .ltt-event-card__title {
@@ -222,10 +211,6 @@
     padding: 1.5rem;
     text-align: center;
     transition: opacity 300ms ease-out;
-}
-
-.ltt-event-card__summary-tag {
-    margin: 0;
 }
 
 .ltt-event-card__summary-title {

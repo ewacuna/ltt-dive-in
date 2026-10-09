@@ -10,27 +10,11 @@
 }
 
 .event-driver__tag {
-    display: inline-flex;
-    align-items: center;
     align-self: center;
-    min-height: 1.625rem;
-    margin: 0;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0;
-    border-top-right-radius: 0.8125rem;
-    background: rgba(4, 39, 66, 0.5);
-    color: #f8dfb3;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
 }
 
 .event-driver__tag--light {
     margin-bottom: 1rem;
-    background: rgba(4, 39, 66, 0.15);
-    color: #06304d;
 }
 
 .event-driver__preview-message {

@@ -38,20 +38,6 @@
     margin-bottom: 0;
 }
 
-.video-module__tag {
-    display: inline-flex;
-    width: fit-content;
-    margin: 0;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0 0.8125rem 0 0;
-    background: rgba(4, 39, 66, 0.15);
-    color: #06304d;
-    font-size: 0.875rem;
-    line-height: 1;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-}
-
 .video-module__copy {
     display: flex;
     flex-direction: column;
