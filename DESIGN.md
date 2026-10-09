@@ -408,6 +408,7 @@ Implementation rules:
 - The four-up feature pattern expands the selected or hovered card.
 - Inspired-gallery copy appears after activation on both desktop and mobile.
 - Figma presents two gallery-expansion ideas; the final expansion pattern remains open.
+- The PhotoSwipe counter uses Roboto SemiBold at `0.875rem` (14px) with `0.125rem` (2px) tracking. Inspired Gallery captions use Gotham HTF Medium: title `1.125rem` (18px) and description `0.75rem` (12px) on mobile.
 - On mobile, the PhotoSwipe counter and close control sit 24px above the active image frame, inside the image's horizontal gutters; their vertical position follows the displayed image rather than the viewport edge.
 - Non-clickable clusters must not expose misleading link or button semantics.
 

@@ -33,9 +33,10 @@
 .ltt-photoswipe .pswp__counter {
     height: auto;
     margin: 0;
-    font-family: "Gotham HTF", Arial, sans-serif;
+    font-family: "Roboto", Arial, sans-serif;
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 600;
+    line-height: normal;
     letter-spacing: 0.125rem;
     opacity: 1;
 }
@@ -168,7 +169,7 @@
 .ltt-photoswipe__title {
     margin: 0;
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.45;
 }
 .ltt-photoswipe__description {
@@ -203,10 +204,10 @@
         height: 1.5rem;
     }
     .ltt-photoswipe__title {
-        font-size: 1rem;
+        font-size: 1.125rem;
     }
     .ltt-photoswipe__description {
-        font-size: 0.875rem;
+        font-size: 0.75rem;
     }
 
     .pswp__button--arrow--next {
