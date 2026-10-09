@@ -7,7 +7,7 @@
 .page-cluster__container { display: grid; grid-template-columns: minmax(0, 1fr) auto; max-width: 80rem; margin-inline: auto; }
 .page-cluster__header { grid-column: 1; grid-row: 1; margin-bottom: 3.125rem; }
 .page-cluster__intro { max-width: 48rem; min-width: 0; }
-.page-cluster__title { margin: 1rem 0 0; font-family: "Big Caslon", Georgia, serif; font-size: 2.5rem; font-weight: 500; line-height: 1.15; letter-spacing: 0.02em; color: inherit; }
+.page-cluster__title { margin: 1rem 0 0; font-family: "Big Caslon", Georgia, serif; font-size: 3rem; font-weight: 500; line-height: 1.15; letter-spacing: 0.02em; color: inherit; }
 .page-cluster__label { display: table; margin: 0; padding: 0.25rem 0.75rem; border-top-right-radius: 0.8125rem; background: rgba(4,39,66,0.15); color: #06304d; font-size: 0.875rem; letter-spacing: 0.02em; text-transform: uppercase; }
 .page-cluster__body { margin: 1.5rem 0 0; font-size: 1.125rem; line-height: 1.45; white-space: pre-line; }
 .page-cluster__actions { display: flex; grid-column: 2; grid-row: 1; align-self: end; flex-wrap: wrap; justify-content: flex-end; gap: 1rem; margin: 0 0 3.125rem 2rem; }
@@ -52,6 +52,7 @@
     .page-cluster--hub { padding-top: 4rem; }
     .page-cluster--hub.page-cluster--has-actions .page-cluster__header { margin-bottom: 0; }
     .page-cluster--hub .page-cluster__actions { margin: 1.25rem 0 2.5rem; }
+    .page-cluster--hub .page-cluster__body { font-size: 1rem; line-height: 1.5; letter-spacing: -0.0025em; }
     .page-cluster--hub .page-cluster__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .page-cluster--hub .page-cluster__card { min-height: max(11.3125rem, calc((100vw - 0.6875rem) / 2)); padding: 1rem 0.75rem; }
     .page-cluster--hub .page-cluster__card-title { font-size: 1.125rem; }
@@ -64,5 +65,7 @@
     .page-cluster--features .page-cluster__card { flex: 0 0 90%; width: 90%; scroll-snap-align: start; }
     .page-cluster--features .page-cluster__image { aspect-ratio: 335 / 176; margin-bottom: 1.25rem; }
     .page-cluster--features .page-cluster__card-title { font-size: 1rem; line-height: 1.5; }
+    .page-cluster--features .page-cluster__card:nth-child(n + 3) .page-cluster__card-title { font-family: "Roboto", Arial, sans-serif; font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: 0; }
+    .page-cluster--features .page-cluster__card:nth-child(n + 3) .page-cluster__card-body { font-family: "Roboto", Arial, sans-serif; font-size: 1rem; font-weight: 400; line-height: 1.5; }
     .page-cluster--hub .page-cluster__card-cta { min-width: min(100%, 9rem); }
 }
