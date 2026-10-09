@@ -120,14 +120,63 @@
 	text-decoration: none;
 }
 
-.home-hero__scroll:hover,
+/* Figma Scroll Module (95:97473): the glass pill appears only on hover. */
+.home-hero__scroll span {
+	display: inline-flex;
+	min-height: 1.625rem;
+	align-items: center;
+	padding-inline: 0.9375rem;
+	border-radius: 2.5rem;
+	transition:
+		background-color 0.3s ease-out,
+		-webkit-backdrop-filter 0.3s ease-out,
+		backdrop-filter 0.3s ease-out;
+}
+
+.home-hero__scroll:is(:hover, :focus-visible) span {
+	/* User-approved: lighter fill and stronger blur than Figma's 60% white for a clearer glass effect. */
+	background-color: rgba(255, 255, 255, 0.3);
+	-webkit-backdrop-filter: blur(0.5rem);
+	backdrop-filter: blur(0.5rem);
+}
+
+/* Keep the label white instead of the global link hover color. */
+.home-hero__scroll:is(:hover, :focus, :focus-visible) {
+	color: #ffffff;
+}
+
 .home-hero__scroll:focus-visible {
-	color: #eeb040;
+	outline: 3px solid #eeb040;
+	outline-offset: 3px;
 }
 
 .home-hero__scroll img {
 	width: 0.875rem;
 	height: 0.75rem;
+	transition: filter 0.3s ease-out;
+}
+
+/* The arrow changes from #c7d1d8 to white on hover. */
+.home-hero__scroll:is(:hover, :focus-visible) img {
+	filter: brightness(0) invert(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.home-hero__scroll span,
+	.home-hero__scroll img {
+		transition: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.home-hero__scroll:is(:hover, :focus-visible) span {
+		background-color: Highlight;
+		color: HighlightText;
+	}
+
+	.home-hero__scroll:focus-visible {
+		outline-color: Highlight;
+	}
 }
 
 #front-page-content {
