@@ -270,7 +270,7 @@ $render_copy = static function ( $item, $heading_id = '' ) use ( $render_cta ) {
 	<?php if ( 'episodic' === $variant && ! $is_preview ) : ?>
 		<dialog class="video-module__dialog" data-video-dialog aria-labelledby="<?php echo esc_attr( $section_id . '-dialog-title' ); ?>">
 			<div class="video-module__dialog-inner">
-				<div class="video-module__dialog-header"><h2 id="<?php echo esc_attr( $section_id . '-dialog-title' ); ?>" data-video-dialog-title></h2><button type="button" class="video-module__dialog-close" data-video-dialog-close><?php esc_html_e( 'Close', 'ltt-dive-in' ); ?></button></div>
+				<div class="video-module__dialog-header"><h2 id="<?php echo esc_attr( $section_id . '-dialog-title' ); ?>" data-video-dialog-title></h2><button type="button" class="video-module__dialog-close" data-video-dialog-close><span class="video-module__dialog-close-icon" aria-hidden="true"></span><span class="screen-reader-text"><?php esc_html_e( 'Close video', 'ltt-dive-in' ); ?></span></button></div>
 				<div class="video-module__dialog-player" data-video-dialog-player></div>
 			</div>
 		</dialog>

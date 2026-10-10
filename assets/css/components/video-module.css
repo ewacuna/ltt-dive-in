@@ -371,13 +371,32 @@
 }
 
 .video-module__dialog-close {
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-    border: 1px solid var(--video-module-navy);
-    border-radius: 2rem;
-    background: #ffffff;
+    display: grid;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-inline-end: -0.625rem;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--video-module-navy);
     cursor: pointer;
+}
+
+/* The shared glyph is light gray; masking it lets the dialog paint it navy on white. */
+.video-module__dialog-close-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: currentColor;
+    -webkit-mask: url("../../images/header/close-icon.svg") center / contain no-repeat;
+    mask: url("../../images/header/close-icon.svg") center / contain no-repeat;
+}
+
+/* The gold play-button outline is too faint on the white dialog. */
+.video-module__dialog-close:focus-visible {
+    outline-color: var(--video-module-navy);
+    outline-offset: 0;
 }
 
 .video-module__dialog-player {
@@ -550,7 +569,8 @@
 }
 
 @media (forced-colors: active) {
-    .video-module__dialog-close {
-        border: 1px solid ButtonText;
+    .video-module__dialog-close-icon {
+        background-color: ButtonText;
+        forced-color-adjust: none;
     }
 }
