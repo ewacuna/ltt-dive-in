@@ -63,7 +63,7 @@ $get_player = static function ( $item ) {
 			}
 
 			if ( preg_match( '/^[A-Za-z0-9_-]{6,20}$/', $video_id ) ) {
-				$url = 'https://www.youtube-nocookie.com/embed/' . rawurlencode( $video_id ) . '?autoplay=1&rel=0';
+				$url = 'https://www.youtube-nocookie.com/embed/' . rawurlencode( $video_id ) . '?autoplay=1&rel=0&enablejsapi=1';
 			}
 		} elseif ( in_array( $host, array( 'vimeo.com', 'www.vimeo.com', 'player.vimeo.com' ), true ) && preg_match( '/(?:video\/)?([0-9]+)/', $path, $matches ) ) {
 			$url = 'https://player.vimeo.com/video/' . rawurlencode( $matches[1] ) . '?autoplay=1';

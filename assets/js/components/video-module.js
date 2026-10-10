@@ -66,6 +66,59 @@
 		}
 	};
 
+	/*
+	 * Pause a started player once it leaves the viewport. Playback is never
+	 * resumed automatically, so audio cannot start again on scroll. YouTube
+	 * (with `enablejsapi=1`) and Vimeo accept a pause command over
+	 * `postMessage`; Cloudflare Stream has no documented equivalent without
+	 * its SDK, so its player is returned to the poster.
+	 */
+	const pauseOffscreenPlayer = function ( wrapper ) {
+		const fullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+		const pip = document.pictureInPictureElement;
+
+		if ( fullscreen || ( pip && wrapper.contains( pip ) ) ) {
+			return;
+		}
+
+		const iframe = wrapper.querySelector( 'iframe' );
+
+		if ( ! iframe ) {
+			pauseMedia( wrapper );
+			return;
+		}
+
+		let origin = '';
+
+		try {
+			origin = new URL( iframe.src ).origin;
+		} catch ( error ) {
+			return;
+		}
+
+		if ( 'https://www.youtube-nocookie.com' === origin ) {
+			iframe.contentWindow.postMessage( JSON.stringify( { event: 'command', func: 'pauseVideo', args: [] } ), origin );
+		} else if ( 'https://player.vimeo.com' === origin ) {
+			iframe.contentWindow.postMessage( JSON.stringify( { method: 'pause' } ), origin );
+		} else {
+			restorePoster( wrapper );
+		}
+	};
+
+	const offscreenObserver = 'IntersectionObserver' in window ? new IntersectionObserver( function ( entries ) {
+		entries.forEach( function ( entry ) {
+			if ( ! entry.isIntersecting && entry.target.classList.contains( 'is-playing' ) ) {
+				pauseOffscreenPlayer( entry.target );
+			}
+		} );
+	} ) : null;
+
+	if ( offscreenObserver ) {
+		document.querySelectorAll( '[data-video-module] [data-video-player]' ).forEach( function ( wrapper ) {
+			offscreenObserver.observe( wrapper );
+		} );
+	}
+
 	/* Keep at most one player started per page so two videos never overlap. */
 	const stopOtherPlayers = function ( except ) {
 		document.querySelectorAll( '[data-video-player].is-playing' ).forEach( function ( other ) {
