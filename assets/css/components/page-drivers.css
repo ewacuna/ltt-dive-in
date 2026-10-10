@@ -515,12 +515,19 @@
         min-height: 17.5rem;
     }
 
-    .page-drivers__carousel-control--previous {
-        left: 1.5rem;
+    .page-drivers--six-plus-up .page-drivers__carousel-control,
+    .page-drivers--monthly .page-drivers__carousel-control {
+        bottom: 6.75rem;
     }
 
-    .page-drivers__carousel-control--next {
-        right: 1.5rem;
+    .page-drivers--six-plus-up .page-drivers__carousel-control--previous,
+    .page-drivers--monthly .page-drivers__carousel-control--previous {
+        left: 0.125rem;
+    }
+
+    .page-drivers--six-plus-up .page-drivers__carousel-control--next,
+    .page-drivers--monthly .page-drivers__carousel-control--next {
+        right: 0.9375rem;
     }
 
     .page-drivers--five-up .page-drivers__card:first-child {

@@ -273,6 +273,8 @@ The active filter uses weight `700` in the theme so its selected state is not co
 
 Page Driver carousel arrows use the shared glass control. On hover, the circular control uses a 50% Peak Gold (`#EEB040`) fill with a 4px backdrop blur; its gold border and white arrow remain visible. Keyboard focus uses the same glass fill and a white focus outline.
 
+On mobile, Monthly and Six-plus carousels place the arrows in the lower part of the card: `20px` above its bottom edge, with the previous control `2px` from the viewport's left edge and the next control `15px` from its right edge, matching the Mobile Monthly reference (`1:11029`).
+
 ### Feature image drivers
 
 Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:
