@@ -290,8 +290,10 @@ Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:
 | Stacked section title | Big Caslon Medium `48px`, `1` line height, `2%` tracking | Big Caslon Medium `36px`, `1` line height, `2%` tracking |
 | Stacked intro | Gotham HTF Medium `18px`, `145%` | Gotham HTF Medium `16px`, `145%` |
 | Stacked card title | Gotham HTF Medium `32px` | Gotham HTF Medium `24px`, `-0.25%` tracking |
-| Stacked card body | Roboto Regular `18px`, `150%` | Gotham HTF Medium `14px`, `145%` in the default card; Roboto Regular `16px`, `150%` in the expanded mobile-background-light state |
+| Stacked card body | Roboto Regular `18px`, `150%` | Gotham HTF Medium `14px`, `145%` in the collapsed card; Roboto Regular `18px`, `150%`, truncated to three lines in the expanded mobile-background-light state |
 | Stacked card CTA | Gotham HTF Medium `14px`, `145%` | Gotham HTF Medium `14px`, `145%` |
+
+The mobile stacked-card reference (`40:1897`) uses `24px` card padding, a `2px` gap between cards, a `16px` title-to-Expand gap, and a `10px` title-to-body / body-to-CTA gap when expanded. The collapsed card is `114px` tall. The expanded body reserves a `108px` text area while clamping copy to three lines; the expanded card is `249px` tall with a one-line title and grows naturally if the title wraps.
 
 Use the shared CTA component for button geometry and states; only the Short Feature Driver CTA overrides its typography to the documented Roboto style.
 
