@@ -12,6 +12,7 @@
       "choices": {
         "side_by_side": "Side by Side",
         "copy_block": "Copy Block",
+        "copy_block_list": "Copy Block List",
         "icon_block": "Icon Block",
         "newsletter_signup": "Newsletter Sign Up",
         "meetings_request": "Meetings Request",
@@ -84,13 +85,81 @@
       "label": "Rich text content",
       "name": "ltt_dive_in_content_module_copy_content",
       "type": "wysiwyg",
-      "instructions": "Use semantic headings, lists, links, and inline images as needed.",
+      "instructions": "Use semantic headings, lists, links, and inline images as needed. For a bulleted list, use List style in the Visual toolbar to choose icon or round bullets.",
       "required": 1,
       "tabs": "all",
-      "toolbar": "full",
+      "toolbar": "ltt_copy_block_lists",
       "media_upload": 1,
       "delay": 0,
       "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"copy_block"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_copy_list_heading",
+      "label": "Heading",
+      "name": "ltt_dive_in_content_module_copy_list_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"copy_block_list"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_copy_lists",
+      "label": "Lists",
+      "name": "ltt_dive_in_content_module_copy_lists",
+      "type": "repeater",
+      "instructions": "Add one to six lists. Choose one of the three approved styles for each list.",
+      "required": 1,
+      "min": 1,
+      "max": 6,
+      "layout": "block",
+      "collapsed": "field_ltt_dive_in_content_module_copy_list_type",
+      "button_label": "Add list",
+      "sub_fields": [
+        {
+          "key": "field_ltt_dive_in_content_module_copy_list_type",
+          "label": "List style",
+          "name": "list_type",
+          "type": "select",
+          "required": 1,
+          "choices": {
+            "icon": "Icon bullets",
+            "round": "Round bullets",
+            "numbered": "Numbered"
+          },
+          "default_value": "icon",
+          "return_format": "value",
+          "ui": 1,
+          "parent_repeater": "field_ltt_dive_in_content_module_copy_lists"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_copy_list_items",
+          "label": "Items",
+          "name": "items",
+          "type": "repeater",
+          "instructions": "Add one to ten text items.",
+          "required": 1,
+          "min": 1,
+          "max": 10,
+          "layout": "block",
+          "collapsed": "field_ltt_dive_in_content_module_copy_list_item_text",
+          "button_label": "Add item",
+          "parent_repeater": "field_ltt_dive_in_content_module_copy_lists",
+          "sub_fields": [
+            {
+              "key": "field_ltt_dive_in_content_module_copy_list_item_text",
+              "label": "Text",
+              "name": "text",
+              "type": "textarea",
+              "required": 1,
+              "rows": 3,
+              "maxlength": 500,
+              "new_lines": "",
+              "parent_repeater": "field_ltt_dive_in_content_module_copy_list_items"
+            }
+          ]
+        }
+      ],
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"copy_block_list"}]]
     },
     {
       "key": "field_ltt_dive_in_content_module_icon_heading",
@@ -596,5 +665,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1791479544
+  "modified": 1791830839
 }

@@ -10,6 +10,68 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Add a list-style control only to the Content Module Copy Block WYSIWYG toolbar.
+ *
+ * @param array $toolbars Registered ACF WYSIWYG toolbars.
+ * @return array
+ */
+function ltt_dive_in_register_content_module_copy_list_toolbar( $toolbars ) {
+	if ( ! isset( $toolbars['Full'][1] ) || ! is_array( $toolbars['Full'][1] ) ) {
+		return $toolbars;
+	}
+
+	$toolbars['LTT Copy Block Lists'] = $toolbars['Full'];
+	array_splice( $toolbars['LTT Copy Block Lists'][1], 5, 0, array( 'ltt_copy_list_style' ) );
+
+	return $toolbars;
+}
+add_filter( 'acf/fields/wysiwyg/toolbars', 'ltt_dive_in_register_content_module_copy_list_toolbar' );
+
+/**
+ * Register the TinyMCE control used by the Copy Block-specific toolbar.
+ *
+ * @param array $plugins TinyMCE external plugins.
+ * @return array
+ */
+function ltt_dive_in_register_content_module_copy_list_plugin( $plugins ) {
+	$path = get_theme_file_path( 'assets/js/components/content-module-editor.js' );
+	$plugins['ltt_copy_list_style'] = add_query_arg( 'ver', file_exists( $path ) ? (string) filemtime( $path ) : LTT_DIVE_IN_VERSION, get_theme_file_uri( 'assets/js/components/content-module-editor.js' ) );
+
+	return $plugins;
+}
+add_filter( 'mce_external_plugins', 'ltt_dive_in_register_content_module_copy_list_plugin' );
+
+/**
+ * Make the component's list styles available inside the Copy Block visual editor.
+ *
+ * @param string $mce_css Comma-separated TinyMCE stylesheets.
+ * @return string
+ */
+function ltt_dive_in_add_content_module_copy_list_editor_css( $mce_css ) {
+	$path = get_theme_file_path( 'assets/css/components/content-module.css' );
+	$url  = add_query_arg( 'ver', file_exists( $path ) ? (string) filemtime( $path ) : LTT_DIVE_IN_VERSION, get_theme_file_uri( 'assets/css/components/content-module.css' ) );
+
+	return $mce_css ? $mce_css . ',' . $url : $url;
+}
+add_filter( 'mce_css', 'ltt_dive_in_add_content_module_copy_list_editor_css' );
+
+/**
+ * Pass translated labels to the Copy Block TinyMCE control.
+ *
+ * @param array  $settings  TinyMCE settings.
+ * @param string $editor_id Editor instance ID.
+ * @return array
+ */
+function ltt_dive_in_content_module_copy_list_editor_labels( $settings, $editor_id ) {
+	$settings['lttCopyListStyleLabel'] = __( 'List style', 'ltt-dive-in' );
+	$settings['lttCopyListIconLabel']  = __( 'Icon bullets', 'ltt-dive-in' );
+	$settings['lttCopyListRoundLabel'] = __( 'Round bullets', 'ltt-dive-in' );
+
+	return $settings;
+}
+add_filter( 'tiny_mce_before_init', 'ltt_dive_in_content_module_copy_list_editor_labels', 10, 2 );
+
+/**
  * Find a submitted ACF value by field key, including nested repeaters.
  *
  * @param array  $values    Submitted values.
@@ -76,6 +138,52 @@ function ltt_dive_in_validate_content_module_repeater( $valid, $value, $field, $
 
 	return $valid;
 }
+
+/**
+ * Validate the Copy Block List variant's one to six lists.
+ *
+ * @param bool|string $valid Current validation state.
+ * @param mixed       $value Submitted repeater rows.
+ * @param array       $field Field definition.
+ * @param string      $input Field input name.
+ * @return bool|string
+ */
+function ltt_dive_in_validate_content_module_copy_lists( $valid, $value, $field, $input ) {
+	return ltt_dive_in_validate_content_module_repeater(
+		$valid,
+		$value,
+		$field,
+		$input,
+		1,
+		6,
+		'copy_block_list',
+		__( 'Copy Block List needs between one and six lists.', 'ltt-dive-in' )
+	);
+}
+add_filter( 'acf/validate_value/key=field_ltt_dive_in_content_module_copy_lists', 'ltt_dive_in_validate_content_module_copy_lists', 10, 4 );
+
+/**
+ * Validate each Copy Block List's one to ten items.
+ *
+ * @param bool|string $valid Current validation state.
+ * @param mixed       $value Submitted repeater rows.
+ * @param array       $field Field definition.
+ * @param string      $input Field input name.
+ * @return bool|string
+ */
+function ltt_dive_in_validate_content_module_copy_list_items( $valid, $value, $field, $input ) {
+	return ltt_dive_in_validate_content_module_repeater(
+		$valid,
+		$value,
+		$field,
+		$input,
+		1,
+		10,
+		'copy_block_list',
+		__( 'Each list needs between one and ten items.', 'ltt-dive-in' )
+	);
+}
+add_filter( 'acf/validate_value/key=field_ltt_dive_in_content_module_copy_list_items', 'ltt_dive_in_validate_content_module_copy_list_items', 10, 4 );
 
 /**
  * Validate the Icon Block's two to four blurbs.

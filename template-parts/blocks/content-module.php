@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) || ! function_exists( 'get_field' ) ) {
 $variants = array(
 	'side_by_side',
 	'copy_block',
+	'copy_block_list',
 	'icon_block',
 	'newsletter_signup',
 	'meetings_request',
@@ -183,6 +184,9 @@ switch ( $variant ) {
 		$heading  = $get_text( get_field( 'ltt_dive_in_content_module_side_title' ) );
 		$bg_image = $get_image_id( get_field( 'ltt_dive_in_content_module_side_background' ) );
 		break;
+	case 'copy_block_list':
+		$heading = $get_text( get_field( 'ltt_dive_in_content_module_copy_list_heading' ) );
+		break;
 	case 'icon_block':
 		$heading = $get_text( get_field( 'ltt_dive_in_content_module_icon_heading' ) );
 		break;
@@ -243,6 +247,50 @@ if ( $heading ) {
 	<?php elseif ( 'copy_block' === $variant ) : ?>
 		<div class="content-module__container content-module__copy-block">
 			<div class="content-module__rich-text"><?php echo wp_kses_post( get_field( 'ltt_dive_in_content_module_copy_content' ) ); ?></div>
+		</div>
+
+	<?php elseif ( 'copy_block_list' === $variant ) : ?>
+		<div class="content-module__container content-module__copy-list-block">
+			<?php if ( $heading ) : ?>
+				<h2 id="<?php echo esc_attr( $id . '-heading' ); ?>" class="content-module__heading content-module__copy-list-heading"><?php echo esc_html( $heading ); ?></h2>
+			<?php endif; ?>
+			<?php
+			$lists = get_field( 'ltt_dive_in_content_module_copy_lists' );
+			$lists = is_array( $lists ) ? array_slice( $lists, 0, 6 ) : array();
+			?>
+			<?php if ( $lists ) : ?>
+				<div class="content-module__copy-lists">
+					<?php foreach ( $lists as $list ) : ?>
+						<?php
+						if ( ! is_array( $list ) ) {
+							continue;
+						}
+
+						$type  = in_array( $list['list_type'] ?? '', array( 'icon', 'round', 'numbered' ), true ) ? $list['list_type'] : 'round';
+						$items = isset( $list['items'] ) && is_array( $list['items'] ) ? array_slice( $list['items'], 0, 10 ) : array();
+						$items = array_values(
+							array_filter(
+								$items,
+								static function ( $item ) use ( $get_text ) {
+									return is_array( $item ) && '' !== $get_text( $item['text'] ?? '' );
+								}
+							)
+						);
+
+						if ( ! $items ) {
+							continue;
+						}
+
+						$tag = 'numbered' === $type ? 'ol' : 'ul';
+						?>
+						<<?php echo esc_attr( $tag ); ?> class="content-module__styled-list content-module__styled-list--<?php echo esc_attr( $type ); ?>"<?php echo 'icon' === $type ? ' role="list"' : ''; ?>>
+							<?php foreach ( $items as $item ) : ?>
+								<li><?php echo esc_html( $get_text( $item['text'] ) ); ?></li>
+							<?php endforeach; ?>
+						</<?php echo esc_attr( $tag ); ?>>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 
 	<?php elseif ( 'icon_block' === $variant ) : ?>

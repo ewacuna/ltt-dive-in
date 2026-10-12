@@ -6,7 +6,7 @@
   "category": "ltt-blocks",
   "icon": "align-wide",
   "description": "Text-led content layouts for page sections.",
-  "keywords": [ "content", "copy", "stats", "newsletter", "comparison" ],
+  "keywords": [ "content", "copy", "list", "stats", "newsletter", "comparison" ],
   "textdomain": "ltt-dive-in",
   "style": "ltt-dive-in-content-module",
   "script": "ltt-dive-in-content-module",
