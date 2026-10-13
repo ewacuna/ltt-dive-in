@@ -265,7 +265,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style(
 		'ltt-dive-in-content-module',
 		LTT_DIVE_IN_URI . '/assets/css/components/content-module.css',
-		array( 'ltt-dive-in-buttons' ),
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags' ),
 		file_exists( $content_module_style_path ) ? (string) filemtime( $content_module_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script(

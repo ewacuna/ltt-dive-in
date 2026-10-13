@@ -364,6 +364,15 @@
       "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"meetings_request"}]]
     },
     {
+      "key": "field_ltt_dive_in_content_module_stats_tag",
+      "label": "Category tag",
+      "name": "ltt_dive_in_content_module_stats_tag",
+      "type": "text",
+      "instructions": "Optional short label shown above the heading.",
+      "maxlength": 40,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
       "key": "field_ltt_dive_in_content_module_stats_heading",
       "label": "Heading",
       "name": "ltt_dive_in_content_module_stats_heading",
@@ -380,6 +389,15 @@
       "rows": 4,
       "maxlength": 600,
       "new_lines": "",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
+    },
+    {
+      "key": "field_ltt_dive_in_content_module_stats_cta",
+      "label": "Header call to action",
+      "name": "ltt_dive_in_content_module_stats_cta",
+      "type": "link",
+      "instructions": "Optional button below the header copy. Choose its label and destination.",
+      "return_format": "array",
       "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"stats"}]]
     },
     {
@@ -665,5 +683,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1791830839
+  "modified": 1791859400
 }

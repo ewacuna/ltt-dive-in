@@ -58,6 +58,9 @@ $classes  = array( 'content-module', 'content-module--' . $variant );
 $heading  = '';
 $bg_image = 0;
 $stats_background_color = '';
+$stats_tag = '';
+$stats_intro = '';
+$stats_cta = array();
 $newsletter_aside_heading = '';
 $newsletter_aside_copy    = '';
 $newsletter_aside_cta     = array();
@@ -203,6 +206,9 @@ switch ( $variant ) {
 		break;
 	case 'stats':
 		$heading                = $get_text( get_field( 'ltt_dive_in_content_module_stats_heading' ) );
+		$stats_tag              = $get_text( get_field( 'ltt_dive_in_content_module_stats_tag' ) );
+		$stats_intro            = $get_text( get_field( 'ltt_dive_in_content_module_stats_intro', false, false ) );
+		$stats_cta              = $get_link( get_field( 'ltt_dive_in_content_module_stats_cta' ) );
 		$stats_background_color = $get_text( get_field( 'field_ltt_dive_in_content_module_stats_background_color' ) );
 		$bg_image               = $get_image_id( get_field( 'ltt_dive_in_content_module_stats_background' ) );
 		break;
@@ -380,9 +386,32 @@ if ( $heading ) {
 
 	<?php elseif ( 'stats' === $variant ) : ?>
 		<div class="content-module__container content-module__stats">
-			<header class="content-module__section-header">
-				<h2 id="<?php echo esc_attr( $id . '-heading' ); ?>" class="content-module__heading"><?php echo esc_html( $heading ); ?></h2>
-				<?php $render_copy( get_field( 'ltt_dive_in_content_module_stats_intro', false, false ) ); ?>
+			<?php
+			$stats_dark_surface = $bg_image || in_array( $stats_background_color, array( 'navy', 'burgundy', 'red', 'forest', 'blue' ), true );
+			$stats_dark_tag     = $stats_dark_surface || 'green' === $stats_background_color;
+			$stats_cta_style    = 'primary-outline';
+
+			if ( $bg_image ) {
+				$stats_cta_style = 'glass';
+			} elseif ( $stats_dark_surface ) {
+				$stats_cta_style = 'dark-standard';
+			} elseif ( in_array( $stats_background_color, array( 'gold', 'green', 'cyan' ), true ) ) {
+				$stats_cta_style = 'primary-fill';
+			}
+			?>
+			<header class="content-module__section-header content-module__stats-header">
+				<div class="content-module__stats-heading">
+					<?php if ( $stats_tag ) : ?>
+						<p class="content-module__stats-tag ltt-tag<?php echo $stats_dark_tag ? ' ltt-tag--dark' : ''; ?>"><?php echo esc_html( $stats_tag ); ?></p>
+					<?php endif; ?>
+					<h2 id="<?php echo esc_attr( $id . '-heading' ); ?>" class="content-module__heading"><?php echo esc_html( $heading ); ?></h2>
+				</div>
+				<?php if ( $stats_intro || $stats_cta ) : ?>
+					<div class="content-module__stats-detail">
+						<?php $render_copy( $stats_intro ); ?>
+						<?php $render_cta( $stats_cta, $stats_cta_style, 'content-module__stats-cta' ); ?>
+					</div>
+				<?php endif; ?>
 			</header>
 			<?php
 			$stats = get_field( 'ltt_dive_in_content_module_stats' );
