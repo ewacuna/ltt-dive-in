@@ -60,12 +60,33 @@ function ltt_dive_in_posted_month() {
 }
 
 /**
- * Estimate the reading time of a post in whole minutes.
+ * Get the reading time of a post in whole minutes.
+ *
+ * Posts store their estimate on save (see ltt_dive_in_store_reading_time());
+ * posts saved before that existed are estimated on demand.
  *
  * @param int|WP_Post|null $post Optional. Post ID or object. Defaults to the current post.
  * @return int Minutes, at least 1.
  */
 function ltt_dive_in_get_reading_time( $post = null ) {
+	$post = get_post( $post );
+
+	if ( ! $post ) {
+		return 1;
+	}
+
+	$stored = absint( get_post_meta( $post->ID, '_ltt_dive_in_reading_time', true ) );
+
+	return $stored ? $stored : ltt_dive_in_calculate_reading_time( $post );
+}
+
+/**
+ * Estimate the reading time of a post in whole minutes from its content.
+ *
+ * @param int|WP_Post|null $post Optional. Post ID or object. Defaults to the current post.
+ * @return int Minutes, at least 1.
+ */
+function ltt_dive_in_calculate_reading_time( $post = null ) {
 	$post = get_post( $post );
 
 	if ( ! $post ) {

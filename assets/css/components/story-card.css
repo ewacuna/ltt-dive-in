@@ -1,0 +1,277 @@
+/*
+ * Story tile (Figma “Story Card – Default”, “Story Card – Expanded”, and
+ * “Story Card – Mobile”). Consumers own placement and set the tile height
+ * through `--story-card-height`.
+ */
+.ltt-story-card {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template: 1fr / 1fr;
+    min-width: 0;
+    min-height: var(--story-card-height, 43.125rem);
+    overflow: hidden;
+    border: 1px solid #000000;
+    background: #073959;
+    color: #ffffff;
+    font-family: "Gotham HTF", Arial, sans-serif;
+}
+
+.ltt-story-card > * {
+    grid-area: 1 / 1;
+}
+
+.ltt-story-card__media {
+    position: relative;
+    z-index: -1;
+    overflow: hidden;
+    background: #06304d;
+}
+
+.ltt-story-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ltt-story-card__media::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 57, 89, 0.51), rgba(2, 22, 43, 0.51));
+    content: "";
+    transition: opacity 300ms ease-out;
+}
+
+.ltt-story-card__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: opacity 300ms ease-out;
+}
+
+.ltt-story-card__summary-title {
+    font-family: "Big Caslon", Georgia, serif;
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+}
+
+.ltt-story-card__panel {
+    align-self: end;
+    margin: 0 1.125rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 0;
+    background: rgba(255, 255, 255, 0.75);
+    color: #073959;
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+}
+
+.ltt-story-card__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+}
+
+.ltt-story-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.625rem;
+    margin: 0 0 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+/*
+ * Read time follows Figma's tertiary shade 300 (#319D8E), as on the Stories
+ * Hero. It is below WCAG AA's 4.5:1 for 14px text on white; see DESIGN.md.
+ */
+.ltt-story-card__read-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    color: #319d8e;
+}
+
+.ltt-story-card__tag + .ltt-story-card__read-time {
+    padding-left: 0.625rem;
+    border-left: 1px solid #073959;
+}
+
+.ltt-story-card__read-time-icon,
+.ltt-story-card__read-more-icon {
+    display: block;
+    flex: 0 0 auto;
+    background-color: currentColor;
+}
+
+.ltt-story-card__read-time-icon {
+    width: 1.0625rem;
+    height: 1.0625rem;
+    -webkit-mask: url("../../images/icons/read-time.svg") center / contain no-repeat;
+    mask: url("../../images/icons/read-time.svg") center / contain no-repeat;
+}
+
+.ltt-story-card__title {
+    margin: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.0025em;
+    overflow-wrap: anywhere;
+}
+
+.ltt-story-card__link,
+.ltt-story-card__link:is(:hover, :focus, :visited) {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* The title link covers the whole tile so the image is also a target. */
+.ltt-story-card__link::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    content: "";
+}
+
+.ltt-story-card__link:focus-visible {
+    outline: 0;
+}
+
+.ltt-story-card:has(.ltt-story-card__link:focus-visible) {
+    outline: 3px solid #eeb040;
+    outline-offset: -3px;
+}
+
+.ltt-story-card__excerpt {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+/* Sits above the title link's overlay so it has its own hover (Figma “Read More Carrot – Hover”). */
+.ltt-story-card__read-more,
+.ltt-story-card__read-more:visited {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    color: #319d8e;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    text-decoration: none;
+    transition: color 200ms ease-out;
+}
+
+.ltt-story-card__read-more:hover,
+.ltt-story-card:has(.ltt-story-card__link:focus-visible) .ltt-story-card__read-more {
+    color: #eeb040;
+}
+
+.ltt-story-card__read-more-icon {
+    width: 0.6875rem;
+    height: 0.625rem;
+    rotate: -90deg;
+    -webkit-mask: url("../../images/icons/read-more-chevron.svg") center / contain no-repeat;
+    mask: url("../../images/icons/read-more-chevron.svg") center / contain no-repeat;
+}
+
+/* Expanded: hover, keyboard focus, or the scroll/active state from story-drivers.js. */
+.ltt-story-card:is(:hover, :focus-within, .is-expanded) .ltt-story-card__media::after,
+.ltt-story-card:is(:hover, :focus-within, .is-expanded) .ltt-story-card__summary {
+    opacity: 0;
+}
+
+.ltt-story-card:is(:hover, :focus-within, .is-expanded) .ltt-story-card__panel {
+    opacity: 1;
+}
+
+@media (max-width: 1199.98px) {
+    .ltt-story-card__summary-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .ltt-story-card__summary-title {
+        font-size: 2.25rem;
+    }
+}
+
+/* Mobile story card: the image sits above an always-visible panel. */
+@media (max-width: 767.98px) {
+    .ltt-story-card:not(.ltt-story-card--tile) {
+        grid-template: auto 1fr / 1fr;
+        min-height: 0;
+        border: 0;
+        background: #ffffff;
+        color: #073959;
+    }
+
+    .ltt-story-card:not(.ltt-story-card--tile) > * {
+        grid-area: auto;
+    }
+
+    .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__media {
+        aspect-ratio: 371 / 198;
+        border: 1px solid #000000;
+    }
+
+    .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__media::after,
+    .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__summary {
+        display: none;
+    }
+
+    .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__panel {
+        align-self: stretch;
+        margin: 0;
+        border: 0;
+        background: transparent;
+        opacity: 1;
+    }
+
+    .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__content {
+        padding: 1.5rem 1.5rem 1rem;
+    }
+
+    .ltt-story-card__summary-title {
+        font-size: 2.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ltt-story-card *,
+    .ltt-story-card *::after {
+        transition: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .ltt-story-card,
+    .ltt-story-card__panel {
+        border: 1px solid CanvasText;
+    }
+
+    .ltt-story-card__read-time-icon,
+    .ltt-story-card__read-more-icon {
+        background-color: CanvasText;
+    }
+
+    .ltt-story-card:has(.ltt-story-card__link:focus-visible) {
+        outline-color: Highlight;
+    }
+}

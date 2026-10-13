@@ -391,6 +391,57 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $event_driver_path . '/block.json' ) ) {
 		register_block_type( $event_driver_path );
 	}
+
+	$story_card_style_path       = LTT_DIVE_IN_DIR . '/assets/css/components/story-card.css';
+	$story_drivers_style_path    = LTT_DIVE_IN_DIR . '/assets/css/components/story-drivers.css';
+	$story_drivers_script_path   = LTT_DIVE_IN_DIR . '/assets/js/components/story-drivers.js';
+	$story_drivers_carousel_path = LTT_DIVE_IN_DIR . '/assets/js/components/story-drivers-carousel.js';
+	$story_drivers_path          = LTT_DIVE_IN_DIR . '/blocks/story-drivers';
+
+	wp_register_style( 'ltt-dive-in-story-card', LTT_DIVE_IN_URI . '/assets/css/components/story-card.css', array( 'ltt-dive-in-tags' ), file_exists( $story_card_style_path ) ? (string) filemtime( $story_card_style_path ) : LTT_DIVE_IN_VERSION );
+	// Swiper styles are enqueued separately, only for the slideshow and carousel layouts.
+	wp_register_style(
+		'ltt-dive-in-story-drivers',
+		LTT_DIVE_IN_URI . '/assets/css/components/story-drivers.css',
+		array( 'ltt-dive-in-story-card', 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-category-selection', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators' ),
+		file_exists( $story_drivers_style_path ) ? (string) filemtime( $story_drivers_style_path ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script( 'ltt-dive-in-story-drivers', LTT_DIVE_IN_URI . '/assets/js/components/story-drivers.js', array(), file_exists( $story_drivers_script_path ) ? (string) filemtime( $story_drivers_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_localize_script(
+		'ltt-dive-in-story-drivers',
+		'ltt_dive_in_story_drivers',
+		array(
+			'endpoint'  => rest_url( 'ltt-dive-in/v1/story-driver-stories' ),
+			'loading'   => __( 'Loading stories…', 'ltt-dive-in' ),
+			/* translators: 1: number of stories shown, 2: total matching stories. */
+			'showing'   => __( 'Showing %1$d of %2$d stories.', 'ltt-dive-in' ),
+			/* translators: %d: number of stories added. */
+			'loaded'    => __( '%d more stories loaded.', 'ltt-dive-in' ),
+			'noResults' => __( 'No stories match your filters.', 'ltt-dive-in' ),
+			'error'     => __( 'Stories could not be loaded. Please try again.', 'ltt-dive-in' ),
+		)
+	);
+	wp_register_script( 'ltt-dive-in-story-drivers-carousel', LTT_DIVE_IN_URI . '/assets/js/components/story-drivers-carousel.js', array( 'ltt-dive-in-swiper' ), file_exists( $story_drivers_carousel_path ) ? (string) filemtime( $story_drivers_carousel_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_localize_script(
+		'ltt-dive-in-story-drivers-carousel',
+		'ltt_dive_in_story_drivers_carousel',
+		array(
+			'previousStory'   => __( 'Previous story', 'ltt-dive-in' ),
+			'nextStory'       => __( 'Next story', 'ltt-dive-in' ),
+			/* translators: %d: story position in the slideshow. */
+			'goToStory'       => __( 'Go to story %d', 'ltt-dive-in' ),
+			'previousStories' => __( 'Previous stories', 'ltt-dive-in' ),
+			'nextStories'     => __( 'Next stories', 'ltt-dive-in' ),
+			/* translators: %d: number of stories shown (always 1). */
+			'storyShown'      => __( '%d story shown.', 'ltt-dive-in' ),
+			/* translators: %d: number of stories shown. */
+			'storiesShown'    => __( '%d stories shown.', 'ltt-dive-in' ),
+		)
+	);
+
+	if ( file_exists( $story_drivers_path . '/block.json' ) ) {
+		register_block_type( $story_drivers_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
 
@@ -511,6 +562,16 @@ function ltt_dive_in_enqueue_video_module_carousel_assets() {
 }
 
 /**
+ * Load Swiper for the Story Drivers slideshow and carousel layouts.
+ *
+ * @return void
+ */
+function ltt_dive_in_enqueue_story_driver_carousel_assets() {
+	wp_enqueue_style( 'ltt-dive-in-swiper' );
+	wp_enqueue_script( 'ltt-dive-in-story-drivers-carousel' );
+}
+
+/**
  * Load Swiper only for the Features List Grid variant of Page Cluster.
  *
  * @return void
@@ -616,6 +677,48 @@ function ltt_dive_in_page_cluster_uses_carousel( $block ) {
 
 	return 'features' === $variant;
 }
+
+/**
+ * Determine whether a parsed Story Drivers block uses Swiper.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_story_driver_uses_carousel( $block ) {
+	if ( ! is_array( $block ) || 'ltt-dive-in/story-drivers' !== ( $block['blockName'] ?? '' ) ) {
+		return false;
+	}
+
+	$layout = $block['attrs']['data']['ltt_dive_in_story_driver_layout'] ?? '';
+
+	return in_array( $layout, array( 'one_up', 'carousel', 'hero_grid' ), true );
+}
+
+/**
+ * Enqueue Story Drivers Swiper assets before the document head.
+ *
+ * Blocks that cannot be found in the queried post still receive the assets
+ * from the render-time fallback in the block template.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_story_driver_carousel_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( ! $post instanceof WP_Post || ! has_block( 'ltt-dive-in/story-drivers', $post ) ) {
+		return;
+	}
+
+	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_story_driver_uses_carousel' ) ) {
+		ltt_dive_in_enqueue_story_driver_carousel_assets();
+	}
+}
+// Match the other carousel components so Swiper precedes story-drivers.css.
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_story_driver_carousel_assets', 5 );
 
 /**
  * Enqueue carousel assets before the document head is printed when possible.

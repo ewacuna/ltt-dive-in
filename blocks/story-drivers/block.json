@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ltt-dive-in/story-drivers",
+    "title": "Story Drivers",
+    "category": "ltt-blocks",
+    "icon": "excerpt-view",
+    "description": "Blog post tiles in 1 Up, 2 Up, 3 Up, 4 Up, carousel, and Hero + Page Grid layouts.",
+    "keywords": [ "stories", "blog", "posts" ],
+    "textdomain": "ltt-dive-in",
+    "style": "ltt-dive-in-story-drivers",
+    "editorStyle": "ltt-dive-in-story-drivers",
+    "viewScript": "ltt-dive-in-story-drivers",
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "template-parts/blocks/story-drivers.php"
+    },
+    "attributes": {
+        "align": { "type": "string", "default": "full" }
+    },
+    "supports": {
+        "align": [ "full" ],
+        "anchor": true,
+        "customClassName": false,
+        "html": false,
+        "multiple": true
+    }
+}
