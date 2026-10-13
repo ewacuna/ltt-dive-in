@@ -29,12 +29,12 @@
 	}
 
 	/**
-	 * Disable a newsletter form's submit button until every consent checkbox is checked.
+	 * Disable a form's submit button until every consent checkbox is checked.
 	 *
-	 * @param {Element} root Content Module newsletter form wrapper.
+	 * @param {Element} root Content Module form wrapper.
 	 * @return {void}
 	 */
-	function updateNewsletterSubmitState( root ) {
+	function updateConsentSubmitState( root ) {
 		Array.prototype.forEach.call( root.querySelectorAll( '.gform_wrapper' ), function ( wrapper ) {
 			var submitButton = wrapper.querySelector( '.gform_footer .gform_button' );
 			var consentFields = Array.prototype.filter.call( wrapper.querySelectorAll( consentFieldSelector ), isConsentField );
@@ -60,37 +60,33 @@
 	}
 
 	/**
-	 * Set up the newsletter consent listener once, including after Gravity Forms re-renders.
+	 * Set up the consent listener once, including after Gravity Forms re-renders.
 	 *
-	 * @param {Element} root Content Module newsletter form wrapper.
+	 * @param {Element} root Content Module form wrapper.
 	 * @return {void}
 	 */
-	function initializeNewsletterConsent( root ) {
-		if ( ! root.matches( '.content-module__form--newsletter' ) ) {
-			return;
-		}
-
+	function initializeConsentSubmitState( root ) {
 		if ( 'true' !== root.dataset.consentSubmitEnhancementInitialized ) {
 			root.dataset.consentSubmitEnhancementInitialized = 'true';
 			root.addEventListener( 'change', function ( event ) {
 				if ( event.target.matches && event.target.matches( 'input[type="checkbox"]' ) ) {
-					updateNewsletterSubmitState( root );
+					updateConsentSubmitState( root );
 				}
 			} );
 		}
 
-		updateNewsletterSubmitState( root );
+		updateConsentSubmitState( root );
 	}
 
 	/**
-	 * Initialize consent positioning and the newsletter submit state for a form root.
+	 * Initialize consent positioning and the submit state for a form root.
 	 *
 	 * @param {Element} root Content Module form wrapper.
 	 * @return {void}
 	 */
 	function initializeFormRoot( root ) {
 		placeConsentForViewport( root );
-		initializeNewsletterConsent( root );
+		initializeConsentSubmitState( root );
 	}
 
 	/**

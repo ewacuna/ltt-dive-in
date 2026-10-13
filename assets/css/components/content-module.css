@@ -830,18 +830,18 @@
 	line-height: 1.45 !important;
 }
 
-.content-module__form .gform_button:is(:hover, :focus-visible) {
-	background: #073959;
-	color: #ffffff;
+.content-module__form .gform_button:not(:disabled):is(:hover, :focus-visible) {
+	background: #eeb040;
+	color: #073959;
 }
 
-.content-module .content-module__lead-capture .content-module__form .gform_wrapper .gform_footer :is(input[type="submit"], button[type="submit"]).gform_button:is(:hover, :focus-visible) {
+.content-module .content-module__lead-capture .content-module__form .gform_wrapper .gform_footer :is(input[type="submit"], button[type="submit"]).gform_button:not(:disabled):is(:hover, :focus-visible) {
 	border-color: #073959 !important;
-	background: #073959 !important;
-	color: #ffffff !important;
+	background: #eeb040 !important;
+	color: #073959 !important;
 }
 
-.content-module .content-module__lead-capture .content-module__form--newsletter .gform_wrapper .gform_footer :is(input[type="submit"], button[type="submit"]).gform_button:disabled {
+.content-module .content-module__lead-capture .content-module__form .gform_wrapper .gform_footer :is(input[type="submit"], button[type="submit"]).gform_button:disabled {
 	border-color: #073959 !important;
 	background: #ffffff !important;
 	color: #073959 !important;
