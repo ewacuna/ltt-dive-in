@@ -791,7 +791,6 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
         + .feature-image-driver__stacked-card
         .feature-image-driver__stacked-card-title {
         color: #ffffff;
-        width: 10.5rem;
         max-width: 100%;
         font-size: 1.5rem;
         font-weight: 500;
