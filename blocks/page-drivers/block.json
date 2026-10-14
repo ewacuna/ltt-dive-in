@@ -5,7 +5,7 @@
     "title": "Up Driver",
     "category": "ltt-blocks",
     "icon": "screenoptions",
-    "description": "A selectable hub-page grid with approved layout and filter variants.",
+    "description": "A hub-page grid with approved layouts, optional filters, and monthly navigation.",
     "textdomain": "ltt-dive-in",
     "style": "ltt-dive-in-page-drivers",
     "editorStyle": "ltt-dive-in-page-drivers",

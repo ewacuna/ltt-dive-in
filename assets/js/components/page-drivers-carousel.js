@@ -11,8 +11,16 @@
 	}
 
 	const reducedMotion = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+	const strings = window.ltt_dive_in_page_driver_carousel || {};
+	const getSlideMonthTerms = function ( slide ) {
+		return ( slide.dataset.pageDriverMonthTerms || '' ).split( ' ' ).filter( Boolean );
+	};
 
-	document.querySelectorAll( '[data-page-driver-carousel]' ).forEach( function ( carousel ) {
+	const initializeCarousel = function ( carousel ) {
+		if ( 'true' === carousel.dataset.pageDriverCarouselInitialized ) {
+			return;
+		}
+
 		const viewport = carousel.querySelector( '.page-drivers__carousel-viewport' );
 		const wrapper = carousel.querySelector( '.swiper-wrapper' );
 		const previous = carousel.querySelector( '[data-page-driver-carousel-previous]' );
@@ -20,6 +28,8 @@
 		const pagination = carousel.querySelector( '[data-page-driver-carousel-pagination]' );
 		const driver = carousel.closest( '[data-page-driver]' );
 		const allSlides = driver ? Array.from( driver.querySelectorAll( '[data-page-driver-card]' ) ) : [];
+		const monthSelect = driver && driver.querySelector( '[data-page-driver-month-select]' );
+		const status = driver && driver.querySelector( '[data-page-driver-status]' );
 		const mobileCarousel = window.matchMedia( '(max-width: 767.98px)' );
 		const isSixPlus = driver && driver.classList.contains( 'page-drivers--six-plus-up' );
 		const isMonthly = driver && driver.classList.contains( 'page-drivers--monthly' );
@@ -30,6 +40,8 @@
 			return;
 		}
 
+		carousel.dataset.pageDriverCarouselInitialized = 'true';
+
 		const updatePaginationState = function ( instance ) {
 			if ( ! instance.pagination || ! instance.pagination.bullets ) {
 				return;
@@ -37,10 +49,39 @@
 
 			instance.pagination.bullets.forEach( function ( bullet, index ) {
 				const isCurrent = bullet.classList.contains( 'is-active' );
+				let label = ( strings.goToDestination || 'Go to destination %d' ).replace( '%d', String( index + 1 ) );
+
+				if ( isMonthly && monthSelect && allSlides[ index ] ) {
+					const slideTerms = getSlideMonthTerms( allSlides[ index ] );
+					const option = Array.from( monthSelect.options ).find( function ( item ) {
+						return slideTerms.includes( item.value );
+					} );
+
+					if ( option ) {
+						label = ( strings.goToMonth || 'Go to %s' ).replace( '%s', option.text );
+					}
+				}
 
 				bullet.setAttribute( 'aria-current', isCurrent ? 'true' : 'false' );
-				bullet.setAttribute( 'aria-label', 'Go to destination ' + ( index + 1 ) );
+				bullet.setAttribute( 'aria-label', label );
 			} );
+		};
+
+		const updateActiveMonthStatus = function ( instance ) {
+			if ( ! isMonthly || ! monthSelect || ! allSlides[ instance.realIndex ] ) {
+				return;
+			}
+
+			const slideTerms = getSlideMonthTerms( allSlides[ instance.realIndex ] );
+			const option = Array.from( monthSelect.options ).find( function ( item ) {
+				return slideTerms.includes( item.value );
+			} );
+
+			if ( ! option || ! status ) {
+				return;
+			}
+
+			status.textContent = ( strings.monthShown || '%s shown.' ).replace( '%s', option.text );
 		};
 
 		const getVisibleSlides = function () {
@@ -87,8 +128,16 @@
 			const hasMultipleSlides = visibleSlides.length > 1;
 			const isFiltered = 'all' !== activeTerm;
 			const useLoop = isMonthly && hasMultipleSlides && ! isFiltered;
+			const initialMonthIndex = isMonthly && monthSelect ? allSlides.findIndex( function ( slide ) {
+				return getSlideMonthTerms( slide ).includes( monthSelect.value );
+			} ) : 0;
+
+			if ( isMonthly ) {
+				driver.classList.add( 'is-enhanced' );
+			}
 
 			swiper = new window.Swiper( viewport, {
+				initialSlide: Math.max( 0, initialMonthIndex ),
 				slidesPerView: 'auto',
 				spaceBetween: 11,
 				speed: reducedMotion ? 0 : 350,
@@ -104,8 +153,8 @@
 				},
 				a11y: {
 					enabled: true,
-					prevSlideMessage: 'Previous destinations',
-					nextSlideMessage: 'Next destinations',
+					prevSlideMessage: isMonthly ? ( strings.previousMonth || 'Previous month' ) : ( strings.previous || 'Previous destinations' ),
+					nextSlideMessage: isMonthly ? ( strings.nextMonth || 'Next month' ) : ( strings.next || 'Next destinations' ),
 				},
 				navigation: {
 					prevEl: previous,
@@ -121,9 +170,15 @@
 						return '<button class="' + className + '" type="button"></button>';
 					},
 				},
-				on: {
-					init: updatePaginationState,
-					slideChange: updatePaginationState,
+					on: {
+					init: function ( instance ) {
+						updatePaginationState( instance );
+						updateActiveMonthStatus( instance );
+					},
+					slideChange: function ( instance ) {
+						updatePaginationState( instance );
+						updateActiveMonthStatus( instance );
+					},
 					paginationUpdate: updatePaginationState,
 				},
 			} );
@@ -141,6 +196,24 @@
 		rebuildCarousel();
 		pagination.addEventListener( 'click', handleMonthlyPaginationClick );
 
+		if ( isMonthly && monthSelect ) {
+			monthSelect.addEventListener( 'change', function () {
+				const targetIndex = allSlides.findIndex( function ( slide ) {
+					return getSlideMonthTerms( slide ).includes( monthSelect.value );
+				} );
+
+				if ( ! swiper || targetIndex < 0 || targetIndex === swiper.realIndex ) {
+					return;
+				}
+
+				if ( swiper.params.loop ) {
+					swiper.slideToLoop( targetIndex );
+				} else {
+					swiper.slideTo( targetIndex );
+				}
+			} );
+		}
+
 		if ( driver ) {
 			driver.addEventListener( 'ltt:page-driver-filtered', function ( event ) {
 				activeTerm = event.detail && event.detail.termId ? event.detail.termId : 'all';
@@ -149,5 +222,35 @@
 		}
 
 		mobileCarousel.addEventListener( 'change', rebuildCarousel );
-	} );
+	};
+
+	const initializeCarouselsWithin = function ( root ) {
+		if ( root.matches && root.matches( '[data-page-driver-carousel]' ) ) {
+			initializeCarousel( root );
+		}
+
+		if ( root.querySelectorAll ) {
+			root.querySelectorAll( '[data-page-driver-carousel]' ).forEach( initializeCarousel );
+		}
+	};
+
+	initializeCarouselsWithin( document );
+
+	// ACF refreshes server-rendered block previews when editors change fields.
+	// Initialize those new previews as well as markup present at page load.
+	if ( window.MutationObserver && document.documentElement ) {
+		const previewObserver = new MutationObserver( function ( mutations ) {
+			mutations.forEach( function ( mutation ) {
+				mutation.addedNodes.forEach( function ( node ) {
+					if ( node instanceof Element ) {
+						initializeCarouselsWithin( node );
+					}
+				} );
+			} );
+		} );
+
+		// Gutenberg may replace the iframe body while mounting or refreshing ACF
+		// previews. Observe the document element so those replacements remain visible.
+		previewObserver.observe( document.documentElement, { childList: true, subtree: true } );
+	}
 }() );

@@ -275,6 +275,8 @@ Page Driver carousel arrows use the shared glass control. On hover, the circular
 
 On mobile, Monthly and Six-plus carousels place the arrows in the lower part of the card: `20px` above its bottom edge, with the previous control `2px` from the viewport's left edge and the next control `15px` from its right edge, matching the Mobile Monthly reference (`1:11029`).
 
+Monthly Page Driver requires taxonomy controls to be enabled, a public taxonomy registered for pages, and twelve selected hub pages. Selected taxonomy terms provide the month options; each selected term must be assigned to at least one selected page. The selector and cards follow calendar order from January through December, preserving relationship order between cards for the same month. With the full annual set, the default selected month is January. Selecting a term navigates to the first matching carousel card in relationship order. Arrow navigation, pagination, and swipes change the active card but leave the selector value unchanged; only choosing a month in the selector changes that value. All cards remain in the carousel. When the carousel script is unavailable, all twelve cards remain visible in a responsive grid with month anchor links. On 2026-10-13 the client confirmed that mobile uses the same month selector as desktop; the search, Categories, and Upcoming controls in mobile review node `1:11029` are not part of this Monthly Page Driver.
+
 ### Feature image drivers
 
 Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:

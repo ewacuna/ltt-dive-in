@@ -392,6 +392,58 @@
     margin-top: 1rem;
 }
 
+.page-drivers__month-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.page-drivers__month-link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: inherit;
+    text-decoration: underline;
+}
+
+.page-drivers__month-link:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+}
+
+.page-drivers--monthly.is-enhanced .page-drivers__month-links,
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__month-select,
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel-control,
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel-pagination {
+    display: none;
+}
+
+.page-drivers--monthly:not(.is-enhanced) {
+    overflow: visible;
+}
+
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel-viewport {
+    overflow: visible;
+}
+
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel .page-drivers__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6875rem;
+}
+
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel .page-drivers__card {
+    width: auto;
+    align-items: stretch;
+}
+
+.page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel .page-drivers__card-link {
+    height: auto;
+    min-height: 24rem;
+}
+
 @media (max-width: 1399.98px) {
     .page-drivers {
         padding-top: 2.5rem;
@@ -433,6 +485,10 @@
         grid-template-columns: 1fr;
     }
 
+    .page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel .page-drivers__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .page-drivers .page-drivers__grid.is-filtered[data-visible-count="3"] {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -467,6 +523,10 @@
     }
 
     .page-drivers .page-drivers__grid.is-filtered[data-visible-count] {
+        grid-template-columns: 1fr;
+    }
+
+    .page-drivers--monthly:not(.is-enhanced) .page-drivers__carousel .page-drivers__grid {
         grid-template-columns: 1fr;
     }
 

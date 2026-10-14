@@ -35,18 +35,17 @@
 
 	drivers.forEach( function ( driver ) {
 		const filters = Array.from( driver.querySelectorAll( '[data-page-driver-filter]' ) );
-		const filterSelect = driver.querySelector( '[data-page-driver-filter-select]' );
 		const cards = Array.from( driver.querySelectorAll( '[data-page-driver-card]' ) );
 		const grid = driver.querySelector( '[data-page-driver-grid]' );
 		const status = driver.querySelector( '[data-page-driver-status]' );
 		const isCarousel = Boolean( driver.querySelector( '[data-page-driver-carousel]' ) );
 
-		if ( ( ! filters.length && ! filterSelect ) || ! cards.length ) {
+		if ( ! filters.length || ! cards.length ) {
 			return;
 		}
 
 		const activateFilter = function ( activeFilter ) {
-			const termId = activeFilter.dataset.pageDriverFilter || activeFilter.value;
+			const termId = activeFilter.dataset.pageDriverFilter;
 			let visibleCount = 0;
 
 			if ( grid ) {
@@ -59,10 +58,6 @@
 				filter.setAttribute( 'aria-pressed', selected ? 'true' : 'false' );
 				filter.classList.toggle( 'is-selected', selected );
 			} );
-
-			if ( filterSelect && filterSelect.value !== termId ) {
-				filterSelect.value = termId;
-			}
 
 			cards.forEach( function ( card ) {
 				const terms = ( card.dataset.pageDriverTerms || '' ).split( ' ' );
@@ -93,11 +88,5 @@
 				activateFilter( filter );
 			} );
 		} );
-
-		if ( filterSelect ) {
-			filterSelect.addEventListener( 'change', function () {
-				activateFilter( filterSelect );
-			} );
-		}
 	} );
 }() );

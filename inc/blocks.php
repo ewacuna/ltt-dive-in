@@ -219,6 +219,22 @@ function ltt_dive_in_register_blocks() {
 		)
 	);
 	wp_localize_script( 'ltt-dive-in-page-drivers', 'ltt_dive_in_page_drivers', array( 'destinationSingular' => __( 'destination shown.', 'ltt-dive-in' ), 'destinationPlural' => __( 'destinations shown.', 'ltt-dive-in' ) ) );
+	wp_localize_script(
+		'ltt-dive-in-page-drivers-carousel',
+		'ltt_dive_in_page_driver_carousel',
+		array(
+			/* translators: %s: month name. */
+			'goToMonth'       => __( 'Go to %s', 'ltt-dive-in' ),
+			/* translators: %d: destination position. */
+			'goToDestination' => __( 'Go to destination %d', 'ltt-dive-in' ),
+			/* translators: %s: month name. */
+			'monthShown'      => __( '%s shown.', 'ltt-dive-in' ),
+			'previous'        => __( 'Previous destinations', 'ltt-dive-in' ),
+			'next'            => __( 'Next destinations', 'ltt-dive-in' ),
+			'previousMonth'   => __( 'Previous month', 'ltt-dive-in' ),
+			'nextMonth'       => __( 'Next month', 'ltt-dive-in' ),
+		)
+	);
 
 	if ( file_exists( $page_driver_path . '/block.json' ) ) {
 		register_block_type( $page_driver_path );
@@ -836,23 +852,48 @@ function ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets() {
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets', 5 );
 
 /**
- * Load shared carousel styles before block styles inside the editor canvas.
+ * Load shared carousel assets before block previews inside the editor canvas.
  *
- * All registered block variants can be previewed in the editor, so the shared
- * visual foundations are loaded there without enqueueing either initializer.
+ * All carousel variants can be previewed in the editor, so the shared visual
+ * foundations and Page Drivers initializer are loaded into its canvas.
  *
  * @return void
  */
-function ltt_dive_in_enqueue_carousel_editor_styles() {
+function ltt_dive_in_enqueue_carousel_editor_assets() {
 	if ( ! is_admin() ) {
 		return;
 	}
+	$select_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/select.js';
+
+	// ACF block previews run in the editor canvas iframe. Enqueue the same select
+	// enhancement there so its x-cloak fallback is replaced by the styled control.
+	wp_enqueue_script(
+		'ltt-dive-in-select',
+		LTT_DIVE_IN_URI . '/assets/js/components/select.js',
+		array(),
+		file_exists( $select_script_path ) ? (string) filemtime( $select_script_path ) : LTT_DIVE_IN_VERSION,
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => false,
+		)
+	);
+	wp_enqueue_script(
+		'ltt-dive-in-alpine',
+		LTT_DIVE_IN_URI . '/assets/js/vendor/alpine.min.js',
+		array( 'ltt-dive-in-select' ),
+		'3.17.2',
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => false,
+		)
+	);
 
 	wp_enqueue_style( 'ltt-dive-in-swiper' );
 	wp_enqueue_style( 'ltt-dive-in-slider-navigation' );
 	wp_enqueue_style( 'ltt-dive-in-carousel-indicators' );
+	wp_enqueue_script( 'ltt-dive-in-page-drivers-carousel' );
 }
-add_action( 'enqueue_block_assets', 'ltt_dive_in_enqueue_carousel_editor_styles', 5 );
+add_action( 'enqueue_block_assets', 'ltt_dive_in_enqueue_carousel_editor_assets', 5 );
 
 function ltt_dive_in_enqueue_page_driver_editor_assets() {
 	$script_path = LTT_DIVE_IN_DIR . '/assets/js/admin/page-driver-fields.js';

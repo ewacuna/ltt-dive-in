@@ -165,7 +165,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'        => __( 'Layout', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_page_driver_layout',
 					'type'         => 'select',
-						'instructions' => __( 'Choose the approved card-count variant. The selected page count is validated when this block is saved.', 'ltt-dive-in' ),
+					'instructions' => __( 'Choose the approved card-count variant. Monthly requires twelve hub pages and enabled taxonomy controls; the selected terms provide month options.', 'ltt-dive-in' ),
 					'required'     => 1,
 					'choices'      => array(
 						'one_up'       => __( '1 Up', 'ltt-dive-in' ),
@@ -237,7 +237,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'         => __( 'Hub pages', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_tiles',
 					'type'          => 'relationship',
-					'instructions'  => __( 'Choose and order published hub pages. Every selected page needs a featured image.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Choose and order published hub pages. Every page needs a featured image. For Monthly, select exactly twelve pages; their relationship order controls carousel order.', 'ltt-dive-in' ),
 					'required'      => 1,
 					'post_type'     => array( 'page' ),
 					'post_status'   => array( 'publish' ),
@@ -248,19 +248,19 @@ function ltt_dive_in_register_page_driver_settings() {
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_page_driver_enable_toggles',
-					'label'         => __( 'Enable filters', 'ltt-dive-in' ),
+					'label'         => __( 'Enable taxonomy controls', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_enable_toggles',
 					'type'          => 'true_false',
-					'instructions'  => __( 'Let visitors narrow the displayed hub pages without reloading the page.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Other layouts use these terms to filter pages. Monthly uses them as month options that navigate to the matching carousel page.', 'ltt-dive-in' ),
 					'default_value' => 0,
 					'ui'            => 1,
 				),
 				array(
 					'key'               => 'field_ltt_dive_in_page_driver_taxonomy',
-					'label'             => __( 'Filter taxonomy', 'ltt-dive-in' ),
+					'label'             => __( 'Taxonomy', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_taxonomy',
 					'type'              => 'select',
-					'instructions'      => __( 'Choose any public taxonomy registered for pages. All Page Driver variants use the selected taxonomy for filtering.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Choose a public taxonomy registered for pages. Other layouts use its terms as filters; Monthly uses them as month options.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'choices'           => $taxonomy_choices,
 					'allow_null'        => 1,
@@ -278,10 +278,10 @@ function ltt_dive_in_register_page_driver_settings() {
 				),
 				array(
 					'key'               => 'field_ltt_dive_in_page_driver_toggle_terms',
-					'label'             => __( 'Filter values', 'ltt-dive-in' ),
+					'label'             => __( 'Terms', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_toggle_terms',
 					'type'              => 'taxonomy',
-					'instructions'      => __( 'Select two to five values from the chosen taxonomy. The available terms update when you change the taxonomy.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Choose the terms to use. Monthly displays them as month options; each selected term must be assigned to at least one selected page. Other layouts use two to five terms as filters. Available terms update when you change the taxonomy.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'field_type'        => 'checkbox',
 					'taxonomy'          => $default_taxonomy,
@@ -315,14 +315,14 @@ function ltt_dive_in_register_page_driver_settings() {
 			'label_placement'       => 'top',
 			'instruction_placement' => 'label',
 			'active'                => true,
-			'description'           => __( 'Ordered, feature-image page links with approved grid and client-side filtering variants.', 'ltt-dive-in' ),
+			'description'           => __( 'Ordered, feature-image page links with approved grid, carousel, optional filters, and month navigation.', 'ltt-dive-in' ),
 		)
 	);
 }
 add_action( 'acf/init', 'ltt_dive_in_register_page_driver_settings' );
 
 /**
- * Require a public page taxonomy and filters for the Monthly Page Driver.
+ * Require filters and a public page taxonomy for the Monthly Page Driver.
  *
  * @param bool|string $valid Validation result.
  * @param mixed       $value Submitted value.
@@ -338,12 +338,7 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 	$filters_enabled = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_enable_toggles' );
 	$taxonomy        = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy' );
 
-	/*
-	 * ACF validates the Layout select independently while its value changes in
-	 * the block editor. That request contains the Layout field only, not its
-	 * sibling filter controls. Defer cross-field validation until the complete
-	 * block submission includes those values.
-	 */
+	/* ACF may validate the Layout field before including its sibling fields. */
 	if ( null === $filters_enabled ) {
 		return $valid;
 	}
