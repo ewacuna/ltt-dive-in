@@ -297,7 +297,9 @@ Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:
 
 The mobile stacked-card reference (`40:1897`) uses `24px` card padding, a `2px` gap between cards, a `16px` title-to-Expand gap, and a `10px` title-to-body / body-to-CTA gap when expanded. The collapsed card is `114px` tall. The expanded body reserves a `108px` text area while clamping copy to three lines; the expanded card is `249px` tall with a one-line title and grows naturally if the title wraps.
 
-Use the shared CTA component for button geometry and states; only the Short Feature Driver CTA overrides its typography to the documented Roboto style.
+Use the shared CTA component as the base for these actions. Short Feature Driver retains the documented Roboto typography and square button shape.
+
+On 2026-10-15 the client updated Short Feature Driver Single to support two independently linked CTAs within its Feature item. The new primary action is white with dark text and uses the footer newsletter submit button's Peak Gold fill, border, and dark text on hover. The existing transparent, white-outline action is secondary and retains its white-fill, dark-text hover. The primary field appears in the editor only for Short Single; existing blocks with only the secondary action remain valid.
 
 ### Buttons and controls
 

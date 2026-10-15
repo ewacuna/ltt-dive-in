@@ -142,6 +142,16 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
     justify-content: center;
 }
 
+.feature-image-driver--short .feature-image-driver__card-link:is(:hover, :focus-within)
+    .feature-image-driver__media img {
+    transform: scale(1.04);
+}
+
+.feature-image-driver--short .feature-image-driver__card-link:is(:hover, :focus-within)
+    .feature-image-driver__overlay {
+    background-color: rgba(2, 22, 43, 0.3);
+}
+
 /* Short Feature Driver Single — Figma node 1:11346. */
 .feature-image-driver--short .feature-image-driver__title {
     font-family: "Roboto", Arial, sans-serif;
@@ -158,7 +168,40 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
     line-height: 1.5;
 }
 
+.feature-image-driver--short .feature-image-driver__actions {
+    display: flex;
+    max-width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
 .feature-image-driver--short .feature-image-driver__cta {
+    min-height: 3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0;
+    font-family: "Roboto", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.feature-image-driver--short .feature-image-driver__cta--primary {
+    --ltt-button-background: #ffffff;
+    --ltt-button-border-color: #ffffff;
+    --ltt-button-color: #151419;
+    --ltt-button-hover-background: #eeb040;
+    --ltt-button-hover-border-color: #eeb040;
+    --ltt-button-hover-color: #042742;
+    --ltt-button-pressed-background: #eeb040;
+    --ltt-button-pressed-border-color: #eeb040;
+    --ltt-button-pressed-color: #042742;
+}
+
+.feature-image-driver--short .feature-image-driver__cta--secondary {
+    --ltt-button-background: transparent;
     --ltt-button-border-color: #ffffff;
     --ltt-button-color: #ffffff;
     --ltt-button-hover-background: #ffffff;
@@ -167,15 +210,6 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
     --ltt-button-pressed-background: #ffffff;
     --ltt-button-pressed-border-color: #ffffff;
     --ltt-button-pressed-color: #151419;
-    min-height: 3rem;
-    align-self: center;
-    margin-top: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0;
-    font-family: "Roboto", Arial, sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
 }
 
 .feature-image-driver--carousel {

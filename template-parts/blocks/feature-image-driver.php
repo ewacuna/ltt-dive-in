@@ -44,11 +44,12 @@ $normalize_item = static function ( $item ) use ( $normalize_link ) {
 	}
 
 	return array(
-		'image' => $image_id,
-		'title' => $title,
-		'tag'   => isset( $item['tag'] ) ? trim( (string) $item['tag'] ) : '',
-		'body'  => ! empty( $item['show_body'] ) && ! empty( $item['body'] ) ? trim( (string) $item['body'] ) : '',
-		'link'  => $link,
+		'image'              => $image_id,
+		'title'              => $title,
+		'tag'                => isset( $item['tag'] ) ? trim( (string) $item['tag'] ) : '',
+		'body'               => ! empty( $item['show_body'] ) && ! empty( $item['body'] ) ? trim( (string) $item['body'] ) : '',
+		'link'               => $link,
+		'short_primary_link' => $normalize_link( $item['short_primary_link'] ?? array() ),
 	);
 };
 $link_attributes = static function ( $link ) {
@@ -121,21 +122,25 @@ if ( 'carousel' === $variant && function_exists( 'ltt_dive_in_enqueue_feature_im
 	ltt_dive_in_enqueue_feature_image_driver_carousel_assets();
 }
 
-$section_id = $anchor ? $anchor : 'feature-image-driver-' . $block_id;
-$classes    = 'feature-image-driver feature-image-driver--' . $variant . $alignment . ( $is_preview ? ' feature-image-driver--preview' : '' );
-$link_tag   = $is_preview ? 'div' : 'a';
+$section_id         = $anchor ? $anchor : 'feature-image-driver-' . $block_id;
+$classes            = 'feature-image-driver feature-image-driver--' . $variant . $alignment . ( $is_preview ? ' feature-image-driver--preview' : '' );
+$link_tag           = $is_preview ? 'div' : 'a';
 ?>
 
 <?php if ( in_array( $variant, array( 'single', 'short' ), true ) ) : ?>
-	<?php $item = $items[0]; ?>
+	<?php
+	$item               = $items[0];
+	$short_primary_link = 'short' === $variant ? $item['short_primary_link'] : array();
+	?>
 	<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>" aria-labelledby="<?php echo esc_attr( $section_id . '-title' ); ?>">
 		<div class="feature-image-driver__feature">
-			<<?php echo esc_attr( $link_tag ); ?> class="feature-image-driver__card-link"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $item['link']['url'] ); ?>" aria-label="<?php echo esc_attr( $item['link']['title'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php else : ?> aria-hidden="true"<?php endif; ?>>
+			<?php $card_tag = 'short' === $variant ? 'div' : $link_tag; ?>
+			<<?php echo esc_attr( $card_tag ); ?> class="feature-image-driver__card-link"<?php if ( 'single' === $variant && ! $is_preview ) : ?> href="<?php echo esc_url( $item['link']['url'] ); ?>" aria-label="<?php echo esc_attr( $item['link']['title'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php elseif ( 'single' === $variant ) : ?> aria-hidden="true"<?php endif; ?>>
 			<span class="feature-image-driver__media" aria-hidden="true">
 				<?php echo wp_get_attachment_image( $item['image'], 'full', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
 			</span>
 			<span class="feature-image-driver__overlay" aria-hidden="true"></span>
-			<span class="feature-image-driver__content">
+			<div class="feature-image-driver__content">
 				<?php if ( $item['tag'] && 'short' !== $variant ) : ?>
 					<span class="feature-image-driver__tag ltt-tag ltt-tag--dark"><?php echo esc_html( $item['tag'] ); ?></span>
 				<?php endif; ?>
@@ -143,9 +148,18 @@ $link_tag   = $is_preview ? 'div' : 'a';
 				<?php if ( $item['body'] ) : ?>
 					<span class="feature-image-driver__body"><?php echo esc_html( $item['body'] ); ?></span>
 				<?php endif; ?>
-				<span class="feature-image-driver__cta ltt-button ltt-button--<?php echo esc_attr( 'short' === $variant ? 'dark-standard' : 'glass' ); ?>"><?php echo esc_html( $item['link']['title'] ); ?></span>
-			</span>
-			</<?php echo esc_attr( $link_tag ); ?>>
+				<?php if ( 'short' === $variant ) : ?>
+					<div class="feature-image-driver__actions">
+						<?php if ( $short_primary_link ) : ?>
+							<<?php echo esc_attr( $is_preview ? 'span' : 'a' ); ?> class="feature-image-driver__cta feature-image-driver__cta--primary ltt-button ltt-button--dark-standard"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $short_primary_link['url'] ); ?>"<?php echo $link_attributes( $short_primary_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php endif; ?>><?php echo esc_html( $short_primary_link['title'] ); ?></<?php echo esc_attr( $is_preview ? 'span' : 'a' ); ?>>
+						<?php endif; ?>
+						<<?php echo esc_attr( $is_preview ? 'span' : 'a' ); ?> class="feature-image-driver__cta feature-image-driver__cta--secondary ltt-button ltt-button--dark-standard"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $item['link']['url'] ); ?>"<?php echo $link_attributes( $item['link'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php endif; ?>><?php echo esc_html( $item['link']['title'] ); ?></<?php echo esc_attr( $is_preview ? 'span' : 'a' ); ?>>
+					</div>
+				<?php else : ?>
+					<span class="feature-image-driver__cta ltt-button ltt-button--glass"><?php echo esc_html( $item['link']['title'] ); ?></span>
+				<?php endif; ?>
+			</div>
+			</<?php echo esc_attr( $card_tag ); ?>>
 		</div>
 	</section>
 

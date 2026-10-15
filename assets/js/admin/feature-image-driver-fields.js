@@ -4,6 +4,7 @@
 	const variantKey = 'field_ltt_dive_in_feature_image_driver_variant';
 	const itemsKey = 'field_ltt_dive_in_feature_image_driver_items';
 	const enabledKey = 'field_ltt_dive_in_feature_image_driver_item_enabled';
+	const shortPrimaryLinkKey = 'field_ltt_dive_in_feature_image_driver_short_primary_link';
 	const activeRequiredKeys = [
 		'field_ltt_dive_in_feature_image_driver_item_image',
 		'field_ltt_dive_in_feature_image_driver_item_title'
@@ -100,6 +101,10 @@
 		const $fields = $itemsField.closest( '.acf-fields' );
 		const variant = $fields.find( '[data-key="' + variantKey + '"] select' ).first().val();
 		const limits = itemLimits[ variant ];
+
+		getRows( $itemsField ).each( function () {
+			$( this ).find( '[data-key="' + shortPrimaryLinkKey + '"]' ).first().toggle( 'short' === variant );
+		} );
 
 		if ( ! limits ) {
 			return;

@@ -221,6 +221,14 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "return_format": "array"
+                },
+                {
+                    "key": "field_ltt_dive_in_feature_image_driver_short_primary_link",
+                    "label": "Call to action white button",
+                    "name": "short_primary_link",
+                    "type": "link",
+                    "conditional_logic": 0,
+                    "return_format": "array"
                 }
             ]
         }
@@ -241,5 +249,5 @@
     "instruction_placement": "label",
     "active": true,
     "show_in_rest": 0,
-    "modified": 1789941169
+    "modified": 1792086301
 }
