@@ -209,13 +209,8 @@ if ( 'hero_grid' === $layout ) :
 	$results_id    = $section_id . '-results';
 	$categories    = ltt_dive_in_get_story_driver_filter_options( 'category' );
 	$tags          = ltt_dive_in_get_story_driver_filter_options( 'post_tag' );
-	$build_options = static function ( $placeholder, $terms ) {
-		$options = array(
-			array(
-				'value' => '',
-				'label' => $placeholder,
-			),
-		);
+	$build_options = static function ( $terms ) {
+		$options = array();
 
 		foreach ( $terms as $term_id => $term_name ) {
 			$options[] = array(
@@ -258,7 +253,8 @@ if ( 'hero_grid' === $layout ) :
 								'id'                => $section_id . '-category',
 								'name'              => 'story_category',
 								'label'             => __( 'Story category', 'ltt-dive-in' ),
-								'options'           => $build_options( __( 'Categories', 'ltt-dive-in' ), $categories ),
+								'placeholder'       => __( 'Categories', 'ltt-dive-in' ),
+								'options'           => $build_options( $categories ),
 								'selected_value'    => $filters['category'] ? (string) $filters['category'] : '',
 								'surface'           => 'light',
 								'aria_controls'     => $results_id,
@@ -279,7 +275,8 @@ if ( 'hero_grid' === $layout ) :
 								'id'                => $section_id . '-tag',
 								'name'              => 'story_tag',
 								'label'             => __( 'Story tag', 'ltt-dive-in' ),
-								'options'           => $build_options( __( 'Tags', 'ltt-dive-in' ), $tags ),
+								'placeholder'       => __( 'Tags', 'ltt-dive-in' ),
+								'options'           => $build_options( $tags ),
 								'selected_value'    => $filters['tag'] ? (string) $filters['tag'] : '',
 								'surface'           => 'light',
 								'aria_controls'     => $results_id,

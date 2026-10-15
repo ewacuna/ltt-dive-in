@@ -116,9 +116,11 @@
     z-index: 3;
     max-width: 10.5rem;
     top: calc(100% + 0.5rem);
-    right: 0;
     left: 0;
+    width: max-content;
+    min-width: 100%;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     padding: 0.375rem;
     border: 1.3px solid #073959;
     border-radius: 0.5rem;
@@ -136,6 +138,7 @@
     font-size: 0.875rem;
     line-height: 1.45;
     text-align: left;
+    overflow-wrap: anywhere;
 }
 
 .ltt-select__option:is(:hover, [aria-pressed="true"]) {

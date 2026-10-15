@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $id                 = isset( $args['id'] ) ? sanitize_html_class( $args['id'] ) : wp_unique_id( 'ltt-select-' );
 $label              = isset( $args['label'] ) && is_string( $args['label'] ) ? $args['label'] : __( 'Choose an option', 'ltt-dive-in' );
 $options            = isset( $args['options'] ) && is_array( $args['options'] ) ? $args['options'] : array();
+$placeholder        = isset( $args['placeholder'] ) && is_string( $args['placeholder'] ) ? $args['placeholder'] : '';
 $selected_value     = isset( $args['selected_value'] ) && is_scalar( $args['selected_value'] ) ? (string) $args['selected_value'] : '';
 $surface            = isset( $args['surface'] ) && 'dark' === $args['surface'] ? 'dark' : 'light';
 $class_name         = isset( $args['class_name'] ) ? sanitize_html_class( $args['class_name'] ) : '';
@@ -25,6 +26,18 @@ $icon_file          = 'dark' === $surface ? 'assets/images/icons/select-toggle-d
 
 if ( ! $options ) {
 	return;
+}
+
+// The placeholder resets the filter, so the menu lists it only while another value is selected.
+if ( $placeholder ) {
+	array_unshift(
+		$options,
+		array(
+			'value'       => '',
+			'label'       => $placeholder,
+			'placeholder' => true,
+		)
+	);
 }
 ?>
 <label id="<?php echo esc_attr( $label_id ); ?>" class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
@@ -47,7 +60,7 @@ if ( ! $options ) {
 			<?php $option_value = isset( $option['value'] ) && is_scalar( $option['value'] ) ? (string) $option['value'] : ''; ?>
 			<?php $option_label = isset( $option['label'] ) && is_string( $option['label'] ) ? $option['label'] : ''; ?>
 			<?php if ( ! $option_label ) { continue; } ?>
-			<button class="ltt-select__option" type="button" data-ltt-select-value="<?php echo esc_attr( $option_value ); ?>" x-bind:aria-pressed="isSelected($el.dataset.lttSelectValue)" x-on:click="choose"><?php echo esc_html( $option_label ); ?></button>
+			<button class="ltt-select__option" type="button" data-ltt-select-value="<?php echo esc_attr( $option_value ); ?>" x-bind:aria-pressed="isSelected($el.dataset.lttSelectValue)" x-on:click="choose"<?php echo ! empty( $option['placeholder'] ) ? ' x-show="! isSelected($el.dataset.lttSelectValue)"' : ''; ?>><?php echo esc_html( $option_label ); ?></button>
 		<?php endforeach; ?>
 	</div>
 </div>
