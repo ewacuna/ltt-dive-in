@@ -182,8 +182,10 @@
     scroll-snap-type: none;
 }
 
+/* Keep the carousel height so a wide single tile does not grow with its image and push the page down. */
 .story-drivers--carousel .story-drivers__carousel[data-visible-count] .story-drivers__slide {
     width: auto;
+    height: var(--story-card-height);
     flex: 1 1 0;
 }
 
@@ -630,6 +632,7 @@
     }
 
     .story-drivers--carousel .story-drivers__carousel[data-visible-count] .story-drivers__slide {
+        height: auto;
         flex: 0 0 auto;
     }
 

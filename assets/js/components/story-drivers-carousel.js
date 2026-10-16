@@ -85,6 +85,7 @@
 		const track = carousel ? carousel.querySelector( '[data-story-carousel-track]' ) : null;
 		const filters = Array.prototype.slice.call( section.querySelectorAll( '[data-story-filter]' ) );
 		const status = section.querySelector( '[data-story-filter-status]' );
+		const singles = Array.prototype.slice.call( section.querySelectorAll( '[data-story-single]' ) );
 		let inRevealBand = false;
 
 		if ( ! viewport || ! track || viewport.classList.contains( 'swiper-initialized' ) ) {
@@ -204,6 +205,14 @@
 				filters.forEach( function ( item ) {
 					item.setAttribute( 'aria-pressed', item === button ? 'true' : 'false' );
 				} );
+
+				/* A filter that leaves one story shows its 1 Up feature, rendered hidden by the block. */
+				const single = 1 === matches.length ? section.querySelector( '[data-story-single="' + value + '"]' ) : null;
+
+				singles.forEach( function ( item ) {
+					item.hidden = item !== single;
+				} );
+				carousel.hidden = Boolean( single );
 
 				render( matches );
 

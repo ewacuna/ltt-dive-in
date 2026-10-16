@@ -3,7 +3,8 @@
  * Feature story slideshow (Figma “Feature Story Driver” desktop and mobile).
  *
  * Used by the 1 Up layout and as the hero of Hero + Page Grid. Without
- * JavaScript, slides fall back to a horizontally scrolling row.
+ * JavaScript, slides fall back to a horizontally scrolling row. Pass `lazy`
+ * when the feature starts hidden so its first image is not loaded eagerly.
  *
  * @package LTT_Dive_In
  */
@@ -17,6 +18,7 @@ $heading_level = isset( $args['heading_level'] ) && 3 === $args['heading_level']
 $label         = isset( $args['label'] ) && is_string( $args['label'] ) ? $args['label'] : __( 'Featured stories', 'ltt-dive-in' );
 $is_preview    = ! empty( $args['is_preview'] );
 $has_controls  = count( $stories ) > 1;
+$is_lazy       = ! empty( $args['lazy'] );
 
 if ( ! $stories ) {
 	return;
@@ -35,7 +37,7 @@ if ( ! $stories ) {
 							false,
 							array(
 								'alt'     => '',
-								'loading' => 0 === $index ? 'eager' : 'lazy',
+								'loading' => 0 === $index && ! $is_lazy ? 'eager' : 'lazy',
 								'sizes'   => '100vw',
 							)
 						);

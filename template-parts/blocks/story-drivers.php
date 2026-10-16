@@ -127,9 +127,15 @@ if ( 'one_up' === $layout ) :
 endif;
 
 if ( 'carousel' === $layout ) :
-	$filters = array();
+	$filters      = array();
+	$feature_args = array(
+		'heading_level' => 3,
+		/* translators: %s: Story Drivers section heading. */
+		'label'         => sprintf( __( 'Featured story: %s', 'ltt-dive-in' ), $heading ),
+		'is_preview'    => $is_preview,
+	);
 
-	if ( $get_value( 'ltt_dive_in_story_driver_enable_filters' ) ) {
+	if ( count( $stories ) > 1 && $get_value( 'ltt_dive_in_story_driver_enable_filters' ) ) {
 		$story_terms = array_unique( array_merge( array(), ...array_column( $stories, 'category_ids' ) ) );
 
 		foreach ( array_slice( array_filter( array_map( 'absint', (array) $get_value( 'ltt_dive_in_story_driver_filter_terms' ) ) ), 0, 5 ) as $term_id ) {
@@ -160,7 +166,16 @@ if ( 'carousel' === $layout ) :
 		</div>
 
 		<?php
-		/* Fewer than three stories cannot fill the carousel, so they use the 2 Up row presentation. */
+		/* A single story uses the 1 Up feature presentation instead of a lone carousel tile. */
+		if ( 1 === count( $stories ) ) :
+			get_template_part( 'template-parts/components/story-drivers/feature', null, array_merge( $feature_args, array( 'stories' => $stories ) ) );
+			?>
+		</section>
+			<?php
+			return;
+		endif;
+
+		/* Two stories cannot fill the carousel, so they use the 2 Up row presentation. */
 		$is_row = count( $stories ) < 3;
 		?>
 		<div class="story-drivers__carousel" data-story-carousel<?php echo $is_row ? ' data-visible-count="' . esc_attr( (string) count( $stories ) ) . '"' : ''; ?>>
@@ -189,6 +204,27 @@ if ( 'carousel' === $layout ) :
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/carousel-arrow-next.svg' ) ); ?>" alt="" aria-hidden="true" />
 			</button>
 		</div>
+
+		<?php
+		/* Filters that leave one story swap the carousel for this 1 Up feature. */
+		foreach ( $filters as $term ) :
+			$term_stories = array_values(
+				array_filter(
+					$stories,
+					static function ( $story ) use ( $term ) {
+						return in_array( $term->term_id, $story['category_ids'], true );
+					}
+				)
+			);
+
+			if ( 1 !== count( $term_stories ) ) {
+				continue;
+			}
+			?>
+			<div class="story-drivers__single" data-story-single="<?php echo esc_attr( (string) $term->term_id ); ?>" hidden>
+				<?php get_template_part( 'template-parts/components/story-drivers/feature', null, array_merge( $feature_args, array( 'stories' => $term_stories, 'lazy' => true ) ) ); ?>
+			</div>
+		<?php endforeach; ?>
 	</section>
 	<?php
 	return;
