@@ -22,6 +22,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/customizer.php';
 require_once LTT_DIVE_IN_DIR . '/inc/header-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-hero-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/section-navigation.php';
+require_once LTT_DIVE_IN_DIR . '/inc/weather-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/weather.php';
 require_once LTT_DIVE_IN_DIR . '/inc/footer-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-driver-settings.php';
