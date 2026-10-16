@@ -375,12 +375,13 @@ function ltt_dive_in_get_map_cartography() {
 	);
 
 	return array(
+		// The map opens fitted to the lake plus every destination and
+		// attraction, and that view is the furthest visitors can zoom out.
+		// maxBounds keeps panning near Tahoe, including the route shields.
 		'view'       => array(
-			'center'    => array( -120.039636, 39.120698 ),
-			'zoom'      => 10.1,
-			'minZoom'   => 10.1,
+			'bounds'    => array( array( -120.17, 38.92 ), array( -119.92, 39.26 ) ),
 			'maxZoom'   => 11,
-			'maxBounds' => array( array( -120.04, 39 ), array( -120, 39.2 ) ),
+			'maxBounds' => array( array( -121, 38.6 ), array( -119.1, 39.65 ) ),
 		),
 		'lines'      => array_map(
 			static function ( $line ) use ( $data_uri ) {

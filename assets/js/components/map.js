@@ -618,14 +618,47 @@
 
 		window.mapboxgl.accessToken = root.dataset.accessToken;
 
+		// Everything the map opens on: the lake, destinations, and attractions.
+		const contentBounds = new window.mapboxgl.LngLatBounds( view.bounds[ 0 ], view.bounds[ 1 ] );
+
+		places.concat( attractions ).forEach( function ( item ) {
+			contentBounds.extend( item.lngLat );
+		} );
+
+		// Room for the centered destination names and the corner controls.
+		function fitPadding() {
+			const side = canvas.clientWidth < 576 ? 80 : 96;
+
+			return { top: 56, bottom: 32, left: side, right: side };
+		}
+
+		let userMoved = false;
+
+		// The fitted view is the furthest visitors can zoom out; they zoom in
+		// from there. Refit on resize until the visitor has moved the map.
+		function fitContent() {
+			const camera = map.cameraForBounds( contentBounds, { padding: fitPadding() } );
+
+			if ( ! camera ) {
+				return;
+			}
+
+			const zoom = Math.min( camera.zoom, view.maxZoom );
+
+			map.setMinZoom( zoom );
+
+			if ( ! userMoved ) {
+				map.jumpTo( { center: camera.center, zoom: zoom, bearing: 0 } );
+			}
+		}
+
 		try {
 			map = new window.mapboxgl.Map( {
 				container: canvas,
 				style: root.dataset.mapStyle,
 				projection: 'globe',
-				center: view.center,
-				zoom: view.zoom,
-				minZoom: view.minZoom,
+				bounds: contentBounds,
+				fitBoundsOptions: { padding: fitPadding() },
 				maxZoom: view.maxZoom,
 				maxBounds: view.maxBounds,
 				// One-finger drags scroll the page on touch screens; two fingers
@@ -640,6 +673,19 @@
 
 		map.touchZoomRotate.disableRotation();
 		map.addControl( new window.mapboxgl.NavigationControl(), 'top-right' );
+		fitContent();
+
+		// Visitor gestures and controls carry an original event; a window
+		// resize also does, but it is not the visitor moving the map.
+		function markUserMove( event ) {
+			if ( event.originalEvent && 'resize' !== event.originalEvent.type ) {
+				userMoved = true;
+			}
+		}
+
+		map.on( 'movestart', markUserMove );
+		map.on( 'zoomstart', markUserMove );
+		map.on( 'resize', fitContent );
 
 		map.on( 'load', function () {
 			loaded = true;

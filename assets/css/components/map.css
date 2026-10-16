@@ -23,7 +23,7 @@
 
 .ltt-map__frame {
     position: relative;
-    /* The prototype fills the viewport; its fixed zoom needs ~780px to show the whole lake. */
+    /* The prototype fills the viewport; the script fits the lake into whatever height results. */
     height: clamp(30rem, 100svh, 50rem);
 }
 
@@ -445,6 +445,11 @@
 }
 
 @media (max-width: 575.98px) {
+    /* Full-size names overlap and overflow a 375px map. */
+    .ltt-map__destination {
+        font-size: 0.875rem;
+    }
+
     .ltt-map__popup .mapboxgl-popup-content {
         max-height: min(28.125rem, calc(100dvh - 3rem));
     }
