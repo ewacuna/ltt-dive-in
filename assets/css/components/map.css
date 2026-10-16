@@ -1,0 +1,289 @@
+/*
+ * Map block. Figma reserves only a full-width "MAP HERE FPO" frame, so the
+ * frame height and the marker and card treatments are provisional, built from
+ * the approved palette. The map itself is the Mapbox Studio style.
+ */
+.ltt-map {
+    background: #083959;
+    color: #f9f9f9;
+}
+
+/* Shared button classes set display; keep script-hidden controls hidden. */
+.ltt-map [hidden] {
+    display: none;
+}
+
+.ltt-map__frame {
+    position: relative;
+    height: clamp(30rem, 70vh, 47.5rem);
+}
+
+.ltt-map__canvas {
+    position: absolute;
+    inset: 0;
+}
+
+.ltt-map__canvas .mapboxgl-canvas:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: -3px;
+}
+
+/* Keep Mapbox zoom controls at the 44px target size. */
+.ltt-map .mapboxgl-ctrl-group button {
+    width: 2.75rem;
+    height: 2.75rem;
+}
+
+.ltt-map .mapboxgl-ctrl-group button:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 2px;
+}
+
+.ltt-map__marker {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.5rem 0 0;
+    border: 0;
+    background: none;
+    color: #ffffff;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ltt-map__marker-dot {
+    width: 1rem;
+    height: 1rem;
+    margin-left: -0.5rem;
+    border: 3px solid #eeb040;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: transform 0.2s ease-out;
+}
+
+.ltt-map__marker-label {
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.25rem;
+    background: rgba(7, 57, 89, 0.85);
+}
+
+.ltt-map__marker:hover .ltt-map__marker-dot,
+.ltt-map__marker[aria-expanded="true"] .ltt-map__marker-dot {
+    transform: scale(1.35);
+}
+
+.ltt-map__marker[aria-expanded="true"] .ltt-map__marker-label {
+    background: #ffffff;
+    color: #073959;
+}
+
+.ltt-map__marker:focus-visible {
+    border-radius: 0.25rem;
+    outline: 3px solid #eeb040;
+    outline-offset: 2px;
+}
+
+.ltt-map__card {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 1rem;
+    z-index: 2;
+    width: min(22rem, calc(100% - 2rem));
+    max-height: calc(100% - 7rem);
+    overflow-y: auto;
+    padding: 1.25rem 3.25rem 1.25rem 1.25rem;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
+    color: #073959;
+}
+
+.ltt-map__card-title {
+    margin: 0 0 0.25rem;
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.ltt-map__card-region {
+    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ltt-map__card-text {
+    margin: 0;
+}
+
+.ltt-map__card-link {
+    margin-top: 1rem;
+}
+
+.ltt-map__card-close {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    background: none;
+    color: #073959;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ltt-map__card-close:focus-visible {
+    outline: 3px solid #073959;
+    outline-offset: -3px;
+}
+
+.ltt-map__reset {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+}
+
+/* Text alternative shown when the interactive map cannot load. */
+.ltt-map__fallback {
+    width: min(calc(100% - 8rem), 80rem);
+    margin-inline: auto;
+    padding-block: 3rem;
+}
+
+.ltt-map__fallback-title {
+    margin: 0 0 1.5rem;
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.ltt-map__places {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ltt-map__place {
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0.5rem;
+}
+
+.ltt-map__place p {
+    margin: 0 0 0.25rem;
+}
+
+.ltt-map__place-name {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.ltt-map__place-region {
+    color: #c7d1d8;
+    font-size: 0.875rem;
+}
+
+.ltt-map__place-link {
+    display: inline-block;
+    padding-block: 0.75rem;
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.ltt-map__place-link:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 2px;
+}
+
+/* Without scripting the empty frame is hidden; the noscript list remains. */
+@media (scripting: none) {
+    .ltt-map__frame {
+        display: none;
+    }
+}
+
+/* Editor preview: Mapbox is not loaded in the block editor. */
+.ltt-map__preview {
+    display: grid;
+    min-height: 18rem;
+    place-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.ltt-map__preview p {
+    margin: 0 0 0.5rem;
+}
+
+.ltt-map__preview-title {
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 1.75rem;
+}
+
+.ltt-map__preview-notice {
+    padding: 0.75rem 1rem;
+    border: 1px solid #eeb040;
+    border-radius: 0.5rem;
+}
+
+.ltt-map__preview-places {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (max-width: 991.98px) {
+    .ltt-map__fallback {
+        width: min(calc(100% - 4rem), 80rem);
+    }
+
+    .ltt-map__places {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ltt-map__frame {
+        height: clamp(26rem, 70vh, 35rem);
+    }
+
+    .ltt-map__fallback {
+        width: calc(100% - 2rem);
+    }
+
+    .ltt-map__places {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ltt-map__marker-dot {
+        transition: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .ltt-map__marker-dot {
+        border-color: ButtonText;
+        background: ButtonFace;
+    }
+
+    .ltt-map__marker[aria-expanded="true"] .ltt-map__marker-dot {
+        background: Highlight;
+    }
+}

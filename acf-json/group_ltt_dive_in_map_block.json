@@ -1,0 +1,22 @@
+{
+  "key": "group_ltt_dive_in_map_block",
+  "title": "LTT Dive In — Map",
+  "fields": [
+    {"key":"field_ltt_dive_in_map_places","label":"Places","name":"ltt_dive_in_map_places","type":"repeater","instructions":"Optional markers shown on the map. Selecting a marker shows its details. Places are also listed as text when the map cannot load.","min":0,"max":30,"layout":"block","collapsed":"field_ltt_dive_in_map_place_name","button_label":"Add place","rows_per_page":30,"sub_fields":[
+      {"key":"field_ltt_dive_in_map_place_name","label":"Name","name":"name","type":"text","instructions":"Shown next to the marker, for example “Tahoe City”.","required":1,"maxlength":40,"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_region","label":"Region","name":"region","type":"text","instructions":"Optional, for example “North Shore · California”.","maxlength":60,"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_description","label":"Description","name":"description","type":"textarea","instructions":"Optional short description shown when the place is selected.","maxlength":240,"rows":3,"new_lines":"","parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_latitude","label":"Latitude","name":"latitude","type":"number","instructions":"Decimal degrees, for example 39.1677. In Google Maps, right-click the place and copy the first number.","required":1,"min":-90,"max":90,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_longitude","label":"Longitude","name":"longitude","type":"number","instructions":"Decimal degrees, for example -120.1452 (negative in North America). The second number copied from Google Maps.","required":1,"min":-180,"max":180,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_link","label":"Link","name":"link","type":"link","instructions":"Optional. Use a descriptive link text such as “Explore Tahoe City”; a link without text is not shown.","return_format":"array","parent_repeater":"field_ltt_dive_in_map_places"}
+    ]}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"ltt-dive-in/map"}]],
+  "position":"normal",
+  "style":"default",
+  "label_placement":"top",
+  "instruction_placement":"label",
+  "active":true,
+  "show_in_rest":0,
+  "modified":1792022400
+}

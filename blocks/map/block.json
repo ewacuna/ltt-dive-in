@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/map",
+  "title": "Map",
+  "category": "ltt-blocks",
+  "icon": "location-alt",
+  "description": "Interactive Lake Tahoe map with editable places that show their details when selected.",
+  "keywords": [ "map", "mapbox", "places", "lake" ],
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-map",
+  "viewScript": "ltt-dive-in-map",
+  "acf": { "mode": "preview", "renderTemplate": "template-parts/blocks/map.php" },
+  "attributes": { "align": { "type": "string", "default": "full" } },
+  "supports": { "align": [ "full" ], "anchor": true, "customClassName": false, "html": false, "multiple": true }
+}

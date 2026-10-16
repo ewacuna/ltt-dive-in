@@ -458,6 +458,32 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $story_drivers_path . '/block.json' ) ) {
 		register_block_type( $story_drivers_path );
 	}
+
+	$map_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/map.css';
+	$map_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/map.js';
+	$map_path        = LTT_DIVE_IN_DIR . '/blocks/map';
+	$mapbox_gl_url   = 'https://api.mapbox.com/mapbox-gl-js/v' . LTT_DIVE_IN_MAPBOX_GL_VERSION;
+
+	// Mapbox GL JS is loaded from Mapbox's CDN, and only on pages with a Map block.
+	wp_register_style( 'ltt-dive-in-mapbox-gl', $mapbox_gl_url . '/mapbox-gl.css', array(), null );
+	wp_register_script( 'ltt-dive-in-mapbox-gl', $mapbox_gl_url . '/mapbox-gl.js', array(), null, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_register_style( 'ltt-dive-in-map', LTT_DIVE_IN_URI . '/assets/css/components/map.css', array( 'ltt-dive-in-mapbox-gl', 'ltt-dive-in-buttons' ), file_exists( $map_style_path ) ? (string) filemtime( $map_style_path ) : LTT_DIVE_IN_VERSION );
+	wp_register_script( 'ltt-dive-in-map', LTT_DIVE_IN_URI . '/assets/js/components/map.js', array( 'ltt-dive-in-mapbox-gl' ), file_exists( $map_script_path ) ? (string) filemtime( $map_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_localize_script(
+		'ltt-dive-in-map',
+		'ltt_dive_in_map',
+		array(
+			'canvas'   => __( 'Lake Tahoe map. Use the arrow keys to pan and plus or minus to zoom.', 'ltt-dive-in' ),
+			/* translators: %s: place name. */
+			'selected' => __( '%s selected. Details are shown on the map.', 'ltt-dive-in' ),
+			'reset'    => __( 'Map view reset to the whole lake.', 'ltt-dive-in' ),
+			'newTab'   => __( '(opens in a new tab)', 'ltt-dive-in' ),
+		)
+	);
+
+	if ( file_exists( $map_path . '/block.json' ) ) {
+		register_block_type( $map_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
 
@@ -828,6 +854,28 @@ function ltt_dive_in_maybe_enqueue_event_driver_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_event_driver_assets', 20 );
+
+/**
+ * Enqueue Map block styles before the document head is printed.
+ *
+ * Keeps the Mapbox and theme styles in the head, in dependency order, for Map
+ * blocks found in the queried post. Other blocks still receive their assets
+ * from block.json and the render template.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_map_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( $post instanceof WP_Post && has_block( 'ltt-dive-in/map', $post ) ) {
+		wp_enqueue_style( 'ltt-dive-in-map' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_map_assets', 20 );
 
 /**
  * Load Features List Grid carousel assets before the document head.
