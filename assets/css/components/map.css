@@ -1,7 +1,15 @@
 /*
- * Map block. Figma reserves only a full-width "MAP HERE FPO" frame, so the
- * frame height and the marker and card treatments are provisional, built from
- * the approved palette. The map itself is the Mapbox Studio style.
+ * Map block. Follows the client's map prototype (supplied 2026-10-16): gold
+ * destination names with a dark popup, attraction icons with a name tooltip,
+ * and white town and gateway labels. Figma still reserves only a "MAP HERE
+ * FPO" frame, so the frame height is provisional.
+ *
+ * Deliberate differences from the prototype: the snow effect has a play/pause
+ * map control (WCAG 2.2.2), Gotham and Big Caslon replace
+ * Montserrat, the popup uses primary shade #042742 instead of the off-palette
+ * #002434, the CTA uses the shared dark-standard button, gateway labels are
+ * 10px instead of 8px, and every control keeps a 44px target and a visible
+ * focus indicator.
  */
 .ltt-map {
     background: #083959;
@@ -15,7 +23,8 @@
 
 .ltt-map__frame {
     position: relative;
-    height: clamp(30rem, 70vh, 47.5rem);
+    /* The prototype fills the viewport; its fixed zoom needs ~780px to show the whole lake. */
+    height: clamp(30rem, 100svh, 50rem);
 }
 
 .ltt-map__canvas {
@@ -28,7 +37,12 @@
     outline-offset: -3px;
 }
 
-/* Keep Mapbox zoom controls at the 44px target size. */
+/* Keep Mapbox controls at the 44px target size. */
+.ltt-map .mapboxgl-ctrl-group {
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
 .ltt-map .mapboxgl-ctrl-group button {
     width: 2.75rem;
     height: 2.75rem;
@@ -36,118 +50,291 @@
 
 .ltt-map .mapboxgl-ctrl-group button:focus-visible {
     outline: 3px solid #eeb040;
-    outline-offset: 2px;
-}
-
-.ltt-map__marker {
-    display: flex;
-    min-height: 2.75rem;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0 0.5rem 0 0;
-    border: 0;
-    background: none;
-    color: #ffffff;
-    font-family: "Gotham HTF", Arial, sans-serif;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.ltt-map__marker-dot {
-    width: 1rem;
-    height: 1rem;
-    margin-left: -0.5rem;
-    border: 3px solid #eeb040;
-    border-radius: 50%;
-    background: #ffffff;
-    transition: transform 0.2s ease-out;
-}
-
-.ltt-map__marker-label {
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.25rem;
-    background: rgba(7, 57, 89, 0.85);
-}
-
-.ltt-map__marker:hover .ltt-map__marker-dot,
-.ltt-map__marker[aria-expanded="true"] .ltt-map__marker-dot {
-    transform: scale(1.35);
-}
-
-.ltt-map__marker[aria-expanded="true"] .ltt-map__marker-label {
-    background: #ffffff;
-    color: #073959;
-}
-
-.ltt-map__marker:focus-visible {
-    border-radius: 0.25rem;
-    outline: 3px solid #eeb040;
-    outline-offset: 2px;
-}
-
-.ltt-map__card {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 1rem;
-    z-index: 2;
-    width: min(22rem, calc(100% - 2rem));
-    max-height: calc(100% - 7rem);
-    overflow-y: auto;
-    padding: 1.25rem 3.25rem 1.25rem 1.25rem;
-    border-radius: 0.5rem;
-    background: #ffffff;
-    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
-    color: #073959;
-}
-
-.ltt-map__card-title {
-    margin: 0 0 0.25rem;
-    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
-    font-size: 1.75rem;
-    font-weight: 500;
-    line-height: 1.1;
-}
-
-.ltt-map__card-region {
-    margin: 0 0 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.ltt-map__card-text {
-    margin: 0;
-}
-
-.ltt-map__card-link {
-    margin-top: 1rem;
-}
-
-.ltt-map__card-close {
-    position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 0;
-    background: none;
-    color: #073959;
-    font-size: 1.75rem;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.ltt-map__card-close:focus-visible {
-    outline: 3px solid #073959;
     outline-offset: -3px;
 }
 
-.ltt-map__reset {
+/* Snow play/pause, drawn like the native Mapbox control icons. */
+.ltt-map__snow-toggle .mapboxgl-ctrl-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 29 29' fill='%23333'%3E%3Crect x='9.5' y='8.5' width='3.5' height='12' rx='1'/%3E%3Crect x='16' y='8.5' width='3.5' height='12' rx='1'/%3E%3C/svg%3E");
+}
+
+.ltt-map__snow-toggle.is-paused .mapboxgl-ctrl-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 29 29' fill='%23333'%3E%3Cpath d='M11 8.4v12.2a.8.8 0 0 0 1.2.7l9.6-6.1a.8.8 0 0 0 0-1.4l-9.6-6.1a.8.8 0 0 0-1.2.7z'/%3E%3C/svg%3E");
+}
+
+/* Reset Mapbox marker text so labels use the theme typography. */
+.ltt-map .mapboxgl-marker {
+    font-family: "Gotham HTF", Arial, sans-serif;
+}
+
+/* Destinations: gold names that open a popup. */
+.ltt-map__destination {
+    min-height: 2.75rem;
+    padding: 0.25rem 0.375rem;
+    border: 0;
+    border-radius: 0.25rem;
+    background: none;
+    color: #eeb040;
+    font: inherit;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.ltt-map__destination:hover,
+.ltt-map__destination[aria-expanded="true"] {
+    color: #ffffff;
+}
+
+.ltt-map__destination:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 0;
+}
+
+/* Attractions: icon buttons with a hover variant. */
+.ltt-map__attraction {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: end center;
+    padding: 0 0 0.25rem;
+    border: 0;
+    border-radius: 0.25rem;
+    background: none;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.ltt-map__attraction-icon {
+    grid-area: 1 / 1;
+    max-width: none;
+    object-fit: contain;
+}
+
+.ltt-map__attraction-icon--hover,
+.ltt-map__attraction:is(:hover, :focus-visible, .is-active) .ltt-map__attraction-icon:not(.ltt-map__attraction-icon--hover) {
+    visibility: hidden;
+}
+
+.ltt-map__attraction:is(:hover, :focus-visible, .is-active) .ltt-map__attraction-icon--hover {
+    visibility: visible;
+}
+
+.ltt-map__attraction:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 0;
+}
+
+/* Static cartography labels. */
+.ltt-map__town,
+.ltt-map__gateway {
+    margin: 0;
+    color: #ffffff;
+    line-height: 1.1;
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+}
+
+.ltt-map__town {
+    font-size: 0.6875rem;
+    white-space: nowrap;
+}
+
+.ltt-map__gateway {
+    font-size: 0.625rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.ltt-map__gateway--left {
+    text-align: left;
+}
+
+.ltt-map__gateway--right {
+    text-align: right;
+}
+
+.ltt-map__gateway-subtitle {
+    display: block;
+    margin-top: 1px;
+    font-weight: 400;
+}
+
+.ltt-map__shield {
+    max-width: none;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Destination popup. */
+.ltt-map .ltt-map__popup {
+    z-index: 3;
+    max-width: none;
+}
+
+.ltt-map__popup .mapboxgl-popup-content {
+    width: min(21.875rem, calc(100vw - 2rem));
+    max-height: min(31.25rem, calc(100dvh - 3rem));
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: #042742;
+    box-shadow: 0 0.5rem 1.875rem rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+}
+
+.ltt-map__popup.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+.ltt-map__popup.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+.ltt-map__popup.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
+    border-top-color: #042742;
+}
+
+.ltt-map__popup.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.ltt-map__popup.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+.ltt-map__popup.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+    border-bottom-color: #042742;
+}
+
+.ltt-map__popup.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+    border-right-color: #042742;
+}
+
+.ltt-map__popup.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+    border-left-color: #042742;
+}
+
+.ltt-map__popup-body {
+    position: relative;
+    display: flex;
+    max-height: inherit;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.ltt-map__popup-image {
+    display: block;
+    flex-shrink: 0;
+    width: calc(100% + 3rem);
+    max-width: none;
+    height: 11.25rem;
+    margin: -1.5rem -1.5rem 1.25rem;
+    object-fit: cover;
+}
+
+.ltt-map__popup-title {
+    flex-shrink: 0;
+    margin: 0 0 0.625rem;
+    padding-right: 2.5rem;
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+.ltt-map__popup-image + .ltt-map__popup-title {
+    padding-right: 0;
+}
+
+.ltt-map__popup-region {
+    flex-shrink: 0;
+    margin: 0 0 0.5rem;
+    color: #c7d1d8;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ltt-map__popup-text {
+    min-height: 0;
+    flex: 1 1 auto;
+    margin: 0 0 1.25rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+.ltt-map__popup-text:last-child {
+    margin-bottom: 0;
+}
+
+.ltt-map__popup-link {
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.ltt-map__popup-close {
     position: absolute;
-    top: 1rem;
-    left: 1rem;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0 0.5rem 0 0.5rem;
+    background: #042742;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ltt-map__popup-close:hover {
+    background: #ffffff;
+    color: #042742;
+}
+
+.ltt-map__popup-close:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: -3px;
+}
+
+/* Attraction name tooltip. */
+.ltt-map .ltt-map__tooltip {
     z-index: 2;
+    max-width: calc(100vw - 1.5rem);
+}
+
+.ltt-map__tooltip .mapboxgl-popup-content {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    background: #042742;
+    box-shadow: 0 0.5rem 1.875rem rgba(0, 0, 0, 0.25);
+}
+
+.ltt-map__tooltip.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+    border-top-color: #042742;
+}
+
+.ltt-map__tooltip.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+    border-bottom-color: #042742;
+}
+
+.ltt-map__tooltip.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+    border-right-color: #042742;
+}
+
+.ltt-map__tooltip.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+    border-left-color: #042742;
+}
+
+.ltt-map__tooltip-text {
+    margin: 0;
+    color: #ffffff;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    white-space: nowrap;
 }
 
 /* Text alternative shown when the interactive map cannot load. */
@@ -258,8 +445,26 @@
 }
 
 @media (max-width: 575.98px) {
-    .ltt-map__frame {
-        height: clamp(26rem, 70vh, 35rem);
+    .ltt-map__popup .mapboxgl-popup-content {
+        max-height: min(28.125rem, calc(100dvh - 3rem));
+    }
+
+    .ltt-map__popup .mapboxgl-popup-tip {
+        display: none;
+    }
+
+    .ltt-map__popup-body {
+        padding: 1.25rem;
+    }
+
+    .ltt-map__popup-image {
+        width: calc(100% + 2.5rem);
+        height: 9.375rem;
+        margin: -1.25rem -1.25rem 1rem;
+    }
+
+    .ltt-map__popup-title {
+        font-size: 1.375rem;
     }
 
     .ltt-map__fallback {
@@ -271,19 +476,14 @@
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .ltt-map__marker-dot {
-        transition: none;
-    }
-}
-
 @media (forced-colors: active) {
-    .ltt-map__marker-dot {
-        border-color: ButtonText;
-        background: ButtonFace;
+    .ltt-map__destination,
+    .ltt-map__attraction {
+        border: 1px solid ButtonText;
     }
 
-    .ltt-map__marker[aria-expanded="true"] .ltt-map__marker-dot {
-        background: Highlight;
+    .ltt-map__popup .mapboxgl-popup-content,
+    .ltt-map__tooltip .mapboxgl-popup-content {
+        border: 1px solid CanvasText;
     }
 }

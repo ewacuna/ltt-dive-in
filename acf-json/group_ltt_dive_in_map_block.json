@@ -2,14 +2,22 @@
   "key": "group_ltt_dive_in_map_block",
   "title": "LTT Dive In — Map",
   "fields": [
-    {"key":"field_ltt_dive_in_map_places","label":"Places","name":"ltt_dive_in_map_places","type":"repeater","instructions":"Optional markers shown on the map. Selecting a marker shows its details. Places are also listed as text when the map cannot load.","min":0,"max":30,"layout":"block","collapsed":"field_ltt_dive_in_map_place_name","button_label":"Add place","rows_per_page":30,"sub_fields":[
-      {"key":"field_ltt_dive_in_map_place_name","label":"Name","name":"name","type":"text","instructions":"Shown next to the marker, for example “Tahoe City”.","required":1,"maxlength":40,"parent_repeater":"field_ltt_dive_in_map_places"},
-      {"key":"field_ltt_dive_in_map_place_region","label":"Region","name":"region","type":"text","instructions":"Optional, for example “North Shore · California”.","maxlength":60,"parent_repeater":"field_ltt_dive_in_map_places"},
-      {"key":"field_ltt_dive_in_map_place_description","label":"Description","name":"description","type":"textarea","instructions":"Optional short description shown when the place is selected.","maxlength":240,"rows":3,"new_lines":"","parent_repeater":"field_ltt_dive_in_map_places"},
-      {"key":"field_ltt_dive_in_map_place_latitude","label":"Latitude","name":"latitude","type":"number","instructions":"Decimal degrees, for example 39.1677. In Google Maps, right-click the place and copy the first number.","required":1,"min":-90,"max":90,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_places"},
-      {"key":"field_ltt_dive_in_map_place_longitude","label":"Longitude","name":"longitude","type":"number","instructions":"Decimal degrees, for example -120.1452 (negative in North America). The second number copied from Google Maps.","required":1,"min":-180,"max":180,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_places"},
+    {"key":"field_ltt_dive_in_map_places","label":"Destinations","name":"ltt_dive_in_map_places","type":"repeater","instructions":"Destinations shown as gold names on the map. Selecting one opens a popup with its image, description, and link. Destinations are also listed as text when the map cannot load.","min":0,"max":12,"layout":"block","collapsed":"field_ltt_dive_in_map_place_name","button_label":"Add destination","rows_per_page":20,"sub_fields":[
+      {"key":"field_ltt_dive_in_map_place_name","label":"Name","name":"name","type":"text","instructions":"Shown on the map in capital letters, for example “Tahoe City”.","required":1,"maxlength":40,"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_image","label":"Image","name":"image","type":"image","instructions":"Optional landscape image shown at the top of the popup. It is decorative because the destination name appears directly below it.","return_format":"id","preview_size":"medium","library":"all","mime_types":"jpg,jpeg,png,webp","parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_region","label":"Region","name":"region","type":"text","instructions":"Optional, shown under the name in the popup, for example “North Shore · California”.","maxlength":60,"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_description","label":"Description","name":"description","type":"textarea","instructions":"Optional. Longer text scrolls inside the popup.","maxlength":600,"rows":4,"new_lines":"","parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_latitude","label":"Latitude","name":"latitude","type":"number","instructions":"Decimal degrees, for example 39.18. In Google Maps, right-click the place and copy the first number.","required":1,"min":-90,"max":90,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_places"},
+      {"key":"field_ltt_dive_in_map_place_longitude","label":"Longitude","name":"longitude","type":"number","instructions":"Decimal degrees, for example -120.127 (negative in North America). The second number copied from Google Maps.","required":1,"min":-180,"max":180,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_places"},
       {"key":"field_ltt_dive_in_map_place_link","label":"Link","name":"link","type":"link","instructions":"Optional. Use a descriptive link text such as “Explore Tahoe City”; a link without text is not shown.","return_format":"array","parent_repeater":"field_ltt_dive_in_map_places"}
-    ]}
+    ]},
+    {"key":"field_ltt_dive_in_map_attractions","label":"Attractions","name":"ltt_dive_in_map_attractions","type":"repeater","instructions":"Points of interest shown as icons. The name appears when a visitor hovers, focuses, or taps the icon.","min":0,"max":30,"layout":"block","collapsed":"field_ltt_dive_in_map_attraction_name","button_label":"Add attraction","rows_per_page":30,"sub_fields":[
+      {"key":"field_ltt_dive_in_map_attraction_name","label":"Name","name":"name","type":"text","instructions":"For example “Vikingsholm Castle”.","required":1,"maxlength":60,"parent_repeater":"field_ltt_dive_in_map_attractions"},
+      {"key":"field_ltt_dive_in_map_attraction_icon","label":"Icon","name":"icon","type":"select","instructions":"Choose the icon that best describes the attraction.","required":1,"choices":{},"allow_null":0,"ui":0,"return_format":"value","parent_repeater":"field_ltt_dive_in_map_attractions"},
+      {"key":"field_ltt_dive_in_map_attraction_latitude","label":"Latitude","name":"latitude","type":"number","required":1,"min":-90,"max":90,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_attractions"},
+      {"key":"field_ltt_dive_in_map_attraction_longitude","label":"Longitude","name":"longitude","type":"number","required":1,"min":-180,"max":180,"step":"any","wrapper":{"width":"50"},"parent_repeater":"field_ltt_dive_in_map_attractions"}
+    ]},
+    {"key":"field_ltt_dive_in_map_snow","label":"Snow effect","name":"ltt_dive_in_map_snow","type":"true_false","instructions":"Show falling snow over the map. Visitors can pause it with the map control, and it starts paused for visitors who ask their device to reduce motion.","default_value":1,"ui":1}
   ],
   "location":[[{"param":"block","operator":"==","value":"ltt-dive-in/map"}]],
   "position":"normal",
@@ -18,5 +26,5 @@
   "instruction_placement":"label",
   "active":true,
   "show_in_rest":0,
-  "modified":1792022400
+  "modified":1792281600
 }

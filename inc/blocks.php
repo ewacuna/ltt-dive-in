@@ -473,11 +473,13 @@ function ltt_dive_in_register_blocks() {
 		'ltt-dive-in-map',
 		'ltt_dive_in_map',
 		array(
-			'canvas'   => __( 'Lake Tahoe map. Use the arrow keys to pan and plus or minus to zoom.', 'ltt-dive-in' ),
-			/* translators: %s: place name. */
-			'selected' => __( '%s selected. Details are shown on the map.', 'ltt-dive-in' ),
-			'reset'    => __( 'Map view reset to the whole lake.', 'ltt-dive-in' ),
-			'newTab'   => __( '(opens in a new tab)', 'ltt-dive-in' ),
+			'canvas'    => __( 'Lake Tahoe map. Use the arrow keys to pan and plus or minus to zoom.', 'ltt-dive-in' ),
+			/* translators: %s: destination name. */
+			'opened'    => __( '%s details opened.', 'ltt-dive-in' ),
+			'close'     => __( 'Close destination details', 'ltt-dive-in' ),
+			'newTab'    => __( '(opens in a new tab)', 'ltt-dive-in' ),
+			'pauseSnow' => __( 'Pause snow', 'ltt-dive-in' ),
+			'playSnow'  => __( 'Play snow', 'ltt-dive-in' ),
 		)
 	);
 

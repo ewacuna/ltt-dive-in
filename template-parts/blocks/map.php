@@ -19,8 +19,11 @@ if ( ! defined( 'ABSPATH' ) || ! function_exists( 'get_field' ) ) {
 
 $is_preview = ! empty( $is_preview );
 $block      = isset( $block ) && is_array( $block ) ? $block : array();
-$places     = ltt_dive_in_prepare_map_places( get_field( 'ltt_dive_in_map_places' ) );
-$token      = ltt_dive_in_get_mapbox_access_token();
+$places      = ltt_dive_in_prepare_map_places( get_field( 'ltt_dive_in_map_places' ) );
+$attractions = ltt_dive_in_prepare_map_attractions( get_field( 'ltt_dive_in_map_attractions' ) );
+$snow        = get_field( 'ltt_dive_in_map_snow' );
+$snow        = null === $snow ? true : (bool) $snow;
+$token       = ltt_dive_in_get_mapbox_access_token();
 $block_id   = ! empty( $block['id'] ) ? $block['id'] : wp_unique_id();
 $id         = ! empty( $block['anchor'] ) ? sanitize_html_class( $block['anchor'] ) : 'ltt-map-' . sanitize_html_class( $block_id );
 $classes    = array( 'ltt-map' );
@@ -72,9 +75,10 @@ if ( $is_preview ) :
 				<?php
 				echo esc_html(
 					sprintf(
-						/* translators: %d: number of places on the map. */
-						_n( 'The interactive map with %d place appears on the published page.', 'The interactive map with %d places appears on the published page.', count( $places ), 'ltt-dive-in' ),
-						count( $places )
+						/* translators: 1: number of destinations, 2: number of attractions. */
+						__( 'The interactive map with %1$d destinations and %2$d attractions appears on the published page.', 'ltt-dive-in' ),
+						count( $places ),
+						count( $attractions )
 					)
 				);
 				?>
@@ -116,7 +120,6 @@ if ( ! $token ) {
 wp_enqueue_style( 'ltt-dive-in-map' );
 wp_enqueue_script( 'ltt-dive-in-map' );
 
-$card_id = $id . '-card';
 ?>
 <section
 	id="<?php echo esc_attr( $id ); ?>"
@@ -126,23 +129,12 @@ $card_id = $id . '-card';
 	data-access-token="<?php echo esc_attr( $token ); ?>"
 	data-map-style="<?php echo esc_attr( ltt_dive_in_get_mapbox_style_url() ); ?>"
 	data-places="<?php echo esc_attr( wp_json_encode( $places ) ); ?>"
+	data-attractions="<?php echo esc_attr( wp_json_encode( $attractions ) ); ?>"
+	data-cartography="<?php echo esc_attr( wp_json_encode( ltt_dive_in_get_map_cartography() ) ); ?>"
+	<?php echo $snow ? 'data-snow' : ''; ?>
 >
 	<div class="ltt-map__frame" data-ltt-map-frame>
 		<div class="ltt-map__canvas" data-ltt-map-canvas></div>
-
-		<div class="ltt-map__card" id="<?php echo esc_attr( $card_id ); ?>" data-ltt-map-card hidden>
-			<p class="ltt-map__card-title" data-ltt-map-card-title></p>
-			<p class="ltt-map__card-region" data-ltt-map-card-region hidden></p>
-			<p class="ltt-map__card-text" data-ltt-map-card-text hidden></p>
-			<a class="ltt-map__card-link ltt-button ltt-button--primary-outline" data-ltt-map-card-link hidden></a>
-			<button type="button" class="ltt-map__card-close" data-ltt-map-card-close aria-label="<?php esc_attr_e( 'Close place details', 'ltt-dive-in' ); ?>">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-
-		<button type="button" class="ltt-map__reset ltt-button ltt-button--glass" data-ltt-map-reset hidden>
-			<?php esc_html_e( 'Reset view', 'ltt-dive-in' ); ?>
-		</button>
 	</div>
 
 	<div class="ltt-map__fallback" data-ltt-map-fallback hidden>
