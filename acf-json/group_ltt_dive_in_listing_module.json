@@ -1,0 +1,100 @@
+{
+  "key": "group_ltt_dive_in_listing_module",
+  "title": "LTT Dive In — Listing Module",
+  "fields": [
+    {
+      "key": "field_ltt_dive_in_listing_module_eyebrow",
+      "label": "Category tag",
+      "name": "ltt_dive_in_listing_module_eyebrow",
+      "type": "text",
+      "instructions": "Optional short label above the heading.",
+      "required": 0,
+      "maxlength": 40
+    },
+    {
+      "key": "field_ltt_dive_in_listing_module_heading",
+      "label": "Heading",
+      "name": "ltt_dive_in_listing_module_heading",
+      "type": "text",
+      "required": 1,
+      "maxlength": 120
+    },
+    {
+      "key": "field_ltt_dive_in_listing_module_intro",
+      "label": "Introduction",
+      "name": "ltt_dive_in_listing_module_intro",
+      "type": "textarea",
+      "required": 0,
+      "rows": 3,
+      "maxlength": 300,
+      "new_lines": ""
+    },
+    {
+      "key": "field_ltt_dive_in_listing_module_source",
+      "label": "Content type",
+      "name": "ltt_dive_in_listing_module_source",
+      "type": "select",
+      "instructions": "Select a registered public content type to display. The intended Listings type will appear here when it is registered.",
+      "required": 1,
+      "choices": {},
+      "allow_null": 1,
+      "multiple": 0,
+      "ui": 1,
+      "return_format": "value"
+    },
+    {
+      "key": "field_ltt_dive_in_listing_module_facet_one",
+      "label": "First dropdown filter",
+      "name": "ltt_dive_in_listing_module_facet_one",
+      "type": "select",
+      "instructions": "Choose a FacetWP Dropdown facet whose taxonomy belongs to the selected content type. Create the facet in Settings → FacetWP first.",
+      "required": 0,
+      "choices": {},
+      "allow_null": 1,
+      "multiple": 0,
+      "ui": 1,
+      "return_format": "value"
+    },
+    {
+      "key": "field_ltt_dive_in_listing_module_facet_two",
+      "label": "Second dropdown filter",
+      "name": "ltt_dive_in_listing_module_facet_two",
+      "type": "select",
+      "instructions": "Choose a different FacetWP Dropdown facet for another taxonomy used by the selected content type.",
+      "required": 0,
+      "choices": {},
+      "allow_null": 1,
+      "multiple": 0,
+      "ui": 1,
+      "return_format": "value"
+    },
+    {
+      "key": "field_ltt_dive_in_listing_module_initial_count",
+      "label": "Initial card count",
+      "name": "ltt_dive_in_listing_module_initial_count",
+      "type": "number",
+      "instructions": "Number of cards shown before Load More is connected. Three cards fit a desktop row.",
+      "required": 1,
+      "default_value": 3,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "ltt-dive-in/listing-module"
+      }
+    ]
+  ],
+  "active": true,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "show_in_rest": 0,
+  "modified": 1792123589
+}

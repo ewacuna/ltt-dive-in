@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/listing-module",
+  "title": "Listing Module",
+  "category": "ltt-blocks",
+  "icon": "screenoptions",
+  "description": "Listing cards with optional FacetWP taxonomy dropdown filters. Keyword search and Load More are pending.",
+  "keywords": [ "listing", "lodging", "cards" ],
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-listing-module",
+  "editorStyle": "ltt-dive-in-listing-module",
+  "viewScript": "ltt-dive-in-listing-module",
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "template-parts/blocks/listing-module.php"
+  },
+  "attributes": {
+    "align": { "type": "string", "default": "full" }
+  },
+  "supports": {
+    "align": [ "full" ],
+    "anchor": true,
+    "customClassName": false,
+    "html": false,
+    "multiple": false
+  }
+}

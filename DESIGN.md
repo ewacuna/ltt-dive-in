@@ -277,6 +277,8 @@ On mobile, Monthly and Six-plus carousels place the arrows in the lower part of 
 
 Monthly Page Driver requires taxonomy controls to be enabled, a public taxonomy registered for pages, and twelve selected hub pages. Selected taxonomy terms provide the month options; each selected term must be assigned to at least one selected page. The selector and cards follow calendar order from January through December, preserving relationship order between cards for the same month. With the full annual set, the default selected month is January. Selecting a term navigates to the first matching carousel card in relationship order. Arrow navigation, pagination, and swipes change the active card but leave the selector value unchanged; only choosing a month in the selector changes that value. All cards remain in the carousel. When the carousel script is unavailable, all twelve cards remain visible in a responsive grid with month anchor links. On 2026-10-13 the client confirmed that mobile uses the same month selector as desktop; the search, Categories, and Upcoming controls in mobile review node `1:11029` are not part of this Monthly Page Driver.
 
+On a dark background, the Monthly dropdown follows Figma `1:44712`: white label field, primary tint 50 (`#C7D1D8`) border and arrow compartment, and navy (`#073959`) label and arrow. Hover, press, keyboard focus, and expanded states change only the arrow compartment to Peak Gold (`#EEB040`), keeping the navy arrow and tint-50 border.
+
 ### Feature image drivers
 
 Typography verified against the Feature Image board (`1:11248`) on 2026-10-09:
@@ -404,14 +406,16 @@ Implementation rules:
 - General hover-state transitions propose a `500ms` crossfade.
 - Respect `prefers-reduced-motion`; reduced-motion mode should remove stagger, bounce, and non-essential crossfades while preserving immediate state feedback.
 
-### Listing module — technology open
+### Listing module — dropdown filtering confirmed
 
 - Each card contains an image, title, short copy, and at most one or two buttons.
 - Two dropdown filters and a dedicated keyword-search field may be combined.
 - The unfiltered state shows the full initial listing set.
 - Optional additional copy may appear in an expanded/rollover state, but it must also be available to keyboard and touch users.
 - “See More” loads further listings after the initial grid.
-- Algolia is only a current direction; the search technology has not been approved.
+- Taxonomy dropdown filtering uses FacetWP. The keyword-search integration remains an open implementation decision.
+- The FacetWP dropdowns use the shared light select appearance and open-menu states from Monthly Page Driver; FacetWP remains the source of filter options and selected values.
+- The shared light dropdown's Figma hover state (`1:44701`) changes the navy arrow compartment to Peak Gold (`#EEB040`) and the tint-300 arrow to navy (`#073959`). The theme keeps that appearance while the menu is expanded and applies it to keyboard focus and press as well.
 
 ### Events
 

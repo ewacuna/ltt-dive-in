@@ -484,6 +484,28 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $map_path . '/block.json' ) ) {
 		register_block_type( $map_path );
 	}
+
+	$listing_module_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/listing-module.css';
+	$listing_module_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/listing-module.js';
+	$listing_module_path        = LTT_DIVE_IN_DIR . '/blocks/listing-module';
+
+	wp_register_style(
+		'ltt-dive-in-listing-module',
+		LTT_DIVE_IN_URI . '/assets/css/components/listing-module.css',
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-slider-navigation' ),
+		file_exists( $listing_module_style_path ) ? (string) filemtime( $listing_module_style_path ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script(
+		'ltt-dive-in-listing-module',
+		LTT_DIVE_IN_URI . '/assets/js/components/listing-module.js',
+		array(),
+		file_exists( $listing_module_script_path ) ? (string) filemtime( $listing_module_script_path ) : LTT_DIVE_IN_VERSION,
+		array( 'strategy' => 'defer', 'in_footer' => true )
+	);
+
+	if ( file_exists( $listing_module_path . '/block.json' ) ) {
+		register_block_type( $listing_module_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
 

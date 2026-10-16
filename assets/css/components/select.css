@@ -90,6 +90,7 @@
 }
 
 .ltt-select__trigger-icon {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,8 +108,52 @@
     transition: transform 200ms ease-out;
 }
 
+.ltt-select--light .ltt-select__native-icon,
+.ltt-select--light .ltt-select__trigger-icon {
+    transition: background-color 200ms ease-out;
+}
+
+.ltt-select--light .ltt-select__native-icon img,
+.ltt-select--light .ltt-select__trigger-icon img {
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
 .ltt-select__trigger[aria-expanded="true"] .ltt-select__trigger-icon img {
     transform: rotate(180deg);
+}
+
+.ltt-select--light .ltt-select__trigger-icon::after,
+.ltt-select--light .ltt-select__native-icon::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.9375rem;
+    height: 0.75rem;
+    background: url("../../images/icons/select-toggle-hover.svg") center / contain no-repeat;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.ltt-select--light .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon,
+.ltt-select--light:is(:hover, :active, :focus-within) > .ltt-select__native-icon {
+    background-color: #eeb040;
+}
+
+.ltt-select--light .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon img,
+.ltt-select--light:is(:hover, :active, :focus-within) > .ltt-select__native-icon img {
+    opacity: 0;
+}
+
+.ltt-select--light .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon::after,
+.ltt-select--light:is(:hover, :active, :focus-within) > .ltt-select__native-icon::after {
+    opacity: 1;
+}
+
+.ltt-select--light .ltt-select__trigger[aria-expanded="true"] .ltt-select__trigger-icon::after {
+    transform: translate(-50%, -50%) rotate(180deg);
 }
 
 .ltt-select__menu {
@@ -147,22 +192,62 @@
 }
 
 .ltt-select--dark .ltt-select__native {
-    border-color: #ffffff;
+    border-color: #c7d1d8;
 }
 
 .ltt-select--dark .ltt-select__native-icon {
-    border: 1.3px solid #ffffff;
+    border: 1.3px solid #c7d1d8;
     border-left: 0;
     border-radius: 0 0.5rem 0.5rem 0;
-    background-color: #91d9d1;
+    background-color: #c7d1d8;
+}
+
+.ltt-select--dark .ltt-select__trigger {
+    border-color: #c7d1d8;
 }
 
 .ltt-select--dark .ltt-select__trigger-icon {
-    background-color: #91d9d1;
+    background-color: #c7d1d8;
+}
+
+.ltt-select--dark .ltt-select__native-icon,
+.ltt-select--dark .ltt-select__trigger-icon {
+    transition: background-color 200ms ease-out;
+}
+
+.ltt-select--dark .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon,
+.ltt-select--dark:is(:hover, :active, :focus-within) > .ltt-select__native-icon {
+    background-color: #eeb040;
 }
 
 @media (prefers-reduced-motion: reduce) {
     .ltt-select__trigger-icon img {
         transition: none;
+    }
+
+    .ltt-select--light .ltt-select__native-icon,
+    .ltt-select--light .ltt-select__trigger-icon,
+    .ltt-select--light .ltt-select__native-icon img,
+    .ltt-select--light .ltt-select__trigger-icon img,
+    .ltt-select--light .ltt-select__native-icon::after,
+    .ltt-select--light .ltt-select__trigger-icon::after {
+        transition: none;
+    }
+
+    .ltt-select--dark .ltt-select__native-icon,
+    .ltt-select--dark .ltt-select__trigger-icon {
+        transition: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .ltt-select--light .ltt-select__trigger-icon img,
+    .ltt-select--light .ltt-select__native-icon img {
+        opacity: 1 !important;
+    }
+
+    .ltt-select--light .ltt-select__trigger-icon::after,
+    .ltt-select--light .ltt-select__native-icon::after {
+        display: none;
     }
 }
