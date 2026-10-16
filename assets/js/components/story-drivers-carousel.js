@@ -92,42 +92,87 @@
 		}
 
 		const allSlides = Array.prototype.slice.call( track.children );
+		let swiper = null;
 
 		const syncExpanded = function ( instance ) {
 			const shouldReveal = noHover && noHover.matches && inRevealBand;
+
+			if ( ! instance ) {
+				return;
+			}
 
 			instance.slides.forEach( function ( slide, index ) {
 				slide.classList.toggle( 'is-expanded', shouldReveal && index === instance.activeIndex );
 			} );
 		};
 
-		const swiper = new window.Swiper( viewport, {
-			slidesPerView: 'auto',
-			spaceBetween: 11,
-			speed: reducedMotion ? 0 : 350,
-			watchOverflow: true,
-			keyboard: {
-				enabled: true,
-				onlyInViewport: true,
-			},
-			a11y: {
-				enabled: true,
-				prevSlideMessage: strings.previousStories || 'Previous stories',
-				nextSlideMessage: strings.nextStories || 'Next stories',
-			},
-			navigation: {
-				prevEl: carousel.querySelector( '[data-story-carousel-previous]' ),
-				nextEl: carousel.querySelector( '[data-story-carousel-next]' ),
-			},
-			breakpoints: {
-				768: { slidesPerView: 2 },
-				992: { slidesPerView: 3 },
-			},
-			on: {
-				init: syncExpanded,
-				slideChange: syncExpanded,
-			},
-		} );
+		const createSwiper = function () {
+			return new window.Swiper( viewport, {
+				slidesPerView: 'auto',
+				spaceBetween: 11,
+				speed: reducedMotion ? 0 : 350,
+				watchOverflow: true,
+				keyboard: {
+					enabled: true,
+					onlyInViewport: true,
+				},
+				a11y: {
+					enabled: true,
+					prevSlideMessage: strings.previousStories || 'Previous stories',
+					nextSlideMessage: strings.nextStories || 'Next stories',
+				},
+				navigation: {
+					prevEl: carousel.querySelector( '[data-story-carousel-previous]' ),
+					nextEl: carousel.querySelector( '[data-story-carousel-next]' ),
+				},
+				breakpoints: {
+					768: { slidesPerView: 2 },
+					992: { slidesPerView: 3 },
+				},
+				on: {
+					init: syncExpanded,
+					slideChange: syncExpanded,
+				},
+			} );
+		};
+
+		/*
+		 * Fewer than three stories cannot fill the carousel, so they use the
+		 * 2 Up row presentation (one story spans the row) instead of leaving
+		 * empty slide positions.
+		 */
+		const render = function ( slides ) {
+			const isRow = slides.length < 3;
+
+			if ( swiper ) {
+				swiper.destroy( true, true );
+				swiper = null;
+			}
+
+			track.replaceChildren.apply( track, slides );
+
+			slides.forEach( function ( slide ) {
+				const image = slide.querySelector( '.ltt-story-card__media img' );
+
+				slide.classList.remove( 'is-expanded' );
+				slide.classList.toggle( 'ltt-story-card--tile', ! isRow );
+
+				if ( image && image.sizes ) {
+					image.dataset.carouselSizes = image.dataset.carouselSizes || image.sizes;
+					image.sizes = isRow ? '(max-width: 767.98px) 100vw, ' + Math.ceil( 1436 / slides.length * 1.5 ) + 'px' : image.dataset.carouselSizes;
+				}
+			} );
+
+			if ( isRow ) {
+				carousel.dataset.visibleCount = String( slides.length );
+				return;
+			}
+
+			delete carousel.dataset.visibleCount;
+			swiper = createSwiper();
+		};
+
+		render( allSlides );
 
 		/* The “defined position” for the touch reveal is the middle of the viewport. */
 		if ( window.IntersectionObserver ) {
@@ -160,11 +205,7 @@
 					item.setAttribute( 'aria-pressed', item === button ? 'true' : 'false' );
 				} );
 
-				swiper.removeAllSlides();
-				swiper.appendSlide( matches );
-				swiper.update();
-				swiper.slideTo( 0, 0 );
-				syncExpanded( swiper );
+				render( matches );
 
 				if ( status ) {
 					status.textContent = format( 1 === matches.length ? strings.storyShown : strings.storiesShown, matches.length );

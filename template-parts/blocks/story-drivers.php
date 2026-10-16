@@ -159,7 +159,11 @@ if ( 'carousel' === $layout ) :
 			<?php endif; ?>
 		</div>
 
-		<div class="story-drivers__carousel" data-story-carousel>
+		<?php
+		/* Fewer than three stories cannot fill the carousel, so they use the 2 Up row presentation. */
+		$is_row = count( $stories ) < 3;
+		?>
+		<div class="story-drivers__carousel" data-story-carousel<?php echo $is_row ? ' data-visible-count="' . esc_attr( (string) count( $stories ) ) . '"' : ''; ?>>
 			<div class="story-drivers__carousel-viewport swiper">
 				<div class="story-drivers__carousel-track swiper-wrapper" data-story-carousel-track>
 					<?php
@@ -170,8 +174,8 @@ if ( 'carousel' === $layout ) :
 							array(
 								'story'   => $story,
 								'wrapper' => 'story-drivers__slide swiper-slide',
-								'sizes'   => '(max-width: 767.98px) 317px, 471px',
-								'tile'    => true,
+								'sizes'   => $is_row ? '(max-width: 767.98px) 100vw, ' . (int) ceil( 1436 / count( $stories ) * 1.5 ) . 'px' : '(max-width: 767.98px) 317px, 471px',
+								'tile'    => ! $is_row,
 							)
 						);
 					}

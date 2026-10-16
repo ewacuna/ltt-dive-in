@@ -170,6 +170,27 @@
     display: none;
 }
 
+/*
+ * One or two stories (initially or after filtering) use the 2 Up row
+ * presentation; a single story spans the row. story-drivers-carousel.js
+ * removes Swiper and sets `data-visible-count`.
+ */
+.story-drivers__carousel[data-visible-count] .story-drivers__carousel-track {
+    display: flex;
+    gap: 0.6875rem;
+    overflow: visible;
+    scroll-snap-type: none;
+}
+
+.story-drivers--carousel .story-drivers__carousel[data-visible-count] .story-drivers__slide {
+    width: auto;
+    flex: 1 1 0;
+}
+
+.story-drivers__carousel[data-visible-count] .story-drivers__carousel-control {
+    display: none;
+}
+
 /* Feature story slideshow (1 Up and the Hero + Page Grid hero). */
 .story-drivers__feature {
     position: relative;
@@ -600,6 +621,18 @@
         flex-basis: 19.8125rem;
     }
 
+    .story-drivers__carousel[data-visible-count] {
+        padding-inline: 2px;
+    }
+
+    .story-drivers__carousel[data-visible-count] .story-drivers__carousel-track {
+        flex-direction: column;
+    }
+
+    .story-drivers--carousel .story-drivers__carousel[data-visible-count] .story-drivers__slide {
+        flex: 0 0 auto;
+    }
+
     .story-drivers__carousel-control--previous {
         left: 2px;
     }
@@ -714,12 +747,12 @@
  * carousel reveals its active tile from story-drivers-carousel.js.
  */
 @media (hover: none) {
-    :is(.story-drivers__row, .story-drivers__grid) .ltt-story-card .ltt-story-card__media::after,
-    :is(.story-drivers__row, .story-drivers__grid) .ltt-story-card .ltt-story-card__summary {
+    :is(.story-drivers__row, .story-drivers__grid, .story-drivers__carousel[data-visible-count]) .ltt-story-card .ltt-story-card__media::after,
+    :is(.story-drivers__row, .story-drivers__grid, .story-drivers__carousel[data-visible-count]) .ltt-story-card .ltt-story-card__summary {
         opacity: 0;
     }
 
-    :is(.story-drivers__row, .story-drivers__grid) .ltt-story-card .ltt-story-card__panel {
+    :is(.story-drivers__row, .story-drivers__grid, .story-drivers__carousel[data-visible-count]) .ltt-story-card .ltt-story-card__panel {
         opacity: 1;
     }
 
