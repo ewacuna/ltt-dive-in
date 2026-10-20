@@ -32,7 +32,7 @@ if ( '' === $title ) {
 	return;
 }
 ?>
-<article class="ltt-listing-module__card">
+<article class="ltt-listing-module__card<?php echo $buttons ? '' : ' ltt-listing-module__card--without-buttons'; ?>">
 	<div class="ltt-listing-module__media<?php echo $image_id ? '' : ' ltt-listing-module__media--empty'; ?>">
 		<?php if ( $image_id ) : ?>
 			<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'class' => 'ltt-listing-module__image', 'sizes' => '(max-width: 767.98px) 100vw, (max-width: 1199.98px) 50vw, 33vw' ) ); ?>
@@ -46,12 +46,14 @@ if ( '' === $title ) {
 		<div class="ltt-listing-module__card-actions">
 			<?php foreach ( $buttons as $button_index => $button ) : ?>
 				<?php
-				$modifier = 0 === $button_index ? 'primary-outline' : 'secondary-outline';
+				$modifier = isset( $button['variant'] ) && in_array( $button['variant'], array( 'primary-outline', 'secondary-outline' ), true )
+					? $button['variant']
+					: ( 0 === $button_index ? 'primary-outline' : 'secondary-outline' );
 				?>
 				<?php if ( $is_preview ) : ?>
 					<span class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button"><?php echo esc_html( $button['title'] ); ?></span>
 				<?php else : ?>
-					<a class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button" href="<?php echo esc_url( $button['url'] ); ?>"<?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?></a>
+					<a class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button" href="<?php echo esc_url( $button['url'] ); ?>"<?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?><span class="screen-reader-text"><?php echo esc_html( sprintf( /* translators: %s: listing title. */ __( ' for %s', 'ltt-dive-in' ), $title ) ); ?><?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?><?php esc_html_e( ' (opens in a new tab)', 'ltt-dive-in' ); ?><?php endif; ?></span></a>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>

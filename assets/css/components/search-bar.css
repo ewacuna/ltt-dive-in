@@ -118,11 +118,13 @@
     height: 1.75rem;
 }
 
-.ltt-search-bar--filter .ltt-search-bar__submit:focus-visible,
+/* TODO: Descomment if is required to have a focus outline on the search bar when the input is focused. */
+
+/* .ltt-search-bar--filter .ltt-search-bar__submit:focus-visible,
 .ltt-search-bar--filter:has(.ltt-search-bar__input:focus-visible) {
     outline: 3px solid #eeb040;
     outline-offset: 3px;
-}
+} */
 
 .ltt-search-bar--on-image {
     --search-bar-background: rgba(2, 22, 43, 0.1);

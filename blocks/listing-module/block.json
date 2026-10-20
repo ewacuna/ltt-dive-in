@@ -5,7 +5,7 @@
   "title": "Listing Module",
   "category": "ltt-blocks",
   "icon": "screenoptions",
-  "description": "Listing cards with optional FacetWP taxonomy dropdown filters. Keyword search and Load More are pending.",
+  "description": "Filterable listing cards with FacetWP dropdowns, keyword search, and Load More.",
   "keywords": [ "listing", "lodging", "cards" ],
   "textdomain": "ltt-dive-in",
   "style": "ltt-dive-in-listing-module",

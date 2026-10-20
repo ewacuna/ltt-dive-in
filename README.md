@@ -7,7 +7,10 @@ A PHP-based WordPress theme starter with reusable template parts and modern bloc
 - WordPress 6.6 or newer
 - PHP 8.0 or newer
 - Advanced Custom Fields Pro (ACF Pro)
+- FacetWP (for Listing Module dropdown filters, search, and Load More)
 - Gravity Forms paid version
+
+For setting up the Listing Module's FacetWP dropdowns, search, and Load More facets, see [`docs/listing-module-facetwp.md`](docs/listing-module-facetwp.md).
 
 ## Install
 

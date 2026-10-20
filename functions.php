@@ -46,4 +46,5 @@ require_once LTT_DIVE_IN_DIR . '/inc/story-drivers.php';
 require_once LTT_DIVE_IN_DIR . '/inc/story-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/map-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/listing-module-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/listing-module-facetwp.php';
 require_once LTT_DIVE_IN_DIR . '/inc/blocks.php';

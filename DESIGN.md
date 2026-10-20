@@ -408,12 +408,20 @@ Implementation rules:
 
 ### Listing module — dropdown filtering confirmed
 
-- Each card contains an image, title, short copy, and at most one or two buttons.
-- Two dropdown filters and a dedicated keyword-search field may be combined.
+- Each card contains an image, title, short copy, and zero, one, or two optional buttons.
+- Listing Module reads the native post title, featured image, and excerpt. A code-driven ACF group on its selectable post types supplies two independently optional card links. The first can link to the post (labeled “See More” unless edited) or use a custom link; the second uses its own Link field. The card renderer caps the output at two buttons and preserves each button's visual priority when shown alone.
+- A card with no configured buttons uses the taller framed treatment shown in the desktop reference; mobile cards retain the carousel's common image height. Card height does not determine its frame color.
+- The card frame is a 13px gradient stroke over the full-bleed photograph, not a flat border. Its colors repeat by visible card order: blue on the first card, gold on the second, green on the third, then repeat. The blue frame blends `#397398` into `#61C2B7` with Hard Light; the gold frame uses a `180deg` gradient from `rgba(225, 132, 26, 0.77)` to `rgba(238, 176, 64, 0.77)` with Screen blending; the green frame blends `#296154` into `#4FA154` with Hard Light. The image and darkening overlay extend behind the frame.
+- The Listing Module search field has a 1.3px, 20%-opacity gradient stroke over `#F2F2F2`, transitioning through cyan `#61C2B7`, green `#4FA154`, gold `#EEB040`, and red `#9E3F3D`. Its Figma transform places the first and last stops beyond the visible field, so the CSS border gradient extends past both edges rather than showing all four full-strength endpoints.
+- The Listing Module's Load More control follows Figma's Expand Module: a centered 138 × 26px white pill with a 1.3px navy border and 14px Gotham label, then a separate 14 × 12px light-grey down arrow 6px below it. Its interactive target is at least 44px high.
+- Its hover treatment uses a navy pill with white text and changes the arrow to tertiary green `#61C2B7`; both colors transition over 300ms and change immediately when reduced motion is requested.
+- The block editor selects the content type, two different taxonomy Dropdown facets, a Search facet using WP Default with Auto refresh and Order by relevance enabled, a Pager facet using Load More, the initial card count, and the later Load More step. New blocks default to a step of three; older blocks without a saved step use their initial card count.
 - The unfiltered state shows the full initial listing set.
+- Dropdowns, keyword search, and Load More use the same FacetWP listing. Search updates while typing after FacetWP's 500ms delay, searches WordPress title, excerpt, and content, and combines with taxonomy filters using AND. Search results follow WordPress relevance; other results use date descending and ID descending as a stable tie-breaker.
+- Load More appends the configured step after the initial batch. Filtering or changing search replaces the cards and returns to the initial count. The pager total accounts for a different initial count and later step size.
 - Optional additional copy may appear in an expanded/rollover state, but it must also be available to keyboard and touch users.
-- “See More” loads further listings after the initial grid.
-- Taxonomy dropdown filtering uses FacetWP. The keyword-search integration remains an open implementation decision.
+- Card buttons navigate to their configured destinations. The Load More control appends the next batch after the initial grid.
+- Taxonomy dropdown filtering, WP Default keyword search, and Load More pagination use FacetWP. Follow `docs/listing-module-facetwp.md` to configure and export the facets.
 - The FacetWP dropdowns use the shared light select appearance and open-menu states from Monthly Page Driver; FacetWP remains the source of filter options and selected values.
 - The shared light dropdown's Figma hover state (`1:44701`) changes the navy arrow compartment to Peak Gold (`#EEB040`) and the tint-300 arrow to navy (`#073959`). The theme keeps that appearance while the menu is expanded and applies it to keyboard focus and press as well.
 
