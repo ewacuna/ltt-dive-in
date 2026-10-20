@@ -260,6 +260,12 @@
     width: 19.25rem;
 }
 
+/* Date presets such as "This weekend" exceed the shared select's 10.5rem cap. */
+.event-driver__filter .ltt-select__trigger,
+.event-driver__filter .ltt-select__menu {
+    max-width: none;
+}
+
 .event-driver__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -589,11 +595,6 @@
     .event-driver__filter .ltt-select {
         display: block;
         min-width: 0;
-    }
-
-    .event-driver__filter .ltt-select__trigger,
-    .event-driver__filter .ltt-select__menu {
-        max-width: none;
     }
 
     .event-driver__filter:only-of-type {
