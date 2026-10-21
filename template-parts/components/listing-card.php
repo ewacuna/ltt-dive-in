@@ -49,11 +49,20 @@ if ( '' === $title ) {
 				$modifier = isset( $button['variant'] ) && in_array( $button['variant'], array( 'primary-outline', 'secondary-outline' ), true )
 					? $button['variant']
 					: ( 0 === $button_index ? 'primary-outline' : 'secondary-outline' );
+				$accessible_name = sprintf(
+					/* translators: 1: button label, 2: listing title. */
+					__( '%1$s for %2$s', 'ltt-dive-in' ),
+					$button['title'],
+					$title
+				);
+				if ( '_blank' === ( $button['target'] ?? '' ) ) {
+					$accessible_name .= ' ' . __( '(opens in a new tab)', 'ltt-dive-in' );
+				}
 				?>
 				<?php if ( $is_preview ) : ?>
 					<span class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button"><?php echo esc_html( $button['title'] ); ?></span>
 				<?php else : ?>
-					<a class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button" href="<?php echo esc_url( $button['url'] ); ?>"<?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?><span class="screen-reader-text"><?php echo esc_html( sprintf( /* translators: %s: listing title. */ __( ' for %s', 'ltt-dive-in' ), $title ) ); ?><?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?><?php esc_html_e( ' (opens in a new tab)', 'ltt-dive-in' ); ?><?php endif; ?></span></a>
+					<a class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button" href="<?php echo esc_url( $button['url'] ); ?>" aria-label="<?php echo esc_attr( $accessible_name ); ?>"<?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?></a>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
