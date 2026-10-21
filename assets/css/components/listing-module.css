@@ -732,8 +732,12 @@
         gap: 0.6875rem;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        scrollbar-color: #85a2b2 #f2f2f2;
-        scrollbar-width: thin;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .ltt-listing-module__grid::-webkit-scrollbar {
+        display: none;
     }
 
     .ltt-listing-module__empty {
