@@ -330,30 +330,39 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
  * @return array[] Normalized upcoming events.
  */
 function ltt_dive_in_get_seeker_events_by_id( $uuids ) {
-	$events = array();
+	$uuids = array_slice( array_values( array_unique( array_filter( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) $uuids ) ) ) ), 0, 12 );
+	$found = array();
 
-	foreach ( array_slice( array_filter( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) $uuids ) ), 0, 12 ) as $uuid ) {
-		$body = ltt_dive_in_seeker_request(
-			'/events/feeds',
+	// The feed cannot be filtered by event ID (`searchfield=id` returns 422), so
+	// read the cached upcoming feed in pages and match the UUIDs locally.
+	for ( $offset = 0; $uuids && $offset < 500 && count( $found ) < count( $uuids ); $offset += 100 ) {
+		$result = ltt_dive_in_get_seeker_events(
 			array(
-				'limit'       => 1,
-				'q'           => $uuid,
-				'searchfield' => 'id',
-				'states'      => 'published',
+				'limit'  => 100,
+				'offset' => $offset,
 			)
 		);
 
-		if ( is_wp_error( $body ) ) {
-			continue;
+		if ( is_wp_error( $result ) ) {
+			break;
 		}
 
-		foreach ( ltt_dive_in_get_seeker_items( $body ) as $item ) {
-			$event = ltt_dive_in_normalize_seeker_event( $item );
-
-			if ( $event && $uuid === $event['id'] ) {
-				$events[] = $event;
-				break;
+		foreach ( $result['events'] as $event ) {
+			if ( in_array( $event['id'], $uuids, true ) ) {
+				$found[ $event['id'] ] = $event;
 			}
+		}
+
+		if ( count( $result['events'] ) < 100 || $offset + 100 >= $result['total'] ) {
+			break;
+		}
+	}
+
+	$events = array();
+
+	foreach ( $uuids as $uuid ) {
+		if ( isset( $found[ $uuid ] ) ) {
+			$events[] = $found[ $uuid ];
 		}
 	}
 
