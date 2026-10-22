@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ltt-dive-in/end-page-cluster",
+  "title": "End Page Cluster",
+  "category": "ltt-blocks",
+  "icon": "columns",
+  "description": "Closing section that keeps visitors moving: Copy/CTA Driver, Page Driver, or Content Trail.",
+  "textdomain": "ltt-dive-in",
+  "style": "ltt-dive-in-end-page-cluster",
+  "editorStyle": "ltt-dive-in-end-page-cluster",
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "template-parts/blocks/end-page-cluster.php"
+  },
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": "full"
+    }
+  },
+  "supports": {
+    "align": [
+      "full"
+    ],
+    "anchor": true,
+    "customClassName": false,
+    "html": false
+  }
+}

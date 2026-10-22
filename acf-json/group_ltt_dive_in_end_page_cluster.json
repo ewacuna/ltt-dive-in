@@ -1,0 +1,408 @@
+{
+    "key": "group_ltt_dive_in_end_page_cluster",
+    "title": "LTT Dive In — End Page Cluster",
+    "fields": [
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_variant",
+            "label": "Variant",
+            "name": "ltt_dive_in_end_page_cluster_variant",
+            "type": "select",
+            "instructions": "Copy/CTA Driver shows two or three text callouts. Page Driver shows three image cards. Content Trail shows a carousel of stories, events, and places.",
+            "choices": {
+                "copy_cta": "Copy/CTA Driver",
+                "page_driver": "Page Driver",
+                "content_trail": "Content Trail"
+            },
+            "default_value": "copy_cta",
+            "required": 1
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_background_color",
+            "label": "Background color",
+            "name": "ltt_dive_in_end_page_cluster_background_color",
+            "type": "select",
+            "instructions": "Leave empty for a white background.",
+            "choices": {
+                "navy": "Deep Navy",
+                "gold": "Peak Gold",
+                "burgundy": "Burgundy",
+                "red": "Red",
+                "forest": "Forest Green",
+                "green": "Green",
+                "blue": "Blue",
+                "cyan": "Crystal Clear Cyan"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "ui": 1,
+            "allow_null": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "copy_cta"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_callouts",
+            "label": "Callouts",
+            "name": "ltt_dive_in_end_page_cluster_callouts",
+            "type": "repeater",
+            "instructions": "Add two or three callouts. They display side by side on desktop.",
+            "required": 1,
+            "min": 2,
+            "max": 3,
+            "layout": "block",
+            "button_label": "Add callout",
+            "collapsed": "field_ltt_dive_in_end_page_cluster_callout_title",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "copy_cta"
+                    }
+                ]
+            ],
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_callout_tag",
+                    "label": "Category tag",
+                    "name": "tag",
+                    "type": "text",
+                    "instructions": "Optional short label shown above the title.",
+                    "maxlength": 40,
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_callouts"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_callout_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "maxlength": 80,
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_callouts"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_callout_copy",
+                    "label": "Short copy",
+                    "name": "copy",
+                    "type": "textarea",
+                    "rows": 3,
+                    "maxlength": 200,
+                    "new_lines": "",
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_callouts"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_callout_primary_cta",
+                    "label": "Primary call to action",
+                    "name": "primary_cta",
+                    "type": "link",
+                    "required": 1,
+                    "return_format": "array",
+                    "instructions": "Choose a descriptive label and destination.",
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_callouts"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_callout_secondary_cta",
+                    "label": "Secondary call to action",
+                    "name": "secondary_cta",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "Optional second button.",
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_callouts"
+                }
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_tag",
+            "label": "Category tag",
+            "name": "ltt_dive_in_end_page_cluster_tag",
+            "type": "text",
+            "instructions": "Optional short label shown above the title.",
+            "maxlength": 40,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "page_driver"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "content_trail"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_title",
+            "label": "Title",
+            "name": "ltt_dive_in_end_page_cluster_title",
+            "type": "text",
+            "required": 1,
+            "maxlength": 120,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "page_driver"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "content_trail"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_body",
+            "label": "Body copy",
+            "name": "ltt_dive_in_end_page_cluster_body",
+            "type": "textarea",
+            "instructions": "Optional.",
+            "rows": 3,
+            "maxlength": 300,
+            "new_lines": "",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "page_driver"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "content_trail"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_cta",
+            "label": "Call to action",
+            "name": "ltt_dive_in_end_page_cluster_cta",
+            "type": "link",
+            "instructions": "Optional button beside the header.",
+            "return_format": "array",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "content_trail"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_cards",
+            "label": "Cards",
+            "name": "ltt_dive_in_end_page_cluster_cards",
+            "type": "repeater",
+            "required": 1,
+            "min": 3,
+            "max": 3,
+            "layout": "block",
+            "button_label": "Add card",
+            "collapsed": "field_ltt_dive_in_end_page_cluster_card_title",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "page_driver"
+                    }
+                ]
+            ],
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_card_image",
+                    "label": "Background image",
+                    "name": "image",
+                    "type": "image",
+                    "required": 1,
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "mime_types": "jpg,jpeg,png,webp",
+                    "instructions": "Decorative: the card title describes the destination.",
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_cards"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "maxlength": 50,
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_cards"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_card_copy",
+                    "label": "Short copy",
+                    "name": "copy",
+                    "type": "textarea",
+                    "rows": 3,
+                    "maxlength": 150,
+                    "new_lines": "",
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_cards"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_card_cta",
+                    "label": "Button",
+                    "name": "cta",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "Optional. Choose a descriptive label and destination.",
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_cards"
+                }
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_end_page_cluster_trail_items",
+            "label": "Trail items",
+            "name": "ltt_dive_in_end_page_cluster_trail_items",
+            "type": "repeater",
+            "instructions": "Choose 2 to 12 items in display order. Each uses the site's existing card for its type. Stories and places without a featured image, and events that have ended, are skipped.",
+            "required": 1,
+            "min": 2,
+            "max": 12,
+            "layout": "block",
+            "button_label": "Add item",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "content_trail"
+                    }
+                ]
+            ],
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_trail_type",
+                    "label": "Type",
+                    "name": "type",
+                    "type": "select",
+                    "required": 1,
+                    "choices": {
+                        "story": "Story",
+                        "event": "Event",
+                        "place": "Place (page)"
+                    },
+                    "default_value": "story",
+                    "return_format": "value",
+                    "ui": 0,
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_trail_items"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_trail_story",
+                    "label": "Story",
+                    "name": "story",
+                    "type": "post_object",
+                    "required": 1,
+                    "post_type": [
+                        "post"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "ui": 1,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_ltt_dive_in_end_page_cluster_trail_type",
+                                "operator": "==",
+                                "value": "story"
+                            }
+                        ]
+                    ],
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_trail_items"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_trail_event",
+                    "label": "Event",
+                    "name": "event",
+                    "type": "select",
+                    "required": 1,
+                    "instructions": "Search upcoming Seeker events by name.",
+                    "choices": {},
+                    "multiple": 0,
+                    "ui": 1,
+                    "ajax": 1,
+                    "allow_null": 0,
+                    "return_format": "value",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_ltt_dive_in_end_page_cluster_trail_type",
+                                "operator": "==",
+                                "value": "event"
+                            }
+                        ]
+                    ],
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_trail_items"
+                },
+                {
+                    "key": "field_ltt_dive_in_end_page_cluster_trail_place",
+                    "label": "Place",
+                    "name": "place",
+                    "type": "post_object",
+                    "required": 1,
+                    "post_type": [
+                        "page"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "ui": 1,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_ltt_dive_in_end_page_cluster_trail_type",
+                                "operator": "==",
+                                "value": "place"
+                            }
+                        ]
+                    ],
+                    "parent_repeater": "field_ltt_dive_in_end_page_cluster_trail_items"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "ltt-dive-in/end-page-cluster"
+            }
+        ]
+    ],
+    "active": true,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "show_in_rest": 0
+}

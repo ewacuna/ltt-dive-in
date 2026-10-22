@@ -508,6 +508,33 @@ function ltt_dive_in_register_blocks() {
 	if ( file_exists( $listing_module_path . '/block.json' ) ) {
 		register_block_type( $listing_module_path );
 	}
+
+	$end_page_cluster_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/end-page-cluster.css';
+	$end_page_cluster_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/end-page-cluster.js';
+	$end_page_cluster_path        = LTT_DIVE_IN_DIR . '/blocks/end-page-cluster';
+
+	// Card and slider styles are small; Swiper loads only for the Content Trail variant.
+	wp_register_style(
+		'ltt-dive-in-end-page-cluster',
+		LTT_DIVE_IN_URI . '/assets/css/components/end-page-cluster.css',
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-story-card', 'ltt-dive-in-event-card', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators' ),
+		file_exists( $end_page_cluster_style_path ) ? (string) filemtime( $end_page_cluster_style_path ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script( 'ltt-dive-in-end-page-cluster', LTT_DIVE_IN_URI . '/assets/js/components/end-page-cluster.js', array( 'ltt-dive-in-swiper' ), file_exists( $end_page_cluster_script_path ) ? (string) filemtime( $end_page_cluster_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_localize_script(
+		'ltt-dive-in-end-page-cluster',
+		'ltt_dive_in_end_page_cluster',
+		array(
+			'previous' => __( 'Previous items', 'ltt-dive-in' ),
+			'next'     => __( 'Next items', 'ltt-dive-in' ),
+			/* translators: %d: item position in the Content Trail. */
+			'goTo'     => __( 'Go to item %d', 'ltt-dive-in' ),
+		)
+	);
+
+	if ( file_exists( $end_page_cluster_path . '/block.json' ) ) {
+		register_block_type( $end_page_cluster_path );
+	}
 }
 add_action( 'init', 'ltt_dive_in_register_blocks' );
 
@@ -922,6 +949,53 @@ function ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_page_cluster_carousel_assets', 5 );
+
+/**
+ * Load the Content Trail carousel assets.
+ *
+ * @return void
+ */
+function ltt_dive_in_enqueue_end_page_cluster_carousel_assets() {
+	wp_enqueue_style( 'ltt-dive-in-swiper' );
+	wp_enqueue_script( 'ltt-dive-in-end-page-cluster' );
+}
+
+/**
+ * Determine whether a parsed End Page Cluster block uses the Content Trail carousel.
+ *
+ * @param array $block Parsed block.
+ * @return bool
+ */
+function ltt_dive_in_end_page_cluster_uses_carousel( $block ) {
+	return is_array( $block )
+		&& 'ltt-dive-in/end-page-cluster' === ( $block['blockName'] ?? '' )
+		&& 'content_trail' === ( $block['attrs']['data']['ltt_dive_in_end_page_cluster_variant'] ?? '' );
+}
+
+/**
+ * Load Content Trail carousel assets before the document head.
+ *
+ * The block template keeps a render-time fallback for content that cannot be
+ * discovered from the queried post.
+ *
+ * @return void
+ */
+function ltt_dive_in_maybe_enqueue_end_page_cluster_carousel_assets() {
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+
+	if ( ! $post instanceof WP_Post || ! has_block( 'ltt-dive-in/end-page-cluster', $post ) ) {
+		return;
+	}
+
+	if ( ltt_dive_in_block_tree_contains( parse_blocks( $post->post_content ), 'ltt_dive_in_end_page_cluster_uses_carousel' ) ) {
+		ltt_dive_in_enqueue_end_page_cluster_carousel_assets();
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ltt_dive_in_maybe_enqueue_end_page_cluster_carousel_assets', 5 );
 
 /**
  * Load shared carousel assets before block previews inside the editor canvas.

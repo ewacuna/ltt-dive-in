@@ -1,0 +1,508 @@
+/*
+ * End Page Cluster (Figma END PAGE CLUSTER, 2145:14874).
+ * Variants: Copy/CTA Driver, Page Driver, and Content Trail. Tags, buttons,
+ * slider controls, and the Story and Event cards keep their shared styles;
+ * this file owns only composition and the Content Trail place tile.
+ */
+.end-page-cluster {
+    padding: 3.125rem 4rem;
+    overflow: clip;
+    background: #ffffff;
+    color: #073959;
+}
+
+.end-page-cluster__container {
+    max-width: 80rem;
+    margin-inline: auto;
+}
+
+.end-page-cluster__tag {
+    font-size: 1.125rem;
+}
+
+.end-page-cluster__title {
+    margin: 0;
+    color: inherit;
+    font-family: "Big Caslon", Georgia, serif;
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+}
+
+.end-page-cluster__tag + .end-page-cluster__title {
+    margin-top: 1rem;
+}
+
+.end-page-cluster__body {
+    margin: 1.5rem 0 0;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.45;
+    text-wrap: pretty;
+}
+
+.end-page-cluster__notice {
+    margin: 0;
+    padding: 1.5rem;
+}
+
+/* Copy/CTA Driver. */
+.end-page-cluster__callouts {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.end-page-cluster__callout {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    max-width: 48rem;
+    text-align: center;
+}
+
+.end-page-cluster__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Stats module swatches (DESIGN.md, Content modules). */
+.end-page-cluster--bg-navy {
+    background: #003a5c;
+    color: #ffffff;
+}
+
+.end-page-cluster--bg-gold {
+    background: #eeb040;
+}
+
+.end-page-cluster--bg-burgundy {
+    background: #5e3236;
+    color: #ffffff;
+}
+
+.end-page-cluster--bg-red {
+    background: #9e3f3d;
+    color: #ffffff;
+}
+
+.end-page-cluster--bg-forest {
+    background: #296154;
+    color: #ffffff;
+}
+
+.end-page-cluster--bg-green {
+    background: #4fa154;
+    color: #042742;
+}
+
+.end-page-cluster--bg-blue {
+    background: #397398;
+    color: #ffffff;
+}
+
+.end-page-cluster--bg-cyan {
+    background: #61c2b7;
+}
+
+.end-page-cluster--bg-cyan .end-page-cluster__tag {
+    background: #ffffff;
+}
+
+/* Page Driver. */
+.end-page-cluster--page-driver {
+    padding-bottom: 7rem;
+}
+
+.end-page-cluster--page-driver .end-page-cluster__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 48rem;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.end-page-cluster__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6875rem;
+    width: 100vw;
+    margin: 3.1875rem calc(50% - 50vw) 0;
+}
+
+.end-page-cluster__card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 19.25rem;
+    padding: 0.75rem 3rem;
+    background: #073959;
+    color: #ffffff;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.end-page-cluster__card-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+}
+
+.end-page-cluster__card-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Darkened from Figma's 51% to the 65% Page Cluster treatment so white copy stays readable over bright photos. */
+.end-page-cluster__card-media::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 57, 89, 0.65), rgba(2, 22, 43, 0.65));
+    content: "";
+}
+
+.end-page-cluster__card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 23.5rem;
+}
+
+.end-page-cluster__card-title {
+    margin: 0;
+    color: inherit;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.end-page-cluster__card-body {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.end-page-cluster__card-cta {
+    margin-top: 1.5rem;
+}
+
+/* Content Trail. */
+.end-page-cluster--content-trail .end-page-cluster__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.end-page-cluster__intro {
+    max-width: 48rem;
+    min-width: 0;
+}
+
+.end-page-cluster__header-cta {
+    flex: none;
+}
+
+/*
+ * The track bleeds past the container to the right edge of the viewport, as in
+ * Figma. Selectors are qualified so they win over Swiper's later-loading
+ * `.swiper` and `.swiper-slide` defaults.
+ */
+.end-page-cluster__trail > .end-page-cluster__viewport {
+    margin-right: calc(50% - 50vw);
+}
+
+.end-page-cluster__viewport:not(.swiper-initialized) {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-color: #073959 #c7d1d8;
+}
+
+.end-page-cluster__viewport:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+.end-page-cluster__track {
+    display: flex;
+    gap: 0.6875rem;
+}
+
+.end-page-cluster__viewport.swiper-initialized .end-page-cluster__track {
+    gap: 0;
+}
+
+.end-page-cluster__track > .end-page-cluster__slide {
+    --story-card-height: 30.25rem;
+    display: flex;
+    flex: 0 0 auto;
+    width: 20.9375rem;
+    height: auto;
+    scroll-snap-align: start;
+}
+
+.end-page-cluster__slide > * {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.end-page-cluster__slide .ltt-event-card--tile {
+    min-height: 30.25rem;
+}
+
+.end-page-cluster__place {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 30.25rem;
+    padding: 2rem;
+    overflow: hidden;
+    border: 1px solid #000000;
+    background: #06304d;
+    color: #ffffff;
+}
+
+.end-page-cluster__place-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+}
+
+.end-page-cluster__place-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.end-page-cluster__place-media::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(21, 20, 25, 0) 57.212%, rgba(9, 9, 11, 0.64) 79.808%, rgba(0, 0, 0, 0.8));
+    content: "";
+}
+
+.end-page-cluster__place-title {
+    margin: 0;
+    color: inherit;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+.end-page-cluster__place-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.end-page-cluster__place-link::before {
+    flex: none;
+    width: 1.375rem;
+    height: 2rem;
+    background: url("../../images/icons/location.svg") center / contain no-repeat;
+    content: "";
+}
+
+/* Makes the whole tile one target while keeping a single link. */
+.end-page-cluster__place-link::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+}
+
+.end-page-cluster__place-link:is(:hover, :focus-visible) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.end-page-cluster__place-link:focus-visible {
+    outline: none;
+}
+
+.end-page-cluster__place:focus-within {
+    outline: 3px solid #eeb040;
+    outline-offset: -3px;
+}
+
+.end-page-cluster__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+}
+
+.end-page-cluster__controls[hidden] {
+    display: none;
+}
+
+.end-page-cluster__arrows {
+    display: flex;
+    gap: 1rem;
+}
+
+.end-page-cluster__arrows button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.end-page-cluster__pagination {
+    gap: 0.5rem;
+}
+
+.end-page-cluster__pagination .ltt-carousel-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    min-height: auto;
+}
+
+@media (max-width: 1199.98px) {
+    .end-page-cluster {
+        padding-inline: 2rem;
+    }
+
+    .end-page-cluster__card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .end-page-cluster__callouts {
+        gap: 2rem;
+    }
+
+    .end-page-cluster__title {
+        font-size: 2.5rem;
+    }
+
+    .end-page-cluster__card-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .end-page-cluster {
+        padding: 3.125rem 1.25rem;
+    }
+
+    .end-page-cluster__tag {
+        font-size: 0.875rem;
+    }
+
+    .end-page-cluster__title {
+        font-size: 3rem;
+    }
+
+    .end-page-cluster__tag + .end-page-cluster__title {
+        margin-top: 0.75rem;
+    }
+
+    .end-page-cluster__body {
+        margin-top: 1.25rem;
+    }
+
+    .end-page-cluster--copy-cta {
+        padding-block: 4rem;
+    }
+
+    .end-page-cluster__callouts {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 3rem;
+    }
+
+    .end-page-cluster__callout {
+        max-width: none;
+    }
+
+    .end-page-cluster__actions {
+        margin-top: 1.5rem;
+    }
+
+    /* On white, Figma left-aligns the copy and centers the buttons. */
+    .end-page-cluster--bg-white .end-page-cluster__callout {
+        align-items: stretch;
+        text-align: left;
+    }
+
+    .end-page-cluster--bg-white .end-page-cluster__tag {
+        align-self: flex-start;
+    }
+
+    .end-page-cluster--page-driver {
+        padding-bottom: 4rem;
+    }
+
+    .end-page-cluster--page-driver .end-page-cluster__tag {
+        font-size: 1.125rem;
+    }
+
+    .end-page-cluster--page-driver .end-page-cluster__tag + .end-page-cluster__title {
+        margin-top: 1rem;
+    }
+
+    .end-page-cluster__cards {
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 1.25rem;
+    }
+
+    .end-page-cluster__card {
+        min-height: 20.9375rem;
+        padding: 0.75rem 2rem;
+    }
+
+    .end-page-cluster__card-title {
+        font-size: 2rem;
+    }
+
+    .end-page-cluster--content-trail .end-page-cluster__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5625rem;
+        margin-bottom: 1.5625rem;
+    }
+
+    .end-page-cluster__track {
+        gap: 0.375rem;
+    }
+
+    .end-page-cluster__track > .end-page-cluster__slide {
+        /* Keeps a whole card inside the 320px reflow viewport. */
+        width: min(19.5625rem, calc(100vw - 2.5rem));
+    }
+}
+
+@media (forced-colors: active) {
+    .end-page-cluster__card,
+    .end-page-cluster__place {
+        border: 1px solid CanvasText;
+    }
+
+    .end-page-cluster__place:focus-within {
+        outline-color: Highlight;
+    }
+}
