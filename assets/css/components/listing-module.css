@@ -726,6 +726,11 @@
         display: none;
     }
 
+    .ltt-listing-module--loading-more .facetwp-facet.is-loading {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
     .ltt-listing-module__grid {
         display: flex;
         grid-template-columns: none;
@@ -789,9 +794,21 @@
         pointer-events: auto;
     }
 
-    .ltt-listing-module__arrow:disabled {
+    .ltt-listing-module__arrow:disabled,
+    .ltt-listing-module__arrow[aria-disabled="true"] {
         opacity: 0.5;
         cursor: default;
+    }
+
+    .ltt-listing-module__arrow.is-loading .ltt-slider-navigation__icon {
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        background: none;
+        -webkit-mask: none;
+        mask: none;
+        translate: 0;
+        animation: ltt-listing-loading 0.8s linear infinite;
     }
 
     .ltt-listing-module__grid:focus-visible {
@@ -810,7 +827,17 @@
     }
 }
 
+@keyframes ltt-listing-loading {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .ltt-listing-module__arrow.is-loading .ltt-slider-navigation__icon {
+        animation: none;
+    }
+
     .ltt-listing-module__grid {
         scroll-behavior: auto;
     }

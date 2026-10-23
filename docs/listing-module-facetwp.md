@@ -35,6 +35,14 @@ In the Listing Module block settings, choose:
 
 Save the page and test the front end. A keyword search combines with both dropdowns, and the conditions narrow the same card set together. Changing a filter or search term replaces the visible cards and resets the pager. Load More appends the next batch without reloading the page.
 
+## Mobile loading
+
+At 767.98px and narrower, the carousel uses the same configured Pager and step size. Its standalone Load More button and native scrollbar stay hidden. Once the penultimate loaded card settles into view, the next batch loads in the background without moving the current card or blocking the filters. An initial batch of one or two cards can prefetch once when the carousel enters the viewport. Only one request runs at a time; receiving a batch cannot automatically load every remaining page.
+
+At the loaded boundary, the next arrow shows a loading indicator while the request is pending. An additional next-arrow click, horizontal forward swipe, or Right Arrow key on the focused carousel queues one advance to the first new card. Moving backward, leaving the carousel, changing filters/search, or switching to desktop cancels that advance. At the final result, the next arrow is disabled and the carousel does not loop.
+
+A failed load preserves the cards and rolls back the page number. The error includes a Try again button; the next arrow also retries at the boundary. Automatic prefetch pauses after an error until an explicit retry or a filter change. Loading status and results are announced accessibly, and the spinner is static with reduced motion. No new facet configuration or re-index is required for this behavior.
+
 ## Re-index and move to another environment
 
 FacetWP indexes content and taxonomy values for filtering. Re-index after adding a taxonomy, changing which content types or taxonomies FacetWP indexes, or otherwise changing the indexed data. Creating a Search or Pager facet alone does not add taxonomy values to the index.
@@ -52,6 +60,7 @@ FacetWP references: [Search facet settings and behavior](https://facetwp.com/hel
 - Type quickly and check that the latest term wins. Press Enter and use the search icon. Confirm the search facet returns more than 200 matching posts when that many are available.
 - Check initial/step combinations of 3/3, 3/6, and 6/3, including a final partial batch. Try double-clicking Load More and changing a filter after several batches.
 - Check keyboard-only operation, visible focus, result announcements, mobile carousel arrows, 320px reflow, 200% zoom, and reduced motion.
+- On mobile, check slow responses, repeated next clicks/swipes, backward navigation while waiting, failure/retry of the same page, and filtering during prefetch. Test initial counts of one/two and a step of one to rule out automatic request chains. Check resizing through 768px during a request and confirm desktop Load More still works.
 
 ## What happens when settings are missing
 

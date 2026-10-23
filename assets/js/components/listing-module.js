@@ -9,6 +9,18 @@
         const arrows = section.querySelector('.ltt-listing-module__arrows');
         const facetControls = section.querySelectorAll('[data-listing-select-id]');
         const status = section.querySelector('[data-listing-status]');
+        const previous = arrows ? arrows.querySelector('[data-listing-previous]') : null;
+        const next = arrows ? arrows.querySelector('[data-listing-next]') : null;
+        const nextLabel = next ? next.getAttribute('aria-label') : '';
+        const mobile = window.matchMedia('(max-width: 767.98px)');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const prefetchedCards = new Set();
+        let carouselVisible = false;
+        let prefetchPaused = false;
+        let pendingAdvance = null;
+        let settleTimer = null;
+        let lastScrollLeft = 0;
+        let touchStart = null;
         let awaitingRefresh = false;
         let awaitingLoadMore = false;
         let restoreFocusControl = null;
@@ -76,6 +88,9 @@
             restoreSearchButtonFocus = false;
             restoreLoadMoreFocus = false;
             restoreClearFocus = false;
+            pendingAdvance = null;
+            prefetchPaused = request.isLoadMore;
+            section.classList.remove('ltt-listing-module--loading-more');
             status.classList.remove('screen-reader-text');
             status.classList.add('ltt-listing-module__status--error');
             status.replaceChildren(document.createTextNode(
@@ -84,19 +99,57 @@
                     : section.dataset.listingUpdateError
             ));
 
-            if (!request.isLoadMore) {
-                const retry = document.createElement('button');
-                retry.type = 'button';
-                retry.className = 'ltt-listing-module__retry';
-                retry.textContent = section.dataset.listingRetry;
-                retry.addEventListener('click', function () {
-                    clearErrorStatus();
-                    if (window.FWP) {
-                        window.FWP.refresh();
+            const retry = document.createElement('button');
+            retry.type = 'button';
+            retry.className = 'ltt-listing-module__retry';
+            retry.textContent = section.dataset.listingRetry;
+            retry.addEventListener('click', function () {
+                if (request.isLoadMore) {
+                    const control = mobile.matches && next ? next : section.querySelector('.facetwp-load-more');
+                    if (control) {
+                        control.focus({ preventScroll: true });
                     }
-                });
-                status.appendChild(retry);
+                    requestMore(false, true);
+                } else if (window.FWP) {
+                    window.FWP.refresh();
+                }
+            });
+            status.appendChild(retry);
+            update();
+        }
+
+        function failRequest(request) {
+            if (request.isLoadMore && window.FWP) {
+                const previousPage = Math.max(1, request.page - 1);
+                window.FWP.load_more_paged = previousPage;
+                window.FWP.paged = previousPage;
+                window.FWP.is_load_more = false;
+                window.FWP.soft_refresh = false;
+                window.FWP.is_refresh = false;
             }
+
+            const button = section.querySelector('.facetwp-load-more');
+            if (button) {
+                button.disabled = false;
+                button.dataset.listingLoading = 'false';
+                if (button.dataset.listingLabel) {
+                    button.textContent = button.dataset.listingLabel;
+                }
+            }
+
+            activeRequest = null;
+            loadMorePending = false;
+            showRequestError(request);
+            stopFacetwpLoading();
+        }
+
+        function rememberFacetFocus() {
+            restoreFocusControl = Array.from(facetControls).find(function (control) {
+                return control.contains(document.activeElement);
+            }) || null;
+            const input = section.querySelector('.facetwp-search:focus');
+            restoreSearchSelection = input ? { start: input.selectionStart, end: input.selectionEnd } : null;
+            restoreSearchButtonFocus = Boolean(section.querySelector('.facetwp-type-search .facetwp-icon:focus'));
         }
 
         function normalizeSearchValue(value) {
@@ -252,28 +305,7 @@
 
                     const responseObject = getResponseObject(response);
                     if (!responseObject || !responseObject.settings) {
-                        if (request.isLoadMore && window.FWP) {
-                            const previousPage = Math.max(1, request.page - 1);
-                            window.FWP.load_more_paged = previousPage;
-                            window.FWP.paged = previousPage;
-                            window.FWP.is_load_more = false;
-                            window.FWP.soft_refresh = false;
-                            window.FWP.is_refresh = false;
-                        }
-
-                        const loadButton = section.querySelector('.facetwp-load-more');
-                        if (loadButton) {
-                            loadButton.disabled = false;
-                            loadButton.dataset.listingLoading = 'false';
-                            if (loadButton.dataset.listingLabel) {
-                                loadButton.textContent = loadButton.dataset.listingLabel;
-                            }
-                        }
-
-                        showRequestError(request);
-                        stopFacetwpLoading();
-                        activeRequest = null;
-                        loadMorePending = false;
+                        failRequest(request);
                         return;
                     }
 
@@ -289,7 +321,20 @@
                         }
                         activeRequest = null;
                         loadMorePending = false;
+                        awaitingRefresh = false;
+                        awaitingLoadMore = false;
+                        pendingAdvance = null;
+                        section.classList.remove('ltt-listing-module--loading-more');
+                        grid.removeAttribute('aria-busy');
+                        stopFacetwpLoading();
+                        update();
                         return;
+                    }
+
+                    // Background pagination must preserve the focus as it is now,
+                    // not restore whichever filter was focused when loading began.
+                    if (request.mobileLoad) {
+                        rememberFacetFocus();
                     }
 
                     if (typeof previousDone === 'function') {
@@ -308,28 +353,7 @@
                         return;
                     }
 
-                    if (request.isLoadMore && window.FWP) {
-                        const previousPage = Math.max(1, request.page - 1);
-                        window.FWP.load_more_paged = previousPage;
-                        window.FWP.paged = previousPage;
-                        window.FWP.is_load_more = false;
-                        window.FWP.soft_refresh = false;
-                        window.FWP.is_refresh = false;
-                    }
-
-                    const loadButton = section.querySelector('.facetwp-load-more');
-                    if (loadButton) {
-                        loadButton.disabled = false;
-                        loadButton.dataset.listingLoading = 'false';
-                        if (loadButton.dataset.listingLabel) {
-                            loadButton.textContent = loadButton.dataset.listingLabel;
-                        }
-                    }
-
-                    loadMorePending = false;
-                    showRequestError(request);
-                    stopFacetwpLoading();
-                    activeRequest = null;
+                    failRequest(request);
                 };
 
                 return settings;
@@ -352,11 +376,11 @@
             }
         }
 
-        function syncFacetSelects() {
+        function syncFacetSelects(preserveExisting) {
             facetControls.forEach(function (control) {
                 const select = control.querySelector('select.facetwp-dropdown');
 
-                if (!select) {
+                if (!select || (preserveExisting === true && control.lttActiveSelect === select)) {
                     return;
                 }
 
@@ -529,10 +553,18 @@
                 window.FWP.paged = 1;
             }
 
+            if (!isLoadMore) {
+                pendingAdvance = null;
+                prefetchPaused = false;
+                prefetchedCards.clear();
+                window.clearTimeout(settleTimer);
+            }
+
             requestSequence += 1;
             activeRequest = {
                 id: requestSequence,
                 isLoadMore: isLoadMore,
+                mobileLoad: isLoadMore && mobile.matches,
                 page: isLoadMore ? Number(window.FWP.paged) : 1,
                 facets: JSON.parse(JSON.stringify(window.FWP.facets || {}))
             };
@@ -540,16 +572,7 @@
             awaitingLoadMore = isLoadMore;
             loadMorePending = isLoadMore;
 
-            restoreFocusControl = Array.from(facetControls).find(function (control) {
-                return control.contains(document.activeElement);
-            }) || null;
-
-            const focusedSearch = section.querySelector('.facetwp-search:focus');
-            restoreSearchSelection = focusedSearch ? {
-                start: focusedSearch.selectionStart,
-                end: focusedSearch.selectionEnd
-            } : null;
-            restoreSearchButtonFocus = Boolean(section.querySelector('.facetwp-type-search .facetwp-icon:focus'));
+            rememberFacetFocus();
 
             if (restoreClearFocus) {
                 restoreClearFocus = false;
@@ -559,16 +582,20 @@
                 }
             }
 
-            facetControls.forEach(function (control) {
-                closeFacet(control, false);
-            });
+            if (!activeRequest.mobileLoad) {
+                facetControls.forEach(function (control) {
+                    closeFacet(control, false);
+                });
+            }
 
             clearErrorStatus();
             grid.setAttribute('aria-busy', 'true');
+            section.classList.toggle('ltt-listing-module--loading-more', activeRequest.mobileLoad);
 
-            if (status) {
+            if (status && !activeRequest.mobileLoad) {
                 status.textContent = isLoadMore ? section.dataset.listingLoadingMore : section.dataset.listingLoading;
             }
+            update();
         });
 
         section.addEventListener('click', function (event) {
@@ -650,7 +677,7 @@
                 }
             }
 
-            if (loadMorePending) {
+            if (loadMorePending || activeRequest) {
                 event.preventDefault();
                 event.stopPropagation();
                 return;
@@ -665,8 +692,15 @@
         section.addEventListener('change', function (event) {
             if (event.target.matches && event.target.matches('select.facetwp-dropdown')) {
                 clearSearchDelay();
+                pendingAdvance = null;
             }
         }, true);
+
+        section.addEventListener('input', function (event) {
+            if (event.target.matches('.facetwp-search')) {
+                pendingAdvance = null;
+            }
+        });
 
         section.addEventListener('keydown', function (event) {
             const input = event.target.closest('.facetwp-search');
@@ -692,17 +726,29 @@
 
         document.addEventListener('facetwp-loaded', function () {
             installFacetwpAjaxHook();
+            const wasMobileLoad = Boolean(activeRequest && activeRequest.mobileLoad);
+            // FacetWP can complete its initial refresh from preloaded HTML,
+            // without ever running an AJAX callback.
+            activeRequest = null;
+            const wasLoadMore = awaitingLoadMore;
+            const advance = wasLoadMore ? pendingAdvance : null;
+            if (wasLoadMore) {
+                prefetchedCards.add(currentCardIndex());
+                window.clearTimeout(settleTimer);
+            }
+            pendingAdvance = null;
+            section.classList.remove('ltt-listing-module--loading-more');
             // FacetWP replaces the native selects after each refresh. Rebuild
             // their shared select presentation after its new markup is ready.
             queueMicrotask(function () {
-                syncFacetSelects();
+                syncFacetSelects(wasMobileLoad);
                 syncSearchControls();
                 syncResetControls();
 
                 if (restoreFocusControl) {
                     const trigger = restoreFocusControl.querySelector('.ltt-select__trigger');
 
-                    if (trigger) {
+                    if (trigger && (!wasMobileLoad || !restoreFocusControl.contains(document.activeElement))) {
                         trigger.focus({ preventScroll: true });
                     }
                     restoreFocusControl = null;
@@ -737,9 +783,10 @@
 
             grid.removeAttribute('aria-busy');
 
-            if (awaitingRefresh && status) {
+            if (awaitingRefresh) {
                 if (!awaitingLoadMore) {
                     grid.scrollLeft = 0;
+                    lastScrollLeft = 0;
                 }
                 clearErrorStatus();
                 announceVisibleResults();
@@ -759,51 +806,194 @@
             if (arrows) {
                 update();
             }
+
+            if (advance && mobile.matches && carouselVisible && !document.hidden && currentCardIndex() === advance - 1) {
+                scrollToCard(advance);
+            }
+            // A received batch never starts another prefetch by itself.
+            if (!wasLoadMore) {
+                schedulePrefetch();
+            }
         });
 
-        if (!arrows) {
-            return;
+        function currentCardIndex() {
+            const card = grid.querySelector('.ltt-listing-module__card');
+            const gap = parseFloat(window.getComputedStyle(grid).gap) || 0;
+            const step = card ? card.getBoundingClientRect().width + gap : 0;
+            return step ? Math.max(0, Math.round(grid.scrollLeft / step)) : 0;
         }
 
-        const previous = arrows.querySelector('[data-listing-previous]');
-        const next = arrows.querySelector('[data-listing-next]');
-        const mobile = window.matchMedia('(max-width: 767.98px)');
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        function atLoadedEnd() {
+            return grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
+        }
+
+        function hasMore() {
+            const pager = window.FWP && window.FWP.settings && window.FWP.settings.pager;
+            return Boolean(pager && Number(pager.page) < Number(pager.total_pages) && section.querySelector('[data-listing-load-more] .facetwp-load-more'));
+        }
+
+        function requestMore(advance, manual) {
+            const button = section.querySelector('[data-listing-load-more] .facetwp-load-more');
+            const search = section.querySelector('.facetwp-search');
+            const searchName = section.dataset.listingSearchName;
+            if (!button || !hasMore() || activeRequest || awaitingRefresh || loadMorePending || searchDelayTimer ||
+                (search && normalizeSearchValue(window.FWP.facets[searchName]) !== search.value)) {
+                return;
+            }
+            if (!manual && (prefetchPaused || !mobile.matches || !carouselVisible || document.hidden)) {
+                return;
+            }
+
+            prefetchPaused = false;
+            prefetchedCards.add(currentCardIndex());
+            if (advance) {
+                pendingAdvance = grid.querySelectorAll('.ltt-listing-module__card').length;
+            }
+            // The native pager owns page increments, rendering and filter state.
+            button.click();
+        }
+
+        function prefetch() {
+            const count = grid.querySelectorAll('.ltt-listing-module__card').length;
+            const index = currentCardIndex();
+            if (count && index >= count - 2 && !prefetchedCards.has(index)) {
+                requestMore(false, false);
+            }
+        }
+
+        function schedulePrefetch() {
+            window.clearTimeout(settleTimer);
+            settleTimer = window.setTimeout(prefetch, 150);
+        }
+
+        function update() {
+            if (!previous || !next) {
+                return;
+            }
+            const count = grid.querySelectorAll('.ltt-listing-module__card').length;
+            const more = hasMore();
+            const end = atLoadedEnd();
+            const waiting = mobile.matches && end && loadMorePending;
+            arrows.hidden = !mobile.matches || !count || (count === 1 && !more);
+            previous.disabled = grid.scrollLeft <= 2;
+            // Keep the control focusable at the end, including after AJAX.
+            next.disabled = false;
+            next.setAttribute('aria-disabled', String(!count || (end && !more)));
+            next.setAttribute('aria-busy', String(waiting));
+            next.setAttribute('aria-label', waiting ? section.dataset.listingLoadingMore :
+                end && prefetchPaused && more ? next.dataset.listingRetryLabel :
+                    end && !more ? next.dataset.listingEndLabel : nextLabel);
+            next.classList.toggle('is-loading', waiting);
+            if (waiting && status && !prefetchPaused && status.textContent !== section.dataset.listingLoadingMore) {
+                status.textContent = section.dataset.listingLoadingMore;
+            }
+        }
+
+        function scrollToCard(index) {
+            const cards = grid.querySelectorAll('.ltt-listing-module__card');
+            const card = cards[Math.max(0, Math.min(index, cards.length - 1))];
+            if (!card) {
+                return;
+            }
+            grid.scrollTo({
+                left: grid.scrollLeft + card.getBoundingClientRect().left - grid.getBoundingClientRect().left,
+                behavior: reducedMotion.matches ? 'auto' : 'smooth'
+            });
+        }
+
+        function move(direction) {
+            if (direction < 0) {
+                pendingAdvance = null;
+            } else if (atLoadedEnd()) {
+                if (loadMorePending) {
+                    pendingAdvance = grid.querySelectorAll('.ltt-listing-module__card').length;
+                } else {
+                    requestMore(true, true);
+                }
+                return;
+            }
+            scrollToCard(currentCardIndex() + direction);
+        }
 
         if (!previous || !next) {
             return;
         }
 
-        function update() {
-            const scrollable = mobile.matches && grid.scrollWidth > grid.clientWidth + 2;
-            arrows.hidden = !scrollable;
-
-            if (!scrollable) {
-                return;
-            }
-
-            previous.disabled = grid.scrollLeft <= 2;
-            next.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
-        }
-
-        function move(direction) {
-            const card = grid.querySelector('.ltt-listing-module__card');
-
-            if (!card) {
-                return;
-            }
-
-            const gap = parseFloat(window.getComputedStyle(grid).gap) || 0;
-            grid.scrollBy({
-                left: direction * (card.getBoundingClientRect().width + gap),
-                behavior: reducedMotion.matches ? 'auto' : 'smooth'
-            });
-        }
-
         previous.addEventListener('click', function () { move(-1); });
         next.addEventListener('click', function () { move(1); });
-        grid.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
+        grid.addEventListener('scroll', function () {
+            if (grid.scrollLeft < lastScrollLeft - 2) {
+                pendingAdvance = null;
+            }
+            lastScrollLeft = grid.scrollLeft;
+            update();
+            schedulePrefetch();
+        }, { passive: true });
+        grid.addEventListener('keydown', function (event) {
+            if (event.target === grid && mobile.matches && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.preventDefault();
+                move(event.key === 'ArrowRight' ? 1 : -1);
+            }
+        });
+        // Observe only an extra forward swipe at the boundary; native scrolling
+        // still handles every gesture, including vertical page navigation.
+        grid.addEventListener('touchstart', function (event) {
+            touchStart = event.touches.length === 1 ? {
+                x: event.touches[0].clientX, y: event.touches[0].clientY,
+                end: atLoadedEnd(), index: currentCardIndex()
+            } : null;
+        }, { passive: true });
+        grid.addEventListener('touchend', function (event) {
+            if (touchStart && event.changedTouches.length) {
+                const dx = event.changedTouches[0].clientX - touchStart.x;
+                const dy = event.changedTouches[0].clientY - touchStart.y;
+                if (mobile.matches && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                    if (dx > 0) {
+                        pendingAdvance = null;
+                    } else if (touchStart.end && touchStart.index === currentCardIndex()) {
+                        move(1);
+                    }
+                }
+            }
+            touchStart = null;
+        }, { passive: true });
+        grid.addEventListener('touchcancel', function () { touchStart = null; }, { passive: true });
+
+        const carousel = grid.parentElement;
+        carousel.addEventListener('focusout', function (event) {
+            if (event.relatedTarget && !carousel.contains(event.relatedTarget)) {
+                pendingAdvance = null;
+            }
+        });
+        document.addEventListener('pointerdown', function (event) {
+            if (!carousel.contains(event.target)) {
+                pendingAdvance = null;
+            }
+        });
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                pendingAdvance = null;
+            } else {
+                schedulePrefetch();
+            }
+        });
+        window.addEventListener('blur', function () { pendingAdvance = null; });
+        const observer = new IntersectionObserver(function (entries) {
+            carouselVisible = entries[0].isIntersecting;
+            if (!carouselVisible) {
+                pendingAdvance = null;
+            } else {
+                schedulePrefetch();
+            }
+        });
+        observer.observe(grid);
+        window.addEventListener('resize', function () {
+            if (!mobile.matches) {
+                pendingAdvance = null;
+            }
+            update();
+            schedulePrefetch();
+        });
         update();
     }
 
