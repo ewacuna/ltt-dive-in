@@ -21,6 +21,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/template-functions.php';
 require_once LTT_DIVE_IN_DIR . '/inc/customizer.php';
 require_once LTT_DIVE_IN_DIR . '/inc/header-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-hero-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/meetings-hero-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/section-navigation.php';
 require_once LTT_DIVE_IN_DIR . '/inc/weather-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/weather.php';

@@ -255,6 +255,10 @@ The component catalog includes:
 
 The internal mobile hero in review node `95:24452` uses a `64px` Big Caslon Medium H1 on a `375px` canvas. On 2026-09-29 the client approved reducing mobile font sizes slightly at the theme's discretion, so at `767.98px` and narrower the theme uses `56px` as the mobile target and reduces it further only when the widest word would exceed the available width (for example, “Meetings”); the non-JavaScript fallback favors complete words and prevents clipping at narrow widths. Editorial line separators in page titles are rendered as normal spaces so wrapping can adapt to the viewport.
 
+### Meetings Hero
+
+The reusable Meetings Hero follows dev-access node `1:10709` and the mobile composition in review node `95:24749`. Desktop uses a centered Gotham HTF Bold title at `76px`, `2%` tracking, white text with a `0 4px 4px rgba(0,0,0,.25)` shadow, `14px` Gotham HTF Medium copy, optional glass CTAs, and an optional Scroll for more link. Mobile keeps the centered composition with a `36px` title and a `305px` text column. The background photo, decorative vector, and radial navy wash are separate layers; the default vector SVG has matching desktop and mobile exports. A custom SVG keeps its supplied dimensions ratio, colors, and transparency. The ACF SVG field is versioned without a location rule until a destination template is selected. The component is not assigned to any page yet. See `docs/meetings-hero.md` for its interface and template integration.
+
 ### Page drivers
 
 Typography verified against the Page Drivers board (`1:10721`) on 2026-10-09:
