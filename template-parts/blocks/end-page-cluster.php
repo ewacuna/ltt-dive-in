@@ -55,6 +55,8 @@ if ( 'copy_cta' === $variant ) {
 	} elseif ( in_array( $color, array( 'gold', 'green', 'cyan' ), true ) ) {
 		$cta_style = 'primary-fill';
 	}
+	// Figma's 3 up White frame alone gives the second CTA the secondary outline.
+	$secondary_style = ( '' === $color && 3 === count( $callouts ) ) ? 'secondary-outline' : $cta_style;
 	$classes = array( 'end-page-cluster', 'end-page-cluster--copy-cta', 'end-page-cluster--count-' . count( $callouts ) );
 	$classes[] = $color ? 'end-page-cluster--bg-' . $color : 'end-page-cluster--bg-white';
 	if ( $is_full ) {
@@ -75,7 +77,7 @@ if ( 'copy_cta' === $variant ) {
 					<?php if ( $has_cta( $callout['primary_cta'] ?? null ) || $has_cta( $callout['secondary_cta'] ?? null ) ) : ?>
 						<div class="end-page-cluster__actions">
 							<?php $render_cta( $callout['primary_cta'] ?? null, $cta_style ); ?>
-							<?php $render_cta( $callout['secondary_cta'] ?? null, $cta_style ); ?>
+							<?php $render_cta( $callout['secondary_cta'] ?? null, $secondary_style ); ?>
 						</div>
 					<?php endif; ?>
 				</div>
