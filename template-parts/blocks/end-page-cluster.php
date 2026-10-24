@@ -181,7 +181,9 @@ if ( ! $is_preview && function_exists( 'ltt_dive_in_enqueue_end_page_cluster_car
 	ltt_dive_in_enqueue_end_page_cluster_carousel_assets();
 }
 $cta        = get_field( 'ltt_dive_in_end_page_cluster_cta' );
-$card_sizes = '(max-width: 767.98px) 313px, 335px';
+$card_sizes   = '(max-width: 767.98px) 313px, 335px';
+$place_hovers = array( 'navy', 'teal', 'yellow', 'red' );
+$place_index  = 0;
 ?>
 <section id="<?php echo esc_attr( $id ); ?>" class="end-page-cluster end-page-cluster--content-trail<?php echo $is_full ? ' alignfull' : ''; ?>" aria-labelledby="<?php echo esc_attr( $id ); ?>-title">
 	<div class="end-page-cluster__container">
@@ -204,10 +206,16 @@ $card_sizes = '(max-width: 767.98px) 313px, 335px';
 							} elseif ( 'event' === $item['type'] ) {
 								get_template_part( 'template-parts/components/event-card', null, array( 'event' => $item['event'], 'style' => 'tile', 'sizes' => $card_sizes ) );
 							} else {
-								$place_title = get_the_title( $item['place'] );
+								$place_title   = get_the_title( $item['place'] );
+								$place_excerpt = has_excerpt( $item['place'] ) ? wp_trim_words( wp_strip_all_tags( get_the_excerpt( $item['place'] ) ), 40 ) : '';
+								// Inspiration Panels hover swatches rotate in Figma's order.
+								$place_hover = $place_hovers[ $place_index++ % count( $place_hovers ) ];
 								?>
-								<article class="end-page-cluster__place">
+								<article class="end-page-cluster__place end-page-cluster__place--<?php echo esc_attr( $place_hover ); ?>">
 									<div class="end-page-cluster__place-media" aria-hidden="true"><?php echo get_the_post_thumbnail( $item['place'], 'large', array( 'alt' => '', 'loading' => 'lazy', 'sizes' => $card_sizes ) ); ?></div>
+									<?php if ( $place_excerpt ) : ?>
+										<div class="end-page-cluster__place-copy"><p><?php echo esc_html( $place_excerpt ); ?></p></div>
+									<?php endif; ?>
 									<h3 class="end-page-cluster__place-title">
 										<a class="end-page-cluster__place-link" href="<?php echo esc_url( get_permalink( $item['place'] ) ); ?>"><?php echo esc_html( $place_title ); ?></a>
 									</h3>

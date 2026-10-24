@@ -303,6 +303,72 @@
     content: "";
 }
 
+/*
+ * Inspiration Panels hover (Figma 1:45073): a 60% swatch over a darker
+ * gradient rises from the bottom and the excerpt opens above the title;
+ * both reverse on leave. Swatches rotate Navy, Teal, Yellow, Red.
+ */
+.end-page-cluster__place::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(var(--place-hover-color), var(--place-hover-color)), linear-gradient(180deg, rgba(21, 20, 25, 0) 22.115%, rgba(9, 9, 11, 0.4) 50%, rgba(0, 0, 0, 0.5));
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 0.4s ease;
+    content: "";
+}
+
+.end-page-cluster__place--navy {
+    --place-hover-color: rgba(4, 39, 66, 0.6);
+}
+
+.end-page-cluster__place--navy::after {
+    background: linear-gradient(var(--place-hover-color), var(--place-hover-color)), linear-gradient(180deg, rgba(21, 20, 25, 0) 22.115%, rgba(9, 9, 11, 0.8) 53.846%, #000000);
+}
+
+.end-page-cluster__place--teal {
+    --place-hover-color: rgba(49, 157, 142, 0.6);
+}
+
+.end-page-cluster__place--yellow {
+    --place-hover-color: rgba(225, 132, 26, 0.6);
+}
+
+.end-page-cluster__place--red {
+    --place-hover-color: rgba(158, 63, 61, 0.6);
+}
+
+.end-page-cluster__place-copy {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 0.4s ease, margin 0.4s ease, opacity 0.3s ease;
+}
+
+.end-page-cluster__place-copy > p {
+    display: -webkit-box;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.45;
+    text-wrap: pretty;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 11;
+}
+
+.end-page-cluster__place:is(:hover, :focus-within)::after {
+    clip-path: inset(0);
+}
+
+.end-page-cluster__place:is(:hover, :focus-within) .end-page-cluster__place-copy {
+    grid-template-rows: 1fr;
+    margin-bottom: 1.5rem;
+    opacity: 1;
+}
+
 .end-page-cluster__place-title {
     margin: 0;
     color: inherit;
@@ -335,9 +401,9 @@
     content: "";
 }
 
-.end-page-cluster__place-link:is(:hover, :focus-visible) {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+/* The swatch is the hover cue; the label stays white over it. */
+.end-page-cluster__place-link:is(:hover, :focus) {
+    color: inherit;
 }
 
 .end-page-cluster__place-link:focus-visible {
@@ -493,6 +559,13 @@
     .end-page-cluster__track > .end-page-cluster__slide {
         /* Keeps a whole card inside the 320px reflow viewport. */
         width: min(19.5625rem, calc(100vw - 2.5rem));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .end-page-cluster__place::after,
+    .end-page-cluster__place-copy {
+        transition: none;
     }
 }
 
