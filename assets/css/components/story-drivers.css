@@ -590,8 +590,8 @@
         justify-content: center;
     }
 
-    /* 2 Up shows only the primary CTA on mobile. */
-    .story-drivers--two-up .story-drivers__action--secondary {
+    /* 2, 3, and 4 Up show only the primary CTA on mobile. */
+    .story-drivers__actions .story-drivers__action--secondary {
         display: none;
     }
 
