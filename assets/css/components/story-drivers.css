@@ -509,6 +509,22 @@
     }
 }
 
+/*
+ * Touch tablets keep every 4 Up panel open, so four columns are too narrow;
+ * use the md 2x2 layout up to lg (client-approved).
+ */
+@media (max-width: 1199.98px) and (hover: none) {
+    .story-drivers--four-up .story-drivers__row {
+        --story-card-height: 33.9375rem;
+        flex-wrap: wrap;
+    }
+
+    .story-drivers--four-up .story-drivers__row > .ltt-story-card,
+    .story-drivers--four-up .story-drivers__row > .ltt-story-card:is(:hover, :focus-within, .is-expanded) {
+        flex: 1 1 calc(50% - 0.6875rem);
+    }
+}
+
 @media (max-width: 991.98px) {
     .story-drivers__container {
         width: calc(100% - 4rem);
