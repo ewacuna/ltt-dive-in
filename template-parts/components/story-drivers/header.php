@@ -32,7 +32,7 @@ if ( empty( $config['heading'] ) ) {
 	<?php if ( $config['links'] ) : ?>
 		<div class="story-drivers__actions">
 			<?php foreach ( $config['links'] as $index => $link ) : ?>
-				<<?php echo esc_attr( $link_tag ); ?> class="ltt-button ltt-button--<?php echo esc_attr( 0 === $index ? 'primary-outline' : 'secondary-outline' ); ?>"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $link['url'] ); ?>"<?php echo $link['target'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?><?php endif; ?>><?php echo esc_html( $link['title'] ); ?></<?php echo esc_attr( $link_tag ); ?>>
+				<<?php echo esc_attr( $link_tag ); ?> class="ltt-button ltt-button--<?php echo esc_attr( 0 === $index ? 'primary-outline' : 'secondary-outline story-drivers__action--secondary' ); ?>"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $link['url'] ); ?>"<?php echo $link['target'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?><?php endif; ?>><?php echo esc_html( $link['title'] ); ?></<?php echo esc_attr( $link_tag ); ?>>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>

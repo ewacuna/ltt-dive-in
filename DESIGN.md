@@ -569,6 +569,7 @@ The following must be resolved before the related production work is considered 
 - Final ACF field-group and page-template mapping for each editable module, including which content is reusable or global.
 - Final Gravity Forms inventory and environment-migration process, including fields, consent, confirmations, notifications, retention, spam protection, email delivery, and external feeds.
 - Event detail pages, the Remind Me behavior, and the date-filter presets for the Seeker-based Event Driver.
+- The second filter dropdown in Story Drivers "Hero + Page Grid w/ Filters" (`2145:14524`). Figma labels it "Upcoming" and includes no developer note. The label appears to be carried over from the Event Driver, because published posts have no upcoming state. The requirements notes list author, category, tag, and date as blog facets. The current implementation filters by post tag. Confirm with the client whether to keep tags or switch to a date filter (for example, latest/oldest or month/year) or an author filter.
 - OpenWeather subscription level and lake-temperature data source.
 - Weather condition icon set, pending client feedback; OpenWeather's API icons remain in use until then.
 - Exact motion easing and whether the proposed bounce effect is retained.

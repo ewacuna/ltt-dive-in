@@ -590,6 +590,11 @@
         justify-content: center;
     }
 
+    /* 2 Up shows only the primary CTA on mobile. */
+    .story-drivers--two-up .story-drivers__action--secondary {
+        display: none;
+    }
+
     /* Stacked story cards replace the hover row. */
     .story-drivers__row {
         flex-direction: column;
