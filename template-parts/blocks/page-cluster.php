@@ -66,6 +66,13 @@ if ( 'features' === $variant && ! $is_preview && function_exists( 'ltt_dive_in_e
 		<?php if ( 'features' === $variant ) : ?><div class="page-cluster__viewport" role="region" aria-label="<?php esc_attr_e( 'Feature cards', 'ltt-dive-in' ); ?>"><?php endif; ?>
 		<div class="page-cluster__grid" id="<?php echo esc_attr( $id ); ?>-cards">
 			<?php foreach ( $cards as $card ) : ?>
+				<?php
+				$see_more_link = $card['see_more_link'] ?? array();
+				$has_see_more  = is_array( $see_more_link ) && ! empty( $see_more_link['url'] ) && (bool) esc_url( $see_more_link['url'] );
+				$see_more_label = ! empty( $card['title'] )
+					? sprintf( __( 'See more about %s', 'ltt-dive-in' ), wp_strip_all_tags( (string) $card['title'] ) )
+					: __( 'See more', 'ltt-dive-in' );
+				?>
 				<article class="page-cluster__card">
 					<?php if ( ! empty( $card['image'] ) ) : ?>
 						<div class="page-cluster__image"><?php echo wp_get_attachment_image( absint( $card['image'] ), 'large', false, 'hub' === $variant ? array( 'alt' => '', 'sizes' => '(max-width: 767.98px) 50vw, 25vw' ) : array( 'sizes' => '(max-width: 767.98px) 85vw, 25vw' ) ); ?></div>
@@ -74,6 +81,10 @@ if ( 'features' === $variant && ! $is_preview && function_exists( 'ltt_dive_in_e
 						<?php if ( ! empty( $card['title'] ) ) : ?><h3 class="page-cluster__card-title"><?php echo esc_html( $card['title'] ); ?></h3><?php endif; ?>
 						<?php if ( ! empty( $card['copy'] ) ) : ?><p class="page-cluster__card-body"><?php echo esc_html( $card['copy'] ); ?></p><?php endif; ?>
 						<?php if ( 'hub' === $variant ) { $render_cta( $card['cta'] ?? array(), 'glass', 'page-cluster__card-cta' ); } ?>
+						<?php if ( 'features' === $variant && $has_see_more ) : ?>
+							<?php $see_more_tag = $is_preview ? 'span' : 'a'; ?>
+							<<?php echo esc_html( $see_more_tag ); ?> class="page-cluster__card-see-more"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $see_more_link['url'] ); ?>" aria-label="<?php echo esc_attr( $see_more_label ); ?>"<?php if ( '_blank' === ( $see_more_link['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php endif; ?>><?php esc_html_e( 'See More', 'ltt-dive-in' ); ?><span class="page-cluster__card-see-more-icon" aria-hidden="true"></span></<?php echo esc_html( $see_more_tag ); ?>>
+						<?php endif; ?>
 					</div>
 				</article>
 			<?php endforeach; ?>

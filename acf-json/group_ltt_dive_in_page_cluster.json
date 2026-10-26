@@ -113,6 +113,24 @@
               }
             ]
           ]
+        },
+        {
+          "key": "field_ltt_dive_in_page_cluster_card_see_more_link",
+          "name": "see_more_link",
+          "label": "See More link",
+          "type": "link",
+          "instructions": "Choose the destination. The front-end link label is fixed to See More.",
+          "required": 1,
+          "return_format": "array",
+          "conditional_logic": [
+            [
+              {
+                "field": "field_ltt_dive_in_page_cluster_variant",
+                "operator": "==",
+                "value": "features"
+              }
+            ]
+          ]
         }
       ]
     }
