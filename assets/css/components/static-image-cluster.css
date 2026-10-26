@@ -102,6 +102,17 @@
     border-color: #61c2b7;
 }
 
+:is(
+    .static-image-cluster--three_up,
+    .static-image-cluster--inline_four_up,
+    .static-image-cluster--staggered_four,
+    .static-image-cluster--five_plus,
+    .static-image-cluster--inspired
+) .static-image-cluster__trigger:is(:hover, :focus-visible)::after {
+    border-width: 0.125rem;
+    border-color: #ffffff;
+}
+
 
 .static-image-cluster--one_up {
     padding-bottom: 2.75rem;
@@ -693,6 +704,16 @@
 
 @media (forced-colors: active) {
     .static-image-cluster__trigger:is(:hover, :focus-visible)::after {
+        border-color: ButtonText;
+    }
+
+    :is(
+        .static-image-cluster--three_up,
+        .static-image-cluster--inline_four_up,
+        .static-image-cluster--staggered_four,
+        .static-image-cluster--five_plus,
+        .static-image-cluster--inspired
+    ) .static-image-cluster__trigger:is(:hover, :focus-visible)::after {
         border-color: ButtonText;
     }
 }
