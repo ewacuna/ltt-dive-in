@@ -132,8 +132,7 @@
 }
 
 /*
- * A transparent border extends each 6px dot to a 24px target (WCAG 2.5.8),
- * since the dots are the only click control once the arrows are hidden.
+ * A transparent border extends each 6px dot to a 24px target (WCAG 2.5.8).
  * min-height resets the global 44px button rule, and width: auto resets
  * Swiper's full-width horizontal pagination. The root attribute outranks
  * those rules and the active dot's background shorthand, which load later.
@@ -152,10 +151,12 @@
 }
 
 @media (max-width: 767.98px) {
-    .testimonials__container,
-    .testimonials[data-testimonials-carousel] .testimonials__container {
-        grid-template-columns: minmax(0, 1fr);
+    .testimonials__container {
         width: calc(100% - 2.5rem);
+    }
+
+    .testimonials[data-testimonials-carousel] .testimonials__container {
+        column-gap: 0.75rem;
     }
 
     .testimonials .testimonials__slide {
@@ -167,12 +168,7 @@
         line-height: 1.45;
     }
 
-    .testimonials .testimonials__control {
-        display: none;
-    }
-
     .testimonials[data-testimonials-carousel] .testimonials__pagination {
-        grid-column: 1;
         margin-top: 4.5rem;
     }
 }
