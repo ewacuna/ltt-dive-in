@@ -65,7 +65,7 @@ $hero_links    = array_slice(
 		<?php endif; ?>
 	</div>
 
-	<div class="meetings-hero__art" aria-hidden="true">
+	<div class="meetings-hero__art<?php echo $icon_url ? ' meetings-hero__art--custom' : ''; ?>" aria-hidden="true">
 		<?php if ( ! $icon_url ) : ?>
 			<picture class="meetings-hero__icon">
 				<source media="(max-width: 767.98px)" srcset="<?php echo esc_url( LTT_DIVE_IN_URI . '/assets/images/hero/meetings-hero-icon-mobile.svg' ); ?>" type="image/svg+xml">

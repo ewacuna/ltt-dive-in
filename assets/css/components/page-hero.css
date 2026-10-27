@@ -27,6 +27,10 @@
 	color: #ffffff;
 }
 
+.page-main--header-overlay .page-hero {
+	--page-hero-offset: var(--wp-admin--admin-bar--height, 0px);
+}
+
 .page-hero__media {
 	position: absolute;
 	inset: 0;

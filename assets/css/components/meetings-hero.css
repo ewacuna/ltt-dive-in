@@ -1,6 +1,6 @@
 /* Meetings Hero (Figma 1:10709 desktop and 95:24749 mobile). */
 .meetings-hero {
-	--meetings-hero-offset: 0px;
+	--meetings-hero-offset: calc(5.625rem + var(--wp-admin--admin-bar--height, 0px));
 	position: relative;
 	display: grid;
 	grid-template-rows: minmax(min-content, 1fr) auto;
@@ -12,6 +12,10 @@
 	overflow: hidden;
 	background: #073959;
 	color: #ffffff;
+}
+
+.page-main--header-overlay .meetings-hero {
+	--meetings-hero-offset: var(--wp-admin--admin-bar--height, 0px);
 }
 
 .meetings-hero__media,
@@ -71,13 +75,17 @@
 .meetings-hero__wash {
 	position: absolute;
 	top: 8.3125rem;
-	left: 50%;
-	z-index: 0;
+	left: calc(50% - 1.18vw);
+	z-index: 2;
 	width: max(25.625rem, min(87.64vw, 78.875rem));
 	height: min(37.9375rem, calc(100% - 2rem));
 	transform: translateX(-50%);
 	background: radial-gradient(ellipse 50% 50% at center, rgba(7, 57, 89, 0.8) 25.9615%, rgba(7, 57, 89, 0) 100%);
 	opacity: 0.8;
+}
+
+.meetings-hero__art--custom .meetings-hero__wash {
+	z-index: 0;
 }
 
 .meetings-hero__content {
@@ -210,6 +218,7 @@
 
 @media (max-width: 991.98px) {
 	.meetings-hero {
+		--meetings-hero-offset: calc(4.125rem + var(--wp-admin--admin-bar--height, 0px));
 		padding-inline: 2rem;
 	}
 
@@ -242,6 +251,7 @@
 
 	.meetings-hero__wash {
 		top: 8.75rem;
+		left: calc(50% + 1.47vw);
 		width: max(25.625rem, calc(100vw + 2.1875rem));
 		height: 37.9375rem;
 	}

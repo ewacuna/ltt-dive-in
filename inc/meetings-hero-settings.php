@@ -10,48 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register the versioned SVG setting for the reusable Meetings Hero.
- *
- * This group intentionally has no location rules until the component is
- * assigned to a page template.
- */
-function ltt_dive_in_register_meetings_hero_settings() {
-	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
-		return;
-	}
-
-	acf_add_local_field_group(
-		array(
-			'key'          => 'group_ltt_dive_in_meetings_hero',
-			'title'        => __( 'LTT Dive In — Meetings Hero', 'ltt-dive-in' ),
-			'description'  => __( 'Reserved for the reusable Meetings Hero. This field group will appear after the component is assigned to a page template.', 'ltt-dive-in' ),
-			'fields'       => array(
-				array(
-					'key'           => 'field_ltt_dive_in_meetings_hero_icon',
-					'label'         => __( 'Hero icon (SVG)', 'ltt-dive-in' ),
-					'name'          => 'ltt_dive_in_meetings_hero_icon',
-					'type'          => 'file',
-					'instructions'  => __( 'Optional. Choose a transparent SVG from the Media Library. Its own colors and transparency are preserved.', 'ltt-dive-in' ),
-					'required'      => 0,
-					'return_format' => 'id',
-					'library'       => 'all',
-					'mime_types'    => 'svg',
-				),
-			),
-			'location'     => array(),
-			'menu_order'   => 0,
-			'position'     => 'normal',
-			'style'        => 'default',
-			'label_placement' => 'top',
-			'instruction_placement' => 'label',
-			'active'       => true,
-			'show_in_rest' => 0,
-		)
-	);
-}
-add_action( 'acf/init', 'ltt_dive_in_register_meetings_hero_settings' );
-
-/**
  * Validate that the optional Meetings Hero icon points to an SVG attachment.
  *
  * @param bool|string $valid Current validation result.
@@ -88,10 +46,24 @@ function ltt_dive_in_get_meetings_hero_args( $post_id = 0, $scroll_target = null
 		$scroll_target = ltt_dive_in_get_section_navigation() ? 'section-navigation' : 'page-content';
 	}
 
-	$links   = array();
-	$icon_id = 0;
+	$links    = array();
+	$icon_id  = 0;
+	$title    = get_the_title( $post_id );
+	$text     = has_excerpt( $post_id ) ? get_the_excerpt( $post_id ) : '';
+	$image_id = get_post_thumbnail_id( $post_id );
 
 	if ( function_exists( 'get_field' ) ) {
+		$title_override = get_field( 'ltt_dive_in_meetings_hero_title', $post_id );
+		$text_override  = get_field( 'ltt_dive_in_meetings_hero_text', $post_id );
+
+		if ( is_string( $title_override ) && '' !== trim( $title_override ) ) {
+			$title = $title_override;
+		}
+
+		if ( is_string( $text_override ) && '' !== trim( $text_override ) ) {
+			$text = $text_override;
+		}
+
 		$links = array(
 			get_field( 'ltt_dive_in_page_hero_primary_link', $post_id ),
 			get_field( 'ltt_dive_in_page_hero_secondary_link', $post_id ),
@@ -100,10 +72,10 @@ function ltt_dive_in_get_meetings_hero_args( $post_id = 0, $scroll_target = null
 	}
 
 	return array(
-		'title'         => get_the_title( $post_id ),
+		'title'         => $title,
 		'heading_level' => 'h1',
-		'text'          => has_excerpt( $post_id ) ? get_the_excerpt( $post_id ) : '',
-		'image_id'      => get_post_thumbnail_id( $post_id ),
+		'text'          => $text,
+		'image_id'      => $image_id,
 		'links'         => $links,
 		'scroll_target' => $scroll_target,
 		'icon_id'       => $icon_id,
@@ -111,30 +83,17 @@ function ltt_dive_in_get_meetings_hero_args( $post_id = 0, $scroll_target = null
 }
 
 /**
- * Enqueue component styles and its shared scroll-link behavior.
+ * Enqueue the Meetings Hero component stylesheet.
  *
- * Call conditionally before the theme's global asset enqueue when a template
- * that renders the Meetings Hero is selected.
+ * The regular theme enqueue registers shared scroll behavior for all page heroes.
  */
 function ltt_dive_in_enqueue_meetings_hero_assets() {
 	$style_path       = LTT_DIVE_IN_DIR . '/assets/css/components/meetings-hero.css';
-	$scroll_link_path = LTT_DIVE_IN_DIR . '/assets/js/components/scroll-link.js';
 
 	wp_enqueue_style(
 		'ltt-dive-in-meetings-hero',
 		LTT_DIVE_IN_URI . '/assets/css/components/meetings-hero.css',
 		array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
 		file_exists( $style_path ) ? (string) filemtime( $style_path ) : LTT_DIVE_IN_VERSION
-	);
-
-	wp_enqueue_script(
-		'ltt-dive-in-scroll-link',
-		LTT_DIVE_IN_URI . '/assets/js/components/scroll-link.js',
-		array(),
-		file_exists( $scroll_link_path ) ? (string) filemtime( $scroll_link_path ) : LTT_DIVE_IN_VERSION,
-		array(
-			'strategy'  => 'defer',
-			'in_footer' => false,
-		)
 	);
 }

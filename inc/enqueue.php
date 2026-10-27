@@ -142,23 +142,27 @@ function ltt_dive_in_enqueue_assets() {
 	}
 
 	if ( ltt_dive_in_has_page_hero() ) {
-		wp_enqueue_style(
-			'ltt-dive-in-page-hero',
-			LTT_DIVE_IN_URI . '/assets/css/components/page-hero.css',
-			array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
-			file_exists( $page_hero_style_path ) ? (string) filemtime( $page_hero_style_path ) : LTT_DIVE_IN_VERSION
-		);
+		if ( 'meetings' === ltt_dive_in_get_page_header_hero_variant() ) {
+			ltt_dive_in_enqueue_meetings_hero_assets();
+		} else {
+			wp_enqueue_style(
+				'ltt-dive-in-page-hero',
+				LTT_DIVE_IN_URI . '/assets/css/components/page-hero.css',
+				array( 'ltt-dive-in-style', 'ltt-dive-in-buttons' ),
+				file_exists( $page_hero_style_path ) ? (string) filemtime( $page_hero_style_path ) : LTT_DIVE_IN_VERSION
+			);
 
-		wp_enqueue_script(
-			'ltt-dive-in-page-hero',
-			LTT_DIVE_IN_URI . '/assets/js/components/page-hero.js',
-			array(),
-			file_exists( $page_hero_script_path ) ? (string) filemtime( $page_hero_script_path ) : LTT_DIVE_IN_VERSION,
-			array(
-				'strategy'  => 'defer',
-				'in_footer' => false,
-			)
-		);
+			wp_enqueue_script(
+				'ltt-dive-in-page-hero',
+				LTT_DIVE_IN_URI . '/assets/js/components/page-hero.js',
+				array(),
+				file_exists( $page_hero_script_path ) ? (string) filemtime( $page_hero_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => false,
+				)
+			);
+		}
 	}
 
 	wp_enqueue_script(
@@ -235,7 +239,11 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		'crossorigin' => 'anonymous',
 	);
 
-	if ( is_front_page() || ltt_dive_in_has_page_hero() || is_singular( array( 'post', 'listings' ) ) ) {
+	if (
+		is_front_page()
+		|| ( ltt_dive_in_has_page_hero() && 'standard' === ltt_dive_in_get_page_header_hero_variant() )
+		|| is_singular( array( 'post', 'listings' ) )
+	) {
 		$preload_resources[] = array(
 			'href'        => LTT_DIVE_IN_URI . '/assets/fonts/big-caslon/Big-Caslon-Medium.woff2',
 			'as'          => 'font',

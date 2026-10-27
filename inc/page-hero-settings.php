@@ -21,7 +21,7 @@ function ltt_dive_in_register_page_hero_settings() {
 		array(
 			'key'         => 'group_ltt_dive_in_page_hero',
 			'title'       => __( 'LTT Dive In — Page Hero', 'ltt-dive-in' ),
-			'description' => __( 'The hero uses the title, excerpt, and featured image. Add up to two optional buttons here.', 'ltt-dive-in' ),
+			'description' => __( 'Add up to two optional buttons for the Standard or Immersive Hero. Buttons are hidden until both a label and destination are provided.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(
 					'key'           => 'field_ltt_dive_in_page_hero_primary_link',

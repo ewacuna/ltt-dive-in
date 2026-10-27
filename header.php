@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta
 		name="theme-color"
-		content="<?php echo esc_attr( is_front_page() ? '#02162b' : '#073959' ); ?>"
+		content="<?php echo esc_attr( is_front_page() || ( is_page() && 'overlay' === ltt_dive_in_get_page_header_background() ) ? '#02162b' : '#073959' ); ?>"
 		data-menu-theme-color="#073959"
 	>
 	<?php wp_head(); ?>

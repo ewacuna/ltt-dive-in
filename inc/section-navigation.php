@@ -23,14 +23,86 @@ function ltt_dive_in_register_section_navigation() {
 			'title'    => __( 'LTT Dive In — Page Header', 'ltt-dive-in' ),
 			'fields'   => array(
 				array(
+					'key'           => 'field_ltt_dive_in_page_header_hero_variant',
+					'name'          => 'ltt_dive_in_page_header_hero_variant',
+					'label'         => __( 'Page hero design', 'ltt-dive-in' ),
+					'type'          => 'select',
+					'instructions'  => __( 'Choose the hero displayed above this page. Existing pages use the Standard hero unless you select Immersive Hero.', 'ltt-dive-in' ),
+					'choices'       => array(
+						'standard' => __( 'Standard', 'ltt-dive-in' ),
+						'meetings' => __( 'Immersive Hero', 'ltt-dive-in' ),
+					),
+					'default_value' => 'standard',
+					'return_format' => 'value',
+				),
+				array(
+					'key'                => 'field_ltt_dive_in_meetings_hero_title',
+					'name'               => 'ltt_dive_in_meetings_hero_title',
+					'label'              => __( 'Immersive Hero title', 'ltt-dive-in' ),
+					'type'               => 'textarea',
+					'instructions'       => __( 'Optional. Leave blank to use the page title. Add line breaks where you want the title to wrap.', 'ltt-dive-in' ),
+					'rows'               => 3,
+					'new_lines'          => '',
+					'required'           => 0,
+					'conditional_logic'  => array(
+						array(
+							array(
+								'field'    => 'field_ltt_dive_in_page_header_hero_variant',
+								'operator' => '==',
+								'value'    => 'meetings',
+							),
+						),
+					),
+				),
+				array(
+					'key'                => 'field_ltt_dive_in_meetings_hero_text',
+					'name'               => 'ltt_dive_in_meetings_hero_text',
+					'label'              => __( 'Immersive Hero description', 'ltt-dive-in' ),
+					'type'               => 'textarea',
+					'instructions'       => __( 'Optional. Leave blank to use the page excerpt.', 'ltt-dive-in' ),
+					'rows'               => 4,
+					'new_lines'          => '',
+					'required'           => 0,
+					'conditional_logic'  => array(
+						array(
+							array(
+								'field'    => 'field_ltt_dive_in_page_header_hero_variant',
+								'operator' => '==',
+								'value'    => 'meetings',
+							),
+						),
+					),
+				),
+				array(
+					'key'                => 'field_ltt_dive_in_meetings_hero_icon',
+					'name'               => 'ltt_dive_in_meetings_hero_icon',
+					'label'              => __( 'Immersive Hero icon (SVG)', 'ltt-dive-in' ),
+					'type'               => 'file',
+					'instructions'       => __( 'Optional. Choose a transparent SVG from the Media Library. Its own colors and transparency are preserved; the Figma icon is used when this is empty.', 'ltt-dive-in' ),
+					'required'           => 0,
+					'return_format'      => 'id',
+					'library'            => 'all',
+					'mime_types'         => 'svg',
+					'conditional_logic'  => array(
+						array(
+							array(
+								'field'    => 'field_ltt_dive_in_page_header_hero_variant',
+								'operator' => '==',
+								'value'    => 'meetings',
+							),
+						),
+					),
+				),
+				array(
 					'key'           => 'field_ltt_dive_in_page_header_background',
 					'name'          => 'ltt_dive_in_page_header_background',
 					'label'         => __( 'Header background', 'ltt-dive-in' ),
 					'type'          => 'select',
-					'instructions'  => __( 'Choose the background for this page’s main header row. This also works without a section menu. The homepage header is managed separately.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Choose the background for this page’s main header row. Hero overlay places a translucent navy gradient over the hero image. The homepage header is managed separately.', 'ltt-dive-in' ),
 					'choices'       => array(
 						'solid'    => __( 'Solid navy', 'ltt-dive-in' ),
 						'gradient' => __( 'Navy gradient', 'ltt-dive-in' ),
+						'overlay'  => __( 'Hero overlay', 'ltt-dive-in' ),
 					),
 					'default_value' => 'solid',
 					'return_format' => 'value',
@@ -80,6 +152,22 @@ function ltt_dive_in_register_section_navigation() {
 add_action( 'acf/init', 'ltt_dive_in_register_section_navigation' );
 
 /**
+ * Resolve the selected page hero variant for an internal page.
+ *
+ * @param int $post_id Page ID. Defaults to the current queried page.
+ * @return string Whitelisted page hero variant.
+ */
+function ltt_dive_in_get_page_header_hero_variant( $post_id = 0 ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return 'standard';
+	}
+
+	$post_id = $post_id ? absint( $post_id ) : get_queried_object_id();
+
+	return 'meetings' === get_field( 'ltt_dive_in_page_header_hero_variant', $post_id ) ? 'meetings' : 'standard';
+}
+
+/**
  * Resolve the approved background variant for an internal page header.
  *
  * @return string Whitelisted CSS modifier suffix; existing pages default to solid.
@@ -89,7 +177,9 @@ function ltt_dive_in_get_page_header_background() {
 		return 'solid';
 	}
 
-	return 'gradient' === get_field( 'ltt_dive_in_page_header_background', get_queried_object_id() ) ? 'gradient' : 'solid';
+	$background = get_field( 'ltt_dive_in_page_header_background', get_queried_object_id() );
+
+	return in_array( $background, array( 'gradient', 'overlay' ), true ) ? $background : 'solid';
 }
 
 /**

@@ -11,6 +11,11 @@
     background: #ffffff;
 }
 
+/* Internal page heroes start at the top of the main region. */
+.page-main.site-main--has-hero {
+    padding-top: 0;
+}
+
 .page-main .page-entry {
     padding: 0;
     border: 0;
