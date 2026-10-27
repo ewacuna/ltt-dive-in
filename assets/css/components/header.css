@@ -16,11 +16,15 @@
     background: linear-gradient(180deg, #02162b 0%, #073959 100%);
 }
 
-.site-header--overlay {
+.site-header--overlay,
+.site-header--hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     border-bottom: 0;
+}
+
+.site-header--overlay {
     background: linear-gradient(
         180deg,
         rgba(2, 22, 43, 0.88) 0%,
@@ -29,11 +33,16 @@
     );
 }
 
+.site-header--hero-overlay {
+    background: linear-gradient(180deg, #073959 0%, rgba(7, 57, 89, 0.8) 35.1%, rgba(7, 57, 89, 0) 100%);
+}
+
 .site-header.has-open-submenu {
     background: linear-gradient(180deg, #02162b 0%, #073959 100%);
 }
 
-.admin-bar .site-header--overlay {
+.admin-bar .site-header--overlay,
+.admin-bar .site-header--hero-overlay {
     top: var(--wp-admin--admin-bar--height, 2rem);
 }
 
