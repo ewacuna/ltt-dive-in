@@ -2,8 +2,7 @@
 ( function () {
 	'use strict';
 
-	const title = document.querySelector( '.page-hero__title' );
-	if ( ! title ) {
+	if ( ! document.querySelector( '.page-hero__title' ) ) {
 		return;
 	}
 
@@ -13,8 +12,13 @@
 	}
 
 	const mobileQuery = window.matchMedia( '(max-width: 575.98px)' );
-	const words = title.textContent.trim().split( /\s+/u );
 	const fitTitle = function () {
+		// Query each time: seamless section navigation can replace the title element.
+		const title = document.querySelector( '.page-hero__title' );
+		if ( ! title ) {
+			return;
+		}
+		const words = title.textContent.trim().split( /\s+/u );
 		title.style.removeProperty( 'font-size' );
 		if ( ! mobileQuery.matches || ! words.length ) {
 			return;
@@ -41,6 +45,7 @@
 
 	fitTitle();
 	window.addEventListener( 'resize', fitTitle );
+	document.addEventListener( 'ltt:content-replaced', fitTitle );
 	if ( document.fonts ) {
 		document.fonts.ready.then( fitTitle );
 	}

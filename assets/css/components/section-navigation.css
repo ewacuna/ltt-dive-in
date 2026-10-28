@@ -37,10 +37,9 @@
 	white-space: nowrap;
 }
 
+/* Interim active tab until Figma confirms its state: gold text only (user request, 2026-10-27). */
 .ltt-section-navigation__menu a[aria-current="page"] {
 	color: #eeb040;
-	text-decoration: underline;
-	text-underline-offset: 0.2em;
 }
 
 /* Jump Link Bar hover: white rectangle with navy text. */

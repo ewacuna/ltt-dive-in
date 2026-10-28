@@ -4,7 +4,7 @@
  *
  * Expected arguments:
  * - title: Hero heading.
- * - heading_level: Optional heading tag, h1 or h2. Defaults to h2.
+ * - heading_level: Optional title tag, h1, h2, or p when the page H1 is elsewhere. Defaults to h2.
  * - text: Optional supporting copy.
  * - image_id: Optional background image attachment ID.
  * - links: Optional ACF link arrays rendered as glass buttons.
@@ -14,7 +14,7 @@
  */
 
 $title         = str_replace( array( "\r", "\n", "\u{2028}", "\u{2029}" ), ' ', (string) ( $args['title'] ?? '' ) );
-$heading_level = in_array( $args['heading_level'] ?? '', array( 'h1', 'h2' ), true ) ? $args['heading_level'] : 'h2';
+$heading_level = in_array( $args['heading_level'] ?? '', array( 'h1', 'h2', 'p' ), true ) ? $args['heading_level'] : 'h2';
 $text          = $args['text'] ?? '';
 $image_id      = absint( $args['image_id'] ?? 0 );
 $scroll_target = $args['scroll_target'] ?? '';

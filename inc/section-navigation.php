@@ -238,8 +238,9 @@ function ltt_dive_in_get_section_navigation() {
 
 	if ( is_string( $html ) && '' !== trim( $html ) ) {
 		$navigation = array(
-			'label' => $menu->name,
-			'html'  => $html,
+			'label'   => $menu->name,
+			'html'    => $html,
+			'menu_id' => (int) $menu->term_id,
 		);
 	}
 

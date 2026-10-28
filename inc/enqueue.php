@@ -71,6 +71,22 @@ function ltt_dive_in_enqueue_assets() {
 				'in_footer' => true,
 			)
 		);
+
+		// Current Conditions tabs swap in place; other section menus keep normal page loads.
+		if ( is_page_template( 'templates/current-conditions.php' ) ) {
+			$seamless_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/seamless-navigation.js';
+
+			wp_enqueue_script(
+				'ltt-dive-in-seamless-navigation',
+				LTT_DIVE_IN_URI . '/assets/js/components/seamless-navigation.js',
+				array(),
+				file_exists( $seamless_script_path ) ? (string) filemtime( $seamless_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
+		}
 	}
 
 	wp_enqueue_style(
