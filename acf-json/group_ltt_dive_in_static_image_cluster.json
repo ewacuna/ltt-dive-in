@@ -28,10 +28,10 @@
         },
         {
             "key": "field_ltt_dive_in_static_image_cluster_mobile_display",
-            "label": "Mobile image details",
+            "label": "Image details",
             "name": "ltt_dive_in_static_image_cluster_mobile_display",
             "type": "select",
-            "instructions": "Choose how image details appear on mobile. Desktop always uses the lightbox.",
+            "instructions": "Choose how image details appear on desktop and mobile.",
             "required": 0,
             "conditional_logic": [
                 [

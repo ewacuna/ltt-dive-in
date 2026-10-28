@@ -1,187 +1,313 @@
 /**
- * Static Image Cluster interactions.
+ * Progressive loading and inline details for Inspired galleries, plus existing cluster carousels.
+ *
+ * @package LTT_Dive_In
  */
 ( function () {
 	'use strict';
 
 	const strings = window.ltt_dive_in_static_image_cluster || {};
+	const mobileBreakpoint = '(max-width: 767.98px)';
+	const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
 	let activeInlineDetails = null;
 
-	document.querySelectorAll( '.static-image-cluster--inspired' ).forEach( function ( cluster ) {
-		const loadMore = cluster.querySelector( '[data-inspired-load-more]' );
-		const gallery = cluster.querySelector( '.static-image-cluster__gallery' );
-		const status = loadMore ? loadMore.querySelector( '[data-inspired-load-more-status]' ) : null;
-		const label = loadMore ? loadMore.querySelector( '[data-inspired-load-more-label]' ) : null;
-		const icon = loadMore ? loadMore.querySelector( '[data-inspired-load-more-icon]' ) : null;
-		const defaultLabel = label ? label.textContent : '';
+	/**
+	 * @typedef {Object} InspiredImage
+	 * @property {string} src Full-size image URL.
+	 * @property {string} srcset Responsive image candidates.
+	 * @property {number} width Image width in pixels.
+	 * @property {number} height Image height in pixels.
+	 * @property {string} alt Alternative text.
+	 * @property {string} title Editorial title.
+	 * @property {string} description Editorial description.
+	 */
 
-		if ( ! gallery ) {
-			return;
+	/**
+	 * @typedef {Object} InspiredLoadMoreResponse
+	 * @property {string} html Markup for the next image batch.
+	 * @property {InspiredImage[]} images Image records corresponding to the markup.
+	 * @property {number} nextOffset Offset to use for the next request.
+	 * @property {boolean} hasMore Whether another batch is available.
+	 */
+
+	/**
+	 * @typedef {Object} InlineDetailsController
+	 * @property {(records: Object[], batch: Element) => void} appendImages Add and prepare a newly loaded batch.
+	 */
+
+	/**
+	 * Normalize REST and initial gallery records to the inline panel's private shape.
+	 *
+	 * @param {Object[]} records Raw image records from WordPress.
+	 * @return {InspiredImage[]} Normalized records in gallery order.
+	 */
+	function normalizeImages( records ) {
+		return records.map( function ( image ) {
+			return {
+				src: image.full || image.src || '',
+				srcset: image.srcset || '',
+				width: Number( image.width ) || 1,
+				height: Number( image.height ) || 1,
+				alt: image.alt || '',
+				title: image.title || '',
+				description: image.description || '',
+			};
+		} );
+	}
+
+	/**
+	 * Read the initial six image records used by inline detail.
+	 *
+	 * @param {Element} cluster Inspired Gallery root.
+	 * @return {InspiredImage[]} Initial records, or an empty array for invalid JSON.
+	 */
+	function readInitialImages( cluster ) {
+		const source = cluster.querySelector( '[data-ltt-photoswipe-data]' );
+
+		if ( ! source ) {
+			return [];
 		}
 
+		try {
+			const records = JSON.parse( source.textContent );
+
+			return Array.isArray( records ) ? normalizeImages( records ) : [];
+		} catch ( error ) {
+			return [];
+		}
+	}
+
+	/**
+	 * Initialize inline behavior for one gallery. Image data remains private to this controller.
+	 *
+	 * @param {Element} cluster Gallery root.
+	 * @param {Element} gallery Gallery batch container.
+	 * @return {InlineDetailsController|null} Inline controller, if its required markup exists.
+	 */
+	function initializeInlineDetails( cluster, gallery ) {
 		const details = cluster.querySelector( '[data-inspired-mobile-details]' );
-		const detailsImage = details ? details.querySelector( '[data-inspired-details-image]' ) : null;
-		const detailsDescription = details ? details.querySelector( '[data-inspired-details-description]' ) : null;
-		const detailsTitle = details ? details.querySelector( '[data-inspired-details-title]' ) : null;
-		const detailsStatus = details ? details.querySelector( '[data-inspired-details-status]' ) : null;
-		const detailsClose = details ? details.querySelector( '[data-inspired-details-close]' ) : null;
-		const detailsMore = details ? details.querySelector( '[data-inspired-details-more]' ) : null;
-		const inlineMobile = window.matchMedia( '(max-width: 767.98px)' );
-		const photoswipeData = cluster.querySelector( '[data-ltt-photoswipe-data]' );
-		let inlineImages = [];
+
+		if ( ! details ) {
+			return null;
+		}
+
+		const imageElement = details.querySelector( '[data-inspired-details-image]' );
+		const descriptionElement = details.querySelector( '[data-inspired-details-description]' );
+		const titleElement = details.querySelector( '[data-inspired-details-title]' );
+		const statusElement = details.querySelector( '[data-inspired-details-status]' );
+		const closeButton = details.querySelector( '[data-inspired-details-close]' );
+		const moreButton = details.querySelector( '[data-inspired-details-more]' );
+		const mobileQuery = window.matchMedia( mobileBreakpoint );
+		const reducedMotion = window.matchMedia( reducedMotionQuery );
+		const stickyElements = Array.from( document.querySelectorAll( '#wpadminbar, .site-header' ) );
+		let images = readInitialImages( cluster );
 		let activeTrigger = null;
 		let selectedIndex = -1;
 		let selectionToken = 0;
-		let closeTimer;
-		let stickyHeaderOffset = -1;
-		let stickyHeaderFrame = 0;
+		let closeTimer = 0;
+		let layoutFrame = 0;
+		let currentStickyOffset = -1;
 
-		try {
-			inlineImages = Array.isArray( cluster.lttDiveInGalleryImages )
-				? cluster.lttDiveInGalleryImages
-				: photoswipeData
-					? JSON.parse( photoswipeData.textContent ).map( function ( image ) {
-						return {
-							src: image.full || image.src || '',
-							srcset: image.srcset || '',
-							width: Number( image.width ) || 1,
-							height: Number( image.height ) || 1,
-							alt: image.alt || '',
-							title: image.title || '',
-							description: image.description || '',
-						};
-					} )
-					: [];
-		} catch ( error ) {
-			inlineImages = [];
+		if ( ! imageElement || ! descriptionElement || ! titleElement || ! closeButton || ! moreButton ) {
+			return null;
 		}
 
-		const getImage = function ( index ) {
-			return inlineImages[ index ] || null;
-		};
+		/** Update the control state for the current viewport-specific inline interaction. */
+		function updateTriggerAttributes( trigger ) {
+			const description = trigger.querySelector( '[data-inspired-card-description]' );
 
-		const updateTriggerAttributes = function ( trigger ) {
-			if ( inlineMobile.matches ) {
+			if ( mobileQuery.matches ) {
 				trigger.removeAttribute( 'aria-haspopup' );
 				trigger.setAttribute( 'aria-controls', details.id );
 				trigger.setAttribute( 'aria-expanded', String( Number( trigger.dataset.imageIndex ) === selectedIndex && ! details.hidden ) );
-			} else {
-				trigger.removeAttribute( 'aria-controls' );
-				trigger.removeAttribute( 'aria-expanded' );
-				trigger.setAttribute( 'aria-haspopup', 'dialog' );
+				trigger.removeAttribute( 'aria-describedby' );
+				return;
 			}
-		};
 
-		const prepareTriggers = function () {
-			gallery.querySelectorAll( 'a[data-ltt-photoswipe-trigger]' ).forEach( function ( link ) {
+			trigger.removeAttribute( 'aria-controls' );
+			trigger.removeAttribute( 'aria-expanded' );
+			trigger.removeAttribute( 'aria-haspopup' );
+			trigger.removeAttribute( 'aria-describedby' );
+
+			if ( description && description.id ) {
+				trigger.setAttribute( 'aria-describedby', description.id );
+			}
+		}
+
+		/**
+		 * Convert uninitialized image links into inline action buttons once.
+		 *
+		 * @param {ParentNode} root Gallery or newly inserted batch.
+		 */
+		function prepareTriggers( root ) {
+			root.querySelectorAll( 'a[data-ltt-photoswipe-trigger]' ).forEach( function ( link ) {
 				const button = document.createElement( 'button' );
+				const description = link.querySelector( '[data-inspired-card-description]' );
+				const actionLabel = link.dataset.inlineActionLabel;
 				const hadFocus = document.activeElement === link;
 
 				Array.from( link.attributes ).forEach( function ( attribute ) {
-					if ( attribute.name !== 'href' && attribute.name !== 'target' && attribute.name !== 'rel' ) {
+					if ( ! [ 'href', 'target', 'rel' ].includes( attribute.name ) ) {
 						button.setAttribute( attribute.name, attribute.value );
 					}
 				} );
 				button.type = 'button';
-				button.dataset.fallbackHref = link.href;
+				button.removeAttribute( 'data-inline-action-label' );
+
+				if ( actionLabel ) {
+					button.setAttribute( 'aria-label', actionLabel );
+				}
+
+				if ( description ) {
+					description.id = cluster.id + '-description-' + link.dataset.imageIndex;
+				}
+
 				button.append( ...link.childNodes );
 				link.replaceWith( button );
 				updateTriggerAttributes( button );
+
 				if ( hadFocus ) {
 					button.focus( { preventScroll: true } );
 				}
 			} );
-		};
+		}
 
-		const setTriggerMode = function () {
-			if ( ! inlineMobile.matches && ! details.hidden ) {
-				closeDetails( true, false );
-			}
-			gallery.querySelectorAll( '[data-ltt-photoswipe-trigger]' ).forEach( updateTriggerAttributes );
-		};
-
-		const getStickyOffset = function () {
+		/** Find the lower edge of a fixed or sticky site header currently occupying the viewport. */
+		function getStickyOffset() {
 			let offset = 0;
 
-			document.querySelectorAll( '#wpadminbar, .site-header' ).forEach( function ( element ) {
-				const position = window.getComputedStyle( element ).position;
+			stickyElements.forEach( function ( element ) {
 				const bounds = element.getBoundingClientRect();
+				const position = window.getComputedStyle( element ).position;
 
-				if ( ( position === 'fixed' || position === 'sticky' ) && bounds.top <= offset + 1 && bounds.bottom > offset ) {
+				if ( ( 'fixed' === position || 'sticky' === position ) && bounds.top <= offset + 1 && bounds.bottom > offset ) {
 					offset = Math.max( offset, bounds.bottom );
 				}
 			} );
 
 			return offset;
-		};
+		}
 
-		const getVisibleViewport = function () {
+		/** Return the visual viewport bounds, accounting for mobile browser chrome. */
+		function getVisibleViewport() {
 			const viewport = window.visualViewport;
 			const top = viewport ? viewport.offsetTop : 0;
-			const height = viewport ? viewport.height : window.innerHeight;
 
-			return { top: top, bottom: top + height };
-		};
+			return {
+				top: top,
+				bottom: top + ( viewport ? viewport.height : window.innerHeight ),
+			};
+		}
 
-		const updateDetailsLayout = function () {
-			if ( ! details || details.hidden ) {
+		/** Update sticky positioning, focus clearance, and the description disclosure. */
+		function updateDetailsLayout() {
+			if ( details.hidden ) {
 				return;
 			}
 
-			const stickyOffset = getStickyOffset();
-			stickyHeaderOffset = stickyOffset;
-			details.style.setProperty( '--inspired-details-sticky-top', stickyOffset + 'px' );
+			const headerOffset = getStickyOffset();
+			const detailsHeight = details.scrollHeight;
+			currentStickyOffset = headerOffset;
+			details.style.setProperty( '--inspired-details-sticky-top', headerOffset + 'px' );
 			details.classList.add( 'is-sticky' );
-			details.style.setProperty( '--inspired-details-height', details.scrollHeight + 'px' );
-			cluster.style.setProperty( '--inspired-details-focus-offset', ( stickyOffset + details.scrollHeight + 5 ) + 'px' );
+			details.style.setProperty( '--inspired-details-height', detailsHeight + 'px' );
+			cluster.style.setProperty( '--inspired-details-focus-offset', ( headerOffset + detailsHeight + 5 ) + 'px' );
 			updateReadMore();
-		};
+		}
 
-		const updateReadMore = function () {
-			if ( ! detailsMore || ! detailsDescription ) {
+		/** Coalesce viewport and scroll measurements into one animation frame. */
+		function scheduleLayoutUpdate() {
+			if ( layoutFrame ) {
 				return;
 			}
 
-			const isClamped = detailsDescription.scrollHeight > detailsDescription.clientHeight + 1;
-			detailsMore.hidden = ! isClamped && ! details.classList.contains( 'is-expanded' );
-			detailsMore.textContent = details.classList.contains( 'is-expanded' ) ? ( strings.readLess || 'Read less' ) : ( strings.readMore || 'Read more' );
-			detailsMore.setAttribute( 'aria-expanded', String( details.classList.contains( 'is-expanded' ) ) );
-		};
+			layoutFrame = window.requestAnimationFrame( function () {
+				layoutFrame = 0;
+				updateDetailsLayout();
+			} );
+		}
 
-		const focusVisible = function ( element ) {
+		/** Check the changing header offset during scroll without remeasuring stable layouts. */
+		function checkStickyOffset() {
+			if ( details.hidden || layoutFrame ) {
+				return;
+			}
+
+			layoutFrame = window.requestAnimationFrame( function () {
+				layoutFrame = 0;
+
+				if ( getStickyOffset() !== currentStickyOffset ) {
+					updateDetailsLayout();
+				}
+			} );
+		}
+
+		/** Release the selection-height lock before recalculating after a viewport change. */
+		function handleViewportChange() {
+			details.style.removeProperty( 'min-height' );
+			scheduleLayoutUpdate();
+		}
+
+		/** Keep the Read more control in sync with the actual clamped description height. */
+		function updateReadMore() {
+			if ( ! moreButton || ! descriptionElement ) {
+				return;
+			}
+
+			const expanded = details.classList.contains( 'is-expanded' );
+			const clamped = descriptionElement.scrollHeight > descriptionElement.clientHeight + 1;
+
+			moreButton.hidden = ! clamped && ! expanded;
+			moreButton.textContent = expanded ? ( strings.readLess || 'Read less' ) : ( strings.readMore || 'Read more' );
+			moreButton.setAttribute( 'aria-expanded', String( expanded ) );
+		}
+
+		/** Keep a focused control clear of the header, sticky detail panel, and viewport edges. */
+		function revealFocusedElement( element ) {
 			if ( ! element ) {
 				return;
 			}
 
 			const bounds = element.getBoundingClientRect();
-			const visibleViewport = getVisibleViewport();
-			let top = Math.max( getStickyOffset(), visibleViewport.top );
-			if ( details && details.classList.contains( 'is-sticky' ) ) {
+			const viewport = getVisibleViewport();
+			let top = Math.max( getStickyOffset(), viewport.top );
+			let adjustment = 0;
+
+			if ( details.classList.contains( 'is-sticky' ) ) {
 				top = Math.max( top, details.getBoundingClientRect().bottom + 5 );
 			}
-			const bottom = visibleViewport.bottom;
-			let adjustment = 0;
 
 			if ( bounds.top < top ) {
 				adjustment = bounds.top - top;
-			} else if ( bounds.bottom > bottom ) {
-				adjustment = bounds.bottom - bottom;
+			} else if ( bounds.bottom > viewport.bottom ) {
+				adjustment = bounds.bottom - viewport.bottom;
 			}
 
 			if ( adjustment ) {
-				window.scrollBy( { top: adjustment, behavior: window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth' } );
+				window.scrollBy( {
+					top: adjustment,
+					behavior: reducedMotion.matches ? 'auto' : 'smooth',
+				} );
 			}
-		};
+		}
 
-		const closeDetails = function ( restoreFocus, animate ) {
-			if ( ! details || details.hidden ) {
+		/**
+		 * Close the panel and invalidate any image request still in flight.
+		 *
+		 * @param {boolean} restoreFocus Return focus to the active card.
+		 * @param {boolean} animate Animate the panel close unless motion is reduced.
+		 */
+		function closeDetails( restoreFocus, animate ) {
+			if ( details.hidden ) {
 				return;
 			}
 
-			const shouldAnimate = Boolean( animate && ! window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches );
+			const shouldAnimate = Boolean( animate && ! reducedMotion.matches );
+
 			if ( activeInlineDetails === details ) {
 				activeInlineDetails = null;
 			}
+
 			window.clearTimeout( closeTimer );
 			selectionToken += 1;
 			details.classList.remove( 'is-open', 'is-expanded', 'is-error', 'is-sticky' );
@@ -190,40 +316,50 @@
 			details.setAttribute( 'aria-busy', 'false' );
 			details.setAttribute( 'aria-hidden', 'true' );
 			details.inert = true;
-			cluster.querySelectorAll( '[data-ltt-photoswipe-trigger]' ).forEach( function ( trigger ) {
+			gallery.querySelectorAll( '[data-ltt-photoswipe-trigger]' ).forEach( function ( trigger ) {
 				trigger.setAttribute( 'aria-expanded', 'false' );
 			} );
 
-			const finishClose = function () {
+			/** Finish hiding the panel once its optional close animation ends. */
+			function finishClose() {
 				details.hidden = true;
 				details.classList.remove( 'is-closing' );
 				details.style.removeProperty( '--inspired-details-height' );
 				details.style.removeProperty( 'min-height' );
 				cluster.style.removeProperty( '--inspired-details-focus-offset' );
+
 				if ( restoreFocus && activeTrigger ) {
 					activeTrigger.focus( { preventScroll: true } );
-					focusVisible( activeTrigger );
+					revealFocusedElement( activeTrigger );
 				}
-			};
+			}
 
 			if ( shouldAnimate ) {
 				closeTimer = window.setTimeout( finishClose, 300 );
-			} else {
-				finishClose();
+				return;
 			}
-		};
 
-		const selectImage = function ( trigger, moveFocus ) {
+			finishClose();
+		}
+
+		/**
+		 * Load one image into the shared panel. A token ensures the last rapid selection wins.
+		 *
+		 * @param {HTMLButtonElement} trigger Selected card.
+		 * @param {boolean} moveFocus Whether keyboard activation moves focus into the panel.
+		 */
+		function selectImage( trigger, moveFocus ) {
 			const index = Number( trigger.dataset.imageIndex );
-			const image = getImage( index );
+			const image = images[ index ];
 
-			if ( ! image || ! details ) {
+			if ( ! image ) {
 				return;
 			}
 
 			const wasHidden = details.hidden;
 			const token = ++selectionToken;
 			const previousHeight = wasHidden ? 0 : details.getBoundingClientRect().height;
+
 			activeTrigger = trigger;
 			selectedIndex = index;
 			activeInlineDetails = details;
@@ -239,22 +375,23 @@
 				} );
 			} else {
 				details.style.minHeight = Math.ceil( previousHeight ) + 'px';
-				details.classList.add( 'is-open' );
-				details.classList.add( 'is-changing' );
+				details.classList.add( 'is-open', 'is-changing' );
 			}
 
-			cluster.querySelectorAll( '[data-ltt-photoswipe-trigger]' ).forEach( function ( item ) {
+			gallery.querySelectorAll( '[data-ltt-photoswipe-trigger]' ).forEach( function ( item ) {
 				item.setAttribute( 'aria-expanded', String( item === trigger ) );
 			} );
 			details.classList.remove( 'is-error', 'is-expanded' );
 			details.setAttribute( 'aria-busy', 'true' );
-			detailsTitle.textContent = '';
-			detailsDescription.textContent = '';
-			detailsImage.removeAttribute( 'src' );
-			detailsImage.removeAttribute( 'srcset' );
-			if ( detailsMore ) {
-				detailsMore.hidden = true;
+			titleElement.textContent = '';
+			descriptionElement.textContent = '';
+			imageElement.removeAttribute( 'src' );
+			imageElement.removeAttribute( 'srcset' );
+
+			if ( moreButton ) {
+				moreButton.hidden = true;
 			}
+
 			updateDetailsLayout();
 
 			const preload = new window.Image();
@@ -263,137 +400,170 @@
 					return;
 				}
 
-				detailsImage.src = image.src;
-				detailsImage.srcset = image.srcset || '';
-				detailsDescription.textContent = image.description || '';
-				detailsTitle.textContent = image.title || image.alt || '';
+				imageElement.src = image.src;
+				imageElement.srcset = image.srcset;
+				descriptionElement.textContent = image.description;
+				titleElement.textContent = image.title || image.alt;
 				details.classList.remove( 'is-changing', 'is-error' );
 				details.setAttribute( 'aria-busy', 'false' );
-				if ( detailsStatus ) {
-					detailsStatus.textContent = ( strings.selectedImage || 'Image %1$d selected: %2$s' ).replace( '%1$d', String( index + 1 ) ).replace( '%2$s', image.title || image.alt || '' );
+
+				if ( statusElement ) {
+					statusElement.textContent = ( strings.selectedImage || 'Image %1$d selected: %2$s' )
+						.replace( '%1$d', String( index + 1 ) )
+						.replace( '%2$s', image.title || image.alt );
 				}
+
 				updateDetailsLayout();
 				window.requestAnimationFrame( updateReadMore );
 				window.requestAnimationFrame( function () {
-					window.requestAnimationFrame( function () {
-						if ( wasHidden ) {
-							focusVisible( trigger );
-						}
-					} );
+					if ( wasHidden ) {
+						revealFocusedElement( trigger );
+					}
 				} );
+
 				if ( moveFocus ) {
 					details.setAttribute( 'tabindex', '-1' );
 					details.focus( { preventScroll: true } );
 				}
 			};
+
 			preload.onerror = function () {
 				if ( token !== selectionToken ) {
 					return;
 				}
 
-				detailsTitle.textContent = '';
-				detailsDescription.textContent = strings.imageError || 'This image could not be loaded. Select it again to retry.';
+				titleElement.textContent = '';
+				descriptionElement.textContent = strings.imageError || 'This image could not be loaded. Select it again to retry.';
 				details.classList.add( 'is-error' );
 				details.classList.remove( 'is-changing' );
 				details.setAttribute( 'aria-busy', 'false' );
-				if ( detailsStatus ) {
-					detailsStatus.textContent = detailsDescription.textContent;
+
+				if ( statusElement ) {
+					statusElement.textContent = descriptionElement.textContent;
 				}
+
 				updateDetailsLayout();
 			};
 			preload.src = image.src;
-		};
-
-		if ( details && cluster.dataset.mobileDisplay === 'inline_detail' ) {
-			prepareTriggers();
-			inlineMobile.addEventListener( 'change', setTriggerMode );
-			const handleViewportChange = function () {
-				details.style.removeProperty( 'min-height' );
-				updateDetailsLayout();
-			};
-
-			window.addEventListener( 'resize', handleViewportChange );
-			window.addEventListener( 'orientationchange', handleViewportChange );
-			if ( window.visualViewport ) {
-				window.visualViewport.addEventListener( 'resize', handleViewportChange );
-			}
-			window.addEventListener( 'scroll', function () {
-				if ( details.hidden || stickyHeaderFrame ) {
-					return;
-				}
-
-				stickyHeaderFrame = window.requestAnimationFrame( function () {
-					stickyHeaderFrame = 0;
-					const offset = getStickyOffset();
-
-					if ( offset !== stickyHeaderOffset ) {
-						updateDetailsLayout();
-					}
-				} );
-			}, { passive: true } );
-			if ( document.fonts && document.fonts.ready ) {
-				document.fonts.ready.then( updateDetailsLayout );
-			}
-
-			// PhotoSwipe's shared click handler delegates mobile activations here.
-			cluster.lttDiveInOpenInlineDetails = function ( trigger, event ) {
-				if ( ! inlineMobile.matches ) {
-					return false;
-				}
-				selectImage( trigger, event.detail === 0 );
-				return true;
-			};
-
-			detailsClose.addEventListener( 'click', function () {
-				closeDetails( true, true );
-			} );
-
-			detailsMore.addEventListener( 'click', function () {
-				const expanded = ! details.classList.contains( 'is-expanded' );
-				details.style.removeProperty( 'min-height' );
-				details.classList.toggle( 'is-expanded', expanded );
-				updateReadMore();
-				updateDetailsLayout();
-				window.requestAnimationFrame( function () {
-					if ( detailsMore.hidden && activeTrigger ) {
-						activeTrigger.focus( { preventScroll: true } );
-					} else {
-						detailsMore.focus();
-					}
-				} );
-			} );
-
-			document.addEventListener( 'keydown', function ( event ) {
-				if ( event.key === 'Escape' && activeInlineDetails === details && ! details.hidden && inlineMobile.matches ) {
-					closeDetails( true, true );
-				}
-			} );
 		}
 
-		if ( ! loadMore || ! strings.loadMoreEndpoint ) {
-			return;
+		/** Close a mobile detail panel before desktop hover/focus interaction resumes. */
+		function updateViewportSemantics() {
+			if ( ! mobileQuery.matches && ! details.hidden ) {
+				closeDetails( false, false );
+			}
+
+			gallery.querySelectorAll( '[data-ltt-photoswipe-trigger]' ).forEach( updateTriggerAttributes );
 		}
 
-		loadMore.addEventListener( 'click', function () {
-			if ( loadMore.disabled ) {
+		/** Append batch data and upgrade only the links in that new batch. */
+		function appendImages( records, batch ) {
+			images.push.apply( images, normalizeImages( records ) );
+			prepareTriggers( batch );
+		}
+
+		prepareTriggers( gallery );
+		mobileQuery.addEventListener( 'change', updateViewportSemantics );
+		window.addEventListener( 'resize', handleViewportChange );
+		window.addEventListener( 'orientationchange', handleViewportChange );
+
+		if ( window.visualViewport ) {
+			window.visualViewport.addEventListener( 'resize', handleViewportChange );
+		}
+
+		window.addEventListener( 'scroll', function () {
+			checkStickyOffset();
+		}, { passive: true } );
+
+		if ( document.fonts && document.fonts.ready ) {
+			document.fonts.ready.then( scheduleLayoutUpdate );
+		}
+
+		gallery.addEventListener( 'click', function ( event ) {
+			const trigger = event.target instanceof Element ? event.target.closest( 'button[data-ltt-photoswipe-trigger]' ) : null;
+
+			if ( ! trigger || ! gallery.contains( trigger ) || ! mobileQuery.matches ) {
 				return;
 			}
 
-			const requestUrl = new URL( strings.loadMoreEndpoint, window.location.origin );
+			event.preventDefault();
+			selectImage( trigger, event.detail === 0 );
+		} );
 
-			requestUrl.searchParams.set( 'post', loadMore.dataset.loadMorePost || '' );
-			requestUrl.searchParams.set( 'block', loadMore.dataset.loadMoreBlock || '' );
-			requestUrl.searchParams.set( 'offset', loadMore.dataset.loadMoreOffset || '0' );
-			loadMore.disabled = true;
-			loadMore.setAttribute( 'aria-busy', 'true' );
+		closeButton.addEventListener( 'click', function () {
+			closeDetails( true, true );
+		} );
+
+		moreButton.addEventListener( 'click', function () {
+			const expanded = ! details.classList.contains( 'is-expanded' );
+
+			details.style.removeProperty( 'min-height' );
+			details.classList.toggle( 'is-expanded', expanded );
+			updateReadMore();
+			scheduleLayoutUpdate();
+			window.requestAnimationFrame( function () {
+				if ( moreButton.hidden && activeTrigger ) {
+					activeTrigger.focus( { preventScroll: true } );
+				} else {
+					moreButton.focus();
+				}
+			} );
+		} );
+
+		document.addEventListener( 'keydown', function ( event ) {
+			if ( 'Escape' === event.key && activeInlineDetails === details && ! details.hidden && mobileQuery.matches ) {
+				closeDetails( true, true );
+			}
+		} );
+
+		return { appendImages: appendImages };
+	}
+
+	/**
+	 * Initialize progressive loading for one Inspired Gallery.
+	 *
+	 * @param {Element} cluster Gallery root.
+	 * @param {Element} gallery Gallery batch container.
+	 * @param {InlineDetailsController|null} inlineController Inline-detail controller, when active.
+	 */
+	function initializeLoadMore( cluster, gallery, inlineController ) {
+		const button = cluster.querySelector( '[data-inspired-load-more]' );
+		const endpoint = strings.loadMoreEndpoint;
+
+		if ( ! button || ! endpoint ) {
+			return;
+		}
+
+		const label = button.querySelector( '[data-inspired-load-more-label]' );
+		const icon = button.querySelector( '[data-inspired-load-more-icon]' );
+		const status = button.querySelector( '[data-inspired-load-more-status]' );
+		const defaultLabel = label ? label.textContent : '';
+
+		/** Set the loading presentation and announce the current request state. */
+		function setLoading( loading ) {
+			button.disabled = loading;
+			button.toggleAttribute( 'aria-busy', loading );
 
 			if ( label ) {
-				label.textContent = strings.loading || 'Loading…';
+				label.textContent = loading ? ( strings.loading || 'Loading…' ) : defaultLabel;
 			}
 
 			if ( icon ) {
-				icon.hidden = true;
+				icon.hidden = loading;
 			}
+		}
+
+		button.addEventListener( 'click', function () {
+			if ( button.disabled ) {
+				return;
+			}
+
+			const configuredEndpoint = new URL( endpoint, window.location.href );
+			const requestUrl = new URL( configuredEndpoint.pathname + configuredEndpoint.search, window.location.origin );
+			requestUrl.searchParams.set( 'post', button.dataset.loadMorePost || '' );
+			requestUrl.searchParams.set( 'block', button.dataset.loadMoreBlock || '' );
+			requestUrl.searchParams.set( 'offset', button.dataset.loadMoreOffset || '0' );
+			setLoading( true );
 
 			if ( status ) {
 				status.textContent = strings.loading || 'Loading…';
@@ -413,71 +583,61 @@
 					}
 
 					gallery.insertAdjacentHTML( 'beforeend', payload.html );
-					loadMore.dataset.loadMoreOffset = String( payload.nextOffset || 0 );
-					if ( details ) {
-						if ( ! Array.isArray( cluster.lttDiveInGalleryImages ) ) {
-							payload.images.forEach( function ( image ) {
-								inlineImages.push( {
-									src: image.full || image.src || '',
-									srcset: image.srcset || '',
-									width: Number( image.width ) || 1,
-									height: Number( image.height ) || 1,
-									alt: image.alt || '',
-									title: image.title || '',
-									description: image.description || '',
-								} );
-							} );
-							cluster.lttDiveInGalleryImages = inlineImages;
-						}
-						prepareTriggers();
+					button.dataset.loadMoreOffset = String( payload.nextOffset || 0 );
+					const batch = gallery.lastElementChild;
+
+					if ( inlineController && batch ) {
+						inlineController.appendImages( payload.images, batch );
 					}
 
-					cluster.dispatchEvent( new CustomEvent( 'ltt-photoswipe:items-added', { detail: { items: payload.images } } ) );
+					if ( ! inlineController ) {
+						cluster.dispatchEvent( new CustomEvent( 'ltt-photoswipe:items-added', { detail: { items: payload.images } } ) );
+					}
 
 					if ( payload.hasMore ) {
-						loadMore.disabled = false;
-						loadMore.removeAttribute( 'aria-busy' );
-
-						if ( label ) {
-							label.textContent = defaultLabel;
-						}
-
-						if ( icon ) {
-							icon.hidden = false;
-						}
-
+						setLoading( false );
 						if ( status ) {
 							status.textContent = '';
 						}
-					} else {
-						if ( loadMore.contains( document.activeElement ) ) {
-							const lastTrigger = gallery.querySelector( '[data-ltt-photoswipe-trigger][data-image-index="' + ( Number( payload.nextOffset ) - 1 ) + '"]' );
-							if ( lastTrigger ) {
-								lastTrigger.focus();
-							}
-						}
-						loadMore.remove();
+						return;
 					}
+
+					if ( button.contains( document.activeElement ) && payload.nextOffset > 0 ) {
+						const lastTrigger = gallery.querySelector( '[data-ltt-photoswipe-trigger][data-image-index="' + ( payload.nextOffset - 1 ) + '"]' );
+
+						if ( lastTrigger ) {
+							lastTrigger.focus();
+						}
+					}
+
+					button.remove();
 				} )
 				.catch( function () {
-					loadMore.disabled = false;
-					loadMore.removeAttribute( 'aria-busy' );
-
-					if ( label ) {
-						label.textContent = defaultLabel;
-					}
-
-					if ( icon ) {
-						icon.hidden = false;
-					}
+					setLoading( false );
 
 					if ( status ) {
 						status.textContent = strings.loadMoreError || 'More images could not be loaded. Please try again.';
 					}
 				} );
 		} );
-	} );
+	}
 
+	/** Initialize Inspired Gallery behavior without touching unrelated cluster variants. */
+	function initializeInspiredGallery( cluster ) {
+		const gallery = cluster.querySelector( '.static-image-cluster__gallery' );
+
+		if ( ! gallery ) {
+			return;
+		}
+
+		const inlineController = 'inline_detail' === cluster.dataset.imageDisplay
+			? initializeInlineDetails( cluster, gallery )
+			: null;
+
+		initializeLoadMore( cluster, gallery, inlineController );
+	}
+
+	document.querySelectorAll( '.static-image-cluster--inspired' ).forEach( initializeInspiredGallery );
 	if ( ! window.Swiper ) {
 		return;
 	}

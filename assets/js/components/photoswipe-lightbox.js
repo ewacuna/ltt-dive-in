@@ -122,7 +122,6 @@
 		const inspired = 'true' === cluster.dataset.photoswipeInspired;
 		const locationIcon = cluster.dataset.photoswipeLocationIcon || '';
 		let images = source ? parseImages( source ) : [];
-		cluster.lttDiveInGalleryImages = images;
 		let instancePromise;
 		let swipeStart;
 		let trigger;
@@ -527,11 +526,8 @@
 			}
 
 			event.preventDefault();
-			if ( cluster.lttDiveInOpenInlineDetails && cluster.lttDiveInOpenInlineDetails( target, event ) ) {
-				return;
-			}
 			trigger = target;
-			const fallbackUrl = target.dataset.fallbackHref || target.href;
+			const fallbackUrl = target.href;
 
 			createLightbox()
 				.then( function ( lightbox ) {

@@ -96,34 +96,38 @@ function ltt_dive_in_get_static_image_cluster_image_details( $data, $field ) {
 }
 
 /**
- * Build the public Inspired Gallery image data from a saved block.
+ * Build the ordered Inspired Gallery image records used by the block and REST endpoint.
  *
- * @param array $block Parsed Static Image Cluster block.
- * @return array[]
+ * @param int[] $image_ids Attachment IDs in editor order.
+ * @param array $details Position-aligned rows containing optional `title` and `description` strings.
+ * @param bool  $require_all Whether an invalid attachment invalidates the complete gallery.
+ * @return array<int, array{id:int, alt:string, title:string, description:string, full:string, width:int, height:int, srcset:string}>|false Gallery records, or false when a required image is invalid.
  */
-function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
-	$data       = is_array( $block['attrs']['data'] ?? null ) ? $block['attrs']['data'] : array();
-	$variant    = $data['ltt_dive_in_static_image_cluster_variant'] ?? '';
-	$image_ids  = ltt_dive_in_get_static_image_cluster_attachment_ids( $data, 'ltt_dive_in_static_image_cluster_images' );
-	$details    = ltt_dive_in_get_static_image_cluster_image_details( $data, 'ltt_dive_in_static_image_cluster_image_details' );
-	$images     = array();
-
-	if ( 'inspired' !== $variant ) {
-		return $images;
-	}
+function ltt_dive_in_build_inspired_gallery_images( $image_ids, $details, $require_all = false ) {
+	$images = array();
+	$details = is_array( $details ) ? $details : array();
 
 	foreach ( $image_ids as $index => $image_id ) {
 		if ( ! wp_attachment_is_image( $image_id ) ) {
+			if ( $require_all ) {
+				return false;
+			}
+
+			continue;
+		}
+
+		$alt  = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
+		$full = wp_get_attachment_image_src( $image_id, 'full' );
+
+		if ( '' === $alt || ! $full ) {
+			if ( $require_all ) {
+				return false;
+			}
+
 			continue;
 		}
 
 		$detail = isset( $details[ $index ] ) && is_array( $details[ $index ] ) ? $details[ $index ] : array();
-		$alt    = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
-		$full   = wp_get_attachment_image_src( $image_id, 'full' );
-
-		if ( '' === $alt || ! $full ) {
-			continue;
-		}
 
 		$images[] = array(
 			'id'          => $image_id,
@@ -141,14 +145,34 @@ function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
 }
 
 /**
- * Render an Inspired Gallery item returned by the progressive-load endpoint.
+ * Build the public Inspired Gallery image data from a saved block.
  *
- * @param array  $image     Image data.
- * @param int    $index     Zero-based image position.
- * @param int    $total     Total gallery image count.
+ * @param array $block Parsed Static Image Cluster block.
+ * @return array<int, array{id:int, alt:string, title:string, description:string, full:string, width:int, height:int, srcset:string}>
+ */
+function ltt_dive_in_get_saved_inspired_gallery_images( $block ) {
+	$data      = is_array( $block['attrs']['data'] ?? null ) ? $block['attrs']['data'] : array();
+	$variant   = $data['ltt_dive_in_static_image_cluster_variant'] ?? '';
+	$image_ids = ltt_dive_in_get_static_image_cluster_attachment_ids( $data, 'ltt_dive_in_static_image_cluster_images' );
+	$details   = ltt_dive_in_get_static_image_cluster_image_details( $data, 'ltt_dive_in_static_image_cluster_image_details' );
+
+	if ( 'inspired' !== $variant ) {
+		return array();
+	}
+
+	return ltt_dive_in_build_inspired_gallery_images( $image_ids, $details );
+}
+
+/**
+ * Render an Inspired Gallery item through the shared block template.
+ *
+ * @param array $image Image record created by ltt_dive_in_build_inspired_gallery_images().
+ * @param int   $index Zero-based image position.
+ * @param int   $total Total gallery image count.
+ * @param bool  $inline_detail Whether the cards open inline details.
  * @return string
  */
-function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total ) {
+function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total, $inline_detail = false ) {
 	$desktop_width = in_array( $index % 6, array( 2, 3 ), true ) ? '28vw' : '36vw';
 	$image_html = wp_get_attachment_image(
 		$image['id'],
@@ -167,18 +191,22 @@ function ltt_dive_in_render_inspired_gallery_item( $image, $index, $total ) {
 		return '';
 	}
 
-	return sprintf(
-		'<figure class="static-image-cluster__item"><a class="static-image-cluster__trigger" href="%1$s" data-ltt-photoswipe-trigger data-image-index="%2$d" data-pswp-width="%3$d" data-pswp-height="%4$d" aria-haspopup="dialog" aria-label="%5$s">%6$s<span class="static-image-cluster__inspired-info" aria-hidden="true"><img src="%7$s" alt="" /></span><span class="static-image-cluster__inspired-title"><img src="%8$s" alt="" />%9$s</span></a></figure>',
-		esc_url( $image['full'] ),
-		(int) $index,
-		(int) $image['width'],
-		(int) $image['height'],
-		esc_attr( sprintf( __( 'View image %1$d of %2$d: %3$s', 'ltt-dive-in' ), $index + 1, $total, $image['alt'] ) ),
-		$image_html,
-		esc_url( get_theme_file_uri( 'assets/images/icons/info.svg' ) ),
-		esc_url( get_theme_file_uri( 'assets/images/icons/location.svg' ) ),
-		esc_html( $image['title'] )
+	ob_start();
+	get_template_part(
+		'template-parts/blocks/static-image-cluster-item',
+		null,
+		array(
+			'image'             => $image,
+			'image_html'        => $image_html,
+			'index'             => $index,
+			'total'             => $total,
+			'inline_detail'     => $inline_detail,
+			'uses_photoswipe'   => ! $inline_detail,
+			'section_id'        => 'static-image-cluster-load-more',
+		)
 	);
+
+	return ob_get_clean();
 }
 
 /**
@@ -201,12 +229,14 @@ function ltt_dive_in_get_static_image_cluster_load_more( WP_REST_Request $reques
 	}
 
 	$images = ltt_dive_in_get_saved_inspired_gallery_images( $block );
-	$offset = min( absint( $request->get_param( 'offset' ) ), count( $images ) );
-	$batch  = array_slice( $images, $offset, 6 );
-	$html   = '';
+	$block_data    = is_array( $block['attrs']['data'] ?? null ) ? $block['attrs']['data'] : array();
+	$inline_detail = 'inline_detail' === ( $block_data['ltt_dive_in_static_image_cluster_mobile_display'] ?? '' );
+	$offset        = min( absint( $request->get_param( 'offset' ) ), count( $images ) );
+	$batch         = array_slice( $images, $offset, 6 );
+	$html          = '';
 
 	foreach ( $batch as $batch_index => $image ) {
-		$html .= ltt_dive_in_render_inspired_gallery_item( $image, $offset + $batch_index, count( $images ) );
+		$html .= ltt_dive_in_render_inspired_gallery_item( $image, $offset + $batch_index, count( $images ), $inline_detail );
 	}
 
 	if ( $html ) {
@@ -238,8 +268,8 @@ function ltt_dive_in_register_static_image_cluster_routes() {
 			'callback'            => 'ltt_dive_in_get_static_image_cluster_load_more',
 			'permission_callback' => '__return_true',
 			'args'                => array(
-				'post'  => array( 'required' => true, 'sanitize_callback' => 'absint' ),
-				'block' => array( 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
+				'post'   => array( 'required' => true, 'sanitize_callback' => 'absint' ),
+				'block'  => array( 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
 				'offset' => array( 'required' => true, 'sanitize_callback' => 'absint' ),
 			),
 		)
