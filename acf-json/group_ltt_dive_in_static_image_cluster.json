@@ -27,6 +27,32 @@
             "return_format": "value"
         },
         {
+            "key": "field_ltt_dive_in_static_image_cluster_mobile_display",
+            "label": "Mobile image details",
+            "name": "ltt_dive_in_static_image_cluster_mobile_display",
+            "type": "select",
+            "instructions": "Choose how image details appear on mobile. Desktop always uses the lightbox.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_static_image_cluster_variant",
+                        "operator": "==",
+                        "value": "inspired"
+                    }
+                ]
+            ],
+            "choices": {
+                "lightbox": "Lightbox",
+                "inline_detail": "Inline detail"
+            },
+            "default_value": "lightbox",
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 1,
+            "return_format": "value"
+        },
+        {
             "key": "field_ltt_dive_in_static_image_cluster_heading",
             "label": "Section heading",
             "name": "ltt_dive_in_static_image_cluster_heading",
@@ -216,5 +242,5 @@
     "instruction_placement": "label",
     "active": true,
     "show_in_rest": 0,
-    "modified": 1790446875
+    "modified": 1793205793
 }

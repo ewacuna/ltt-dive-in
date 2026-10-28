@@ -143,10 +143,14 @@ if ( ! $ctas ) {
 $heading        = trim( (string) $get_value( 'ltt_dive_in_static_image_cluster_heading' ) );
 $intro          = trim( (string) $get_value( 'ltt_dive_in_static_image_cluster_intro' ) );
 $hero_caption   = $intro ? $intro : trim( (string) $get_value( 'ltt_dive_in_static_image_cluster_hero_caption' ) );
+$mobile_display = $get_value( 'ltt_dive_in_static_image_cluster_mobile_display' );
+$mobile_display = 'inline_detail' === $mobile_display ? 'inline_detail' : 'lightbox';
+$has_inline_detail = 'inspired' === $variant && 'inline_detail' === $mobile_display && ! $is_preview;
 $shows_header   = ! in_array( $variant, array( 'hero_caption', 'inspired' ), true );
 $has_lightbox   = count( $images ) >= 3;
 $section_id     = $anchor ? $anchor : 'static-image-cluster-' . $block_id;
 $heading_id     = $section_id . '-title';
+$details_id     = $section_id . '-mobile-details';
 $classes        = 'static-image-cluster static-image-cluster--' . $variant . $alignment . ( $has_lightbox ? ' static-image-cluster--has-lightbox' : '' ) . ( $is_preview ? ' static-image-cluster--preview' : '' );
 $post_id        = get_the_ID();
 $can_load_more  = 'inspired' === $variant && ! $is_preview && $post_id && $rest_block_id;
@@ -246,7 +250,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 };
 ?>
 
-<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $shows_header && $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
+<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( $classes ); ?>"<?php echo $shows_header && $heading ? ' aria-labelledby="' . esc_attr( $heading_id ) . '"' : ' aria-label="' . esc_attr__( 'Image gallery', 'ltt-dive-in' ) . '"'; ?><?php if ( 'inspired' === $variant ) : ?> data-mobile-display="<?php echo esc_attr( $mobile_display ); ?>"<?php endif; ?><?php if ( $has_lightbox && ! $is_preview ) : ?> data-ltt-photoswipe data-photoswipe-lightbox-module="<?php echo esc_url( $photoswipe_lightbox_url ); ?>" data-photoswipe-core-module="<?php echo esc_url( $photoswipe_core_url ); ?>" data-photoswipe-close-icon="<?php echo esc_url( $close_icon_url ); ?>" data-photoswipe-location-icon="<?php echo esc_url( $location_icon_url ); ?>" data-photoswipe-inspired="<?php echo 'inspired' === $variant ? 'true' : 'false'; ?>"<?php endif; ?>>
 	<div class="static-image-cluster__container"<?php echo 'five_plus' === $variant ? ' data-static-image-cluster-carousel' : ''; ?>>
 		<?php if ( $shows_header && ( $heading || $intro || $ctas ) ) : ?>
 			<header class="static-image-cluster__header">
@@ -266,6 +270,21 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 					</div>
 				<?php endif; ?>
 			</header>
+		<?php endif; ?>
+		<?php if ( $has_inline_detail ) : ?>
+			<div class="static-image-cluster__inline-detail-boundary" data-inspired-sticky-boundary>
+		<?php endif; ?>
+		<?php if ( $has_inline_detail ) : ?>
+			<section class="static-image-cluster__mobile-details" id="<?php echo esc_attr( $details_id ); ?>" data-inspired-mobile-details role="region" hidden inert aria-hidden="true" aria-busy="false" aria-labelledby="<?php echo esc_attr( $details_id . '-title' ); ?>">
+				<img class="static-image-cluster__mobile-details-image" data-inspired-details-image alt="" />
+				<div class="static-image-cluster__mobile-details-content">
+					<button class="static-image-cluster__mobile-details-close" type="button" data-inspired-details-close aria-label="<?php esc_attr_e( 'Close image details', 'ltt-dive-in' ); ?>"><img src="<?php echo esc_url( $close_icon_url ); ?>" alt="" aria-hidden="true" /></button>
+					<p class="static-image-cluster__mobile-details-description" data-inspired-details-description></p>
+					<button class="static-image-cluster__mobile-details-more" type="button" data-inspired-details-more aria-expanded="false" hidden><?php esc_html_e( 'Read more', 'ltt-dive-in' ); ?></button>
+					<h3 class="static-image-cluster__mobile-details-title" id="<?php echo esc_attr( $details_id . '-title' ); ?>"><img src="<?php echo esc_url( $location_icon_url ); ?>" alt="" aria-hidden="true" /><span data-inspired-details-title></span></h3>
+				</div>
+				<p class="screen-reader-text" data-inspired-details-status role="status" aria-live="polite" aria-atomic="true"></p>
+			</section>
 		<?php endif; ?>
 
 		<div class="static-image-cluster__gallery<?php echo 'five_plus' === $variant ? ' static-image-cluster__gallery--carousel' : ''; ?>">
@@ -304,6 +323,9 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 				</div>
 			<?php endif; ?>
 		</div>
+		<?php if ( $has_inline_detail ) : ?>
+			</div>
+		<?php endif; ?>
 		<?php if ( 'five_plus' === $variant ) : ?>
 			<div class="static-image-cluster__carousel-controls">
 				<div class="static-image-cluster__carousel-pagination ltt-carousel-indicators" data-static-image-cluster-carousel-pagination aria-label="<?php esc_attr_e( 'Choose an image', 'ltt-dive-in' ); ?>"></div>

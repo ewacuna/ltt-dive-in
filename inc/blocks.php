@@ -205,6 +205,11 @@ function ltt_dive_in_register_blocks() {
 			'previousImages' => __( 'Previous images', 'ltt-dive-in' ),
 			'nextImages'     => __( 'Next images', 'ltt-dive-in' ),
 			'loading'        => __( 'Loading…', 'ltt-dive-in' ),
+			'readMore'       => __( 'Read more', 'ltt-dive-in' ),
+			'readLess'       => __( 'Read less', 'ltt-dive-in' ),
+			'imageError'     => __( 'This image could not be loaded. Select it again to retry.', 'ltt-dive-in' ),
+			/* translators: 1: image position; 2: image title or alternative text. */
+			'selectedImage'  => __( 'Image %1$d selected: %2$s', 'ltt-dive-in' ),
 			/* translators: %d: gallery position. */
 			'goToPosition'   => __( 'Go to gallery position %d', 'ltt-dive-in' ),
 		)

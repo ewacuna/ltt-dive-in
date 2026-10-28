@@ -122,6 +122,7 @@
 		const inspired = 'true' === cluster.dataset.photoswipeInspired;
 		const locationIcon = cluster.dataset.photoswipeLocationIcon || '';
 		let images = source ? parseImages( source ) : [];
+		cluster.lttDiveInGalleryImages = images;
 		let instancePromise;
 		let swipeStart;
 		let trigger;
@@ -517,12 +518,20 @@
 		cluster.addEventListener( 'click', function ( event ) {
 			const target = event.target instanceof Element ? event.target.closest( '[data-ltt-photoswipe-trigger]' ) : null;
 
-			if ( ! target || ! cluster.contains( target ) || 0 !== event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ) {
+			if ( ! target || ! cluster.contains( target ) || 0 !== event.button ) {
+				return;
+			}
+
+			if ( target.tagName === 'A' && ( event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ) ) {
 				return;
 			}
 
 			event.preventDefault();
+			if ( cluster.lttDiveInOpenInlineDetails && cluster.lttDiveInOpenInlineDetails( target, event ) ) {
+				return;
+			}
 			trigger = target;
+			const fallbackUrl = target.dataset.fallbackHref || target.href;
 
 			createLightbox()
 				.then( function ( lightbox ) {
@@ -531,7 +540,10 @@
 					lightbox.loadAndOpen( index, images, { x: event.clientX, y: event.clientY } );
 				} )
 				.catch( function () {
-					window.location.assign( target.href );
+					instancePromise = undefined;
+					if ( fallbackUrl ) {
+						window.location.assign( fallbackUrl );
+					}
 				} );
 		} );
 
@@ -542,7 +554,7 @@
 				return;
 			}
 
-			images = images.concat( normalizeImages( additions ) );
+			images.push.apply( images, normalizeImages( additions ) );
 			source.textContent = JSON.stringify( images );
 		} );
 	} );
