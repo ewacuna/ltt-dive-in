@@ -85,6 +85,19 @@ function ltt_dive_in_enqueue_assets() {
 					'in_footer' => true,
 				)
 			);
+
+			$current_weather_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/current-weather.js';
+
+			wp_enqueue_script(
+				'ltt-dive-in-current-weather',
+				LTT_DIVE_IN_URI . '/assets/js/components/current-weather.js',
+				array(),
+				file_exists( $current_weather_script_path ) ? (string) filemtime( $current_weather_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
 		}
 	}
 

@@ -41,7 +41,7 @@ function ltt_dive_in_register_weather_settings() {
 					'label'        => __( 'OpenWeather API key', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_openweather_api_key',
 					'type'         => 'password',
-					'instructions' => __( 'Used only by the server to load Tahoe City weather. The key is never included in front-end markup or JavaScript. Confirm and follow the attribution requirements for your OpenWeather plan.', 'ltt-dive-in' ),
+					'instructions' => __( 'Used only by the server to load One Call weather for the Weather page locations; the header shows the first location. The key is never included in front-end markup or JavaScript. Confirm and follow the attribution requirements for your OpenWeather plan.', 'ltt-dive-in' ),
 				),
 			),
 			'location' => array(
