@@ -45,7 +45,6 @@
 			if ( swiper ) {
 				return;
 			}
-			// Drop any native scroll from the no-JavaScript row so Swiper starts at the first link.
 			section.scrollLeft = 0;
 			viewport.scrollLeft = 0;
 			section.classList.add( 'is-swiper' );
@@ -78,7 +77,6 @@
 			} );
 		};
 
-		// Links plus the 20px start and end gutters; a row that fits stays in CSS so it can center.
 		const overflows = function () {
 			const linksWidth = items.reduce( function ( total, item ) {
 				return total + item.offsetWidth;
@@ -129,7 +127,6 @@
 		if ( window.ResizeObserver ) {
 			new window.ResizeObserver( updateMode ).observe( section );
 		}
-		// Webfonts change label widths after the first measurement.
 		if ( document.fonts ) {
 			document.fonts.ready.then( updateMode );
 		}

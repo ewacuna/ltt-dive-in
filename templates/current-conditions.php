@@ -3,9 +3,6 @@
  * Template Name: Current Conditions
  * Template Post Type: page
  *
- * Tabs are child pages using this template: they share the parent's compact hero and section menu, and
- * each renders its own title as the page H1 so it remains a complete page when opened directly.
- *
  * @package LTT_Dive_In
  */
 

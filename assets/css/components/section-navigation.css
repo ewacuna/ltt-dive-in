@@ -1,4 +1,4 @@
-/* Review Figma 95:87898: 40px desktop bar, 16px Link 1. Current Conditions Figma 2963:63276: content-width links, centered. */
+/* Review Figma 95:87898: 40px desktop bar, 16px Link 1. */
 .ltt-section-navigation {
 	padding-inline: 4rem;
 	background: #042742;
@@ -37,7 +37,6 @@
 	white-space: nowrap;
 }
 
-/* Interim active tab until Figma confirms its state: gold text only (user request, 2026-10-27). */
 .ltt-section-navigation__menu a[aria-current="page"] {
 	color: #eeb040;
 }
@@ -72,10 +71,8 @@
 	}
 
 	.ltt-section-navigation__menu {
-		/* Content-width links keep the desktop spacing between labels. */
 		grid-auto-columns: max-content;
 		width: max-content;
-		/* Centered when the row fits (Swiper is not started); auto margins resolve to 0 when it overflows. */
 		margin: 0 auto;
 	}
 
@@ -124,7 +121,6 @@
 
 	.ltt-section-navigation.is-swiper .ltt-section-navigation__menu {
 		display: flex;
-		/* Swiper positions overflowing slides from the start; desktop centering would push the first link out of view. */
 		justify-content: flex-start;
 		width: 100%;
 		height: auto;
@@ -136,7 +132,6 @@
 	}
 }
 
-/* Mobile rows start at the first link, even when they fit. */
 @media (max-width: 767.98px) {
 	.ltt-section-navigation__menu {
 		margin: 0;

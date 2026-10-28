@@ -72,7 +72,6 @@ function ltt_dive_in_enqueue_assets() {
 			)
 		);
 
-		// Current Conditions tabs swap in place; other section menus keep normal page loads.
 		if ( is_page_template( 'templates/current-conditions.php' ) ) {
 			$seamless_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/seamless-navigation.js';
 

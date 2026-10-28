@@ -1,7 +1,3 @@
-/*
- * Current Conditions template.
- * Compact hero: Figma review dev copy, "Review Phase 3 - Conditions", Copy Block Desktop 434:34330 / mobile 434:35706.
- */
 .current-conditions-hero {
 	display: flex;
 	justify-content: center;
@@ -25,7 +21,6 @@
 	font-size: 4rem;
 	font-synthesis: none;
 	font-weight: 500;
-	/* Figma "normal" line height for Big Caslon: 76.8px at 64px. */
 	line-height: 1.2;
 	overflow-wrap: break-word;
 	text-transform: uppercase;
@@ -41,7 +36,6 @@
 	text-wrap: pretty;
 }
 
-/* Figma mobile frame: 12px outer plus 12px text padding, H2 - Mobile title, 300px Body 1 - Mobile copy. */
 @media (max-width: 575.98px) {
 	.current-conditions-hero {
 		padding: 2.25rem 1.5rem;
@@ -58,7 +52,6 @@
 		font-size: 0.75rem;
 	}
 
-	/* The mobile frame runs both sentences together. */
 	.current-conditions-hero__text br {
 		display: none;
 	}

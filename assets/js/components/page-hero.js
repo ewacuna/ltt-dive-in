@@ -13,7 +13,6 @@
 
 	const mobileQuery = window.matchMedia( '(max-width: 575.98px)' );
 	const fitTitle = function () {
-		// Query each time: seamless section navigation can replace the title element.
 		const title = document.querySelector( '.page-hero__title' );
 		if ( ! title ) {
 			return;

@@ -1,11 +1,6 @@
 <?php
 /**
- * Compact Current Conditions hero, shared by the parent page and its tabs.
- *
- * Expected arguments:
- * - title: Hero title.
- * - heading_level: h1 on the parent page, or p on tabs whose H1 is in the intro.
- * - text: Optional supporting copy; each line break in the excerpt becomes a desktop-only break.
+ * Current Conditions hero.
  *
  * @package LTT_Dive_In
  */

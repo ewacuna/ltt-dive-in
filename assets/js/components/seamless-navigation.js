@@ -1,8 +1,3 @@
-/**
- * Swap section-menu pages in place without a full reload.
- *
- * Every tab remains a complete server-rendered page: direct visits, reloads, new tabs, and failures use normal navigation.
- */
 ( function () {
 	'use strict';
 
@@ -12,11 +7,9 @@
 		return;
 	}
 
-	// Parts of the page that differ between tabs, marked by the template; the header and tab bar stay in place.
 	const regions = Array.from( document.querySelectorAll( '[data-seamless-region]' ), function ( region ) {
 		return '[data-seamless-region="' + region.dataset.seamlessRegion + '"]';
 	} );
-	// Head tags that describe the page itself rather than the site.
 	const headTags = 'link[rel="canonical"], meta[name="description"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]';
 	const reducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
 	let controller = null;
@@ -62,7 +55,6 @@
 
 			const next = new DOMParser().parseFromString( await response.text(), 'text/html' );
 			const nextNav = next.querySelector( '#section-navigation[data-seamless-navigation]' );
-			// Only a page that shares this tab bar can be swapped in place.
 			if ( ! nextNav || nextNav.dataset.menu !== nav.dataset.menu ) {
 				throw new Error( 'Full navigation required.' );
 			}
@@ -93,7 +85,6 @@
 			currentPath = window.location.pathname;
 			updateCurrentLink();
 
-			// Keep the tab bar in view, then move focus to the new page's H1 and announce it.
 			if ( nav.getBoundingClientRect().top < 0 ) {
 				nav.scrollIntoView( { behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' } );
 			}
@@ -104,7 +95,6 @@
 			}
 			status.textContent = status.dataset.message.replace( '%s', heading ? heading.textContent.trim() : document.title );
 
-			// Lets other components initialize markup inside the swapped regions.
 			document.dispatchEvent( new CustomEvent( 'ltt:content-replaced', { detail: { url: url } } ) );
 		} catch ( error ) {
 			if ( 'AbortError' !== error.name ) {
@@ -115,7 +105,6 @@
 
 	nav.addEventListener( 'click', function ( event ) {
 		const link = event.target.closest( 'a[href]' );
-		// Leave modified clicks, new-window links, and drags that Swiper cancelled to the browser.
 		if ( ! link || event.defaultPrevented || 0 !== event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || ( link.target && '_self' !== link.target ) || link.hasAttribute( 'download' ) ) {
 			return;
 		}
@@ -132,7 +121,6 @@
 	} );
 
 	window.addEventListener( 'popstate', function () {
-		// Fragment-only history entries stay on the current page.
 		if ( window.location.pathname !== currentPath ) {
 			load( window.location.href, false );
 		}

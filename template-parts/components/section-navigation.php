@@ -2,10 +2,6 @@
 /**
  * Optional section navigation, separate from primary-menu disclosures.
  *
- * Expected arguments:
- * - navigation: Result of ltt_dive_in_get_section_navigation().
- * - seamless: Optional. True when the template supports swapping pages in place.
- *
  * @package LTT_Dive_In
  */
 
