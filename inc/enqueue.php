@@ -134,6 +134,17 @@ function ltt_dive_in_enqueue_assets() {
 			array( 'ltt-dive-in-style' ),
 			file_exists( $page_style_path ) ? (string) filemtime( $page_style_path ) : LTT_DIVE_IN_VERSION
 		);
+
+		if ( is_page_template( 'templates/current-conditions.php' ) ) {
+			$current_conditions_style_path = LTT_DIVE_IN_DIR . '/assets/css/templates/current-conditions.css';
+
+			wp_enqueue_style(
+				'ltt-dive-in-current-conditions',
+				LTT_DIVE_IN_URI . '/assets/css/templates/current-conditions.css',
+				array( 'ltt-dive-in-style', 'ltt-dive-in-page' ),
+				file_exists( $current_conditions_style_path ) ? (string) filemtime( $current_conditions_style_path ) : LTT_DIVE_IN_VERSION
+			);
+		}
 	}
 
 	if ( is_singular( array( 'post', 'listings' ) ) ) {

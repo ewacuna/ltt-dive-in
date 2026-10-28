@@ -37,36 +37,18 @@ function ltt_dive_in_get_current_conditions_hub_id( $post_id = 0 ) {
 }
 
 /**
- * Build the hero arguments for a Current Conditions page.
+ * Build the compact hero arguments from the parent page's title and excerpt.
  *
- * Tabs reuse the parent's hero content as a non-heading title; their own title is the page H1 in the intro.
+ * Tabs render the hero title as a non-heading; their own title is the page H1 in the intro.
  *
  * @return array
  */
 function ltt_dive_in_get_current_conditions_hero_args() {
-	$args   = ltt_dive_in_get_page_hero_args();
 	$hub_id = ltt_dive_in_get_current_conditions_hub_id();
 
-	if ( get_queried_object_id() === $hub_id ) {
-		return $args;
-	}
-
-	$links = array();
-	if ( function_exists( 'get_field' ) ) {
-		$links = array(
-			get_field( 'ltt_dive_in_page_hero_primary_link', $hub_id ),
-			get_field( 'ltt_dive_in_page_hero_secondary_link', $hub_id ),
-		);
-	}
-
-	return array_merge(
-		$args,
-		array(
-			'title'         => get_the_title( $hub_id ),
-			'heading_level' => 'p',
-			'text'          => has_excerpt( $hub_id ) ? get_the_excerpt( $hub_id ) : '',
-			'image_id'      => get_post_thumbnail_id( $hub_id ),
-			'links'         => $links,
-		)
+	return array(
+		'title'         => get_the_title( $hub_id ),
+		'heading_level' => get_queried_object_id() === $hub_id ? 'h1' : 'p',
+		'text'          => has_excerpt( $hub_id ) ? get_the_excerpt( $hub_id ) : '',
 	);
 }

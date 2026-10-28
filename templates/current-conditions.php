@@ -3,7 +3,7 @@
  * Template Name: Current Conditions
  * Template Post Type: page
  *
- * Tabs are child pages using this template: they share the parent's hero and section menu, and
+ * Tabs are child pages using this template: they share the parent's compact hero and section menu, and
  * each renders its own title as the page H1 so it remains a complete page when opened directly.
  *
  * @package LTT_Dive_In
@@ -18,11 +18,7 @@ if ( 'overlay' === ltt_dive_in_get_page_header_background() ) {
 }
 ?>
 <main id="primary" class="<?php echo esc_attr( $page_main_classes ); ?>">
-	<?php if ( ! $is_tab && 'meetings' === ltt_dive_in_get_page_header_hero_variant() ) : ?>
-		<?php get_template_part( 'template-parts/sections/meetings-hero', null, ltt_dive_in_get_meetings_hero_args() ); ?>
-	<?php else : ?>
-		<?php get_template_part( 'template-parts/sections/hero', null, ltt_dive_in_get_current_conditions_hero_args() ); ?>
-	<?php endif; ?>
+	<?php get_template_part( 'template-parts/sections/current-conditions-hero', null, ltt_dive_in_get_current_conditions_hero_args() ); ?>
 	<?php
 	get_template_part(
 		'template-parts/components/section-navigation',
@@ -33,7 +29,7 @@ if ( 'overlay' === ltt_dive_in_get_page_header_background() ) {
 		)
 	);
 	?>
-	<div id="page-content" class="page-main__content current-conditions__content">
+	<div id="page-content" class="page-main__content current-conditions__content" data-seamless-region="content">
 		<?php
 		while ( have_posts() ) :
 			the_post();

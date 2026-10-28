@@ -1,0 +1,65 @@
+/*
+ * Current Conditions template.
+ * Compact hero: Figma review dev copy, "Review Phase 3 - Conditions", Copy Block Desktop 434:34330 / mobile 434:35706.
+ */
+.current-conditions-hero {
+	display: flex;
+	justify-content: center;
+	padding: 2.25rem 4rem;
+	background: #073959;
+	color: #ffffff;
+	text-align: center;
+}
+
+.current-conditions-hero__content {
+	display: flex;
+	width: min(100%, 73.125rem);
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.current-conditions-hero__title {
+	margin: 0;
+	color: #ffffff;
+	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+	font-size: 4rem;
+	font-synthesis: none;
+	font-weight: 500;
+	/* Figma "normal" line height for Big Caslon: 76.8px at 64px. */
+	line-height: 1.2;
+	overflow-wrap: break-word;
+	text-transform: uppercase;
+}
+
+.current-conditions-hero__text {
+	margin: 0;
+	color: #f9f9f9;
+	font-size: 1.125rem;
+	font-synthesis: none;
+	font-weight: 500;
+	line-height: 1.45;
+	text-wrap: pretty;
+}
+
+/* Figma mobile frame: 12px outer plus 12px text padding, H2 - Mobile title, 300px Body 1 - Mobile copy. */
+@media (max-width: 575.98px) {
+	.current-conditions-hero {
+		padding: 2.25rem 1.5rem;
+	}
+
+	.current-conditions-hero__title {
+		font-size: 2.25rem;
+		letter-spacing: 0.02em;
+	}
+
+	.current-conditions-hero__text {
+		width: min(100%, 18.75rem);
+		margin-inline: auto;
+		font-size: 0.75rem;
+	}
+
+	/* The mobile frame runs both sentences together. */
+	.current-conditions-hero__text br {
+		display: none;
+	}
+}

@@ -164,6 +164,11 @@ function ltt_dive_in_get_page_header_hero_variant( $post_id = 0 ) {
 
 	$post_id = $post_id ? absint( $post_id ) : get_queried_object_id();
 
+	// The Current Conditions template always renders its own compact hero.
+	if ( ltt_dive_in_is_current_conditions_page( $post_id ) ) {
+		return 'standard';
+	}
+
 	return 'meetings' === get_field( 'ltt_dive_in_page_header_hero_variant', $post_id ) ? 'meetings' : 'standard';
 }
 

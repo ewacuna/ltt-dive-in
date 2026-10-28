@@ -8,12 +8,14 @@
 
 	const nav = document.querySelector( '#section-navigation[data-seamless-navigation]' );
 	const status = document.querySelector( '[data-seamless-status]' );
-	if ( ! nav || ! status || ! window.fetch || ! window.DOMParser || ! window.AbortController ) {
+	if ( ! nav || ! status || ! window.fetch || ! window.DOMParser || ! window.AbortController || ! document.querySelector( '[data-seamless-region]' ) ) {
 		return;
 	}
 
-	// Parts of the page that differ between tabs; the header, hero media, and tab bar stay in place.
-	const regions = [ '.page-hero__content', '#page-content' ];
+	// Parts of the page that differ between tabs, marked by the template; the header and tab bar stay in place.
+	const regions = Array.from( document.querySelectorAll( '[data-seamless-region]' ), function ( region ) {
+		return '[data-seamless-region="' + region.dataset.seamlessRegion + '"]';
+	} );
 	// Head tags that describe the page itself rather than the site.
 	const headTags = 'link[rel="canonical"], meta[name="description"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]';
 	const reducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
