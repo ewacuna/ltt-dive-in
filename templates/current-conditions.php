@@ -31,15 +31,18 @@ if ( 'overlay' === ltt_dive_in_get_page_header_background() ) {
 		while ( have_posts() ) :
 			the_post();
 			?>
-			<?php if ( $is_tab ) : ?>
-				<header class="current-conditions__intro">
-					<h1 class="current-conditions__title"><?php echo esc_html( get_the_title() ); ?></h1>
-					<?php if ( has_excerpt() ) : ?>
-						<p class="current-conditions__text"><?php echo esc_html( get_the_excerpt() ); ?></p>
-					<?php endif; ?>
-				</header>
-			<?php endif; ?>
 			<?php
+			if ( $is_tab ) {
+				get_template_part(
+					'template-parts/sections/current-conditions-intro',
+					null,
+					array(
+						'title' => get_the_title(),
+						'text'  => has_excerpt() ? get_the_excerpt() : '',
+					)
+				);
+			}
+
 			get_template_part( 'template-parts/page/content', 'page' );
 		endwhile;
 		?>
