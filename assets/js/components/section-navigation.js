@@ -45,6 +45,9 @@
 			if ( swiper ) {
 				return;
 			}
+			// Drop any native scroll from the no-JavaScript row so Swiper starts at the first link.
+			section.scrollLeft = 0;
+			viewport.scrollLeft = 0;
 			section.classList.add( 'is-swiper' );
 			viewport.classList.add( 'swiper' );
 			menu.classList.add( 'swiper-wrapper' );
@@ -75,8 +78,16 @@
 			} );
 		};
 
+		// Links plus the 20px start and end gutters; a row that fits stays in CSS so it can center.
+		const overflows = function () {
+			const linksWidth = items.reduce( function ( total, item ) {
+				return total + item.offsetWidth;
+			}, 0 );
+			return linksWidth + 40 > section.clientWidth;
+		};
+
 		const updateMode = function () {
-			if ( compactQuery.matches ) {
+			if ( compactQuery.matches && overflows() ) {
 				init();
 			} else {
 				destroy();
@@ -107,8 +118,20 @@
 				viewport.scrollLeft = 0;
 			}
 		} );
+		section.addEventListener( 'scroll', function () {
+			if ( swiper && 0 !== section.scrollLeft ) {
+				section.scrollLeft = 0;
+			}
+		} );
 
 		updateMode();
 		compactQuery.addEventListener( 'change', updateMode );
+		if ( window.ResizeObserver ) {
+			new window.ResizeObserver( updateMode ).observe( section );
+		}
+		// Webfonts change label widths after the first measurement.
+		if ( document.fonts ) {
+			document.fonts.ready.then( updateMode );
+		}
 	}
 }() );
