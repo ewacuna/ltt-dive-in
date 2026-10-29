@@ -102,6 +102,12 @@
     --ltt-button-hover-color: #073959;
 }
 
+/* Selected option in a view switcher, such as the weather panel views. */
+.ltt-button--dark-standard[aria-current="true"] {
+    --ltt-button-background: #ffffff;
+    --ltt-button-color: #073959;
+}
+
 .ltt-button--dark-secondary {
     --ltt-button-background: #eeb040;
     --ltt-button-color: #073959;
@@ -150,5 +156,11 @@
 
     .ltt-button:focus-visible {
         outline-color: Highlight;
+    }
+
+    .ltt-button[aria-current="true"] {
+        border-color: Highlight;
+        background: Highlight;
+        color: HighlightText;
     }
 }

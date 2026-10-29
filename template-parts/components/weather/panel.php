@@ -11,6 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $location = (string) ( $args['location']['name'] ?? '' );
 $report   = $args['report'] ?? new WP_Error( 'ltt_dive_in_weather_report_missing' );
+$view     = (string) ( $args['view'] ?? 'current' );
+$views    = array(
+	'current'  => __( 'Current Weather', 'ltt-dive-in' ),
+	'forecast' => __( '10-Day Forecast', 'ltt-dive-in' ),
+	'history'  => __( 'Historical Data', 'ltt-dive-in' ),
+);
+$view     = isset( $views[ $view ] ) ? $view : 'current';
 ?>
 <div id="<?php echo esc_attr( $args['id'] ); ?>" class="current-weather__panel" data-weather-panel<?php echo is_wp_error( $report ) ? ' data-weather-unavailable' : ''; ?><?php echo empty( $args['active'] ) ? ' hidden' : ''; ?>>
 	<h2 class="screen-reader-text">
@@ -55,90 +62,136 @@ $report   = $args['report'] ?? new WP_Error( 'ltt_dive_in_weather_report_missing
 			__( 'Sunset', 'ltt-dive-in' )     => null !== $current['sunset'] ? wp_date( 'g:i A', $current['sunset'], $timezone ) : '',
 		);
 		?>
-		<div class="current-weather__summary">
-			<div class="current-weather__now">
-				<div class="current-weather__place">
-					<?php if ( $icon ) : ?>
-						<img class="current-weather__icon<?php echo 'openweather' === $icon['source'] ? ' current-weather__openweather-icon' : ''; ?>" src="<?php echo esc_url( $icon['src'] ); ?>" alt="" width="<?php echo esc_attr( $icon['width'] ); ?>" height="<?php echo esc_attr( $icon['height'] ); ?>">
-					<?php endif; ?>
-					<p class="current-weather__location"><?php echo esc_html( $location ); ?></p>
-				</div>
-
-				<div class="current-weather__reading">
-					<p class="current-weather__temperature">
-						<span aria-hidden="true"><?php echo esc_html( $current['temperature'] . '°' ); ?></span>
-						<span class="screen-reader-text">
-							<?php
-							/* translators: %d: temperature in degrees Fahrenheit. */
-							echo esc_html( sprintf( __( '%d degrees Fahrenheit', 'ltt-dive-in' ), $current['temperature'] ) );
-							?>
-						</span>
-					</p>
-					<?php if ( $current['description'] ) : ?>
-						<p class="current-weather__condition"><?php echo esc_html( $current['description'] ); ?></p>
-					<?php endif; ?>
-					<p class="current-weather__range">
-						<?php
-						/* translators: %d: today's high temperature. */
-						echo '<span>' . esc_html( sprintf( __( 'high %d°', 'ltt-dive-in' ), $current['high'] ) ) . '</span> | <span>';
-						/* translators: %d: today's low temperature. */
-						echo esc_html( sprintf( __( 'low %d°', 'ltt-dive-in' ), $current['low'] ) ) . '</span>';
-						?>
-					</p>
-				</div>
-			</div>
-
-			<dl class="current-weather__details">
-				<?php foreach ( $details as $label => $value ) : ?>
-					<div class="current-weather__detail">
-						<dt><?php echo esc_html( $label ); ?></dt>
-						<dd>
-							<?php if ( '' === $value ) : ?>
-								<span aria-hidden="true">—</span>
-								<span class="screen-reader-text"><?php esc_html_e( 'Not available', 'ltt-dive-in' ); ?></span>
-							<?php else : ?>
-								<?php echo esc_html( $value ); ?>
-							<?php endif; ?>
-						</dd>
+		<div id="<?php echo esc_attr( $args['id'] . '-current' ); ?>" class="current-weather__view" data-weather-view="current"<?php echo 'current' === $view ? '' : ' hidden'; ?>>
+			<div class="current-weather__summary">
+				<div class="current-weather__now">
+					<div class="current-weather__place">
+						<?php if ( $icon ) : ?>
+							<img class="current-weather__icon<?php echo 'openweather' === $icon['source'] ? ' current-weather__openweather-icon' : ''; ?>" src="<?php echo esc_url( $icon['src'] ); ?>" alt="" width="<?php echo esc_attr( $icon['width'] ); ?>" height="<?php echo esc_attr( $icon['height'] ); ?>">
+						<?php endif; ?>
+						<p class="current-weather__location"><?php echo esc_html( $location ); ?></p>
 					</div>
-				<?php endforeach; ?>
-			</dl>
-		</div>
 
-		<?php if ( $report['daily'] ) : ?>
-			<h3 class="screen-reader-text">
-				<?php
-				/* translators: %d: number of forecast days. */
-				echo esc_html( sprintf( _n( '%d-day forecast', '%d-day forecast', count( $report['daily'] ), 'ltt-dive-in' ), count( $report['daily'] ) ) );
-				?>
-			</h3>
-			<ol class="current-weather__forecast">
-				<?php foreach ( $report['daily'] as $day ) : ?>
-					<?php $day_icon = ltt_dive_in_get_weather_icon( $day['condition_id'], $day['icon'] ); ?>
-					<li class="current-weather__day">
-						<p class="current-weather__day-name">
-							<span aria-hidden="true"><?php echo esc_html( wp_date( 'D', $day['time'], $timezone ) ); ?></span>
-							<span class="screen-reader-text"><?php echo esc_html( wp_date( 'l', $day['time'], $timezone ) ); ?></span>
-						</p>
-						<span class="current-weather__day-icon">
-							<?php if ( $day_icon ) : ?>
-								<img<?php echo 'openweather' === $day_icon['source'] ? ' class="current-weather__openweather-icon"' : ''; ?> src="<?php echo esc_url( $day_icon['src'] ); ?>" alt="" width="<?php echo esc_attr( $day_icon['width'] ); ?>" height="<?php echo esc_attr( $day_icon['height'] ); ?>" loading="lazy">
-							<?php endif; ?>
-						</span>
-						<p class="current-weather__day-temperatures">
-							<span class="current-weather__high" aria-hidden="true"><?php echo esc_html( $day['high'] . '°' ); ?></span>
-							<span class="current-weather__low" aria-hidden="true"><?php echo esc_html( $day['low'] . '°' ); ?></span>
+					<div class="current-weather__reading">
+						<p class="current-weather__temperature">
+							<span aria-hidden="true"><?php echo esc_html( $current['temperature'] . '°' ); ?></span>
 							<span class="screen-reader-text">
 								<?php
-								/* translators: 1: weather description, 2: high temperature, 3: low temperature. */
-								echo esc_html( sprintf( __( '%1$s, high %2$d°, low %3$d°', 'ltt-dive-in' ), $day['description'], $day['high'], $day['low'] ) );
+								/* translators: %d: temperature in degrees Fahrenheit. */
+								echo esc_html( sprintf( __( '%d degrees Fahrenheit', 'ltt-dive-in' ), $current['temperature'] ) );
 								?>
 							</span>
 						</p>
-					</li>
-				<?php endforeach; ?>
-			</ol>
-		<?php endif; ?>
+						<?php if ( $current['description'] ) : ?>
+							<p class="current-weather__condition"><?php echo esc_html( $current['description'] ); ?></p>
+						<?php endif; ?>
+						<p class="current-weather__range">
+							<?php
+							/* translators: %d: today's high temperature. */
+							echo '<span>' . esc_html( sprintf( __( 'high %d°', 'ltt-dive-in' ), $current['high'] ) ) . '</span> | <span>';
+							/* translators: %d: today's low temperature. */
+							echo esc_html( sprintf( __( 'low %d°', 'ltt-dive-in' ), $current['low'] ) ) . '</span>';
+							?>
+						</p>
+					</div>
+				</div>
+
+				<dl class="current-weather__details">
+					<?php foreach ( $details as $label => $value ) : ?>
+						<div class="current-weather__detail">
+							<dt><?php echo esc_html( $label ); ?></dt>
+							<dd>
+								<?php if ( '' === $value ) : ?>
+									<span aria-hidden="true">—</span>
+									<span class="screen-reader-text"><?php esc_html_e( 'Not available', 'ltt-dive-in' ); ?></span>
+								<?php else : ?>
+									<?php echo esc_html( $value ); ?>
+								<?php endif; ?>
+							</dd>
+						</div>
+					<?php endforeach; ?>
+				</dl>
+			</div>
+
+			<?php if ( $report['daily'] ) : ?>
+				<h3 class="screen-reader-text">
+					<?php
+					/* translators: %d: number of forecast days. */
+					echo esc_html( sprintf( _n( '%d-day forecast', '%d-day forecast', count( $report['daily'] ), 'ltt-dive-in' ), count( $report['daily'] ) ) );
+					?>
+				</h3>
+				<ol class="current-weather__forecast">
+					<?php foreach ( $report['daily'] as $day ) : ?>
+						<?php
+						get_template_part(
+							'template-parts/components/weather/day',
+							null,
+							array(
+								'day'      => $day,
+								'timezone' => $timezone,
+							)
+						);
+						?>
+					<?php endforeach; ?>
+				</ol>
+			<?php endif; ?>
+		</div>
+
+		<div id="<?php echo esc_attr( $args['id'] . '-forecast' ); ?>" class="current-weather__view" data-weather-view="forecast"<?php echo 'forecast' === $view ? '' : ' hidden'; ?>>
+			<h3 class="screen-reader-text">
+				<?php
+				/* translators: %s: weather location name. */
+				echo esc_html( sprintf( __( '10-day forecast for %s', 'ltt-dive-in' ), $location ) );
+				?>
+			</h3>
+			<?php if ( ! empty( $report['forecast'] ) ) : ?>
+				<ol class="current-weather__forecast current-weather__forecast--extended">
+					<?php foreach ( $report['forecast'] as $index => $day ) : ?>
+						<?php
+						get_template_part(
+							'template-parts/components/weather/day',
+							null,
+							array(
+								'day'      => $day,
+								'timezone' => $timezone,
+								'today'    => 0 === $index,
+							)
+						);
+						?>
+					<?php endforeach; ?>
+				</ol>
+			<?php else : ?>
+				<p class="current-weather__message"><?php esc_html_e( 'The 10-day forecast is unavailable right now. Please check back soon.', 'ltt-dive-in' ); ?></p>
+			<?php endif; ?>
+		</div>
+
+		<div id="<?php echo esc_attr( $args['id'] . '-history' ); ?>" class="current-weather__view" data-weather-view="history"<?php echo 'history' === $view ? '' : ' hidden'; ?>>
+			<?php
+			get_template_part(
+				'template-parts/components/weather/history',
+				null,
+				array(
+					'id'       => $args['id'] . '-history',
+					'location' => $location,
+					'history'  => ltt_dive_in_get_weather_history( $args['location']['latitude'], $args['location']['longitude'], $report['timezone'] ),
+				)
+			);
+			?>
+		</div>
+
+		<ul class="current-weather__views" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: weather location name. */ __( 'Weather views for %s', 'ltt-dive-in' ), $location ) ); ?>">
+			<?php foreach ( $views as $key => $label ) : ?>
+				<li>
+					<a
+						class="ltt-button ltt-button--dark-standard"
+						href="<?php echo esc_url( ( 'current' === $key ? $args['url'] : add_query_arg( 'weather_view', $key, $args['url'] ) ) . '#current-weather' ); ?>"
+						aria-controls="<?php echo esc_attr( $args['id'] . '-' . $key ); ?>"
+						data-weather-view-link="<?php echo esc_attr( $key ); ?>"
+						<?php echo $key === $view ? 'aria-current="true"' : ''; ?>
+					><?php echo esc_html( $label ); ?></a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 
 		<p class="screen-reader-text">
 			<?php

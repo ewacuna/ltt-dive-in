@@ -219,7 +219,7 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 
 	$condition = ltt_dive_in_normalize_weather_condition( $current['weather'][0] ?? array() );
 	$daily     = array();
-	$days      = array();
+	$forecast  = array();
 
 	foreach ( $timeline['data'] as $day ) {
 		if ( isset( $day['dt'], $day['temp']['max'], $day['temp']['min'] ) ) {
@@ -232,15 +232,11 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 	}
 
 	foreach ( $daily as $date => $day ) {
-		if ( $date <= $today ) {
+		if ( $date < $today ) {
 			continue;
 		}
 
-		if ( 5 === count( $days ) ) {
-			break;
-		}
-
-		$days[] = array_merge(
+		$forecast[] = array_merge(
 			array(
 				'time' => ( new DateTimeImmutable( $date . ' 12:00', new DateTimeZone( $timezone ) ) )->getTimestamp(),
 				'high' => (int) round( (float) $day['temp']['max'] ),
@@ -271,7 +267,10 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 			),
 			$condition
 		),
-		'daily'       => $days,
+		// The Current view starts tomorrow; today's range is in the top row.
+		'daily'       => array_slice( $forecast, 1, 5 ),
+		// The 10-Day Forecast view starts today. One timeline call returns at most 10 days.
+		'forecast'    => array_slice( $forecast, 0, 10 ),
 	);
 }
 

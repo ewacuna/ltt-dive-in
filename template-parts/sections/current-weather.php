@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $locations = $args['locations'] ?? array();
 $active    = (string) ( $args['active'] ?? '' );
+$view      = (string) ( $args['view'] ?? 'current' );
 
 if ( ! $locations || ! isset( $locations[ $active ] ) ) {
 	return;
@@ -41,12 +42,14 @@ foreach ( $locations as $slug => $location ) {
 				'location' => $location,
 				'report'   => $reports[ $slug ],
 				'active'   => $slug === $active,
+				'view'     => $view,
+				'url'      => add_query_arg( 'location', $slug, $permalink ),
 			)
 		);
 	}
 	?>
 
-	<p class="screen-reader-text" role="status" data-current-weather-status data-message="<?php /* translators: %s: weather location name. */ echo esc_attr__( 'Showing weather for %s.', 'ltt-dive-in' ); ?>"></p>
+	<p class="screen-reader-text" role="status" data-current-weather-status data-message="<?php /* translators: %s: weather location name. */ echo esc_attr__( 'Showing weather for %s.', 'ltt-dive-in' ); ?>" data-view-message="<?php /* translators: %s: weather view name, such as 10-Day Forecast. */ echo esc_attr__( 'Showing %s.', 'ltt-dive-in' ); ?>"></p>
 
 	<?php if ( count( $locations ) > 1 ) : ?>
 		<ul class="current-weather__locations" aria-label="<?php esc_attr_e( 'Weather locations', 'ltt-dive-in' ); ?>">

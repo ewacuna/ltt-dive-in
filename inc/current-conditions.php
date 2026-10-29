@@ -210,7 +210,7 @@ add_action( 'acf/init', 'ltt_dive_in_register_current_conditions_tab_fields' );
  * Resolve the live module and its settings for a Current Conditions tab.
  *
  * @param int $post_id Tab page ID.
- * @return array{module: string, locations?: array, active?: string} Empty module when nothing should render.
+ * @return array{module: string, locations?: array, active?: string, view?: string} Empty module when nothing should render.
  */
 function ltt_dive_in_get_current_conditions_tab_module( $post_id ) {
 	if ( ! function_exists( 'get_field' ) || 'weather' !== get_field( 'ltt_dive_in_conditions_tab_module', $post_id ) ) {
@@ -223,13 +223,16 @@ function ltt_dive_in_get_current_conditions_tab_module( $post_id ) {
 		return array( 'module' => '' );
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display choice, validated against the saved locations.
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only display choices, validated against allowed values.
 	$requested = isset( $_GET['location'] ) ? sanitize_title( wp_unslash( $_GET['location'] ) ) : '';
+	$view      = isset( $_GET['weather_view'] ) ? sanitize_key( wp_unslash( $_GET['weather_view'] ) ) : '';
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	return array(
 		'module'    => 'weather',
 		'locations' => $locations,
 		'active'    => isset( $locations[ $requested ] ) ? $requested : array_key_first( $locations ),
+		'view'      => in_array( $view, array( 'forecast', 'history' ), true ) ? $view : 'current',
 	);
 }
 
