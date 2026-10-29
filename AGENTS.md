@@ -248,8 +248,8 @@ Automated checks are useful but cannot establish conformance by themselves. Ever
 - Keep design tokens aligned between `theme.json` and `assets/css/main.css`. Prefer existing CSS custom properties before introducing new hard-coded colors or spacing values.
 - Follow the CSS architecture below. Do not accumulate all page and component styling in `assets/css/main.css`.
 - Write responsive styles desktop-first using the approved Bootstrap 5.3 breakpoint values and descending `max-width` queries documented below.
-- Use vanilla JavaScript unless a task explicitly requires a dependency. The existing script is loaded in the footer and must remain safe when expected DOM elements are absent.
-- Do not edit generated or minified assets. This repository currently contains only source assets.
+- Use vanilla JavaScript or the vendored Alpine.js for browser behavior; do not add another dependency unless a task explicitly requires one. Scripts must remain safe when expected DOM elements are absent.
+- Do not edit generated or minified assets. Theme assets are source files, except for the vendored libraries listed below.
 
 ### CSS architecture and ownership
 
@@ -407,6 +407,21 @@ Register block-only assets in `inc/blocks.php`, but enqueue them only when the p
 - Reuse the generic traversal with a new predicate for other blocks that need Swiper or another conditionally loaded dependency; do not add their rules to a Page Driver helper.
 - When a Page Driver variant also needs the carousel, extend `ltt_dive_in_page_driver_carousel_layouts` rather than editing the generic traversal.
 - Register third-party libraries once, enqueue their shared handles only after a matching block is found, and let WordPress de-duplicate handles when multiple matching blocks render. Keep a safe render-time enqueue fallback for dynamic blocks whose content cannot be discovered from the queried post before rendering.
+
+### Vendored browser libraries
+
+Third-party browser libraries are pinned, self-hosted copies with their licenses. Load them only through their registered handles; never add a CDN script or style tag.
+
+| Library | Version | Files | Handle | Loading |
+| --- | --- | --- | --- | --- |
+| Alpine.js | `3.17.2` | `assets/js/vendor/alpine.min.js`, `ALPINE-LICENSE.md` | `ltt-dive-in-alpine` | Every page, from the head with `defer` |
+| Swiper | `14.2.0` | `assets/js/vendor/swiper-bundle.min.js`, `assets/css/vendor/swiper-bundle.min.css` | `ltt-dive-in-swiper` | Only on pages with a carousel block |
+| PhotoSwipe | `5.4.4` | `assets/vendor/photoswipe/` | `ltt-dive-in-photoswipe` | Only on pages with a lightbox |
+
+- Use Alpine for small, markup-owned interaction states such as the header search and the shared `lttSelect`. Keep content and links in the server-rendered HTML, provide a useful pre-initialization state, and do not move substantial business logic into `x-data` expressions.
+- An Alpine component script must register before Alpine starts: add its handle to the `ltt-dive-in-alpine` dependencies in `inc/enqueue.php`.
+- Use vanilla JavaScript in `assets/js/main.js` or `assets/js/components/` for behavior that does not fit Alpine. `main.js` owns the accessible mobile-navigation shell, nested primary-menu disclosures, and footer DOM ordering.
+- To upgrade a library, confirm the version in the official release notes, replace the files with that exact release's distribution files, update its license file if needed, update the table above and Alpine's hard-coded version in `inc/enqueue.php` (Swiper and PhotoSwipe are versioned by `filemtime()`), and retest every component that uses it. For Alpine, that includes the mobile menu with keyboard and `Escape`, focus restoration, viewport changes, header-search states, and the homepage video's reduced-motion behavior.
 
 ### Editor styles
 
