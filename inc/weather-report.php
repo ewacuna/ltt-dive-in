@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the current conditions and daily forecast for a location.
  *
+ * Each refresh makes two One Call 4.0 requests (current and daily timeline).
  * Fresh reports are cached for 20 minutes and refreshed every 15 minutes by
  * ltt_dive_in_refresh_weather_locations(). After that, the last valid report
  * is served for up to 24 hours while WordPress refreshes it in the background.
@@ -137,13 +138,15 @@ function ltt_dive_in_unschedule_weather_locations_refresh() {
 add_action( 'switch_theme', 'ltt_dive_in_unschedule_weather_locations_refresh' );
 
 /**
- * Request and normalize a One Call 3.0 report.
+ * Request one One Call 4.0 endpoint.
  *
- * @param float $latitude  Location latitude.
- * @param float $longitude Location longitude.
- * @return array|WP_Error Normalized report or an error.
+ * @param string $endpoint  Path below `/data/4.0/onecall/`, such as `current`.
+ * @param float  $latitude  Location latitude.
+ * @param float  $longitude Location longitude.
+ * @param array  $args      Additional query arguments.
+ * @return array|WP_Error Decoded response body or an error.
  */
-function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
+function ltt_dive_in_request_one_call( $endpoint, $latitude, $longitude, $args = array() ) {
 	$api_key = ltt_dive_in_get_header_option( 'ltt_dive_in_openweather_api_key' );
 
 	if ( ! is_string( $api_key ) || '' === trim( $api_key ) ) {
@@ -152,14 +155,16 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 
 	$response = wp_safe_remote_get(
 		add_query_arg(
-			array(
-				'lat'     => $latitude,
-				'lon'     => $longitude,
-				'exclude' => 'minutely,hourly,alerts',
-				'units'   => 'imperial',
-				'appid'   => trim( $api_key ),
+			array_merge(
+				$args,
+				array(
+					'lat'   => $latitude,
+					'lon'   => $longitude,
+					'units' => 'imperial',
+					'appid' => trim( $api_key ),
+				)
 			),
-			'https://api.openweathermap.org/data/3.0/onecall'
+			'https://api.openweathermap.org/data/4.0/onecall/' . $endpoint
 		),
 		array(
 			'timeout'     => 10,
@@ -173,22 +178,71 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 
 	$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-	if ( ! is_array( $body ) || ! isset( $body['current']['temp'], $body['daily'][0]['temp']['max'] ) ) {
+	return is_array( $body ) ? $body : new WP_Error( 'ltt_dive_in_weather_report_invalid_response' );
+}
+
+/**
+ * Request and normalize a One Call 4.0 report.
+ *
+ * Uses two calls: current weather, then the daily timeline starting at the
+ * location's current date, which supplies today's high and low.
+ *
+ * @param float $latitude  Location latitude.
+ * @param float $longitude Location longitude.
+ * @return array|WP_Error Normalized report or an error.
+ */
+function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
+	$now = ltt_dive_in_request_one_call( 'current', $latitude, $longitude );
+
+	if ( is_wp_error( $now ) ) {
+		return $now;
+	}
+
+	if ( ! isset( $now['data'][0]['temp'] ) ) {
 		return new WP_Error( 'ltt_dive_in_weather_report_invalid_response' );
 	}
 
-	$current   = $body['current'];
+	$current  = $now['data'][0];
+	$timezone = isset( $now['timezone'] ) && in_array( $now['timezone'], timezone_identifiers_list(), true ) ? $now['timezone'] : 'UTC';
+	$today    = wp_date( 'Y-m-d', isset( $current['dt'] ) ? (int) $current['dt'] : time(), new DateTimeZone( $timezone ) );
+
+	// Daily `dt` is midnight UTC of the entry's calendar date, not a local time.
+	$timeline = ltt_dive_in_request_one_call( 'timeline/1day', $latitude, $longitude, array( 'start' => strtotime( $today . ' 00:00:00 UTC' ) ) );
+
+	if ( is_wp_error( $timeline ) ) {
+		return $timeline;
+	}
+
+	if ( ! isset( $timeline['data'] ) || ! is_array( $timeline['data'] ) ) {
+		return new WP_Error( 'ltt_dive_in_weather_report_invalid_response' );
+	}
+
 	$condition = ltt_dive_in_normalize_weather_condition( $current['weather'][0] ?? array() );
+	$daily     = array();
 	$days      = array();
 
-	foreach ( array_slice( $body['daily'], 1, 5 ) as $day ) {
-		if ( ! isset( $day['dt'], $day['temp']['max'], $day['temp']['min'] ) ) {
+	foreach ( $timeline['data'] as $day ) {
+		if ( isset( $day['dt'], $day['temp']['max'], $day['temp']['min'] ) ) {
+			$daily[ gmdate( 'Y-m-d', (int) $day['dt'] ) ] = $day;
+		}
+	}
+
+	if ( ! isset( $daily[ $today ] ) ) {
+		return new WP_Error( 'ltt_dive_in_weather_report_invalid_response' );
+	}
+
+	foreach ( $daily as $date => $day ) {
+		if ( $date <= $today ) {
 			continue;
+		}
+
+		if ( 5 === count( $days ) ) {
+			break;
 		}
 
 		$days[] = array_merge(
 			array(
-				'time' => (int) $day['dt'],
+				'time' => ( new DateTimeImmutable( $date . ' 12:00', new DateTimeZone( $timezone ) ) )->getTimestamp(),
 				'high' => (int) round( (float) $day['temp']['max'] ),
 				'low'  => (int) round( (float) $day['temp']['min'] ),
 			),
@@ -197,7 +251,7 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 	}
 
 	return array(
-		'timezone'    => isset( $body['timezone'] ) && in_array( $body['timezone'], timezone_identifiers_list(), true ) ? $body['timezone'] : 'UTC',
+		'timezone'    => $timezone,
 		'observed_at' => isset( $current['dt'] ) ? (int) $current['dt'] : time(),
 		'current'     => array_merge(
 			array(
@@ -212,8 +266,8 @@ function ltt_dive_in_fetch_weather_report( $latitude, $longitude ) {
 				'pressure'    => isset( $current['pressure'] ) ? round( (float) $current['pressure'] * 0.02953, 1 ) : null,
 				'sunrise'     => isset( $current['sunrise'] ) ? (int) $current['sunrise'] : null,
 				'sunset'      => isset( $current['sunset'] ) ? (int) $current['sunset'] : null,
-				'high'        => (int) round( (float) $body['daily'][0]['temp']['max'] ),
-				'low'         => (int) round( (float) $body['daily'][0]['temp']['min'] ),
+				'high'        => (int) round( (float) $daily[ $today ]['temp']['max'] ),
+				'low'         => (int) round( (float) $daily[ $today ]['temp']['min'] ),
 			),
 			$condition
 		),
