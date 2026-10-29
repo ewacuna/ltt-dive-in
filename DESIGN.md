@@ -257,7 +257,7 @@ The internal mobile hero in review node `95:24452` uses a `64px` Big Caslon Medi
 
 ### Meetings Hero
 
-The reusable Meetings Hero follows dev-access node `1:10709` and the mobile composition in review node `95:24749`. Desktop uses a centered Gotham HTF Bold title at `76px`, `2%` tracking, white text with a `0 4px 4px rgba(0,0,0,.25)` shadow, `14px` Gotham HTF Medium copy, optional glass CTAs, and an optional Scroll for more link. Mobile keeps the centered composition with a `36px` title and a `305px` text column. The background photo, decorative vector, and radial navy wash are separate layers; the default vector SVG has matching desktop and mobile exports. A custom SVG keeps its supplied dimensions ratio, colors, and transparency. The ACF SVG field is versioned without a location rule until a destination template is selected. The component is not assigned to any page yet. See `docs/meetings-hero.md` for its interface and template integration.
+The reusable Meetings Hero follows dev-access node `1:10709` and the mobile composition in review node `95:24749`. Desktop uses a centered Gotham HTF Bold title at `76px`, `2%` tracking, white text with a `0 4px 4px rgba(0,0,0,.25)` shadow, `14px` Gotham HTF Medium copy, optional glass CTAs, and an optional Scroll for more link. Mobile keeps the centered composition with a `36px` title and a `305px` text column. The background photo, decorative vector, and radial navy wash are separate layers; the default vector SVG has matching desktop and mobile exports. A custom SVG keeps its supplied dimensions ratio, colors, and transparency. The ACF SVG field is versioned without a location rule until a destination template is selected. The component is not assigned to any page yet.
 
 ### Page drivers
 
@@ -435,7 +435,7 @@ Implementation rules:
 - Load More appends the configured step after the initial batch. Filtering or changing search replaces the cards and returns to the initial count. The pager total accounts for a different initial count and later step size.
 - Optional additional copy may appear in an expanded/rollover state, but it must also be available to keyboard and touch users.
 - Card buttons navigate to their configured destinations. The Load More control appends the next batch after the initial grid.
-- Taxonomy dropdown filtering, WP Default keyword search, and Load More pagination use FacetWP. Follow `docs/listing-module-facetwp.md` to configure and export the facets.
+- Taxonomy dropdown filtering, WP Default keyword search, and Load More pagination use FacetWP.
 - The FacetWP dropdowns use the shared light select appearance and open-menu states from Monthly Page Driver; FacetWP remains the source of filter options and selected values.
 - The shared light dropdown's Figma hover state (`1:44701`) changes the navy arrow compartment to Peak Gold (`#EEB040`) and the tint-300 arrow to navy (`#073959`). The theme keeps that appearance while the menu is expanded and applies it to keyboard focus and press as well.
 
