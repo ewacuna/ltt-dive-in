@@ -17,13 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * The header never waits on OpenWeather: an uncached report is queued for
  * WP-Cron and the indicator stays hidden until it is ready.
  *
- * @return array{label: string, accessible_label: string, icon_url: string}
+ * @return array{label: string, accessible_label: string, icon_url: string, icon_width: int, icon_height: int, icon_source: string}
  */
 function ltt_dive_in_get_header_weather() {
 	$empty    = array(
 		'label'            => '',
 		'accessible_label' => '',
 		'icon_url'         => '',
+		'icon_width'       => 0,
+		'icon_height'      => 0,
+		'icon_source'      => '',
 	);
 	$location = ltt_dive_in_get_default_weather_location();
 
@@ -39,6 +42,7 @@ function ltt_dive_in_get_header_weather() {
 
 	$current = $report['current'];
 	$label   = sprintf( '%d°F', $current['temperature'] );
+	$icon    = ltt_dive_in_get_weather_icon( $current['condition_id'], $current['icon'], 'dark-mode' );
 
 	return array(
 		'label'            => $label,
@@ -50,6 +54,9 @@ function ltt_dive_in_get_header_weather() {
 			$current['description'] ? strtolower( $current['description'] ) : __( 'conditions unavailable', 'ltt-dive-in' ),
 			wp_date( get_option( 'time_format' ), $report['observed_at'] )
 		),
-		'icon_url'         => $current['icon'] ? sprintf( 'https://openweathermap.org/img/wn/%s@2x.png', rawurlencode( $current['icon'] ) ) : '',
+		'icon_url'         => $icon ? $icon['src'] : '',
+		'icon_width'       => $icon ? $icon['width'] : 0,
+		'icon_height'      => $icon ? $icon['height'] : 0,
+		'icon_source'      => $icon ? $icon['source'] : '',
 	);
 }

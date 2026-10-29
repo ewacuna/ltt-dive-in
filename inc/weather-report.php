@@ -189,9 +189,9 @@ function ltt_dive_in_normalize_weather_condition( $weather ) {
 /**
  * Resolve the Figma weather icon for an OpenWeather condition.
  *
- * Icons come from the Figma "ICON - PACKAGE 1" weather set: `full-color` for
- * dark surfaces and `light-mode` (navy) for light surfaces. Conditions without
- * a Figma icon use OpenWeather's own icon:
+ * Icons come from the Figma "ICON - PACKAGE 1" weather set: `full-color` and
+ * `dark-mode` (white) for dark surfaces, `light-mode` (navy) for light surfaces.
+ * Conditions without a Figma icon use OpenWeather's own icon:
  * - Mist, smoke, haze, dust, fog, sand, and ash (701–762); smoke and haze are
  *   the wildfire-season conditions and the highest-priority missing icons.
  * - Squalls (771) and tornadoes (781).
@@ -201,7 +201,7 @@ function ltt_dive_in_normalize_weather_condition( $weather ) {
  *
  * @param int    $condition_id OpenWeather condition ID.
  * @param string $icon         OpenWeather icon code, such as `01d`.
- * @param string $variant      `full-color` or `light-mode`.
+ * @param string $variant      `full-color`, `light-mode`, or `dark-mode`.
  * @return array{src: string, width: int, height: int, source: string}|array{} Icon image data, or empty when unknown.
  */
 function ltt_dive_in_get_weather_icon( $condition_id, $icon, $variant = 'full-color' ) {
@@ -241,7 +241,7 @@ function ltt_dive_in_get_weather_icon( $condition_id, $icon, $variant = 'full-co
 
 	if ( $file ) {
 		return array(
-			'src'    => LTT_DIVE_IN_URI . '/assets/images/icons/weather/' . ( 'light-mode' === $variant ? 'light-mode' : 'full-color' ) . '/' . $file . '.svg',
+			'src'    => LTT_DIVE_IN_URI . '/assets/images/icons/weather/' . ( in_array( $variant, array( 'light-mode', 'dark-mode' ), true ) ? $variant : 'full-color' ) . '/' . $file . '.svg',
 			'width'  => $sizes[ $file ][0],
 			'height' => $sizes[ $file ][1],
 			'source' => 'figma',

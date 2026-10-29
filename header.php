@@ -125,7 +125,7 @@
 						<span>
 					<?php endif; ?>
 						<?php if ( $weather['icon_url'] ) : ?>
-							<img class="site-header__weather-icon" src="<?php echo esc_url( $weather['icon_url'] ); ?>" alt="" width="28" height="28">
+							<img class="site-header__weather-icon<?php echo 'openweather' === $weather['icon_source'] ? ' site-header__weather-icon--openweather' : ''; ?>" src="<?php echo esc_url( $weather['icon_url'] ); ?>" alt="" width="<?php echo esc_attr( $weather['icon_width'] ); ?>" height="<?php echo esc_attr( $weather['icon_height'] ); ?>">
 						<?php endif; ?>
 						<span class="site-header__weather-label" aria-hidden="true"><?php echo esc_html( $weather['label'] ); ?></span>
 						<span class="screen-reader-text"><?php echo esc_html( $weather['accessible_label'] ); ?></span>
