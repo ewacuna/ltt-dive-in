@@ -32,6 +32,20 @@
 		} );
 	};
 
+	const syncAdminBar = function ( next ) {
+		const nextLinks = new Map();
+
+		next.querySelectorAll( '#wpadminbar li[id] > a.ab-item[href]' ).forEach( function ( link ) {
+			nextLinks.set( link.parentElement.id, link.getAttribute( 'href' ) );
+		} );
+		document.querySelectorAll( '#wpadminbar li[id] > a.ab-item[href]' ).forEach( function ( link ) {
+			const href = nextLinks.get( link.parentElement.id );
+			if ( href ) {
+				link.setAttribute( 'href', href );
+			}
+		} );
+	};
+
 	const load = async function ( url, push ) {
 		if ( controller ) {
 			controller.abort();
@@ -78,6 +92,7 @@
 			next.head.querySelectorAll( headTags ).forEach( function ( tag ) {
 				document.head.appendChild( document.importNode( tag, true ) );
 			} );
+			syncAdminBar( next );
 
 			if ( push ) {
 				window.history.pushState( { lttSeamless: true }, '', url );
