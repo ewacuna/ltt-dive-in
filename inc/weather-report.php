@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the current conditions and daily forecast for a location.
  *
- * Fresh reports are cached for 15 minutes. After that, the last valid report
- * is served for up to six hours while WordPress refreshes it in the background.
+ * Fresh reports are cached for 20 minutes and refreshed every 15 minutes by
+ * ltt_dive_in_refresh_weather_locations(). After that, the last valid report
+ * is served for up to 24 hours while WordPress refreshes it in the background.
  * Failures are cached briefly to protect the provider.
  *
  * @param float $latitude      Location latitude.
@@ -68,8 +69,8 @@ function ltt_dive_in_get_weather_report( $latitude, $longitude, $force_refresh =
 		return $report;
 	}
 
-	set_transient( $cache_key, $report, 15 * MINUTE_IN_SECONDS );
-	set_transient( $stale_key, $report, 6 * HOUR_IN_SECONDS );
+	set_transient( $cache_key, $report, 20 * MINUTE_IN_SECONDS );
+	set_transient( $stale_key, $report, DAY_IN_SECONDS );
 
 	return $report;
 }
@@ -84,6 +85,56 @@ function ltt_dive_in_refresh_weather_report( $latitude, $longitude ) {
 	ltt_dive_in_get_weather_report( $latitude, $longitude, true );
 }
 add_action( 'ltt_dive_in_refresh_weather_report', 'ltt_dive_in_refresh_weather_report', 10, 2 );
+
+/**
+ * Add the fifteen-minute WP-Cron interval used by the weather refresh.
+ *
+ * @param array $schedules Registered cron schedules.
+ * @return array
+ */
+function ltt_dive_in_weather_cron_schedules( $schedules ) {
+	$schedules['ltt_dive_in_fifteen_minutes'] = array(
+		'interval' => 15 * MINUTE_IN_SECONDS,
+		'display'  => __( 'Every 15 minutes', 'ltt-dive-in' ),
+	);
+
+	return $schedules;
+}
+add_filter( 'cron_schedules', 'ltt_dive_in_weather_cron_schedules' );
+
+/**
+ * Schedule the recurring refresh that keeps every weather location warm.
+ */
+function ltt_dive_in_schedule_weather_locations_refresh() {
+	if ( ! wp_next_scheduled( 'ltt_dive_in_refresh_weather_locations' ) ) {
+		wp_schedule_event( time(), 'ltt_dive_in_fifteen_minutes', 'ltt_dive_in_refresh_weather_locations' );
+	}
+}
+add_action( 'init', 'ltt_dive_in_schedule_weather_locations_refresh' );
+
+/**
+ * Refresh every location of the Current Conditions weather tab through WP-Cron.
+ */
+function ltt_dive_in_refresh_weather_locations() {
+	$page_id = ltt_dive_in_get_weather_tab_page_id();
+
+	if ( ! $page_id ) {
+		return;
+	}
+
+	foreach ( ltt_dive_in_get_weather_locations( $page_id ) as $location ) {
+		ltt_dive_in_get_weather_report( $location['latitude'], $location['longitude'], true );
+	}
+}
+add_action( 'ltt_dive_in_refresh_weather_locations', 'ltt_dive_in_refresh_weather_locations' );
+
+/**
+ * Remove the recurring weather refresh when the theme is switched off.
+ */
+function ltt_dive_in_unschedule_weather_locations_refresh() {
+	wp_clear_scheduled_hook( 'ltt_dive_in_refresh_weather_locations' );
+}
+add_action( 'switch_theme', 'ltt_dive_in_unschedule_weather_locations_refresh' );
 
 /**
  * Request and normalize a One Call 3.0 report.

@@ -272,21 +272,12 @@ function ltt_dive_in_get_weather_locations( $post_id ) {
 }
 
 /**
- * Get the default (first) location of the published Current Conditions weather tab.
+ * Get the published Current Conditions page that shows the weather module.
  *
- * The header weather indicator uses it so both show the same report.
- *
- * @return array Location from ltt_dive_in_get_weather_locations(), or empty when no weather tab is set up.
+ * @return int Page ID, or 0 when no weather tab is set up.
  */
-function ltt_dive_in_get_default_weather_location() {
-	static $location = null;
-
-	if ( null !== $location ) {
-		return $location;
-	}
-
-	$location = array();
-	$page_id  = get_transient( 'ltt_dive_in_weather_tab_page_id' );
+function ltt_dive_in_get_weather_tab_page_id() {
+	$page_id = get_transient( 'ltt_dive_in_weather_tab_page_id' );
 
 	if ( false === $page_id ) {
 		$pages = get_posts(
@@ -318,8 +309,22 @@ function ltt_dive_in_get_default_weather_location() {
 		set_transient( 'ltt_dive_in_weather_tab_page_id', $page_id, DAY_IN_SECONDS );
 	}
 
-	if ( $page_id ) {
-		$locations = ltt_dive_in_get_weather_locations( (int) $page_id );
+	return (int) $page_id;
+}
+
+/**
+ * Get the default (first) location of the published Current Conditions weather tab.
+ *
+ * The header weather indicator uses it so both show the same report.
+ *
+ * @return array Location from ltt_dive_in_get_weather_locations(), or empty when no weather tab is set up.
+ */
+function ltt_dive_in_get_default_weather_location() {
+	static $location = null;
+
+	if ( null === $location ) {
+		$page_id   = ltt_dive_in_get_weather_tab_page_id();
+		$locations = $page_id ? ltt_dive_in_get_weather_locations( $page_id ) : array();
 		$location  = $locations ? reset( $locations ) : array();
 	}
 
