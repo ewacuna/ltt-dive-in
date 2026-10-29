@@ -19,3 +19,5 @@ demos/
 !assets/vendor/photoswipe/photoswipe.css
 !assets/vendor/photoswipe/photoswipe-lightbox.esm.js
 !assets/vendor/photoswipe/photoswipe.esm.js
+
+docs/*
