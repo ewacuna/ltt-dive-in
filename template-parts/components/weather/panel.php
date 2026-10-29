@@ -173,7 +173,7 @@ $view     = isset( $views[ $view ] ) ? $view : 'current';
 				array(
 					'id'       => $args['id'] . '-history',
 					'location' => $location,
-					'history'  => ltt_dive_in_get_weather_history( $args['location']['latitude'], $args['location']['longitude'], $report['timezone'] ),
+					'history'  => ltt_dive_in_get_weather_history( $args['location']['latitude'], $args['location']['longitude'] ),
 				)
 			);
 			?>

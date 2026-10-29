@@ -316,7 +316,8 @@
 	letter-spacing: -0.0025em;
 }
 
-.current-weather__history-text {
+.current-weather__history-text,
+.current-weather__history-pending {
 	margin-bottom: 1.5rem;
 	color: #f9f9f9;
 	font-size: 1.125rem;
@@ -579,7 +580,8 @@
 		line-height: 1.5;
 	}
 
-	.current-weather__history-text {
+	.current-weather__history-text,
+	.current-weather__history-pending {
 		font-size: 0.75rem;
 	}
 
