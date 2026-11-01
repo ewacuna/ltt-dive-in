@@ -26,8 +26,11 @@
 	$weather           = ltt_dive_in_get_header_weather();
 	$weather_link      = ltt_dive_in_get_header_option( 'ltt_dive_in_header_weather_link', array() );
 	$header_background = ltt_dive_in_get_page_header_background();
-	$header_variant    = is_front_page() ? 'overlay' : ( 'overlay' === $header_background ? 'hero-overlay' : $header_background );
+	$header_variant    = ltt_dive_in_is_503_view() ? 'gradient' : ( is_front_page() ? 'overlay' : ( 'overlay' === $header_background ? 'hero-overlay' : $header_background ) );
 	$header_classes    = 'site-header site-header--' . $header_variant;
+	if ( is_404() || ltt_dive_in_is_503_view() ) {
+		$header_classes .= ' site-header--error';
+	}
 	?>
 	<header
 		id="masthead"

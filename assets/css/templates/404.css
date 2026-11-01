@@ -1,0 +1,43 @@
+.ltt-error-page--404 {
+    background-image: url("../../images/error-pages/404-background-desktop.webp");
+    background-image: image-set(
+        url("../../images/error-pages/404-background-desktop.webp") 1x,
+        url("../../images/error-pages/404-background.webp") 2x
+    );
+}
+
+.ltt-error-page--404 .ltt-error-page__search-form {
+    display: flex;
+    width: min(100%, 30rem);
+    min-height: 3.625rem;
+    align-items: center;
+    margin-top: 1.75rem;
+    padding-top: 0.3125rem;
+    text-align: left;
+}
+
+@media (max-width: 1199.98px) {
+    .ltt-error-page--404 {
+        background-image: url("../../images/error-pages/404-background-tablet.webp");
+        background-image: image-set(
+            url("../../images/error-pages/404-background-tablet.webp") 1x,
+            url("../../images/error-pages/404-background.webp") 2x
+        );
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ltt-error-page--404 .ltt-error-page__search-form {
+        width: min(calc(100% - 4.25rem), 30rem);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ltt-error-page--404 {
+        background-image: url("../../images/error-pages/404-background-mobile.webp");
+        background-image: image-set(
+            url("../../images/error-pages/404-background-mobile.webp") 1x,
+            url("../../images/error-pages/404-background-tablet.webp") 2x
+        );
+    }
+}

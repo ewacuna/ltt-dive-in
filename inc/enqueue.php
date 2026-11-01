@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enqueue public assets.
  */
 function ltt_dive_in_enqueue_assets() {
+	$is_503_view           = ltt_dive_in_is_503_view();
 	$style_path             = LTT_DIVE_IN_DIR . '/assets/css/main.css';
 	$header_style_path      = LTT_DIVE_IN_DIR . '/assets/css/components/header.css';
 	$search_bar_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/search-bar.css';
@@ -51,7 +52,7 @@ function ltt_dive_in_enqueue_assets() {
 		file_exists( $header_style_path ) ? (string) filemtime( $header_style_path ) : LTT_DIVE_IN_VERSION
 	);
 
-	if ( ltt_dive_in_get_section_navigation() ) {
+	if ( ! $is_503_view && ltt_dive_in_get_section_navigation() ) {
 		$section_style_path  = LTT_DIVE_IN_DIR . '/assets/css/components/section-navigation.css';
 		$section_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/section-navigation.js';
 
@@ -122,7 +123,26 @@ function ltt_dive_in_enqueue_assets() {
 		file_exists( $select_style_path ) ? (string) filemtime( $select_style_path ) : LTT_DIVE_IN_VERSION
 	);
 
-	if ( is_front_page() ) {
+	if ( is_404() || $is_503_view ) {
+		$error_component_path = LTT_DIVE_IN_DIR . '/assets/css/components/error-page.css';
+		$error_template       = $is_503_view ? '503' : '404';
+		$error_template_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/' . $error_template . '.css';
+
+		wp_enqueue_style(
+			'ltt-dive-in-error-page',
+			LTT_DIVE_IN_URI . '/assets/css/components/error-page.css',
+			array( 'ltt-dive-in-style', 'ltt-dive-in-search-bar' ),
+			file_exists( $error_component_path ) ? (string) filemtime( $error_component_path ) : LTT_DIVE_IN_VERSION
+		);
+		wp_enqueue_style(
+			'ltt-dive-in-' . $error_template,
+			LTT_DIVE_IN_URI . '/assets/css/templates/' . $error_template . '.css',
+			array( 'ltt-dive-in-error-page' ),
+			file_exists( $error_template_path ) ? (string) filemtime( $error_template_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	if ( ! $is_503_view && is_front_page() ) {
 		wp_enqueue_style(
 			'ltt-dive-in-front-page',
 			LTT_DIVE_IN_URI . '/assets/css/templates/front-page.css',
@@ -139,7 +159,7 @@ function ltt_dive_in_enqueue_assets() {
 	}
 
 	// Internal pages (page.php and Full Width); Blank Canvas owns its own layout.
-	if ( is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' ) ) {
+	if ( ! $is_503_view && is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' ) ) {
 		wp_enqueue_style(
 			'ltt-dive-in-page',
 			LTT_DIVE_IN_URI . '/assets/css/templates/page.css',
@@ -159,7 +179,7 @@ function ltt_dive_in_enqueue_assets() {
 		}
 	}
 
-	if ( is_singular( array( 'post', 'listings' ) ) ) {
+	if ( ! $is_503_view && is_singular( array( 'post', 'listings' ) ) ) {
 		wp_enqueue_style(
 			'ltt-dive-in-single',
 			LTT_DIVE_IN_URI . '/assets/css/templates/single.css',
@@ -180,7 +200,7 @@ function ltt_dive_in_enqueue_assets() {
 		}
 	}
 
-	if ( ltt_dive_in_has_page_hero() ) {
+	if ( ! $is_503_view && ltt_dive_in_has_page_hero() ) {
 		if ( 'meetings' === ltt_dive_in_get_page_header_hero_variant() ) {
 			ltt_dive_in_enqueue_meetings_hero_assets();
 		} else {
@@ -218,7 +238,7 @@ function ltt_dive_in_enqueue_assets() {
 	$alpine_deps = array( 'ltt-dive-in-select' );
 
 	// Hero "Scroll for more" links; Alpine components must register before Alpine starts.
-	if ( is_front_page() || ltt_dive_in_has_page_hero() ) {
+	if ( ! $is_503_view && ( is_front_page() || ltt_dive_in_has_page_hero() ) ) {
 		wp_register_script(
 			'ltt-dive-in-scroll-link',
 			LTT_DIVE_IN_URI . '/assets/js/components/scroll-link.js',
@@ -280,6 +300,8 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 
 	if (
 		is_front_page()
+		|| is_404()
+		|| ltt_dive_in_is_503_view()
 		|| ( ltt_dive_in_has_page_hero() && 'standard' === ltt_dive_in_get_page_header_hero_variant() )
 		|| is_singular( array( 'post', 'listings' ) )
 	) {
