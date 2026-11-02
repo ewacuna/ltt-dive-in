@@ -190,6 +190,11 @@
 }
 
 @media (max-width: 991.98px) {
+    .ltt-search-bar--error {
+        height: 2.75rem;
+        min-height: 2.75rem;
+    }
+
     .ltt-search-bar input.ltt-search-bar__input[type="search"] {
         font-size: 1rem;
     }
