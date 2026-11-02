@@ -19,6 +19,7 @@ get_header();
 		<form class="ltt-error-page__search-form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 			<span class="ltt-search-bar ltt-search-bar--error">
 				<input id="ltt-error-search" class="ltt-search-bar__input" type="search" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Search', 'ltt-dive-in' ); ?>" aria-label="<?php esc_attr_e( 'Search', 'ltt-dive-in' ); ?>">
+				<button class="ltt-search-bar__clear" type="button" data-error-search-clear aria-label="<?php esc_attr_e( 'Clear search', 'ltt-dive-in' ); ?>" hidden></button>
 				<button class="ltt-search-bar__submit" type="submit" aria-label="<?php esc_attr_e( 'Submit search', 'ltt-dive-in' ); ?>">
 					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/header/search-icon.svg' ) ); ?>" alt="" width="22" height="17">
 				</button>

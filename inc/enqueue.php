@@ -142,6 +142,21 @@ function ltt_dive_in_enqueue_assets() {
 		);
 	}
 
+	if ( is_404() && ! $is_503_view ) {
+		$error_search_script_path = LTT_DIVE_IN_DIR . '/assets/js/templates/404.js';
+
+		wp_enqueue_script(
+			'ltt-dive-in-404-search',
+			LTT_DIVE_IN_URI . '/assets/js/templates/404.js',
+			array(),
+			file_exists( $error_search_script_path ) ? (string) filemtime( $error_search_script_path ) : LTT_DIVE_IN_VERSION,
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
+	}
+
 	if ( ! $is_503_view && is_front_page() ) {
 		wp_enqueue_style(
 			'ltt-dive-in-front-page',
