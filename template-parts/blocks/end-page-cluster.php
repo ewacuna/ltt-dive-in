@@ -101,11 +101,19 @@ if ( 'page_driver' === $variant ) {
 		$empty_notice( __( 'Add a title and three cards to preview the Page Driver.', 'ltt-dive-in' ) );
 		return;
 	}
+	$is_navy = 'navy' === get_field( 'ltt_dive_in_end_page_cluster_page_driver_background' );
+	$classes = array( 'end-page-cluster', 'end-page-cluster--page-driver' );
+	if ( $is_navy ) {
+		$classes[] = 'end-page-cluster--page-driver-navy';
+	}
+	if ( $is_full ) {
+		$classes[] = 'alignfull';
+	}
 	?>
-	<section id="<?php echo esc_attr( $id ); ?>" class="end-page-cluster end-page-cluster--page-driver<?php echo $is_full ? ' alignfull' : ''; ?>" aria-labelledby="<?php echo esc_attr( $id ); ?>-title">
+	<section id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" aria-labelledby="<?php echo esc_attr( $id ); ?>-title">
 		<div class="end-page-cluster__container">
 			<header class="end-page-cluster__header">
-				<?php if ( $tag ) : ?><p class="end-page-cluster__tag ltt-tag"><?php echo esc_html( $tag ); ?></p><?php endif; ?>
+				<?php if ( $tag ) : ?><p class="end-page-cluster__tag ltt-tag<?php echo $is_navy ? ' ltt-tag--dark' : ''; ?>"><?php echo esc_html( $tag ); ?></p><?php endif; ?>
 				<h2 id="<?php echo esc_attr( $id ); ?>-title" class="end-page-cluster__title"><?php echo esc_html( $title ); ?></h2>
 				<?php if ( $body ) : ?><p class="end-page-cluster__body"><?php echo esc_html( $body ); ?></p><?php endif; ?>
 			</header>

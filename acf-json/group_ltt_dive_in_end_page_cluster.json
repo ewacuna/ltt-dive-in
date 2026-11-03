@@ -47,6 +47,30 @@
             ]
         },
         {
+            "key": "field_ltt_dive_in_end_page_cluster_page_driver_background",
+            "label": "Background",
+            "name": "ltt_dive_in_end_page_cluster_page_driver_background",
+            "type": "select",
+            "instructions": "White uses navy text. Navy uses light text and the dark category tag.",
+            "choices": {
+                "white": "White",
+                "navy": "Navy"
+            },
+            "default_value": "white",
+            "return_format": "value",
+            "ui": 0,
+            "allow_null": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_end_page_cluster_variant",
+                        "operator": "==",
+                        "value": "page_driver"
+                    }
+                ]
+            ]
+        },
+        {
             "key": "field_ltt_dive_in_end_page_cluster_callouts",
             "label": "Callouts",
             "name": "ltt_dive_in_end_page_cluster_callouts",

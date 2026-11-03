@@ -204,6 +204,17 @@
     margin-top: 1.5rem;
 }
 
+/* Navy background (Current Conditions "3 up Page driver with one CTA", 2963:65395 / 2963:65499). */
+.end-page-cluster--page-driver-navy {
+    padding-top: 4rem;
+    background: #073959;
+    color: #f9f9f9;
+}
+
+.end-page-cluster--page-driver-navy .end-page-cluster__tag {
+    font-size: 0.875rem;
+}
+
 /* Content Trail. */
 .end-page-cluster--content-trail .end-page-cluster__header {
     display: flex;
@@ -543,6 +554,25 @@
 
     .end-page-cluster__card-title {
         font-size: 2rem;
+    }
+
+    .end-page-cluster--page-driver-navy {
+        padding-top: 3.125rem;
+    }
+
+    .end-page-cluster--page-driver-navy .end-page-cluster__card {
+        min-height: 18.75rem;
+        padding-inline: 3rem;
+    }
+
+    .end-page-cluster--page-driver-navy .end-page-cluster__card-title {
+        font-size: 1.25rem;
+        letter-spacing: -0.0025em;
+        line-height: normal;
+    }
+
+    .end-page-cluster--page-driver-navy .end-page-cluster__card-body {
+        font-size: 0.75rem;
     }
 
     .end-page-cluster--content-trail .end-page-cluster__header {
