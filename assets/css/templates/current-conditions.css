@@ -475,6 +475,64 @@
 	line-height: 1.8;
 }
 
+/* Related conditions prompts (Figma "3 up Copy/CTA driver: White BG", 2963:65370 / 2963:65473). */
+.current-conditions-links {
+	padding-inline: 8rem;
+	background: #ffffff;
+	color: #073959;
+}
+
+.current-conditions-links__container {
+	display: flex;
+	justify-content: center;
+	gap: 0.625rem;
+	max-width: 80rem;
+	margin-inline: auto;
+}
+
+.current-conditions-links__item {
+	display: flex;
+	flex: 1 1 0;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem;
+	min-width: 0;
+	min-height: 18.75rem;
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.current-conditions-links__copy {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	width: 100%;
+	overflow-wrap: break-word;
+}
+
+.current-conditions-links__title {
+	margin: 0;
+	color: inherit;
+	font-family: "Gotham HTF", Arial, sans-serif;
+	font-size: 1.25rem;
+	font-synthesis: none;
+	font-weight: 500;
+	letter-spacing: -0.0025em;
+	line-height: normal;
+}
+
+.current-conditions-links__text {
+	width: min(100%, 17.5625rem);
+	margin: 0;
+	font-size: 0.75rem;
+	font-synthesis: none;
+	font-weight: 500;
+	line-height: 1.45;
+	text-wrap: pretty;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.current-weather-tile {
 		transition: none;
@@ -482,6 +540,10 @@
 }
 
 @media (max-width: 1199.98px) {
+	.current-conditions-links {
+		padding-inline: 4rem;
+	}
+
 	.current-weather__locations {
 		gap: 1.5rem;
 	}
@@ -517,6 +579,10 @@
 }
 
 @media (max-width: 991.98px) {
+	.current-conditions-links {
+		padding-inline: 2rem;
+	}
+
 	.current-conditions-intro__container {
 		flex-direction: column;
 		gap: 0.75rem;
@@ -557,6 +623,19 @@
 }
 
 @media (max-width: 767.98px) {
+	.current-conditions-links {
+		padding: 1.5rem 1.25rem;
+	}
+
+	.current-conditions-links__container {
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.current-conditions-links__item {
+		min-height: 10.25rem;
+	}
+
 	.current-weather__day {
 		font-size: 1.125rem;
 	}

@@ -182,6 +182,50 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 						),
 					),
 				),
+				array(
+					'key'          => 'field_ltt_dive_in_conditions_links',
+					'label'        => __( 'Related conditions', 'ltt-dive-in' ),
+					'name'         => 'ltt_dive_in_conditions_links',
+					'type'         => 'repeater',
+					'instructions' => __( 'Optional. Up to three prompts shown on a white band below the live module, each pointing to another conditions page. Leave empty to hide the band.', 'ltt-dive-in' ),
+					'min'          => 0,
+					'max'          => 3,
+					'layout'       => 'block',
+					'button_label' => __( 'Add prompt', 'ltt-dive-in' ),
+					'collapsed'    => 'field_ltt_dive_in_conditions_link_title',
+					'sub_fields'   => array(
+						array(
+							'key'          => 'field_ltt_dive_in_conditions_link_title',
+							'label'        => __( 'Heading', 'ltt-dive-in' ),
+							'name'         => 'title',
+							'type'         => 'text',
+							'instructions' => __( 'For example, “Need traffic conditions?”', 'ltt-dive-in' ),
+							'required'     => 1,
+							'maxlength'    => 60,
+							'wrapper'      => array( 'width' => '50' ),
+						),
+						array(
+							'key'          => 'field_ltt_dive_in_conditions_link_text',
+							'label'        => __( 'Text', 'ltt-dive-in' ),
+							'name'         => 'text',
+							'type'         => 'textarea',
+							'instructions' => __( 'Optional. One short sentence.', 'ltt-dive-in' ),
+							'maxlength'    => 120,
+							'rows'         => 2,
+							'new_lines'    => '',
+							'wrapper'      => array( 'width' => '50' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_conditions_link_cta',
+							'label'         => __( 'Button', 'ltt-dive-in' ),
+							'name'          => 'cta',
+							'type'          => 'link',
+							'instructions'  => __( 'Choose the destination page and enter a descriptive button label, such as “Check Conditions” or “Find a Cam”.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'return_format' => 'array',
+						),
+					),
+				),
 			),
 			'location'     => array(
 				array(
@@ -272,6 +316,44 @@ function ltt_dive_in_get_weather_locations( $post_id ) {
 	}
 
 	return $locations;
+}
+
+/**
+ * Get a tab's valid Related conditions prompts.
+ *
+ * A prompt needs a heading and a button with both a label and a valid URL.
+ *
+ * @param int $post_id Tab page ID.
+ * @return array<int, array{title: string, text: string, label: string, url: string, new_tab: bool}>
+ */
+function ltt_dive_in_get_current_conditions_links( $post_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return array();
+	}
+
+	$rows  = get_field( 'ltt_dive_in_conditions_links', $post_id );
+	$links = array();
+
+	foreach ( is_array( $rows ) ? array_slice( $rows, 0, 3 ) : array() as $row ) {
+		$title = isset( $row['title'] ) && is_string( $row['title'] ) ? trim( $row['title'] ) : '';
+		$cta   = isset( $row['cta'] ) && is_array( $row['cta'] ) ? $row['cta'] : array();
+		$label = isset( $cta['title'] ) && is_string( $cta['title'] ) ? trim( $cta['title'] ) : '';
+		$url   = isset( $cta['url'] ) && is_string( $cta['url'] ) ? esc_url_raw( $cta['url'] ) : '';
+
+		if ( '' === $title || '' === $label || '' === $url ) {
+			continue;
+		}
+
+		$links[] = array(
+			'title'   => $title,
+			'text'    => isset( $row['text'] ) && is_string( $row['text'] ) ? trim( $row['text'] ) : '',
+			'label'   => $label,
+			'url'     => $url,
+			'new_tab' => '_blank' === ( $cta['target'] ?? '' ),
+		);
+	}
+
+	return $links;
 }
 
 /**

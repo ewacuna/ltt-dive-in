@@ -34,6 +34,7 @@ if ( 'overlay' === ltt_dive_in_get_page_header_background() ) {
 			<?php
 			if ( $is_tab ) {
 				get_template_part( 'template-parts/sections/current-conditions-feature', null, array( 'post_id' => get_the_ID() ) );
+				get_template_part( 'template-parts/sections/current-conditions-links', null, array( 'post_id' => get_the_ID() ) );
 			}
 
 			get_template_part( 'template-parts/page/content', 'page' );
