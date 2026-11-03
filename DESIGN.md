@@ -536,6 +536,30 @@ Newsletter Sign Up and Meetings Request Contact use Peak Gold (`#EEB040`) for fo
 - **HIGH WINDS and EXTREME HEAT** are exported but are not OpenWeather conditions; they require client-defined thresholds (wind speed and temperature) before the theme can show them. Until then, these two icons are not used.
 - Weather data must include units, update/freshness information, understandable error states, and an accessible non-visual representation.
 
+### Road conditions module — implementation notes
+
+Figma: desktop `2966:67618`, mobile `2966:67805` (file `xRR5x46EumF8Lbvd4zoavZ`). Code: `inc/road-conditions.php` (data), `inc/road-conditions-view.php` (cards), `template-parts/sections/current-road-conditions.php`.
+
+- **Data sources (user decision, 2026-11-03).** California uses the official Caltrans CWWP2 JSON feeds (chain controls, lane closures, CCTV; Districts 3 and 10, no key). It does not use the roads.dot.ca.gov highway text, so entry wording is generated from the feed fields rather than copied from Figma's sample text. Nevada uses Nevada 511, whose developer key is set in Settings → Road Conditions; Nevada cards stay unavailable until the key exists and the real response has been mapped.
+- **Scope.** Only reports inside the roads tab area (center and radius, default Lake Tahoe and 40 miles) are shown. Only closures Caltrans reports as started (code 1097), not ended or cancelled, are shown; planned closures are omitted (user decision, 2026-11-03).
+- **Badge colors (user decisions, 2026-11-03).** Fills are Figma's, and the missing states use theme colors from the provisional system palette (component-scoped, not global tokens). Badge text is white on every status at the user's request, matching Figma. **Known WCAG AA exception:** white on Advisory, No Restrictions, and Chain Controls fails the `4.5:1` normal-text minimum; the text is the only cue besides color, so revisit before launch (for example, `#02162B` text, which passes on those three fills).
+
+  | Status | Fill | White text contrast |
+  | --- | --- | ---: |
+  | Closed | Danger shade 100 `#D50D21` | 5.37:1 |
+  | Chain Controls | Secondary `#EEB040` | 1.92:1 (fails) |
+  | Advisory | Secondary shade 300 `#E1841A` | 2.79:1 (fails) |
+  | No Restrictions | Success shade 100 `#009959` | 3.68:1 (fails) |
+  | No Report | Grey 500 `#6F6D7C` | 5.05:1 |
+
+- **No source line.** The “Source: … Updated …” line was removed at the user's request (2026-11-03); the data is still dropped after one hour without a successful refresh.
+- **Badge label.** Figma's mobile frame says “None” where desktop says “No Restrictions”; both breakpoints use “No Restrictions” so the status does not change meaning with the viewport.
+- **Route signs** are decorative because the card heading names the highway. Each card uses the Media Library image set on its highway (“Route sign”, or “Nevada route sign” under Nevada), otherwise a generic Interstate, U.S. Route, or State Route shape with the number.
+  - Source: Figma “HIGHWAY ICONS - DARK MODE” `3192:48239` (file `sLH1hqyZshTfHq5dI1lBB7`, 2026-11-03), exported unedited as SVG and uploaded to the Media Library as `highway-sign-*.svg` through Safe SVG, which sanitizes SVG uploads (user decision, 2026-11-03: the signs live in the Media Library, not the theme). Files are named by artwork because three layer names are wrong: “HWY CA 268” is SR-4, “HWY CA 88” is SR-28, and “HWY NV 29” is NV 431. State Routes have one file per state (`highway-sign-ca-sr-28.svg`, `highway-sign-nv-sr-28.svg`).
+  - The icon set defines the highways shown (user decision, 2026-11-03): I-80, I-580, US-50, US-395, SR-4, SR-28, SR-89, SR-267, and SR-431. SR-88 was removed because the set has no sign for it.
+  - Every environment needs Safe SVG active to upload the signs, and each sign must be assigned on that environment's Roads page.
+- **Cards are disclosures**, expanded by default as in Figma; details remain visible without JavaScript.
+
 ## Accessibility and inclusive behavior
 
 All implementation must meet the accessibility requirements in `AGENTS.md`, including WCAG 2.2 Level AA. Design-specific requirements include:

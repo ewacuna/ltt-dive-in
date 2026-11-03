@@ -13,7 +13,7 @@ $post_id  = (int) ( $args['post_id'] ?? 0 );
 $image_id = (int) get_post_thumbnail_id( $post_id );
 $module   = ltt_dive_in_get_current_conditions_tab_module( $post_id );
 ?>
-<div class="current-conditions-feature<?php echo $module['module'] ? ' current-conditions-feature--has-module' : ''; ?>">
+<div class="current-conditions-feature<?php echo $module['module'] ? ' current-conditions-feature--has-module current-conditions-feature--' . esc_attr( $module['module'] ) : ''; ?>">
 	<?php
 	if ( $image_id ) {
 		echo wp_get_attachment_image(
@@ -41,6 +41,8 @@ $module   = ltt_dive_in_get_current_conditions_tab_module( $post_id );
 
 	if ( 'weather' === $module['module'] ) {
 		get_template_part( 'template-parts/sections/current-weather', null, $module );
+	} elseif ( 'roads' === $module['module'] ) {
+		get_template_part( 'template-parts/sections/current-road-conditions', null, $module );
 	}
 	?>
 </div>

@@ -103,6 +103,16 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 		),
 	);
 
+	$roads_only = array(
+		array(
+			array(
+				'field'    => 'field_ltt_dive_in_conditions_tab_module',
+				'operator' => '==',
+				'value'    => 'roads',
+			),
+		),
+	);
+
 	acf_add_local_field_group(
 		array(
 			'key'          => 'group_ltt_dive_in_current_conditions_tab',
@@ -118,6 +128,7 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 					'choices'       => array(
 						''        => __( 'None', 'ltt-dive-in' ),
 						'weather' => __( 'Current weather', 'ltt-dive-in' ),
+						'roads'   => __( 'Road conditions', 'ltt-dive-in' ),
 					),
 					'default_value' => '',
 					'return_format' => 'value',
@@ -179,6 +190,193 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 							'max'          => 15000,
 							'step'         => 1,
 							'wrapper'      => array( 'width' => '20' ),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_roads_area_center_latitude',
+					'label'             => __( 'Area center latitude', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_roads_area_center_latitude',
+					'type'              => 'number',
+					'instructions'      => __( 'Road reports, closures, and cameras are shown only within the radius below. Decimal degrees; the default is the middle of Lake Tahoe.', 'ltt-dive-in' ),
+					'default_value'     => LTT_DIVE_IN_ROADS_DEFAULT_LATITUDE,
+					'min'               => -90,
+					'max'               => 90,
+					'step'              => 'any',
+					'wrapper'           => array( 'width' => '33' ),
+					'conditional_logic' => $roads_only,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_roads_area_center_longitude',
+					'label'             => __( 'Area center longitude', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_roads_area_center_longitude',
+					'type'              => 'number',
+					'instructions'      => __( 'Decimal degrees, for example -120.0324.', 'ltt-dive-in' ),
+					'default_value'     => LTT_DIVE_IN_ROADS_DEFAULT_LONGITUDE,
+					'min'               => -180,
+					'max'               => 180,
+					'step'              => 'any',
+					'wrapper'           => array( 'width' => '33' ),
+					'conditional_logic' => $roads_only,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_roads_area_radius',
+					'label'             => __( 'Area radius (miles)', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_roads_area_radius',
+					'type'              => 'number',
+					'instructions'      => __( 'How far from the center a report may be. Larger values include more of each highway.', 'ltt-dive-in' ),
+					'default_value'     => LTT_DIVE_IN_ROADS_DEFAULT_RADIUS,
+					'min'               => 5,
+					'max'               => 150,
+					'step'              => 1,
+					'wrapper'           => array( 'width' => '33' ),
+					'conditional_logic' => $roads_only,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_roads_highways',
+					'label'             => __( 'Highways', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_roads_highways',
+					'type'              => 'repeater',
+					'instructions'      => __( 'Each highway becomes a card and an option in “Filter Highway”, in this order. Only reports inside the area above are listed.', 'ltt-dive-in' ),
+					'required'          => 1,
+					'min'               => 1,
+					'max'               => 12,
+					'layout'            => 'block',
+					'button_label'      => __( 'Add highway', 'ltt-dive-in' ),
+					'collapsed'         => 'field_ltt_dive_in_roads_highway_name',
+					'conditional_logic' => $roads_only,
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_ltt_dive_in_roads_highway_shield',
+							'label'         => __( 'Route type', 'ltt-dive-in' ),
+							'name'          => 'shield',
+							'type'          => 'select',
+							'instructions'  => __( 'Sets the route sign and the reports matched to the card.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'choices'       => array(
+								'interstate' => __( 'Interstate (I-)', 'ltt-dive-in' ),
+								'us'         => __( 'U.S. Route (US-)', 'ltt-dive-in' ),
+								'state'      => __( 'State Route (SR-)', 'ltt-dive-in' ),
+							),
+							'default_value' => 'state',
+							'return_format' => 'value',
+							'wrapper'       => array( 'width' => '25' ),
+						),
+						array(
+							'key'      => 'field_ltt_dive_in_roads_highway_number',
+							'label'    => __( 'Route number', 'ltt-dive-in' ),
+							'name'     => 'number',
+							'type'     => 'number',
+							'required' => 1,
+							'min'      => 1,
+							'max'      => 999,
+							'step'     => 1,
+							'wrapper'  => array( 'width' => '15' ),
+						),
+						array(
+							'key'          => 'field_ltt_dive_in_roads_highway_name',
+							'label'        => __( 'Name', 'ltt-dive-in' ),
+							'name'         => 'name',
+							'type'         => 'text',
+							'instructions' => __( 'For example, “Interstate 80” or “Highway 50”.', 'ltt-dive-in' ),
+							'required'     => 1,
+							'maxlength'    => 40,
+							'wrapper'      => array( 'width' => '30' ),
+						),
+						array(
+							'key'          => 'field_ltt_dive_in_roads_highway_subtitle',
+							'label'        => __( 'Subtitle', 'ltt-dive-in' ),
+							'name'         => 'subtitle',
+							'type'         => 'text',
+							'instructions' => __( 'Optional. For example, “Sacramento to Truckee / Donner”.', 'ltt-dive-in' ),
+							'maxlength'    => 60,
+							'wrapper'      => array( 'width' => '30' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_roads_highway_states',
+							'label'         => __( 'Show under', 'ltt-dive-in' ),
+							'name'          => 'states',
+							'type'          => 'checkbox',
+							'instructions'  => __( 'Choose both for highways that cross the state line, such as US-50.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'choices'       => array(
+								'california' => __( 'California', 'ltt-dive-in' ),
+								'nevada'     => __( 'Nevada', 'ltt-dive-in' ),
+							),
+							'default_value' => array( 'california' ),
+							'layout'        => 'horizontal',
+							'return_format' => 'value',
+							'wrapper'       => array( 'width' => '30' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_roads_highway_sign',
+							'label'         => __( 'Route sign', 'ltt-dive-in' ),
+							'name'          => 'sign',
+							'type'          => 'image',
+							'instructions'  => __( 'Optional. The route sign from the Media Library: an SVG (sanitized by Safe SVG), or a transparent PNG or WebP about 124 px wide. Leave empty to show a generic sign for the route type and number. The sign is decorative, so its alt text is not read on this page.', 'ltt-dive-in' ),
+							'return_format' => 'id',
+							'preview_size'  => 'thumbnail',
+							'library'       => 'all',
+							'mime_types'    => 'png,webp,svg',
+							'wrapper'       => array( 'width' => '35' ),
+						),
+						array(
+							'key'               => 'field_ltt_dive_in_roads_highway_sign_nevada',
+							'label'             => __( 'Nevada route sign', 'ltt-dive-in' ),
+							'name'              => 'sign_nevada',
+							'type'              => 'image',
+							'instructions'      => __( 'Optional. Shown under Nevada when the state uses a different sign, such as SR-28. Leave empty to use the route sign above.', 'ltt-dive-in' ),
+							'return_format'     => 'id',
+							'preview_size'      => 'thumbnail',
+							'library'           => 'all',
+							'mime_types'        => 'png,webp,svg',
+							'wrapper'           => array( 'width' => '35' ),
+							'conditional_logic' => array(
+								array(
+									array(
+										'field'    => 'field_ltt_dive_in_roads_highway_states',
+										'operator' => '==',
+										'value'    => 'nevada',
+									),
+								),
+							),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_roads_highway_camera_mode',
+							'label'         => __( 'Cameras', 'ltt-dive-in' ),
+							'name'          => 'camera_mode',
+							'type'          => 'button_group',
+							'instructions'  => __( 'Automatic shows the nearest camera on this highway beside each report.', 'ltt-dive-in' ),
+							'choices'       => array(
+								'auto'   => __( 'Automatic', 'ltt-dive-in' ),
+								'manual' => __( 'Choose', 'ltt-dive-in' ),
+								'none'   => __( 'None', 'ltt-dive-in' ),
+							),
+							'default_value' => 'auto',
+							'return_format' => 'value',
+							'wrapper'       => array( 'width' => '30' ),
+						),
+						array(
+							'key'               => 'field_ltt_dive_in_roads_highway_cameras',
+							'label'             => __( 'Chosen cameras', 'ltt-dive-in' ),
+							'name'              => 'cameras',
+							'type'              => 'select',
+							'instructions'      => __( 'Cameras inside the area, from the latest provider data. The nearest chosen camera is shown beside each report.', 'ltt-dive-in' ),
+							'choices'           => array(),
+							'multiple'          => 1,
+							'ui'                => 1,
+							'allow_null'        => 1,
+							'return_format'     => 'value',
+							'wrapper'           => array( 'width' => '40' ),
+							'conditional_logic' => array(
+								array(
+									array(
+										'field'    => 'field_ltt_dive_in_roads_highway_camera_mode',
+										'operator' => '==',
+										'value'    => 'manual',
+									),
+								),
+							),
 						),
 					),
 				),
@@ -254,10 +452,17 @@ add_action( 'acf/init', 'ltt_dive_in_register_current_conditions_tab_fields' );
  * Resolve the live module and its settings for a Current Conditions tab.
  *
  * @param int $post_id Tab page ID.
- * @return array{module: string, locations?: array, active?: string, view?: string} Empty module when nothing should render.
+ * @return array Module settings: `module` is `weather`, `roads`, or empty when nothing should render.
+ *               Weather adds locations, active, and view; roads adds the values from ltt_dive_in_get_road_conditions_module().
  */
 function ltt_dive_in_get_current_conditions_tab_module( $post_id ) {
-	if ( ! function_exists( 'get_field' ) || 'weather' !== get_field( 'ltt_dive_in_conditions_tab_module', $post_id ) ) {
+	$module = function_exists( 'get_field' ) ? get_field( 'ltt_dive_in_conditions_tab_module', $post_id ) : '';
+
+	if ( 'roads' === $module ) {
+		return ltt_dive_in_get_road_conditions_module( $post_id );
+	}
+
+	if ( 'weather' !== $module ) {
 		return array( 'module' => '' );
 	}
 
