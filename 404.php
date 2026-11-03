@@ -5,9 +5,19 @@
  * @package LTT_Dive_In
  */
 
+$background_config = ltt_dive_in_get_error_background_config( '404' );
+
 get_header();
 ?>
-<main id="primary" class="site-main ltt-error-page ltt-error-page--404">
+<main id="primary" class="site-main ltt-error-page ltt-error-page--404"
+	<?php if ( $background_config['images'] ) : ?>
+		data-background-images
+		data-background-interval="<?php echo esc_attr( $background_config['interval'] ); ?>"
+	<?php endif; ?>
+>
+	<?php if ( $background_config['images'] ) : ?>
+		<?php get_template_part( 'template-parts/components/error-background', null, array( 'images' => $background_config['images'] ) ); ?>
+	<?php endif; ?>
 	<div class="ltt-error-page__intro">
 		<h1 class="ltt-error-page__title"><?php esc_html_e( 'You dove in too deep...', 'ltt-dive-in' ); ?></h1>
 	</div>

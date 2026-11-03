@@ -13,10 +13,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $camera_embed_url  = ltt_dive_in_get_maintenance_camera_url( 'embed' );
 $camera_public_url = ltt_dive_in_get_maintenance_camera_url( 'public' );
+$background_config = ltt_dive_in_get_error_background_config( '503' );
 
 get_header();
 ?>
-<main id="primary" class="site-main ltt-error-page ltt-error-page--503">
+<main id="primary" class="site-main ltt-error-page ltt-error-page--503"
+	<?php if ( $background_config['images'] ) : ?>
+		data-background-images
+		data-background-interval="<?php echo esc_attr( $background_config['interval'] ); ?>"
+	<?php endif; ?>
+>
+	<?php if ( $background_config['images'] ) : ?>
+		<?php get_template_part( 'template-parts/components/error-background', null, array( 'images' => $background_config['images'] ) ); ?>
+	<?php endif; ?>
 	<div class="ltt-error-page__intro">
 		<h1 class="ltt-error-page__title"><?php esc_html_e( 'Great things are on the horizon...', 'ltt-dive-in' ); ?></h1>
 	</div>

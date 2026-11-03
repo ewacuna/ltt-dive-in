@@ -124,14 +124,22 @@ function ltt_dive_in_enqueue_assets() {
 	);
 
 	if ( is_404() || $is_503_view ) {
+		$error_background_config = ltt_dive_in_get_error_background_config( $is_503_view ? '503' : '404' );
+		$has_background_carousel = count( $error_background_config['images'] ) > 1;
 		$error_component_path = LTT_DIVE_IN_DIR . '/assets/css/components/error-page.css';
+		$error_background_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/error-background.js';
 		$error_template       = $is_503_view ? '503' : '404';
 		$error_template_path  = LTT_DIVE_IN_DIR . '/assets/css/templates/' . $error_template . '.css';
+		$error_style_deps     = array( 'ltt-dive-in-style', 'ltt-dive-in-search-bar' );
+
+		if ( $has_background_carousel ) {
+			$error_style_deps[] = 'ltt-dive-in-swiper';
+		}
 
 		wp_enqueue_style(
 			'ltt-dive-in-error-page',
 			LTT_DIVE_IN_URI . '/assets/css/components/error-page.css',
-			array( 'ltt-dive-in-style', 'ltt-dive-in-search-bar' ),
+			$error_style_deps,
 			file_exists( $error_component_path ) ? (string) filemtime( $error_component_path ) : LTT_DIVE_IN_VERSION
 		);
 		wp_enqueue_style(
@@ -140,6 +148,18 @@ function ltt_dive_in_enqueue_assets() {
 			array( 'ltt-dive-in-error-page' ),
 			file_exists( $error_template_path ) ? (string) filemtime( $error_template_path ) : LTT_DIVE_IN_VERSION
 		);
+		if ( $error_background_config['images'] ) {
+			wp_enqueue_script(
+				'ltt-dive-in-error-background',
+				LTT_DIVE_IN_URI . '/assets/js/components/error-background.js',
+				$has_background_carousel ? array( 'ltt-dive-in-swiper' ) : array(),
+				file_exists( $error_background_script_path ) ? (string) filemtime( $error_background_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
+		}
 	}
 
 	if ( is_404() && ! $is_503_view ) {

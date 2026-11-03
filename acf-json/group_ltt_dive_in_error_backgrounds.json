@@ -1,0 +1,84 @@
+{
+  "key": "group_ltt_dive_in_error_backgrounds",
+  "title": "Choose Images and Timing",
+  "fields": [
+    {
+      "key": "field_ltt_dive_in_error_404_section",
+      "label": "Page Not Found",
+      "name": "",
+      "type": "accordion",
+      "instructions": "",
+      "open": 1,
+      "multi_expand": 0
+    },
+    {
+      "key": "field_ltt_dive_in_error_404_background_images",
+      "label": "Background images",
+      "name": "ltt_dive_in_error_404_background_images",
+      "type": "gallery",
+      "instructions": "Choose up to 10 images. Drag them into the order you want. Leave empty to use the default background. Check that text stays readable over each image.",
+      "required": 0,
+      "min": 0,
+      "max": 10,
+      "library": "all",
+      "return_format": "id",
+      "mime_types": "jpg,jpeg,png,webp",
+      "preview_size": "medium"
+    },
+    {
+      "key": "field_ltt_dive_in_error_404_interval_seconds",
+      "label": "Change image every (seconds)",
+      "name": "ltt_dive_in_error_404_interval_seconds",
+      "type": "number",
+      "instructions": "Used when there are two or more images.",
+      "required": 0,
+      "default_value": 10,
+      "min": 5,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "key": "field_ltt_dive_in_error_503_section",
+      "label": "Maintenance Page",
+      "name": "",
+      "type": "accordion",
+      "instructions": "",
+      "open": 0,
+      "multi_expand": 0
+    },
+    {
+      "key": "field_ltt_dive_in_error_503_background_images",
+      "label": "Background images",
+      "name": "ltt_dive_in_error_503_background_images",
+      "type": "gallery",
+      "instructions": "Choose up to 10 images. Drag them into the order you want. Leave empty to use the default background. Check that text stays readable over each image.",
+      "required": 0,
+      "min": 0,
+      "max": 10,
+      "library": "all",
+      "return_format": "id",
+      "mime_types": "jpg,jpeg,png,webp",
+      "preview_size": "medium"
+    },
+    {
+      "key": "field_ltt_dive_in_error_503_interval_seconds",
+      "label": "Change image every (seconds)",
+      "name": "ltt_dive_in_error_503_interval_seconds",
+      "type": "number",
+      "instructions": "Used when there are two or more images.",
+      "required": 0,
+      "default_value": 10,
+      "min": 5,
+      "max": 60,
+      "step": 1
+    }
+  ],
+  "location": [[{"param": "options_page", "operator": "==", "value": "ltt-dive-in-error-backgrounds"}]],
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "active": true,
+  "show_in_rest": 0,
+  "modified": 1793678400
+}
