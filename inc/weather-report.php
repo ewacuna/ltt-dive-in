@@ -291,11 +291,11 @@ function ltt_dive_in_normalize_weather_condition( $weather ) {
 }
 
 /**
- * Resolve the Figma weather icon for an OpenWeather condition.
+ * Resolve the theme weather icon for an OpenWeather condition.
  *
- * Icons come from the Figma "ICON - PACKAGE 1" weather set: `full-color` and
+ * Icons come from assets/images/icons/weather/: `full-color` and
  * `dark-mode` (white) for dark surfaces, `light-mode` (navy) for light surfaces.
- * Conditions without a Figma icon use OpenWeather's own icon:
+ * Conditions without a theme icon use OpenWeather's own icon:
  * - Mist, smoke, haze, dust, fog, sand, and ash (701–762); smoke and haze are
  *   the wildfire-season conditions and the highest-priority missing icons.
  * - Squalls (771) and tornadoes (781).

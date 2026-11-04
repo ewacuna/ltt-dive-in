@@ -1,6 +1,6 @@
 <?php
 /**
- * Current Conditions tab: Related conditions prompts (Figma "3 up Copy/CTA driver: White BG").
+ * Current Conditions tab: Related conditions prompts.
  *
  * @package LTT_Dive_In
  */

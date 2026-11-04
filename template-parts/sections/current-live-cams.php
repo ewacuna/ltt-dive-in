@@ -2,8 +2,7 @@
 /**
  * Current Conditions live-cameras module: a heading, description, and linked image per camera.
  *
- * Figma "LIVE RESOURCES" (Lake Cam 2970:69156, Mountain Cam 2970:69162) shows a
- * third-party player. The theme shows the newest downloaded image from the
+ * The theme shows the newest downloaded image from the
  * camera's latest-image URL (inc/live-cams.php) or, without one, the editor's
  * still. The image links to the live feed and shows the Video Module play
  * icon on hover and focus (always on touch and small screens). The still's
