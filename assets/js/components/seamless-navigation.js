@@ -46,11 +46,62 @@
 		} );
 	};
 
+	const styleSelector = 'link[rel="stylesheet"][id], style[id]';
+
+	/*
+	 * Pages share most stylesheets, but WordPress enqueues block and template
+	 * styles per page. Add the ones the fetched page needs and this document
+	 * lacks, each after its predecessor in the fetched page so the cascade
+	 * order matches a full load, and wait for them before swapping content.
+	 */
+	const syncStyles = function ( next ) {
+		const pending = [];
+		let previous = null;
+
+		next.querySelectorAll( styleSelector ).forEach( function ( element ) {
+			const current = document.getElementById( element.id );
+
+			if ( current ) {
+				previous = current;
+				return;
+			}
+
+			const node = document.importNode( element, true );
+
+			if ( 'LINK' === node.tagName ) {
+				pending.push( new Promise( function ( resolve ) {
+					node.addEventListener( 'load', resolve, { once: true } );
+					node.addEventListener( 'error', resolve, { once: true } );
+				} ) );
+			}
+
+			if ( previous && previous.parentNode ) {
+				previous.after( node );
+			} else {
+				document.head.appendChild( node );
+			}
+			previous = node;
+		} );
+
+		if ( ! pending.length ) {
+			return Promise.resolve();
+		}
+
+		// A stalled stylesheet must not block navigation.
+		return Promise.race( [
+			Promise.all( pending ),
+			new Promise( function ( resolve ) {
+				window.setTimeout( resolve, 3000 );
+			} ),
+		] );
+	};
+
 	const load = async function ( url, push ) {
 		if ( controller ) {
 			controller.abort();
 		}
 		controller = new AbortController();
+		const signal = controller.signal;
 
 		const content = document.getElementById( 'page-content' );
 		if ( content ) {
@@ -61,7 +112,7 @@
 			const response = await fetch( url, {
 				credentials: 'same-origin',
 				headers: { Accept: 'text/html' },
-				signal: controller.signal,
+				signal: signal,
 			} );
 			if ( ! response.ok || response.redirected ) {
 				throw new Error( 'Full navigation required.' );
@@ -80,6 +131,12 @@
 				return ! pair[ 0 ] || ! pair[ 1 ];
 			} ) ) {
 				throw new Error( 'Full navigation required.' );
+			}
+
+			await syncStyles( next );
+			// A newer navigation started while the styles loaded; it owns the page now.
+			if ( signal.aborted ) {
+				return;
 			}
 
 			pairs.forEach( function ( pair ) {
