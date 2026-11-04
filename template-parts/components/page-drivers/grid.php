@@ -5,6 +5,10 @@
  * @package LTT_Dive_In
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
+
 $section_id   = ! empty( $args['id'] ) ? sanitize_html_class( $args['id'] ) : wp_unique_id( 'page-drivers-' );
 $class_name   = ! empty( $args['class_name'] ) ? sanitize_html_class( $args['class_name'] ) : '';
 $layout       = isset( $args['layout'] ) && is_string( $args['layout'] ) ? $args['layout'] : 'one_up';
@@ -17,6 +21,10 @@ $tiles        = isset( $args['tiles'] ) && is_array( $args['tiles'] ) ? $args['t
 $filters      = isset( $args['filters'] ) && is_array( $args['filters'] ) ? $args['filters'] : array();
 $is_carousel  = in_array( $layout, array( 'six_plus_up', 'monthly' ), true );
 $is_monthly   = 'monthly' === $layout;
+$group_mode   = ! empty( $args['group_mode'] ) && ! $is_carousel;
+$navigation   = $group_mode && isset( $args['navigation'] ) ? $args['navigation'] : array();
+$active_term  = $navigation['selected'] ?? 0;
+$visible_count = $group_mode ? count( array_filter( $tiles, static function ( $tile ) use ( $active_term ) { return in_array( $active_term, $tile['terms'], true ); } ) ) : count( $tiles );
 
 if ( ! $heading || ! $tiles ) {
 	return;
@@ -118,7 +126,7 @@ if ( $is_monthly ) {
 	}
 }
 ?>
-<section id="<?php echo esc_attr( $section_id ); ?>" class="page-drivers page-drivers--<?php echo esc_attr( str_replace( '_', '-', $layout ) ); ?> page-drivers--<?php echo esc_attr( $surface ); ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" aria-labelledby="<?php echo esc_attr( $heading_id ); ?>" data-page-driver>
+<section id="<?php echo esc_attr( $section_id ); ?>" class="page-drivers page-drivers--<?php echo esc_attr( str_replace( '_', '-', $layout ) ); ?> page-drivers--<?php echo esc_attr( $surface ); ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" aria-labelledby="<?php echo esc_attr( $heading_id ); ?>" data-page-driver<?php echo $group_mode ? ' data-page-driver-group-mode="true"' : ''; ?>>
 	<div class="page-drivers__container">
 		<header class="page-drivers__header">
 			<?php if ( $tag ) : ?>
@@ -155,7 +163,16 @@ if ( $is_monthly ) {
 					<a class="page-drivers__month-link" href="#<?php echo esc_attr( $section_id . '-tile-' . $option['target_id'] ); ?>"><?php echo esc_html( $option['label'] ); ?></a>
 				<?php endforeach; ?>
 			</nav>
-		<?php elseif ( $filters ) : ?>
+		<?php elseif ( $group_mode && count( $filters ) > 1 ) : ?>
+			<nav class="page-drivers__filters" aria-label="<?php
+				/* translators: %s: section heading. */
+				echo esc_attr( sprintf( __( 'Filter destinations: %s', 'ltt-dive-in' ), $heading ) );
+			?>">
+				<?php foreach ( $filters as $term ) : ?>
+					<a class="page-drivers__filter<?php echo $active_term === $term->term_id ? ' is-selected' : ''; ?>" href="<?php echo esc_url( $navigation['links'][ $term->term_id ] ); ?>"<?php echo $active_term === $term->term_id ? ' aria-current="true"' : ''; ?> aria-controls="<?php echo esc_attr( $section_id . '-tiles' ); ?>" data-page-driver-filter="<?php echo esc_attr( $term->term_id ); ?>"><?php echo esc_html( $term->name ); ?></a>
+				<?php endforeach; ?>
+			</nav>
+		<?php elseif ( ! $group_mode && $filters ) : ?>
 			<div class="page-drivers__filters" role="group" aria-label="<?php esc_attr_e( 'Filter destinations', 'ltt-dive-in' ); ?>">
 				<button class="page-drivers__filter is-selected" type="button" aria-pressed="true" data-page-driver-filter="all"><?php esc_html_e( 'All', 'ltt-dive-in' ); ?></button>
 				<?php foreach ( $filters as $term ) : ?>
@@ -164,13 +181,18 @@ if ( $is_monthly ) {
 			</div>
 		<?php endif; ?>
 
-		<p id="<?php echo esc_attr( $status_id ); ?>" class="screen-reader-text" aria-live="polite" data-page-driver-status></p>
+		<p id="<?php echo esc_attr( $status_id ); ?>" class="screen-reader-text" aria-live="polite" data-page-driver-status><?php
+			if ( $group_mode ) {
+				/* translators: %d: visible destination count. */
+				echo esc_html( ( $navigation['label'] ?? '' ) . ': ' . sprintf( _n( '%d destination shown.', '%d destinations shown.', $visible_count, 'ltt-dive-in' ), $visible_count ) );
+			}
+		?></p>
 
 		<?php if ( $is_carousel ) : ?>
 			<div class="page-drivers__carousel" data-page-driver-carousel>
 				<div class="page-drivers__carousel-viewport swiper">
 		<?php endif; ?>
-		<div id="<?php echo esc_attr( $section_id ); ?>-tiles" class="page-drivers__grid<?php echo $is_carousel ? ' swiper-wrapper' : ''; ?>" data-page-driver-grid aria-describedby="<?php echo esc_attr( $status_id ); ?>">
+		<div id="<?php echo esc_attr( $section_id ); ?>-tiles" class="page-drivers__grid<?php echo $is_carousel ? ' swiper-wrapper' : ( $group_mode ? ' is-filtered' : '' ); ?>"<?php echo $group_mode && $visible_count <= 3 ? ' data-visible-count="' . esc_attr( $visible_count ) . '"' : ''; ?> data-page-driver-grid aria-describedby="<?php echo esc_attr( $status_id ); ?>">
 			<?php foreach ( $tiles as $tile ) : ?>
 				<?php
 				$tile_id     = isset( $tile['id'] ) ? absint( $tile['id'] ) : 0;
@@ -178,13 +200,14 @@ if ( $is_monthly ) {
 				$image_id    = isset( $tile['image'] ) ? absint( $tile['image'] ) : 0;
 				$terms       = isset( $tile['terms'] ) && is_array( $tile['terms'] ) ? array_map( 'absint', $tile['terms'] ) : array();
 				$month_terms = $is_monthly ? array_values( array_intersect( array_keys( $month_options ), $terms ) ) : array();
-				$tile_anchor = $is_monthly ? $section_id . '-tile-' . $tile_id : '';
+				$tile_anchor = $is_monthly ? $section_id . '-tile-' . $tile_id : ( $group_mode ? $section_id . '-filter-' . ( $terms[0] ?? 0 ) . '-tile-' . $tile_id : '' );
+				$tile_hidden = $group_mode && ! in_array( $active_term, $terms, true );
 
 				if ( ! $tile_id || ! $tile_title || ! $image_id ) {
 					continue;
 				}
 				?>
-				<article<?php echo $tile_anchor ? ' id="' . esc_attr( $tile_anchor ) . '"' : ''; ?> class="page-drivers__card<?php echo $is_carousel ? ' swiper-slide' : ''; ?>" data-page-driver-card data-page-driver-terms="<?php echo esc_attr( implode( ' ', $terms ) ); ?>"<?php echo $is_monthly ? ' data-page-driver-month-terms="' . esc_attr( implode( ' ', $month_terms ) ) . '"' : ''; ?>>
+				<article<?php echo $tile_anchor ? ' id="' . esc_attr( $tile_anchor ) . '"' : ''; ?><?php echo $tile_hidden ? ' hidden' : ''; ?> class="page-drivers__card<?php echo $is_carousel ? ' swiper-slide' : ''; ?>" data-page-driver-card data-page-driver-terms="<?php echo esc_attr( implode( ' ', $terms ) ); ?>"<?php echo $is_monthly ? ' data-page-driver-month-terms="' . esc_attr( implode( ' ', $month_terms ) ) . '"' : ''; ?>>
 					<a class="page-drivers__card-link" href="<?php echo esc_url( get_permalink( $tile_id ) ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Explore %s', 'ltt-dive-in' ), $tile_title ) ); ?>">
 						<span class="page-drivers__media" aria-hidden="true">
 							<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>

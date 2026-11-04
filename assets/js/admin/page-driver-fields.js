@@ -9,6 +9,12 @@
 	const editorSettings = window.ltt_dive_in_page_driver_editor || {};
 	const layoutCounts = editorSettings.tileLimits || {};
 	const savingLockKey = 'ltt-dive-in-up-driver-tile-count';
+	const isGroupMode = function ( $fields ) {
+		const layout = $fields.find( '[data-key="' + layoutKey + '"] select' ).val();
+		return [ 'one_up', 'two_up', 'three_up', 'four_up', 'five_up' ].includes( layout ) &&
+			$fields.find( '[data-key="' + toggleKey + '"] input[type="checkbox"]' ).prop( 'checked' ) &&
+			$fields.find( '[data-key="field_ltt_dive_in_page_driver_cards_per_filter"] input[type="checkbox"]' ).prop( 'checked' );
+	};
 
 	const syncSavingLock = function () {
 		if ( ! window.wp || ! window.wp.data ) {
@@ -28,7 +34,7 @@
 			const tilesField = fields && fields.querySelector( '[data-key="' + tilesKey + '"]' );
 			const selectedCount = tilesField ? tilesField.querySelectorAll( '.values-list .acf-rel-item' ).length : 0;
 
-			return limits && ( selectedCount < limits.min || selectedCount > limits.max );
+			return ! isGroupMode( $( fields ) ) && limits && ( selectedCount < limits.min || selectedCount > limits.max );
 		} );
 
 		const hasInvalidFilterCoverage = document.querySelector( '[data-key="' + termsKey + '"][data-ltt-dive-in-filter-coverage-invalid="true"]' );
@@ -51,6 +57,11 @@
 	const updateTileLimits = function ( $layoutField ) {
 		const $fields = $layoutField.closest( '.acf-fields' );
 		const $tilesField = $fields.find( '[data-key="' + tilesKey + '"]' );
+		if ( isGroupMode( $fields ) ) {
+			$tilesField.find( '.ltt-dive-in-page-driver-count-error' ).remove();
+			syncSavingLock();
+			return;
+		}
 		const layout = $layoutField.find( 'select' ).val();
 		const limits = layoutCounts[ layout ];
 		const relationshipField = acf.getField( $tilesField );
@@ -67,7 +78,7 @@
 		let message = ( editorSettings.selectPages || 'Select ' ) + limits.label + '.';
 
 		if ( selectedCount && ! isValid ) {
-			message += ' ' + ( editorSettings.currentlySelected || 'Currently selected: ' ) + selectedCount + '.';
+			message += ' ' + ( editorSettings.currentlySelected || 'Selected: ' ) + selectedCount + '.';
 		}
 
 		let $notice = $tilesField.find( '.ltt-dive-in-page-driver-count-notice' );
@@ -126,7 +137,7 @@
 		const taxonomy = $fields.find( '[data-key="' + taxonomyKey + '"] select' ).val();
 		const count = $termsField.find( 'input[type="checkbox"]:checked' ).length;
 
-		if ( ! filtersEnabled || 'monthly' === layout || ! taxonomy ) {
+		if ( isGroupMode( $fields ) || ! filtersEnabled || 'monthly' === layout || ! taxonomy ) {
 			clearFilterValueCount( $termsField );
 			return;
 		}
@@ -142,7 +153,7 @@
 				$termsField.find( '.acf-input' ).append( $error );
 			}
 
-			$error.find( 'p' ).text( editorSettings.filterValueCount || 'Choose between two and five filter values.' );
+			$error.find( 'p' ).text( editorSettings.filterValueCount || 'Choose 2–5 filters.' );
 		} else {
 			$error.remove();
 		}
@@ -157,7 +168,7 @@
 		const terms = $termsField.find( 'input[type="checkbox"]:checked' ).map( function () { return this.value; } ).get();
 		const tiles = $fields.find( '[data-key="' + tilesKey + '"] .values-list .acf-rel-item' ).map( function () { return $( this ).data( 'id' ); } ).get();
 
-		if ( ! filtersEnabled || ! taxonomy || ! terms.length ) {
+		if ( isGroupMode( $fields ) || ! filtersEnabled || ! taxonomy || ! terms.length ) {
 			clearFilterCoverage( $termsField );
 			return;
 		}
@@ -190,7 +201,7 @@
 					$termsField.find( '.acf-input' ).append( $error );
 				}
 
-				$error.find( 'p' ).text( ( editorSettings.filtersWithoutPages || 'These filter values are not assigned to any selected hub page: ' ) + uncoveredNames.join( ', ' ) + '.' );
+				$error.find( 'p' ).text( ( editorSettings.filtersWithoutPages || 'Choose a page for each of these filters: ' ) + uncoveredNames.join( ', ' ) + '.' );
 			} else {
 				$error.remove();
 			}
@@ -202,10 +213,17 @@
 	const updateTerms = function ( $taxonomyField, resetSelection ) {
 		const $fields = $taxonomyField.closest( '.acf-fields' );
 		const $termsField = $fields.find( '[data-key="' + termsKey + '"]' );
+		if ( isGroupMode( $fields ) ) {
+			clearFilterCoverage( $termsField );
+			clearFilterValueCount( $termsField );
+			return;
+		}
 		const taxonomy = $taxonomyField.find( 'select' ).val();
 		const $checkboxes = $termsField.find( 'input[type="checkbox"]' );
 		const selected = resetSelection ? [] : $checkboxes.filter( ':checked' ).map( function () { return this.value; } ).get();
 		const name = getInputName( $termsField );
+		const previousLabels = {};
+		$checkboxes.each( function () { previousLabels[ this.value ] = $( this ).closest( 'label' ).text().trim(); } );
 
 		if ( ! $termsField.length || ! name ) {
 			return;
@@ -243,6 +261,11 @@
 
 			const inputName = name.replace( /\[\]$/, '' );
 			const terms = response.data || {};
+			selected.forEach( function ( id ) {
+				if ( ! Object.prototype.hasOwnProperty.call( terms, id ) ) {
+					terms[ id ] = previousLabels[ id ] || id;
+				}
+			} );
 			let html = '<input type="hidden" name="' + inputName + '" value="">';
 
 			if ( Object.keys( terms ).length ) {
@@ -279,6 +302,15 @@
 			updateFilterCoverage( $( this ) );
 			updateFilterValueCount( $( this ) );
 		} );
+	} );
+
+	$( document ).on( 'ltt:page-driver-mode', function ( event, $fields ) {
+		updateTileLimits( $fields.find( '[data-key="' + layoutKey + '"]' ) );
+		updateFilterValueCount( $fields.find( '[data-key="' + termsKey + '"]' ) );
+		updateFilterCoverage( $fields.find( '[data-key="' + termsKey + '"]' ) );
+		if ( ! isGroupMode( $fields ) ) {
+			updateTerms( $fields.find( '[data-key="' + taxonomyKey + '"]' ), false );
+		}
 	} );
 
 	acf.addAction( 'remove', function () {

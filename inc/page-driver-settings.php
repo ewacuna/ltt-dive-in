@@ -105,14 +105,40 @@ add_action( 'wp_ajax_ltt_dive_in_page_driver_filter_coverage', 'ltt_dive_in_get_
  * Get a submitted ACF value by field key during validation.
  *
  * @param string $field_key ACF field key.
+ * @param string $input     Input path identifying the owning block.
  * @return mixed
  */
-function ltt_dive_in_get_page_driver_submitted_value( $field_key ) {
-	if ( empty( $_POST['acf'] ) || ! is_array( $_POST['acf'] ) ) {
-		return null;
+function ltt_dive_in_get_page_driver_submitted_value( $field_key, $input = '' ) {
+	$values = isset( $_POST['acf'] ) && is_array( $_POST['acf'] ) ? wp_unslash( $_POST['acf'] ) : array();
+	if ( $input && 0 === strpos( $input, 'acf[' ) ) {
+		preg_match_all( '/\[([^\]]+)\]/', $input, $matches );
+		$parts = $matches[1];
+		array_pop( $parts );
+		foreach ( $parts as $part ) {
+			$values = isset( $values[ $part ] ) && is_array( $values[ $part ] ) ? $values[ $part ] : array();
+		}
+		return $values[ $field_key ] ?? null;
 	}
-
-	return ltt_dive_in_find_page_driver_submitted_value( wp_unslash( $_POST['acf'] ), $field_key );
+	if ( preg_match( '/^acf-([^\[]+)/', $input, $matches ) ) {
+		$block_id = $matches[1];
+		if ( isset( $_POST['block'] ) && is_string( $_POST['block'] ) ) {
+			$block = json_decode( wp_unslash( $_POST['block'] ), true );
+			$submitted_id = is_array( $block ) && isset( $block['id'] ) && is_string( $block['id'] ) ? $block['id'] : '';
+			if ( $submitted_id && 0 !== strpos( $submitted_id, 'block_' ) ) {
+				$submitted_id = 'block_' . $submitted_id;
+			}
+			$expected_id = 0 === strpos( $block_id, 'block_' ) ? $block_id : 'block_' . $block_id;
+			if ( is_array( $block ) && ( ! $submitted_id || $expected_id === $submitted_id ) ) {
+				$data = isset( $block['data'] ) && is_array( $block['data'] ) ? $block['data'] : array();
+				$name = preg_replace( '/^field_/', '', $field_key );
+				if ( array_key_exists( $field_key, $data ) || array_key_exists( $name, $data ) ) {
+					return $data[ $field_key ] ?? $data[ $name ];
+				}
+			}
+		}
+		return function_exists( 'get_field' ) ? get_field( preg_replace( '/^field_/', '', $field_key ), $block_id, false ) : null;
+	}
+	return $values[ $field_key ] ?? null;
 }
 
 /**
@@ -155,8 +181,7 @@ function ltt_dive_in_register_page_driver_settings() {
 	}
 	$default_taxonomy = $taxonomy_choices ? (string) array_key_first( $taxonomy_choices ) : 'category';
 
-	acf_add_local_field_group(
-		array(
+	$group = array(
 			'key'                   => 'group_ltt_dive_in_home_page_drivers',
 			'title'                 => __( 'LTT Dive In — Up Driver Block', 'ltt-dive-in' ),
 			'fields'                => array(
@@ -165,7 +190,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'        => __( 'Layout', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_page_driver_layout',
 					'type'         => 'select',
-					'instructions' => __( 'Choose the approved card-count variant. Monthly requires twelve hub pages and enabled taxonomy controls; the selected terms provide month options.', 'ltt-dive-in' ),
+					'instructions' => __( 'Choose how many cards to show.', 'ltt-dive-in' ),
 					'required'     => 1,
 					'choices'      => array(
 						'one_up'       => __( '1 Up', 'ltt-dive-in' ),
@@ -185,7 +210,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'        => __( 'Heading', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_page_driver_heading',
 					'type'         => 'text',
-					'instructions' => __( 'Required section heading.', 'ltt-dive-in' ),
+					'instructions' => '',
 					'required'     => 1,
 					'maxlength'    => 90,
 				),
@@ -194,7 +219,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'         => __( 'Background', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_surface',
 					'type'          => 'select',
-					'instructions'  => __( 'Choose the approved light or dark Up Driver surface.', 'ltt-dive-in' ),
+					'instructions'  => '',
 					'required'      => 1,
 					'choices'       => array(
 						'light' => __( 'Light', 'ltt-dive-in' ),
@@ -210,7 +235,7 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'        => __( 'Category tag', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_page_driver_tag',
 					'type'         => 'text',
-					'instructions' => __( 'Optional short label shown above the heading.', 'ltt-dive-in' ),
+					'instructions' => __( 'Shown above the heading.', 'ltt-dive-in' ),
 					'maxlength'    => 40,
 				),
 				array(
@@ -218,26 +243,26 @@ function ltt_dive_in_register_page_driver_settings() {
 					'label'        => __( 'Introduction', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_page_driver_intro',
 					'type'         => 'textarea',
-					'instructions' => __( 'Optional one- or two-sentence introduction.', 'ltt-dive-in' ),
+					'instructions' => '',
 					'rows'         => 3,
 					'new_lines'    => '',
 					'maxlength'    => 240,
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_page_driver_show_excerpt',
-					'label'         => __( 'Show tile excerpts', 'ltt-dive-in' ),
+					'label'         => __( 'Show page descriptions', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_show_excerpt',
 					'type'          => 'true_false',
-					'instructions'  => __( 'When enabled, each tile may show its selected page excerpt.', 'ltt-dive-in' ),
+					'instructions'  => '',
 					'default_value' => 1,
 					'ui'            => 1,
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_page_driver_tiles',
-					'label'         => __( 'Hub pages', 'ltt-dive-in' ),
+					'label'         => __( 'Pages', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_tiles',
 					'type'          => 'relationship',
-					'instructions'  => __( 'Choose and order published hub pages. Every page needs a featured image. For Monthly, select exactly twelve pages; their relationship order controls carousel order.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Choose pages with a featured image and arrange them in the order you want.', 'ltt-dive-in' ),
 					'required'      => 1,
 					'post_type'     => array( 'page' ),
 					'post_status'   => array( 'publish' ),
@@ -248,19 +273,19 @@ function ltt_dive_in_register_page_driver_settings() {
 				),
 				array(
 					'key'           => 'field_ltt_dive_in_page_driver_enable_toggles',
-					'label'         => __( 'Enable taxonomy controls', 'ltt-dive-in' ),
+					'label'         => __( 'Show filters', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_enable_toggles',
 					'type'          => 'true_false',
-					'instructions'  => __( 'Other layouts use these terms to filter pages. Monthly uses them as month options that navigate to the matching carousel page.', 'ltt-dive-in' ),
+					'instructions'  => '',
 					'default_value' => 0,
 					'ui'            => 1,
 				),
 				array(
 					'key'               => 'field_ltt_dive_in_page_driver_taxonomy',
-					'label'             => __( 'Taxonomy', 'ltt-dive-in' ),
+					'label'             => __( 'Filter by', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_taxonomy',
 					'type'              => 'select',
-					'instructions'      => __( 'Choose a public taxonomy registered for pages. Other layouts use its terms as filters; Monthly uses them as month options.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Choose how to group your pages.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'choices'           => $taxonomy_choices,
 					'allow_null'        => 1,
@@ -278,10 +303,10 @@ function ltt_dive_in_register_page_driver_settings() {
 				),
 				array(
 					'key'               => 'field_ltt_dive_in_page_driver_toggle_terms',
-					'label'             => __( 'Terms', 'ltt-dive-in' ),
+					'label'             => __( 'Filters', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_page_driver_toggle_terms',
 					'type'              => 'taxonomy',
-					'instructions'      => __( 'Choose the terms to use. Monthly displays them as month options; each selected term must be assigned to at least one selected page. Other layouts use two to five terms as filters. Available terms update when you change the taxonomy.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Choose the options visitors can select.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'field_type'        => 'checkbox',
 					'taxonomy'          => $default_taxonomy,
@@ -315,9 +340,9 @@ function ltt_dive_in_register_page_driver_settings() {
 			'label_placement'       => 'top',
 			'instruction_placement' => 'label',
 			'active'                => true,
-			'description'           => __( 'Ordered, feature-image page links with approved grid, carousel, optional filters, and month navigation.', 'ltt-dive-in' ),
-		)
-	);
+			'description'           => __( 'Show selected pages as cards, with optional filters.', 'ltt-dive-in' ),
+		);
+	acf_add_local_field_group( ltt_dive_in_page_driver_add_group_fields( $group ) );
 }
 add_action( 'acf/init', 'ltt_dive_in_register_page_driver_settings' );
 
@@ -335,8 +360,8 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 		return $valid;
 	}
 
-	$filters_enabled = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_enable_toggles' );
-	$taxonomy        = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy' );
+	$filters_enabled = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_enable_toggles', $input );
+	$taxonomy        = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy', $input );
 
 	/* ACF may validate the Layout field before including its sibling fields. */
 	if ( null === $filters_enabled ) {
@@ -344,7 +369,7 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 	}
 
 	if ( ! $filters_enabled ) {
-		return __( 'Monthly Up Driver requires filters to be enabled.', 'ltt-dive-in' );
+		return __( 'Turn on filters to use Monthly.', 'ltt-dive-in' );
 	}
 
 	if ( null === $taxonomy ) {
@@ -352,7 +377,7 @@ function ltt_dive_in_validate_page_driver_layout( $valid, $value, $field, $input
 	}
 
 	if ( ! is_string( $taxonomy ) || ! isset( ltt_dive_in_get_page_driver_taxonomies()[ $taxonomy ] ) ) {
-		return __( 'Monthly Up Driver requires a public taxonomy registered for pages.', 'ltt-dive-in' );
+		return __( 'Choose what to filter by for Monthly.', 'ltt-dive-in' );
 	}
 
 	return $valid;
@@ -406,12 +431,20 @@ add_filter( 'acf/prepare_field/key=field_ltt_dive_in_page_driver_toggle_terms', 
  * @return bool|string
  */
 function ltt_dive_in_validate_page_driver_tiles( $valid, $value, $field, $input ) {
+	$mode_data = array();
+	foreach ( array( 'layout', 'enable_toggles', 'cards_per_filter' ) as $suffix ) {
+		$mode_data[ 'ltt_dive_in_page_driver_' . $suffix ] = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_' . $suffix, $input );
+	}
+	if ( ltt_dive_in_page_driver_group_mode( $mode_data ) ) {
+		return true;
+	}
+
 	if ( true !== $valid ) {
 		return $valid;
 	}
 
 	$tiles  = is_array( $value ) ? array_values( array_filter( array_map( 'absint', $value ) ) ) : array();
-	$layout = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_layout' );
+	$layout = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_layout', $input );
 	$counts = array(
 		'one_up'      => array( 1, 1 ),
 		'two_up'      => array( 2, 2 ),
@@ -434,9 +467,16 @@ function ltt_dive_in_validate_page_driver_tiles( $valid, $value, $field, $input 
 	list( $minimum, $maximum ) = $counts[ $layout ];
 
 	if ( count( $tiles ) < $minimum || count( $tiles ) > $maximum ) {
+		if ( $minimum === $maximum ) {
+			return sprintf(
+				/* translators: %d: required page count. */
+				_n( 'Choose exactly %d page.', 'Choose exactly %d pages.', $minimum, 'ltt-dive-in' ),
+				$minimum
+			);
+		}
 		return sprintf(
 			/* translators: 1: minimum number of pages, 2: maximum number of pages. */
-			__( 'This layout requires between %1$d and %2$d hub pages.', 'ltt-dive-in' ),
+			__( 'Choose between %1$d and %2$d pages for this layout.', 'ltt-dive-in' ),
 			$minimum,
 			$maximum
 		);
@@ -444,7 +484,7 @@ function ltt_dive_in_validate_page_driver_tiles( $valid, $value, $field, $input 
 
 	foreach ( $tiles as $tile_id ) {
 		if ( 'publish' !== get_post_status( $tile_id ) || 'page' !== get_post_type( $tile_id ) || ! has_post_thumbnail( $tile_id ) ) {
-			return __( 'Every hub page must be published, be a page, and have a featured image.', 'ltt-dive-in' );
+			return __( 'Choose published pages with a featured image.', 'ltt-dive-in' );
 		}
 	}
 
@@ -462,13 +502,25 @@ add_filter( 'acf/validate_value/key=field_ltt_dive_in_page_driver_tiles', 'ltt_d
  * @return bool|string
  */
 function ltt_dive_in_validate_page_driver_toggle_terms( $valid, $value, $field, $input ) {
-	if ( true !== $valid || ! ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_enable_toggles' ) ) {
+	$mode_data = array();
+	foreach ( array( 'layout', 'enable_toggles', 'cards_per_filter' ) as $suffix ) {
+		$mode_data[ 'ltt_dive_in_page_driver_' . $suffix ] = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_' . $suffix, $input );
+	}
+	if ( ltt_dive_in_page_driver_group_mode( $mode_data ) ) {
+		return true;
+	}
+
+	if ( ! ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_enable_toggles', $input ) ) {
+		return true;
+	}
+
+	if ( true !== $valid ) {
 		return $valid;
 	}
 
-	$taxonomy = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy' );
+	$taxonomy = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_taxonomy', $input );
 	$terms    = is_array( $value ) ? array_values( array_filter( array_map( 'absint', $value ) ) ) : array();
-	$tiles    = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_tiles' );
+	$tiles    = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_tiles', $input );
 	$tiles    = is_array( $tiles ) ? array_values( array_filter( array_map( 'absint', $tiles ) ) ) : array();
 
 	if ( ! is_string( $taxonomy ) || ! isset( ltt_dive_in_get_page_driver_taxonomies()[ $taxonomy ] ) ) {
@@ -476,17 +528,17 @@ function ltt_dive_in_validate_page_driver_toggle_terms( $valid, $value, $field, 
 		return $valid;
 	}
 
-	$layout = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_layout' );
+	$layout = ltt_dive_in_get_page_driver_submitted_value( 'field_ltt_dive_in_page_driver_layout', $input );
 
 	if ( 'monthly' !== $layout && ( count( $terms ) < 2 || count( $terms ) > 5 ) ) {
-		return __( 'Choose between two and five filter values.', 'ltt-dive-in' );
+		return __( 'Choose 2–5 filters.', 'ltt-dive-in' );
 	}
 
 	foreach ( $terms as $term_id ) {
 		$term = get_term( $term_id, $taxonomy );
 
 		if ( ! $term || is_wp_error( $term ) ) {
-			return __( 'Every filter value must belong to the selected taxonomy.', 'ltt-dive-in' );
+			return __( 'Choose filters from the selected group.', 'ltt-dive-in' );
 		}
 
 		$has_tile = false;
@@ -499,7 +551,7 @@ function ltt_dive_in_validate_page_driver_toggle_terms( $valid, $value, $field, 
 		}
 
 		if ( ! $has_tile ) {
-			return __( 'Every selected filter value must be assigned to at least one selected hub page.', 'ltt-dive-in' );
+			return __( 'Choose a matching page for each filter.', 'ltt-dive-in' );
 		}
 	}
 

@@ -23,20 +23,36 @@ $layout     = $get_value( 'ltt_dive_in_page_driver_layout' );
 $surface    = $get_value( 'ltt_dive_in_page_driver_surface' );
 $heading    = $get_value( 'ltt_dive_in_page_driver_heading' );
 $tile_ids   = $get_value( 'ltt_dive_in_page_driver_tiles' );
+$mode_data = $block_data;
+foreach ( array( 'layout', 'taxonomy', 'enable_toggles', 'cards_per_filter', 'filter_groups' ) as $suffix ) {
+	$mode_data[ 'ltt_dive_in_page_driver_' . $suffix ] = $get_value( 'ltt_dive_in_page_driver_' . $suffix );
+}
+$group_mode = ltt_dive_in_page_driver_group_mode( $mode_data );
+$groups = $group_mode ? ltt_dive_in_page_driver_render_groups( $mode_data ) : array();
 $layouts    = array( 'one_up', 'two_up', 'three_up', 'four_up', 'five_up', 'six_plus_up', 'monthly' );
 
-if ( ! is_string( $layout ) || ! in_array( $layout, $layouts, true ) || ! is_string( $heading ) || ! trim( $heading ) || ! is_array( $tile_ids ) ) {
-	if ( $is_preview ) { echo '<p>' . esc_html__( 'Choose a layout, heading, and hub pages to preview this Up Driver block.', 'ltt-dive-in' ) . '</p>'; }
+if ( ! is_string( $layout ) || ! in_array( $layout, $layouts, true ) || ! is_string( $heading ) || ! trim( $heading ) || ( ! $group_mode && ! is_array( $tile_ids ) ) ) {
+	if ( $is_preview ) { echo '<p>' . esc_html__( 'Choose a layout, add a heading and select pages to preview this section.', 'ltt-dive-in' ) . '</p>'; }
 	return;
 }
 
 $tiles = array();
-foreach ( array_slice( array_values( array_filter( array_map( 'absint', $tile_ids ) ) ), 0, 12 ) as $tile_id ) {
+foreach ( $group_mode ? array() : array_slice( array_values( array_filter( array_map( 'absint', $tile_ids ) ) ), 0, 12 ) as $tile_id ) {
 	if ( 'publish' === get_post_status( $tile_id ) && 'page' === get_post_type( $tile_id ) && has_post_thumbnail( $tile_id ) ) {
 		$tiles[] = array( 'id' => $tile_id, 'title' => get_the_title( $tile_id ), 'excerpt' => get_the_excerpt( $tile_id ), 'image' => get_post_thumbnail_id( $tile_id ) );
 	}
 }
-if ( ! $tiles ) { return; }
+if ( $group_mode ) {
+	foreach ( $groups as $group ) {
+		$tiles = array_merge( $tiles, $group['tiles'] );
+	}
+}
+if ( ! $tiles ) {
+	if ( $is_preview && $group_mode ) {
+		echo '<p>' . esc_html__( 'Choose a page for each filter to preview this section.', 'ltt-dive-in' ) . '</p>';
+	}
+	return;
+}
 
 if ( in_array( $layout, array( 'six_plus_up', 'monthly' ), true ) && function_exists( 'ltt_dive_in_enqueue_page_driver_carousel_assets' ) ) {
 	ltt_dive_in_enqueue_page_driver_carousel_assets();
@@ -47,7 +63,7 @@ $taxonomy    = $get_value( 'ltt_dive_in_page_driver_taxonomy' );
 $term_ids    = $get_value( 'ltt_dive_in_page_driver_toggle_terms' );
 $filters     = array();
 
-if ( $has_filters && is_string( $taxonomy ) && taxonomy_exists( $taxonomy ) && is_array( $term_ids ) ) {
+if ( ! $group_mode && $has_filters && is_string( $taxonomy ) && taxonomy_exists( $taxonomy ) && is_array( $term_ids ) ) {
 	$selected_term_ids = array_values( array_filter( array_map( 'absint', $term_ids ) ) );
 	if ( 'monthly' !== $layout ) {
 		$selected_term_ids = array_slice( $selected_term_ids, 0, 5 );
@@ -55,16 +71,24 @@ if ( $has_filters && is_string( $taxonomy ) && taxonomy_exists( $taxonomy ) && i
 
 	foreach ( $selected_term_ids as $term_id ) { $term = get_term( $term_id, $taxonomy ); if ( $term && ! is_wp_error( $term ) ) { $filters[] = $term; } }
 }
-foreach ( $tiles as $index => $tile ) {
+foreach ( $group_mode ? array() : $tiles as $index => $tile ) {
 	$terms = $filters ? wp_get_object_terms( $tile['id'], $taxonomy, array( 'fields' => 'ids' ) ) : array();
 	$tiles[ $index ]['terms'] = is_wp_error( $terms ) ? array() : array_map( 'absint', $terms );
 }
+
+if ( $group_mode ) {
+	$filters = array_column( array_values( $groups ), 'term' );
+}
+$section_id = $group_mode ? ltt_dive_in_page_driver_group_instance( $block, $anchor ) : ( $anchor ? $anchor : 'page-drivers-' . $block_id );
+$navigation = $group_mode ? ltt_dive_in_page_driver_group_navigation( $groups, $section_id ) : array();
 
 get_template_part(
 	'template-parts/components/page-drivers/grid',
 	null,
 	array(
-		'id'           => $anchor ? $anchor : 'page-drivers-' . $block_id,
+		'id'           => $section_id,
+		'group_mode'   => $group_mode,
+		'navigation'   => $navigation,
 		'class_name'   => $alignment,
 		'layout'       => $layout,
 		'surface'      => 'dark' === $surface ? 'dark' : 'light',

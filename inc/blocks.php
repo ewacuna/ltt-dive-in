@@ -1057,20 +1057,39 @@ function ltt_dive_in_enqueue_page_driver_editor_assets() {
 			'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
 			'nonce'           => wp_create_nonce( 'ltt_dive_in_page_driver_terms' ),
 			'selectPages'     => __( 'Select ', 'ltt-dive-in' ),
-			'currentlySelected' => __( 'Currently selected: ', 'ltt-dive-in' ),
-			'filtersWithoutPages' => __( 'These filter values are not assigned to any selected hub page: ', 'ltt-dive-in' ),
-			'filterValueCount' => __( 'Choose between two and five filter values.', 'ltt-dive-in' ),
+			'currentlySelected' => __( 'Selected: ', 'ltt-dive-in' ),
+			'filtersWithoutPages' => __( 'Choose a page for each of these filters: ', 'ltt-dive-in' ),
+			'filterValueCount' => __( 'Choose 2–5 filters.', 'ltt-dive-in' ),
+			'groupStrings' => array(
+				'chooseFilter' => __( 'Choose a filter', 'ltt-dive-in' ),
+				/* translators: {count}: filter position. */
+				'filterPosition' => __( 'Filter {count}', 'ltt-dive-in' ),
+				'unavailable' => __( 'Filter no longer available', 'ltt-dive-in' ),
+				/* translators: {count}: selected cards, {limit}: layout maximum. */
+				'counter' => __( '{count} of {limit} selected.', 'ltt-dive-in' ),
+				'limitReached' => __( 'Remove a card to choose another.', 'ltt-dive-in' ),
+				'loadError' => __( 'We couldn’t load the pages. Please try again.', 'ltt-dive-in' ),
+				'retry' => __( 'Try again', 'ltt-dive-in' ),
+				'up' => __( 'Move up', 'ltt-dive-in' ),
+				'down' => __( 'Move down', 'ltt-dive-in' ),
+				/* translators: {name}: filter or page title. */
+				'upLabel' => __( 'Move “{name}” up', 'ltt-dive-in' ),
+				/* translators: {name}: filter or page title. */
+				'downLabel' => __( 'Move “{name}” down', 'ltt-dive-in' ),
+			),
 			'tileLimits'      => array(
-				'one_up'      => array( 'min' => 1, 'max' => 1, 'label' => __( 'exactly 1 hub page', 'ltt-dive-in' ) ),
-				'two_up'      => array( 'min' => 2, 'max' => 2, 'label' => __( 'exactly 2 hub pages', 'ltt-dive-in' ) ),
-				'three_up'    => array( 'min' => 3, 'max' => 3, 'label' => __( 'exactly 3 hub pages', 'ltt-dive-in' ) ),
-				'four_up'     => array( 'min' => 4, 'max' => 4, 'label' => __( 'exactly 4 hub pages', 'ltt-dive-in' ) ),
-				'five_up'     => array( 'min' => 5, 'max' => 5, 'label' => __( 'exactly 5 hub pages', 'ltt-dive-in' ) ),
-				'six_plus_up' => array( 'min' => 6, 'max' => 12, 'label' => __( 'between 6 and 12 hub pages', 'ltt-dive-in' ) ),
-				'monthly'     => array( 'min' => 12, 'max' => 12, 'label' => __( 'exactly 12 hub pages', 'ltt-dive-in' ) ),
+				'one_up'      => array( 'min' => 1, 'max' => 1, 'label' => __( 'exactly 1 page', 'ltt-dive-in' ) ),
+				'two_up'      => array( 'min' => 2, 'max' => 2, 'label' => __( 'exactly 2 pages', 'ltt-dive-in' ) ),
+				'three_up'    => array( 'min' => 3, 'max' => 3, 'label' => __( 'exactly 3 pages', 'ltt-dive-in' ) ),
+				'four_up'     => array( 'min' => 4, 'max' => 4, 'label' => __( 'exactly 4 pages', 'ltt-dive-in' ) ),
+				'five_up'     => array( 'min' => 5, 'max' => 5, 'label' => __( 'exactly 5 pages', 'ltt-dive-in' ) ),
+				'six_plus_up' => array( 'min' => 6, 'max' => 12, 'label' => __( 'between 6 and 12 pages', 'ltt-dive-in' ) ),
+				'monthly'     => array( 'min' => 12, 'max' => 12, 'label' => __( 'exactly 12 pages', 'ltt-dive-in' ) ),
 			),
 		)
 	);
+	$groups_script = LTT_DIVE_IN_DIR . '/assets/js/admin/page-driver-filter-groups.js';
+	wp_enqueue_script( 'ltt-dive-in-page-driver-filter-groups', LTT_DIVE_IN_URI . '/assets/js/admin/page-driver-filter-groups.js', array( 'ltt-dive-in-page-driver-editor' ), (string) filemtime( $groups_script ), true );
 }
 add_action( 'enqueue_block_editor_assets', 'ltt_dive_in_enqueue_page_driver_editor_assets' );
 

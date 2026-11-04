@@ -35,6 +35,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/road-conditions-view.php';
 require_once LTT_DIVE_IN_DIR . '/inc/live-cams.php';
 require_once LTT_DIVE_IN_DIR . '/inc/footer-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-driver-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/page-driver-filter-groups.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-classification.php';
 require_once LTT_DIVE_IN_DIR . '/inc/page-cluster-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/feature-image-driver-settings.php';

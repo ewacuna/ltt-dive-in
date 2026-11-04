@@ -38,6 +38,7 @@
 		const cards = Array.from( driver.querySelectorAll( '[data-page-driver-card]' ) );
 		const grid = driver.querySelector( '[data-page-driver-grid]' );
 		const status = driver.querySelector( '[data-page-driver-status]' );
+		const groupMode = driver.dataset.pageDriverGroupMode === 'true';
 		const isCarousel = Boolean( driver.querySelector( '[data-page-driver-carousel]' ) );
 
 		if ( ! filters.length || ! cards.length ) {
@@ -55,7 +56,15 @@
 
 			filters.forEach( function ( filter ) {
 				const selected = filter === activeFilter;
-				filter.setAttribute( 'aria-pressed', selected ? 'true' : 'false' );
+				if ( groupMode ) {
+					if ( selected ) {
+						filter.setAttribute( 'aria-current', 'true' );
+					} else {
+						filter.removeAttribute( 'aria-current' );
+					}
+				} else {
+					filter.setAttribute( 'aria-pressed', selected ? 'true' : 'false' );
+				}
 				filter.classList.toggle( 'is-selected', selected );
 			} );
 
@@ -77,14 +86,23 @@
 			}
 
 			if ( status && strings.destinationSingular && strings.destinationPlural ) {
-				status.textContent = visibleCount + ' ' + ( 1 === visibleCount ? strings.destinationSingular : strings.destinationPlural );
+				status.textContent = ( groupMode ? activeFilter.textContent.trim() + ': ' : '' ) + visibleCount + ' ' + ( 1 === visibleCount ? strings.destinationSingular : strings.destinationPlural );
 			}
 
 			driver.dispatchEvent( new CustomEvent( 'ltt:page-driver-filtered', { detail: { termId: termId } } ) );
 		};
 
 		filters.forEach( function ( filter ) {
-			filter.addEventListener( 'click', function () {
+			filter.addEventListener( 'click', function ( event ) {
+				if ( groupMode ) {
+					if ( event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button > 0 ) {
+						return;
+					}
+					event.preventDefault();
+					const url = new URL( window.location.href );
+					url.searchParams.set( 'ltt_up_filter[' + driver.id + ']', filter.dataset.pageDriverFilter );
+					window.history.replaceState( window.history.state, '', url );
+				}
 				activateFilter( filter );
 			} );
 		} );

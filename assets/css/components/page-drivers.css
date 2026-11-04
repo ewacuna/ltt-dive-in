@@ -20,7 +20,7 @@
 }
 
 .page-drivers--dark .page-drivers__filter:is(:hover, :focus-visible),
-.page-drivers--dark .page-drivers__filter[aria-pressed="true"] {
+.page-drivers--dark .page-drivers__filter:is([aria-pressed="true"], [aria-current="true"]) {
     color: #073959;
 }
 
@@ -75,6 +75,7 @@
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.45;
+    text-decoration: none;
     cursor: pointer;
     transition:
         background-color 200ms ease-out,
@@ -86,7 +87,7 @@
     color: #073959;
 }
 
-.page-drivers__filter[aria-pressed="true"] {
+.page-drivers__filter:is([aria-pressed="true"], [aria-current="true"]) {
     background: #91d9d1;
     color: #073959;
     font-weight: 700;
@@ -623,7 +624,7 @@
 
 @media (forced-colors: active) {
     .page-drivers__filter,
-    .page-drivers__filter[aria-pressed="true"],
+    .page-drivers__filter:is([aria-pressed="true"], [aria-current="true"]),
     .page-drivers__card {
         border: 1px solid CanvasText;
         background: Canvas;
