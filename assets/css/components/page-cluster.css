@@ -194,10 +194,6 @@
     outline-offset: 3px;
 }
 
-.page-cluster--hub {
-    padding-top: 1.25rem;
-    padding-bottom: 0;
-}
 
 .page-cluster--hub .page-cluster__header {
     margin-bottom: 2.5rem;
