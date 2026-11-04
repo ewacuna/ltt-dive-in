@@ -87,20 +87,19 @@ function ltt_dive_in_enqueue_assets() {
 				)
 			);
 
-			if ( 'roads' === ( ltt_dive_in_get_current_conditions_tab_module( get_queried_object_id() )['module'] ?? '' ) ) {
-				$road_conditions_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/road-conditions.js';
+			// Loaded on every tab: seamless navigation can swap the roads module in from another tab.
+			$road_conditions_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/road-conditions.js';
 
-				wp_enqueue_script(
-					'ltt-dive-in-road-conditions',
-					LTT_DIVE_IN_URI . '/assets/js/components/road-conditions.js',
-					array(),
-					file_exists( $road_conditions_script_path ) ? (string) filemtime( $road_conditions_script_path ) : LTT_DIVE_IN_VERSION,
-					array(
-						'strategy'  => 'defer',
-						'in_footer' => true,
-					)
-				);
-			}
+			wp_enqueue_script(
+				'ltt-dive-in-road-conditions',
+				LTT_DIVE_IN_URI . '/assets/js/components/road-conditions.js',
+				array(),
+				file_exists( $road_conditions_script_path ) ? (string) filemtime( $road_conditions_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
 
 			$current_weather_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/current-weather.js';
 
