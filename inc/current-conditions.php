@@ -474,6 +474,163 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 					),
 				),
 				array(
+					'key'               => 'field_ltt_dive_in_ski_cams_heading',
+					'label'             => __( 'Ski cams heading', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_ski_cams_heading',
+					'type'              => 'text',
+					'instructions'      => __( 'Optional section below the cameras that links to resort ski cams on other sites. Leave the heading empty to hide it.', 'ltt-dive-in' ),
+					'default_value'     => 'Find a Ski Cam',
+					'maxlength'         => 60,
+					'wrapper'           => array( 'width' => '50' ),
+					'conditional_logic' => $cams_only,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_ski_cams_eyebrow',
+					'label'             => __( 'Ski cams label', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_ski_cams_eyebrow',
+					'type'              => 'text',
+					'instructions'      => __( 'Optional. Short tag above the heading.', 'ltt-dive-in' ),
+					'default_value'     => 'Live feed',
+					'maxlength'         => 30,
+					'wrapper'           => array( 'width' => '50' ),
+					'conditional_logic' => $cams_only,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_ski_cams_intro',
+					'label'             => __( 'Ski cams introduction', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_ski_cams_intro',
+					'type'              => 'textarea',
+					'instructions'      => __( 'Optional. One short paragraph.', 'ltt-dive-in' ),
+					'maxlength'         => 400,
+					'rows'              => 3,
+					'new_lines'         => '',
+					'conditional_logic' => $cams_only,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_ski_cams_featured',
+					'label'             => __( 'Featured ski cam', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_ski_cams_featured',
+					'type'              => 'group',
+					'instructions'      => __( 'Optional. Shown above the resort list. It needs a name, an image, and a live feed URL.', 'ltt-dive-in' ),
+					'layout'            => 'block',
+					'conditional_logic' => $cams_only,
+					'sub_fields'        => array(
+						array(
+							'key'       => 'field_ltt_dive_in_ski_cams_featured_heading',
+							'label'     => __( 'Name', 'ltt-dive-in' ),
+							'name'      => 'heading',
+							'type'      => 'text',
+							'maxlength' => 60,
+							'wrapper'   => array( 'width' => '50' ),
+						),
+						array(
+							'key'         => 'field_ltt_dive_in_ski_cams_featured_url',
+							'label'       => __( 'Live feed URL', 'ltt-dive-in' ),
+							'name'        => 'url',
+							'type'        => 'url',
+							'placeholder' => 'https://',
+							'wrapper'     => array( 'width' => '50' ),
+						),
+						array(
+							'key'          => 'field_ltt_dive_in_ski_cams_featured_text',
+							'label'        => __( 'Description', 'ltt-dive-in' ),
+							'name'         => 'text',
+							'type'         => 'textarea',
+							'instructions' => __( 'Optional. Leave a blank line between paragraphs.', 'ltt-dive-in' ),
+							'maxlength'    => 300,
+							'rows'         => 3,
+							'new_lines'    => '',
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_ski_cams_featured_image',
+							'label'         => __( 'Image', 'ltt-dive-in' ),
+							'name'          => 'image',
+							'type'          => 'image',
+							'instructions'  => __( 'Landscape, at least 656px wide. Describe the view in its alt text.', 'ltt-dive-in' ),
+							'return_format' => 'id',
+							'preview_size'  => 'medium',
+							'library'       => 'all',
+							'min_width'     => 656,
+							'mime_types'    => 'jpg, jpeg, png, webp',
+							'wrapper'       => array( 'width' => '50' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_ski_cams_featured_label',
+							'label'         => __( 'Button text', 'ltt-dive-in' ),
+							'name'          => 'label',
+							'type'          => 'text',
+							'default_value' => 'View Live Feed',
+							'maxlength'     => 30,
+							'wrapper'       => array( 'width' => '50' ),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_ski_cams_resorts',
+					'label'             => __( 'Ski resorts', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_ski_cams_resorts',
+					'type'              => 'repeater',
+					'instructions'      => __( 'Each resort becomes a filter; the first one is selected when the page loads. Every camera link opens in a new tab.', 'ltt-dive-in' ),
+					'min'               => 0,
+					'max'               => 8,
+					'layout'            => 'block',
+					'button_label'      => __( 'Add resort', 'ltt-dive-in' ),
+					'collapsed'         => 'field_ltt_dive_in_ski_cams_resort_name',
+					'conditional_logic' => $cams_only,
+					'sub_fields'        => array(
+						array(
+							'key'       => 'field_ltt_dive_in_ski_cams_resort_name',
+							'label'     => __( 'Resort', 'ltt-dive-in' ),
+							'name'      => 'name',
+							'type'      => 'text',
+							'required'  => 1,
+							'maxlength' => 30,
+						),
+						array(
+							'key'          => 'field_ltt_dive_in_ski_cams_resort_cams',
+							'label'        => __( 'Cameras', 'ltt-dive-in' ),
+							'name'         => 'cams',
+							'type'         => 'repeater',
+							'required'     => 1,
+							'min'          => 1,
+							'max'          => 8,
+							'layout'       => 'table',
+							'button_label' => __( 'Add camera', 'ltt-dive-in' ),
+							'sub_fields'   => array(
+								array(
+									'key'          => 'field_ltt_dive_in_ski_cams_cam_heading',
+									'label'        => __( 'Name', 'ltt-dive-in' ),
+									'name'         => 'heading',
+									'type'         => 'text',
+									'instructions' => __( 'For example, “North View”.', 'ltt-dive-in' ),
+									'required'     => 1,
+									'maxlength'    => 60,
+									'wrapper'      => array( 'width' => '25' ),
+								),
+								array(
+									'key'       => 'field_ltt_dive_in_ski_cams_cam_text',
+									'label'     => __( 'Description', 'ltt-dive-in' ),
+									'name'      => 'text',
+									'type'      => 'textarea',
+									'maxlength' => 160,
+									'rows'      => 2,
+									'new_lines' => '',
+									'wrapper'   => array( 'width' => '45' ),
+								),
+								array(
+									'key'         => 'field_ltt_dive_in_ski_cams_cam_url',
+									'label'       => __( 'Live feed URL', 'ltt-dive-in' ),
+									'name'        => 'url',
+									'type'        => 'url',
+									'required'    => 1,
+									'placeholder' => 'https://',
+									'wrapper'     => array( 'width' => '30' ),
+								),
+							),
+						),
+					),
+				),
+				array(
 					'key'          => 'field_ltt_dive_in_conditions_links',
 					'label'        => __( 'Related conditions', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_conditions_links',
@@ -671,6 +828,95 @@ function ltt_dive_in_get_live_cams( $post_id ) {
 	}
 
 	return $cams;
+}
+
+/**
+ * Get a live-cameras tab's ski cams section.
+ *
+ * @param int $post_id Tab page ID.
+ * @return array Empty when the section should not render.
+ */
+function ltt_dive_in_get_ski_cams( $post_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return array();
+	}
+
+	$string = static function ( $value ) {
+		return is_string( $value ) ? trim( $value ) : '';
+	};
+	$url    = static function ( $value ) {
+		$value = is_string( $value ) ? esc_url_raw( trim( $value ), array( 'http', 'https' ) ) : '';
+
+		return $value && wp_http_validate_url( $value ) ? $value : '';
+	};
+
+	$heading = $string( get_field( 'ltt_dive_in_ski_cams_heading', $post_id ) );
+
+	if ( '' === $heading ) {
+		return array();
+	}
+
+	$featured = get_field( 'ltt_dive_in_ski_cams_featured', $post_id );
+	$featured = is_array( $featured ) ? $featured : array();
+	$featured = array(
+		'heading' => $string( $featured['heading'] ?? '' ),
+		'text'    => $string( $featured['text'] ?? '' ),
+		'image'   => absint( $featured['image'] ?? 0 ),
+		'url'     => $url( $featured['url'] ?? '' ),
+		'label'   => $string( $featured['label'] ?? '' ),
+	);
+
+	if ( '' === $featured['heading'] || '' === $featured['url'] || ! $featured['image'] || ! wp_attachment_is_image( $featured['image'] ) ) {
+		$featured = null;
+	} elseif ( '' === $featured['label'] ) {
+		$featured['label'] = __( 'View Live Feed', 'ltt-dive-in' );
+	}
+
+	$rows    = get_field( 'ltt_dive_in_ski_cams_resorts', $post_id );
+	$resorts = array();
+
+	foreach ( is_array( $rows ) ? array_slice( $rows, 0, 8 ) : array() as $row ) {
+		$name = $string( $row['name'] ?? '' );
+		$slug = sanitize_title( $name );
+		$cams = array();
+
+		if ( '' === $slug || isset( $resorts[ $slug ] ) ) {
+			continue;
+		}
+
+		foreach ( isset( $row['cams'] ) && is_array( $row['cams'] ) ? array_slice( $row['cams'], 0, 8 ) : array() as $cam ) {
+			$cam_heading = $string( $cam['heading'] ?? '' );
+			$cam_url     = $url( $cam['url'] ?? '' );
+
+			if ( '' !== $cam_heading && '' !== $cam_url ) {
+				$cams[] = array(
+					'heading' => $cam_heading,
+					'text'    => $string( $cam['text'] ?? '' ),
+					'url'     => $cam_url,
+				);
+			}
+		}
+
+		if ( $cams ) {
+			$resorts[ $slug ] = array(
+				'slug' => $slug,
+				'name' => $name,
+				'cams' => $cams,
+			);
+		}
+	}
+
+	if ( ! $featured && ! $resorts ) {
+		return array();
+	}
+
+	return array(
+		'eyebrow'  => $string( get_field( 'ltt_dive_in_ski_cams_eyebrow', $post_id ) ),
+		'heading'  => $heading,
+		'intro'    => $string( get_field( 'ltt_dive_in_ski_cams_intro', $post_id ) ),
+		'featured' => $featured,
+		'resorts'  => $resorts,
+	);
 }
 
 /**

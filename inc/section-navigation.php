@@ -263,3 +263,26 @@ function ltt_dive_in_section_navigation_item_id( $id, $item, $args ) {
 	return isset( $args->menu_id ) && 'ltt-section-navigation-menu' === $args->menu_id ? 'ltt-section-menu-item-' . $item->ID : $id;
 }
 add_filter( 'nav_menu_item_id', 'ltt_dive_in_section_navigation_item_id', 10, 3 );
+
+/**
+ * Keep section jump links from being marked as the current page.
+ *
+ * @param WP_Post[] $items Menu items.
+ * @param stdClass  $args  Menu rendering arguments.
+ * @return WP_Post[]
+ */
+function ltt_dive_in_section_navigation_jump_links( $items, $args ) {
+	if ( ! isset( $args->menu_id ) || 'ltt-section-navigation-menu' !== $args->menu_id ) {
+		return $items;
+	}
+
+	foreach ( $items as $item ) {
+		if ( ! empty( $item->current ) && is_string( $item->url ) && false !== strpos( $item->url, '#' ) ) {
+			$item->current = false;
+			$item->classes = array_diff( (array) $item->classes, array( 'current-menu-item', 'current_page_item' ) );
+		}
+	}
+
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'ltt_dive_in_section_navigation_jump_links', 10, 2 );

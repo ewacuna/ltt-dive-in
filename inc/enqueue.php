@@ -101,6 +101,19 @@ function ltt_dive_in_enqueue_assets() {
 				)
 			);
 
+			$ski_cams_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/ski-cams.js';
+
+			wp_enqueue_script(
+				'ltt-dive-in-ski-cams',
+				LTT_DIVE_IN_URI . '/assets/js/components/ski-cams.js',
+				array(),
+				file_exists( $ski_cams_script_path ) ? (string) filemtime( $ski_cams_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
+
 			$current_weather_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/current-weather.js';
 
 			wp_enqueue_script(
@@ -222,7 +235,7 @@ function ltt_dive_in_enqueue_assets() {
 			wp_enqueue_style(
 				'ltt-dive-in-current-conditions',
 				LTT_DIVE_IN_URI . '/assets/css/templates/current-conditions.css',
-				array( 'ltt-dive-in-style', 'ltt-dive-in-page' ),
+				array( 'ltt-dive-in-style', 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-category-selection' ),
 				file_exists( $current_conditions_style_path ) ? (string) filemtime( $current_conditions_style_path ) : LTT_DIVE_IN_VERSION
 			);
 		}

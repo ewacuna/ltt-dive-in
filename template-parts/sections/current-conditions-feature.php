@@ -60,3 +60,7 @@ if ( 'cams' === $module['module'] && 1 < count( $module['cams'] ) ) {
 		)
 	);
 }
+
+if ( 'cams' === $module['module'] ) {
+	get_template_part( 'template-parts/sections/current-ski-cams', null, array( 'ski_cams' => ltt_dive_in_get_ski_cams( $post_id ) ) );
+}

@@ -17,7 +17,8 @@
 
 	const updateCurrentLink = function () {
 		nav.querySelectorAll( 'a' ).forEach( function ( link ) {
-			const isCurrent = new URL( link.href ).pathname === window.location.pathname;
+			const target = new URL( link.href );
+			const isCurrent = ! target.hash && target.pathname === window.location.pathname;
 			const item = link.closest( 'li' );
 
 			if ( isCurrent ) {
@@ -182,7 +183,7 @@
 		}
 
 		const url = new URL( link.href );
-		if ( url.origin !== window.location.origin ) {
+		if ( url.origin !== window.location.origin || url.hash ) {
 			return;
 		}
 

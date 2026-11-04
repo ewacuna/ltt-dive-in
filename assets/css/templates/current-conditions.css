@@ -1045,6 +1045,235 @@
 	opacity: 1;
 }
 
+.ski-cams {
+	padding: 4rem 5rem;
+	background: #ffffff;
+	color: #151419;
+}
+
+.ski-cams__container {
+	display: flex;
+	flex-direction: column;
+	gap: 5rem;
+	max-width: 80rem;
+	margin-inline: auto;
+}
+
+.ski-cams__header {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1rem;
+	max-width: 48rem;
+	padding-inline: 3.125rem;
+	color: #073959;
+}
+
+.ski-cams__title {
+	margin: 0 0 0.5rem;
+	color: inherit;
+	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+	font-size: 3rem;
+	font-synthesis: none;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: normal;
+	overflow-wrap: break-word;
+}
+
+.ski-cams__intro {
+	margin: 0;
+	font-size: 1.125rem;
+	font-synthesis: none;
+	font-weight: 500;
+	line-height: 1.45;
+	text-wrap: pretty;
+}
+
+.ski-cams__featured {
+	display: grid;
+	grid-template-columns: minmax(0, 41rem) minmax(0, 1fr);
+	align-items: center;
+	gap: 3rem;
+	margin-bottom: -1rem;
+}
+
+.ski-cams__media {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	aspect-ratio: 656 / 369;
+	background: #073959;
+}
+
+.ski-cams__media::after {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.4);
+	content: "";
+	pointer-events: none;
+}
+
+.ski-cams__media:focus-visible,
+.ski-cams__play:focus-visible {
+	outline: 3px solid #eeb040;
+	outline-offset: 4px;
+}
+
+.ski-cams__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.ski-cams__media-play {
+	position: absolute;
+	z-index: 1;
+	top: 50%;
+	left: 50%;
+	display: block;
+	transform: translate(-50%, -50%);
+}
+
+.ski-cams__badge {
+	position: absolute;
+	z-index: 1;
+	top: 1rem;
+	left: 1rem;
+	padding: 0.25rem 0.5rem;
+	background: #d50d21;
+	color: #ffffff;
+	font-size: 0.875rem;
+	font-synthesis: none;
+	font-weight: 700;
+	line-height: 1.45;
+	text-transform: uppercase;
+}
+
+.ski-cams__featured-copy {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1rem;
+}
+
+.ski-cams__cta {
+	margin-top: 0.5rem;
+}
+
+.ski-cams__live {
+	margin: 0;
+	color: #d50d21;
+	font-size: 0.875rem;
+	font-synthesis: none;
+	font-weight: 500;
+	line-height: 1.45;
+	text-transform: uppercase;
+}
+
+.ski-cams__cam-title {
+	margin: 0;
+	color: inherit;
+	font-family: "Gotham HTF", Arial, sans-serif;
+	font-size: 1.5rem;
+	font-synthesis: none;
+	font-weight: 500;
+	letter-spacing: -0.0025em;
+	line-height: normal;
+	overflow-wrap: break-word;
+}
+
+.ski-cams__text {
+	margin: 0;
+	font-size: 0.875rem;
+	font-synthesis: none;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+.ski-cams__text p {
+	margin: 0;
+}
+
+.ski-cams__text p + p {
+	margin-top: 1.25rem;
+}
+
+.ski-cams__browser {
+	display: flex;
+	flex-direction: column;
+	gap: 3rem;
+}
+
+.ski-cams__filter-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ski-cams__filter {
+	font-weight: 500;
+	text-decoration: none;
+}
+
+.ski-cams__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ski-cams__list[hidden] {
+	display: none;
+}
+
+.ski-cams__item {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	padding-block: 2rem;
+	border-top: 1px solid #151419;
+}
+
+.ski-cams__item-copy {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 1rem;
+	min-width: 0;
+}
+
+.ski-cams__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.625rem;
+	margin: 0;
+}
+
+.ski-cams__meta .ski-cams__live {
+	padding-left: 0.625rem;
+	border-left: 1px solid #073959;
+}
+
+.ski-cams__play {
+	display: block;
+	flex: 0 0 auto;
+	border-radius: 50%;
+}
+
+.ski-cams__play img {
+	display: block;
+}
+
+@media (forced-colors: active) {
+	.ski-cams__badge {
+		border: 1px solid CanvasText;
+	}
+}
+
 /* Devices without hover cannot reveal the icon, so it stays visible. */
 @media (hover: none) {
 	.live-cam__play {
@@ -1114,6 +1343,10 @@
 	.current-weather-tile__elevation {
 		font-size: 0.75rem;
 	}
+
+	.ski-cams {
+		padding-inline: 4rem;
+	}
 }
 
 @media (max-width: 991.98px) {
@@ -1167,6 +1400,18 @@
 
 	.current-weather__table th:first-child {
 		width: auto;
+	}
+
+	.ski-cams {
+		padding-inline: 2rem;
+	}
+
+	.ski-cams__header {
+		padding-inline: 0;
+	}
+
+	.ski-cams__featured {
+		grid-template-columns: minmax(0, 1fr);
 	}
 }
 
@@ -1318,6 +1563,38 @@
 
 	.current-weather__locations {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.ski-cams {
+		padding: 4rem 1.25rem 3rem;
+	}
+
+	.ski-cams__container {
+		gap: 3rem;
+	}
+
+	.ski-cams__header {
+		gap: 0.75rem;
+	}
+
+	.ski-cams__title {
+		margin-bottom: 0.5rem;
+		font-size: 2.25rem;
+	}
+
+	.ski-cams__intro {
+		font-size: 0.75rem;
+	}
+
+	.ski-cams__featured {
+		gap: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.ski-cams__item {
+		flex-direction: column;
+		align-items: flex-start;
+		padding-block: 1.5rem;
 	}
 }
 
