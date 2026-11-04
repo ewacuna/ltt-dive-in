@@ -43,6 +43,20 @@ $module   = ltt_dive_in_get_current_conditions_tab_module( $post_id );
 		get_template_part( 'template-parts/sections/current-weather', null, $module );
 	} elseif ( 'roads' === $module['module'] ) {
 		get_template_part( 'template-parts/sections/current-road-conditions', null, $module );
+	} elseif ( 'cams' === $module['module'] ) {
+		get_template_part( 'template-parts/sections/current-live-cams', null, array( 'cams' => array_slice( $module['cams'], 0, 1 ) ) );
 	}
 	?>
 </div>
+<?php
+// Later cameras sit in their own bands, outside the tab background.
+if ( 'cams' === $module['module'] && 1 < count( $module['cams'] ) ) {
+	get_template_part(
+		'template-parts/sections/current-live-cams',
+		null,
+		array(
+			'cams'  => array_slice( $module['cams'], 1 ),
+			'start' => 1,
+		)
+	);
+}

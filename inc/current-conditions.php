@@ -113,6 +113,16 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 		),
 	);
 
+	$cams_only = array(
+		array(
+			array(
+				'field'    => 'field_ltt_dive_in_conditions_tab_module',
+				'operator' => '==',
+				'value'    => 'cams',
+			),
+		),
+	);
+
 	acf_add_local_field_group(
 		array(
 			'key'          => 'group_ltt_dive_in_current_conditions_tab',
@@ -129,6 +139,7 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 						''        => __( 'None', 'ltt-dive-in' ),
 						'weather' => __( 'Current weather', 'ltt-dive-in' ),
 						'roads'   => __( 'Road conditions', 'ltt-dive-in' ),
+						'cams'    => __( 'Live cameras', 'ltt-dive-in' ),
 					),
 					'default_value' => '',
 					'return_format' => 'value',
@@ -381,6 +392,88 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 					),
 				),
 				array(
+					'key'               => 'field_ltt_dive_in_live_cams',
+					'label'             => __( 'Live cameras', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_live_cams',
+					'type'              => 'repeater',
+					'instructions'      => __( 'Up to four cameras. The first sits on the page background; the others get their own band.', 'ltt-dive-in' ),
+					'required'          => 1,
+					'min'               => 1,
+					'max'               => 4,
+					'layout'            => 'block',
+					'button_label'      => __( 'Add camera', 'ltt-dive-in' ),
+					'collapsed'         => 'field_ltt_dive_in_live_cam_heading',
+					'conditional_logic' => $cams_only,
+					'sub_fields'        => array(
+						array(
+							'key'          => 'field_ltt_dive_in_live_cam_heading',
+							'label'        => __( 'Heading', 'ltt-dive-in' ),
+							'name'         => 'heading',
+							'type'         => 'text',
+							'instructions' => __( 'For example, “Lake Cam”.', 'ltt-dive-in' ),
+							'required'     => 1,
+							'maxlength'    => 40,
+							'wrapper'      => array( 'width' => '40' ),
+						),
+						array(
+							'key'          => 'field_ltt_dive_in_live_cam_text',
+							'label'        => __( 'Description', 'ltt-dive-in' ),
+							'name'         => 'text',
+							'type'         => 'textarea',
+							'instructions' => __( 'Optional. One or two sentences.', 'ltt-dive-in' ),
+							'maxlength'    => 220,
+							'rows'         => 2,
+							'new_lines'    => '',
+							'wrapper'      => array( 'width' => '60' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_live_cam_link',
+							'label'         => __( 'Live feed link', 'ltt-dive-in' ),
+							'name'          => 'link',
+							'type'          => 'link',
+							'instructions'  => __( 'Opens when the image is selected. The link text is read only by screen readers, for example “Watch the Lake Cam live”.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'return_format' => 'array',
+							'wrapper'       => array( 'width' => '50' ),
+						),
+						array(
+							'key'               => 'field_ltt_dive_in_live_cam_image_url',
+							'label'             => __( 'Latest image URL', 'ltt-dive-in' ),
+							'name'              => 'image_url',
+							'type'              => 'url',
+							'instructions'      => __( 'Optional. The provider’s authorized link to the camera’s newest image. While it works, it replaces the camera image.', 'ltt-dive-in' ),
+							'placeholder'       => 'https://',
+							'wrapper'           => array( 'width' => '50' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_live_cam_image',
+							'label'         => __( 'Camera image', 'ltt-dive-in' ),
+							'name'          => 'image',
+							'type'          => 'image',
+							'instructions'  => __( 'Landscape, at least 1220px wide. Describe the view in its alt text.', 'ltt-dive-in' ),
+							'required'      => 1,
+							'return_format' => 'id',
+							'preview_size'  => 'medium',
+							'library'       => 'all',
+							'min_width'     => 600,
+							'mime_types'    => 'jpg, jpeg, png, webp',
+							'wrapper'       => array( 'width' => '50' ),
+						),
+						array(
+							'key'           => 'field_ltt_dive_in_live_cam_background',
+							'label'         => __( 'Band background', 'ltt-dive-in' ),
+							'name'          => 'background',
+							'type'          => 'image',
+							'instructions'  => __( 'Optional. Not used by the first camera. Without one, the band is navy.', 'ltt-dive-in' ),
+							'return_format' => 'id',
+							'preview_size'  => 'medium',
+							'library'       => 'all',
+							'mime_types'    => 'jpg, jpeg, png, webp',
+							'wrapper'       => array( 'width' => '50' ),
+						),
+					),
+				),
+				array(
 					'key'          => 'field_ltt_dive_in_conditions_links',
 					'label'        => __( 'Related conditions', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_conditions_links',
@@ -452,14 +545,24 @@ add_action( 'acf/init', 'ltt_dive_in_register_current_conditions_tab_fields' );
  * Resolve the live module and its settings for a Current Conditions tab.
  *
  * @param int $post_id Tab page ID.
- * @return array Module settings: `module` is `weather`, `roads`, or empty when nothing should render.
- *               Weather adds locations, active, and view; roads adds the values from ltt_dive_in_get_road_conditions_module().
+ * @return array Module settings: `module` is `weather`, `roads`, `cams`, or empty when nothing should render.
+ *               Weather adds locations, active, and view; roads adds the values from ltt_dive_in_get_road_conditions_module();
+ *               cams adds the valid cameras from ltt_dive_in_get_live_cams().
  */
 function ltt_dive_in_get_current_conditions_tab_module( $post_id ) {
 	$module = function_exists( 'get_field' ) ? get_field( 'ltt_dive_in_conditions_tab_module', $post_id ) : '';
 
 	if ( 'roads' === $module ) {
 		return ltt_dive_in_get_road_conditions_module( $post_id );
+	}
+
+	if ( 'cams' === $module ) {
+		$cams = ltt_dive_in_get_live_cams( $post_id );
+
+		return $cams ? array(
+			'module' => 'cams',
+			'cams'   => $cams,
+		) : array( 'module' => '' );
 	}
 
 	if ( 'weather' !== $module ) {
@@ -521,6 +624,53 @@ function ltt_dive_in_get_weather_locations( $post_id ) {
 	}
 
 	return $locations;
+}
+
+/**
+ * Get a live-cameras tab's valid cameras, in editor order.
+ *
+ * A camera needs a heading, an image attachment, and a link with both a label
+ * and a valid URL; incomplete rows are skipped.
+ *
+ * @param int $post_id Tab page ID.
+ * @return array<int, array{heading: string, text: string, image: int, latest: array|null, background: int, label: string, url: string, new_tab: bool}>
+ *         `latest` is the current downloaded copy of the camera's latest-image URL, when there is one.
+ */
+function ltt_dive_in_get_live_cams( $post_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return array();
+	}
+
+	$rows = get_field( 'ltt_dive_in_live_cams', $post_id );
+	$cams = array();
+
+	foreach ( is_array( $rows ) ? array_slice( $rows, 0, 4 ) : array() as $row ) {
+		$heading = isset( $row['heading'] ) && is_string( $row['heading'] ) ? trim( $row['heading'] ) : '';
+		$image   = isset( $row['image'] ) ? absint( $row['image'] ) : 0;
+		$link    = isset( $row['link'] ) && is_array( $row['link'] ) ? $row['link'] : array();
+		$label   = isset( $link['title'] ) && is_string( $link['title'] ) ? trim( $link['title'] ) : '';
+		$url     = isset( $link['url'] ) && is_string( $link['url'] ) ? esc_url_raw( $link['url'] ) : '';
+
+		if ( '' === $heading || ! $image || ! wp_attachment_is_image( $image ) || '' === $label || '' === $url ) {
+			continue;
+		}
+
+		$background = isset( $row['background'] ) ? absint( $row['background'] ) : 0;
+		$image_url  = function_exists( 'ltt_dive_in_sanitize_live_cam_image_url' ) ? ltt_dive_in_sanitize_live_cam_image_url( $row['image_url'] ?? '' ) : '';
+
+		$cams[] = array(
+			'heading'    => $heading,
+			'text'       => isset( $row['text'] ) && is_string( $row['text'] ) ? trim( $row['text'] ) : '',
+			'image'      => $image,
+			'latest'     => $image_url ? ltt_dive_in_get_live_cam_image( $image_url ) : null,
+			'background' => $background && wp_attachment_is_image( $background ) ? $background : 0,
+			'label'      => $label,
+			'url'        => $url,
+			'new_tab'    => '_blank' === ( $link['target'] ?? '' ),
+		);
+	}
+
+	return $cams;
 }
 
 /**
