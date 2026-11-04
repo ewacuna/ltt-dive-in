@@ -18,7 +18,7 @@ function ltt_dive_in_get_activity_tile_from_post( $post_id ) {
 
 	return array(
 		'title'       => get_the_title( $post_id ),
-		'description' => get_the_excerpt( $post_id ),
+		'description' => 'page' === get_post_type( $post_id ) ? ltt_dive_in_get_page_card_description( $post_id ) : get_the_excerpt( $post_id ),
 		'url'         => get_permalink( $post_id ),
 		'image_id'    => get_post_thumbnail_id( $post_id ),
 		'cta_label'   => __( 'Explore', 'ltt-dive-in' ),

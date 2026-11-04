@@ -388,7 +388,7 @@ function ltt_dive_in_page_driver_render_groups( $data ) {
 		$image = get_post_thumbnail_id( $post->ID );
 		$title = get_the_title( $post );
 		if ( $image && wp_attachment_is_image( $image ) && trim( $title ) ) {
-			$cards[ $post->ID ] = array( 'id' => $post->ID, 'title' => $title, 'excerpt' => get_the_excerpt( $post ), 'image' => $image );
+			$cards[ $post->ID ] = array( 'id' => $post->ID, 'title' => $title, 'excerpt' => ltt_dive_in_get_page_card_description( $post->ID ), 'image' => $image );
 		}
 	}
 	$groups = array();

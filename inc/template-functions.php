@@ -10,6 +10,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Keep the optional page card description as plain text when saved by ACF.
+ *
+ * @param mixed $value Submitted description.
+ * @return string
+ */
+function ltt_dive_in_sanitize_page_card_description( $value ) {
+	return is_string( $value ) ? sanitize_textarea_field( $value ) : '';
+}
+add_filter( 'acf/update_value/key=field_ltt_dive_in_page_card_description', 'ltt_dive_in_sanitize_page_card_description' );
+
+/**
  * Add useful classes to the body element.
  *
  * @param string[] $classes Existing body classes.

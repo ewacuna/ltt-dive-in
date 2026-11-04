@@ -1,0 +1,22 @@
+{
+  "key": "group_ltt_dive_in_page_card_content",
+  "title": "Card content",
+  "fields": [
+    {
+      "key": "field_ltt_dive_in_page_card_description",
+      "label": "Description",
+      "name": "ltt_dive_in_page_card_description",
+      "type": "textarea",
+      "required": 0,
+      "rows": 3,
+      "new_lines": ""
+    }
+  ],
+  "location": [[{"param": "post_type", "operator": "==", "value": "page"}]],
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "active": true,
+  "show_in_rest": 0
+}

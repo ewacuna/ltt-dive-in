@@ -39,7 +39,7 @@ if ( ! is_string( $layout ) || ! in_array( $layout, $layouts, true ) || ! is_str
 $tiles = array();
 foreach ( $group_mode ? array() : array_slice( array_values( array_filter( array_map( 'absint', $tile_ids ) ) ), 0, 12 ) as $tile_id ) {
 	if ( 'publish' === get_post_status( $tile_id ) && 'page' === get_post_type( $tile_id ) && has_post_thumbnail( $tile_id ) ) {
-		$tiles[] = array( 'id' => $tile_id, 'title' => get_the_title( $tile_id ), 'excerpt' => get_the_excerpt( $tile_id ), 'image' => get_post_thumbnail_id( $tile_id ) );
+		$tiles[] = array( 'id' => $tile_id, 'title' => get_the_title( $tile_id ), 'excerpt' => ltt_dive_in_get_page_card_description( $tile_id ), 'image' => get_post_thumbnail_id( $tile_id ) );
 	}
 }
 if ( $group_mode ) {

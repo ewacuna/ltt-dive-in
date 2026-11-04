@@ -10,6 +10,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Read a page's optional card description without generating an excerpt.
+ *
+ * @param int $page_id Explicit page ID.
+ * @return string Plain text, or an empty string when unavailable.
+ */
+function ltt_dive_in_get_page_card_description( $page_id ) {
+	$page_id = absint( $page_id );
+
+	if ( ! $page_id || 'page' !== get_post_type( $page_id ) || ! function_exists( 'get_field' ) ) {
+		return '';
+	}
+
+	$description = get_field( 'ltt_dive_in_page_card_description', $page_id, false );
+
+	return is_string( $description ) ? trim( wp_strip_all_tags( $description ) ) : '';
+}
+
+/**
  * Print the published date.
  */
 function ltt_dive_in_posted_on() {
