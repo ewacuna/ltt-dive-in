@@ -40,6 +40,7 @@
 		const status = driver.querySelector( '[data-page-driver-status]' );
 		const groupMode = driver.dataset.pageDriverGroupMode === 'true';
 		const isCarousel = Boolean( driver.querySelector( '[data-page-driver-carousel]' ) );
+		const isFiveUp = driver.classList.contains( 'page-drivers--five-up' );
 
 		if ( ! filters.length || ! cards.length ) {
 			return;
@@ -48,6 +49,7 @@
 		const activateFilter = function ( activeFilter ) {
 			const termId = activeFilter.dataset.pageDriverFilter;
 			let visibleCount = 0;
+			let firstVisibleCard = null;
 
 			if ( grid ) {
 				grid.classList.toggle( 'is-filtered', 'all' !== termId );
@@ -77,9 +79,16 @@
 				}
 
 				if ( visible ) {
+					firstVisibleCard = firstVisibleCard || card;
 					visibleCount += 1;
 				}
 			} );
+
+			if ( isFiveUp ) {
+				cards.forEach( function ( card ) {
+					card.classList.toggle( 'page-drivers__card--featured', 5 === visibleCount && card === firstVisibleCard );
+				} );
+			}
 
 			if ( grid && ! isCarousel && 'all' !== termId && visibleCount > 0 && visibleCount <= 3 ) {
 				grid.dataset.visibleCount = String( visibleCount );

@@ -25,6 +25,7 @@ $group_mode   = ! empty( $args['group_mode'] ) && ! $is_carousel;
 $navigation   = $group_mode && isset( $args['navigation'] ) ? $args['navigation'] : array();
 $active_term  = $navigation['selected'] ?? 0;
 $visible_count = $group_mode ? count( array_filter( $tiles, static function ( $tile ) use ( $active_term ) { return in_array( $active_term, $tile['terms'], true ); } ) ) : count( $tiles );
+$feature_first_visible = 'five_up' === $layout && 5 === $visible_count;
 
 if ( ! $heading || ! $tiles ) {
 	return;
@@ -206,8 +207,12 @@ if ( $is_monthly ) {
 				if ( ! $tile_id || ! $tile_title || ! $image_id ) {
 					continue;
 				}
+				$tile_featured = $feature_first_visible && ! $tile_hidden;
+				if ( $tile_featured ) {
+					$feature_first_visible = false;
+				}
 				?>
-				<article<?php echo $tile_anchor ? ' id="' . esc_attr( $tile_anchor ) . '"' : ''; ?><?php echo $tile_hidden ? ' hidden' : ''; ?> class="page-drivers__card<?php echo $is_carousel ? ' swiper-slide' : ''; ?>" data-page-driver-card data-page-driver-terms="<?php echo esc_attr( implode( ' ', $terms ) ); ?>"<?php echo $is_monthly ? ' data-page-driver-month-terms="' . esc_attr( implode( ' ', $month_terms ) ) . '"' : ''; ?>>
+				<article<?php echo $tile_anchor ? ' id="' . esc_attr( $tile_anchor ) . '"' : ''; ?><?php echo $tile_hidden ? ' hidden' : ''; ?> class="page-drivers__card<?php echo $tile_featured ? ' page-drivers__card--featured' : ''; ?><?php echo $is_carousel ? ' swiper-slide' : ''; ?>" data-page-driver-card data-page-driver-terms="<?php echo esc_attr( implode( ' ', $terms ) ); ?>"<?php echo $is_monthly ? ' data-page-driver-month-terms="' . esc_attr( implode( ' ', $month_terms ) ) . '"' : ''; ?>>
 					<a class="page-drivers__card-link" href="<?php echo esc_url( get_permalink( $tile_id ) ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Explore %s', 'ltt-dive-in' ), $tile_title ) ); ?>">
 						<span class="page-drivers__media" aria-hidden="true">
 							<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>

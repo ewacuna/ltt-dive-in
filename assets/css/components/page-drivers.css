@@ -238,18 +238,12 @@
     --page-driver-card-height: 17rem;
 }
 
-.page-drivers--five-up .page-drivers__card:first-child {
+.page-drivers--five-up .page-drivers__card--featured {
     grid-row: span 2;
 }
 
 .page-drivers--five-up
-    .page-drivers__grid.is-filtered
-    .page-drivers__card:first-child {
-    grid-row: auto;
-}
-
-.page-drivers--five-up
-    .page-drivers__card:first-child
+    .page-drivers__card--featured
     .page-drivers__card-link {
     height: 100%;
 }
@@ -591,12 +585,12 @@
         right: 0.9375rem;
     }
 
-    .page-drivers--five-up .page-drivers__card:first-child {
+    .page-drivers--five-up .page-drivers__card--featured {
         grid-row: auto;
     }
 
     .page-drivers--five-up
-        .page-drivers__card:first-child
+        .page-drivers__card--featured
         .page-drivers__card-link {
         height: auto;
     }
