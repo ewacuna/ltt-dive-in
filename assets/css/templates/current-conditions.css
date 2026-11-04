@@ -1268,6 +1268,15 @@
 	display: block;
 }
 
+.ski-cams + .current-conditions-links::before {
+	display: block;
+	max-width: 80rem;
+	height: 2px;
+	margin-inline: auto;
+	background: #073959;
+	content: "";
+}
+
 @media (forced-colors: active) {
 	.ski-cams__badge {
 		border: 1px solid CanvasText;
@@ -1595,6 +1604,10 @@
 		flex-direction: column;
 		align-items: flex-start;
 		padding-block: 1.5rem;
+	}
+
+	.ski-cams + .current-conditions-links::before {
+		margin: -1.5rem 0.25rem 1.5rem;
 	}
 }
 
