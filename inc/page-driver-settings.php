@@ -249,6 +249,14 @@ function ltt_dive_in_register_page_driver_settings() {
 					'maxlength'    => 240,
 				),
 				array(
+					'key'          => 'field_ltt_dive_in_page_driver_button_text',
+					'label'        => __( 'Button text', 'ltt-dive-in' ),
+					'name'         => 'ltt_dive_in_page_driver_button_text',
+					'type'         => 'text',
+					'instructions' => __( 'Used on every card.', 'ltt-dive-in' ),
+					'placeholder'  => __( 'Explore', 'ltt-dive-in' ),
+				),
+				array(
 					'key'           => 'field_ltt_dive_in_page_driver_show_excerpt',
 					'label'         => __( 'Show page descriptions', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_driver_show_excerpt',

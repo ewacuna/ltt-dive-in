@@ -95,6 +95,7 @@ get_template_part(
 		'heading'      => trim( $heading ),
 		'tag'          => (string) $get_value( 'ltt_dive_in_page_driver_tag' ),
 		'intro'        => (string) $get_value( 'ltt_dive_in_page_driver_intro' ),
+		'button_text'  => $get_value( 'ltt_dive_in_page_driver_button_text' ),
 		'show_excerpt' => (bool) $get_value( 'ltt_dive_in_page_driver_show_excerpt' ),
 		'tiles'        => $tiles,
 		'filters'      => $filters,

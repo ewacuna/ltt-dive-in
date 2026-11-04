@@ -16,6 +16,8 @@ $surface      = isset( $args['surface'] ) && 'dark' === $args['surface'] ? 'dark
 $heading      = isset( $args['heading'] ) && is_string( $args['heading'] ) ? $args['heading'] : '';
 $tag          = isset( $args['tag'] ) && is_string( $args['tag'] ) ? $args['tag'] : '';
 $intro        = isset( $args['intro'] ) && is_string( $args['intro'] ) ? $args['intro'] : '';
+$button_text  = isset( $args['button_text'] ) && is_string( $args['button_text'] ) ? trim( sanitize_text_field( $args['button_text'] ) ) : '';
+$button_text  = '' !== $button_text ? $button_text : __( 'Explore', 'ltt-dive-in' );
 $show_excerpt = ! empty( $args['show_excerpt'] );
 $tiles        = isset( $args['tiles'] ) && is_array( $args['tiles'] ) ? $args['tiles'] : array();
 $filters      = isset( $args['filters'] ) && is_array( $args['filters'] ) ? $args['filters'] : array();
@@ -213,7 +215,10 @@ if ( $is_monthly ) {
 				}
 				?>
 				<article<?php echo $tile_anchor ? ' id="' . esc_attr( $tile_anchor ) . '"' : ''; ?><?php echo $tile_hidden ? ' hidden' : ''; ?> class="page-drivers__card<?php echo $tile_featured ? ' page-drivers__card--featured' : ''; ?><?php echo $is_carousel ? ' swiper-slide' : ''; ?>" data-page-driver-card data-page-driver-terms="<?php echo esc_attr( implode( ' ', $terms ) ); ?>"<?php echo $is_monthly ? ' data-page-driver-month-terms="' . esc_attr( implode( ' ', $month_terms ) ) . '"' : ''; ?>>
-					<a class="page-drivers__card-link" href="<?php echo esc_url( get_permalink( $tile_id ) ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Explore %s', 'ltt-dive-in' ), $tile_title ) ); ?>">
+					<a class="page-drivers__card-link" href="<?php echo esc_url( get_permalink( $tile_id ) ); ?>" aria-label="<?php
+						/* translators: 1: card button text, 2: destination page title. */
+						echo esc_attr( sprintf( __( '%1$s %2$s', 'ltt-dive-in' ), $button_text, $tile_title ) );
+					?>">
 						<span class="page-drivers__media" aria-hidden="true">
 							<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
 						</span>
@@ -222,7 +227,7 @@ if ( $is_monthly ) {
 							<?php if ( $show_excerpt && ! empty( $tile['excerpt'] ) ) : ?>
 								<span class="page-drivers__card-excerpt"><?php echo esc_html( wp_trim_words( wp_strip_all_tags( $tile['excerpt'] ), 22 ) ); ?></span>
 							<?php endif; ?>
-							<span class="page-drivers__card-cta ltt-button ltt-button--glass" aria-hidden="true"><?php esc_html_e( 'Explore', 'ltt-dive-in' ); ?></span>
+							<span class="page-drivers__card-cta ltt-button ltt-button--glass" aria-hidden="true"><?php echo esc_html( $button_text ); ?></span>
 						</span>
 					</a>
 				</article>
