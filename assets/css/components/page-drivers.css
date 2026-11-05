@@ -235,7 +235,17 @@
 
 .page-drivers--five-up {
     --page-driver-columns: 3;
-    --page-driver-card-height: 17rem;
+    --page-driver-card-height: 19.25rem;
+    --page-driver-featured-columns: minmax(0, 510fr) repeat(2, minmax(0, 454fr));
+}
+
+:is(.page-drivers--one-up, .page-drivers--two-up, .page-drivers--three-up, .page-drivers--four-up, .page-drivers--five-up) .page-drivers__card-link {
+    height: 100%;
+}
+
+/* Use the asymmetric grid only while all five cards are visible. */
+.page-drivers--five-up .page-drivers__grid:has(> .page-drivers__card--featured:not([hidden])) {
+    grid-template-columns: var(--page-driver-featured-columns);
 }
 
 .page-drivers--five-up .page-drivers__card--featured {
@@ -467,6 +477,10 @@
 }
 
 @media (max-width: 991.98px) {
+    .page-drivers--five-up {
+        --page-driver-featured-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .page-drivers__grid,
     .page-drivers--two-up .page-drivers__grid,
     .page-drivers--three-up .page-drivers__grid,
@@ -490,6 +504,10 @@
 }
 
 @media (max-width: 767.98px) {
+    .page-drivers--five-up {
+        --page-driver-featured-columns: 1fr;
+    }
+
     .page-drivers {
         padding-top: 2.5rem;
     }
@@ -527,6 +545,18 @@
 
     .page-drivers__card {
         min-height: 17.5rem;
+    }
+
+    .page-drivers--one-up .page-drivers__card,
+    .page-drivers--two-up .page-drivers__card,
+    .page-drivers--three-up .page-drivers__card,
+    .page-drivers--five-up .page-drivers__card {
+        min-height: 18.75rem;
+    }
+
+    .page-drivers--four-up .page-drivers__card,
+    .page-drivers--two-up .page-drivers__card:nth-child(2 of .page-drivers__card:not([hidden])) {
+        min-height: 19.25rem;
     }
 
     .page-drivers--one-up .page-drivers__card-title,
