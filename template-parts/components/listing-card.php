@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $title      = isset( $args['title'] ) ? trim( (string) $args['title'] ) : '';
 $copy       = isset( $args['copy'] ) ? trim( (string) $args['copy'] ) : '';
 $image_id   = isset( $args['image_id'] ) ? absint( $args['image_id'] ) : 0;
+$url        = isset( $args['url'] ) && is_string( $args['url'] ) ? esc_url_raw( $args['url'] ) : '';
 $buttons    = isset( $args['buttons'] ) && is_array( $args['buttons'] ) ? $args['buttons'] : array();
 $is_preview = ! empty( $args['is_preview'] );
 
@@ -33,6 +34,12 @@ if ( '' === $title ) {
 }
 ?>
 <article class="ltt-listing-module__card<?php echo $buttons ? '' : ' ltt-listing-module__card--without-buttons'; ?>">
+	<?php if ( ! $is_preview && '' !== $url ) : ?>
+		<a class="ltt-listing-module__card-link" href="<?php echo esc_url( $url ); ?>" aria-label="<?php
+			/* translators: %s: listing title. */
+			echo esc_attr( sprintf( __( 'View %s', 'ltt-dive-in' ), $title ) );
+		?>"></a>
+	<?php endif; ?>
 	<div class="ltt-listing-module__media<?php echo $image_id ? '' : ' ltt-listing-module__media--empty'; ?>">
 		<?php if ( $image_id ) : ?>
 			<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'class' => 'ltt-listing-module__image', 'sizes' => '(max-width: 767.98px) 100vw, (max-width: 1199.98px) 50vw, 33vw' ) ); ?>

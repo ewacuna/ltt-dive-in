@@ -327,7 +327,20 @@
 }
 
 .ltt-listing-module__card {
+    position: relative;
     min-width: 0;
+    isolation: isolate;
+}
+
+.ltt-listing-module__card-link {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+}
+
+.ltt-listing-module__card-link:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: -3px;
 }
 
 .ltt-listing-module__media {
@@ -381,6 +394,7 @@
     z-index: 1;
     inset: 0;
     background: radial-gradient(ellipse 80% 28% at center, rgba(0, 0, 0, 0.8), rgba(21, 20, 25, 0) 60.577%), rgba(0, 0, 0, 0.2);
+    transition: background-color 200ms ease-out;
     content: "";
 }
 
@@ -395,6 +409,16 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scale(1);
+    transition: transform 300ms ease-out;
+}
+
+.ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__image {
+    transform: scale(1.04);
+}
+
+.ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__media::after {
+    background-color: rgba(2, 22, 43, 0.4);
 }
 
 .ltt-listing-module__card-copy {
@@ -438,6 +462,8 @@
 }
 
 .ltt-listing-module__card-button {
+    position: relative;
+    z-index: 5;
     width: 100%;
     overflow-wrap: anywhere;
 }
@@ -842,6 +868,8 @@
         scroll-behavior: auto;
     }
 
+    .ltt-listing-module__image,
+    .ltt-listing-module__media::after,
     .ltt-listing-module__load-preview-label,
     .ltt-listing-module__load-preview::after,
     .ltt-listing-module__load-more-wrap .facetwp-load-more,

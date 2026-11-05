@@ -154,6 +154,7 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 						null,
 						array(
 							'image_id'   => get_post_thumbnail_id( $listing_post ),
+							'url'        => get_permalink( $listing_post ),
 							'title'      => get_the_title( $listing_post ),
 							'copy'       => wp_trim_words( wp_strip_all_tags( get_the_excerpt( $listing_post ) ), 24, '…' ),
 							'buttons'    => ltt_dive_in_listing_card_buttons( $listing_post ),
