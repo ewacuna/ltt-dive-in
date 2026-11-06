@@ -67,7 +67,7 @@
       "type": "repeater",
       "required": 1,
       "min": 4,
-      "max": 4,
+      "max": 0,
       "layout": "block",
       "button_label": "Add card",
       "sub_fields": [
@@ -117,9 +117,9 @@
         {
           "key": "field_ltt_dive_in_page_cluster_card_see_more_link",
           "name": "see_more_link",
-          "label": "See More link",
+          "label": "Card link",
           "type": "link",
-          "instructions": "Choose the destination. The front-end link label is fixed to See More.",
+          "instructions": "Choose a destination and enter the link text.",
           "required": 1,
           "return_format": "array",
           "conditional_logic": [

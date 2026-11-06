@@ -18,7 +18,7 @@ $title = trim( (string) get_field( 'ltt_dive_in_page_cluster_title' ) );
 $label = trim( (string) get_field( 'ltt_dive_in_page_cluster_label' ) );
 $body = trim( (string) get_field( 'ltt_dive_in_page_cluster_body' ) );
 $cards = get_field( 'ltt_dive_in_page_cluster_cards' );
-$cards = is_array( $cards ) ? array_slice( array_filter( $cards, 'is_array' ), 0, 4 ) : array();
+$cards = is_array( $cards ) ? array_filter( $cards, 'is_array' ) : array();
 $primary_cta = get_field( 'ltt_dive_in_page_cluster_primary_cta' );
 $secondary_cta = get_field( 'ltt_dive_in_page_cluster_secondary_cta' );
 $has_cta = static function ( $link ) {
@@ -69,9 +69,12 @@ if ( 'features' === $variant && ! $is_preview && function_exists( 'ltt_dive_in_e
 				<?php
 				$see_more_link = $card['see_more_link'] ?? array();
 				$has_see_more  = is_array( $see_more_link ) && ! empty( $see_more_link['url'] ) && (bool) esc_url( $see_more_link['url'] );
+				$see_more_text = is_array( $see_more_link ) ? trim( wp_strip_all_tags( (string) ( $see_more_link['title'] ?? '' ) ) ) : '';
+				$see_more_text = '' !== $see_more_text ? $see_more_text : __( 'See More', 'ltt-dive-in' );
 				$see_more_label = ! empty( $card['title'] )
-					? sprintf( __( 'See more about %s', 'ltt-dive-in' ), wp_strip_all_tags( (string) $card['title'] ) )
-					: __( 'See more', 'ltt-dive-in' );
+					/* translators: 1: Link text, 2: Card title. */
+					? sprintf( __( '%1$s: %2$s', 'ltt-dive-in' ), $see_more_text, wp_strip_all_tags( (string) $card['title'] ) )
+					: $see_more_text;
 				?>
 				<article class="page-cluster__card">
 					<?php if ( ! empty( $card['image'] ) ) : ?>
@@ -83,7 +86,7 @@ if ( 'features' === $variant && ! $is_preview && function_exists( 'ltt_dive_in_e
 						<?php if ( 'hub' === $variant ) { $render_cta( $card['cta'] ?? array(), 'glass', 'page-cluster__card-cta' ); } ?>
 						<?php if ( 'features' === $variant && $has_see_more ) : ?>
 							<?php $see_more_tag = $is_preview ? 'span' : 'a'; ?>
-							<<?php echo esc_html( $see_more_tag ); ?> class="page-cluster__card-see-more"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $see_more_link['url'] ); ?>" aria-label="<?php echo esc_attr( $see_more_label ); ?>"<?php if ( '_blank' === ( $see_more_link['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php endif; ?>><?php esc_html_e( 'See More', 'ltt-dive-in' ); ?><span class="page-cluster__card-see-more-icon" aria-hidden="true"></span></<?php echo esc_html( $see_more_tag ); ?>>
+							<<?php echo esc_html( $see_more_tag ); ?> class="page-cluster__card-see-more"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $see_more_link['url'] ); ?>" aria-label="<?php echo esc_attr( $see_more_label ); ?>"<?php if ( '_blank' === ( $see_more_link['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php endif; ?>><?php echo esc_html( $see_more_text ); ?><span class="page-cluster__card-see-more-icon" aria-hidden="true"></span></<?php echo esc_html( $see_more_tag ); ?>>
 						<?php endif; ?>
 					</div>
 				</article>
