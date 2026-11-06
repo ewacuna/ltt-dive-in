@@ -163,12 +163,16 @@
 				return;
 			}
 
-			toggle.hidden = false;
-			toggle.addEventListener( 'click', function () {
-				const expanded = 'true' !== toggle.getAttribute( 'aria-expanded' );
-
+			const setExpanded = function ( expanded ) {
 				toggle.setAttribute( 'aria-expanded', expanded ? 'true' : 'false' );
 				details.hidden = ! expanded;
+			};
+			const card = toggle.closest( '[data-road-highway]' );
+
+			setExpanded( ! ( card && card.hasAttribute( 'data-road-card-collapsed' ) ) );
+			toggle.hidden = false;
+			toggle.addEventListener( 'click', function () {
+				setExpanded( 'true' !== toggle.getAttribute( 'aria-expanded' ) );
 			} );
 		} );
 	};

@@ -712,7 +712,8 @@ function ltt_dive_in_fetch_nv511( $endpoint, $normalizer ) {
 				'format' => 'json',
 			),
 			'https://www.nvroads.com/api/' . $endpoint
-		)
+		),
+		30
 	);
 
 	if ( is_wp_error( $body ) ) {

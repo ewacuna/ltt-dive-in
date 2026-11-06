@@ -503,15 +503,7 @@ function ltt_dive_in_build_california_road_card( $highway, $sources, $area ) {
 		$card['entries'] = array_merge( $card['entries'], array( $entry ) );
 	}
 
-	if ( ! $card['entries'] ) {
-		$card['entries'][] = array(
-			'title'  => __( 'Closures and lane restrictions', 'ltt-dive-in' ),
-			'text'   => __( 'No traffic restrictions are reported for this area.', 'ltt-dive-in' ),
-			'muted'  => true,
-			'points' => array( array( $area['latitude'], $area['longitude'] ) ),
-			'full'   => false,
-		);
-	}
+	$card = ltt_dive_in_add_road_card_empty_entry( $card, $sources, 'ca_closures', $area );
 
 	return ltt_dive_in_attach_road_cameras( $card, $highway, $sources['ca_cameras']['items'] ?? array() );
 }
@@ -659,17 +651,40 @@ function ltt_dive_in_build_nevada_road_card( $highway, $sources, $area ) {
 		$card['entries'] = array_merge( $card['entries'], array( $entry ) );
 	}
 
+	$card = ltt_dive_in_add_road_card_empty_entry( $card, $sources, 'nv_events', $area );
+
+	return ltt_dive_in_attach_road_cameras( $card, $highway, $sources['nv_cameras']['items'] ?? array() );
+}
+
+/**
+ * Add the placeholder entry to a card without reports.
+ *
+ * When the closure or event source failed, the card cannot claim No Restrictions.
+ *
+ * @param array  $card    Card.
+ * @param array  $sources Sources from ltt_dive_in_get_road_conditions().
+ * @param string $source  Source ID of the closures or events feed.
+ * @param array  $area    Area.
+ * @return array
+ */
+function ltt_dive_in_add_road_card_empty_entry( $card, $sources, $source, $area ) {
+	$available = 'ok' === ( $sources[ $source ]['status'] ?? '' );
+
+	if ( ! $available && 'clear' === $card['status'] ) {
+		$card['status'] = 'none';
+	}
+
 	if ( ! $card['entries'] ) {
 		$card['entries'][] = array(
 			'title'  => __( 'Closures and lane restrictions', 'ltt-dive-in' ),
-			'text'   => __( 'No traffic restrictions are reported for this area.', 'ltt-dive-in' ),
+			'text'   => $available ? __( 'No traffic restrictions are reported for this area.', 'ltt-dive-in' ) : __( 'Closure and lane-restriction reports are not available right now.', 'ltt-dive-in' ),
 			'muted'  => true,
 			'points' => array( array( $area['latitude'], $area['longitude'] ) ),
 			'full'   => false,
 		);
 	}
 
-	return ltt_dive_in_attach_road_cameras( $card, $highway, $sources['nv_cameras']['items'] ?? array() );
+	return $card;
 }
 
 /**

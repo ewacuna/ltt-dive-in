@@ -23,7 +23,7 @@ if ( empty( $card['name'] ) || ! $id ) {
 $labels = ltt_dive_in_get_road_status_labels();
 $status = isset( $labels[ $card['status'] ] ) ? $card['status'] : 'none';
 ?>
-<article class="road-card" aria-labelledby="<?php echo esc_attr( $id ); ?>-title" data-road-highway="<?php echo esc_attr( $card['slug'] ); ?>"<?php echo $hidden ? ' hidden' : ''; ?>>
+<article class="road-card" aria-labelledby="<?php echo esc_attr( $id ); ?>-title" data-road-highway="<?php echo esc_attr( $card['slug'] ); ?>"<?php echo 'clear' === $status ? ' data-road-card-collapsed' : ''; ?><?php echo $hidden ? ' hidden' : ''; ?>>
 	<div class="road-card__header">
 		<?php
 		$sign = ltt_dive_in_get_road_sign_markup( $card['sign'] ?? 0 );
