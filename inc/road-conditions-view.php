@@ -176,15 +176,10 @@ function ltt_dive_in_get_road_state_view( $state, $highways, $area ) {
 		return $view;
 	}
 
-	// Nevada 511 cards are mapped once a developer key is available and its real response is reviewed.
-	if ( 'california' !== $state ) {
-		$view['status'] = 'unavailable';
-
-		return $view;
-	}
+	$builder = 'nevada' === $state ? 'ltt_dive_in_build_nevada_road_card' : 'ltt_dive_in_build_california_road_card';
 
 	foreach ( ltt_dive_in_filter_highways_by_state( $highways, $state ) as $highway ) {
-		$view['cards'][] = ltt_dive_in_build_california_road_card( $highway, $data['sources'], $area );
+		$view['cards'][] = call_user_func( $builder, $highway, $data['sources'], $area );
 	}
 
 	return $view;
@@ -519,6 +514,162 @@ function ltt_dive_in_build_california_road_card( $highway, $sources, $area ) {
 	}
 
 	return ltt_dive_in_attach_road_cameras( $card, $highway, $sources['ca_cameras']['items'] ?? array() );
+}
+
+/**
+ * Classify a Nevada 511 road-condition status.
+ *
+ * @param string   $status    Overall status, such as `No Report` or `Road Closed`.
+ * @param string[] $secondary Secondary conditions.
+ * @return array{status: string, label: string} Card status and the short row value.
+ */
+function ltt_dive_in_classify_nv511_condition( $status, $secondary ) {
+	$status = trim( (string) $status );
+	$text   = strtolower( $status . ' ' . implode( ' ', $secondary ) );
+
+	if ( '' === $status || 'no report' === strtolower( $status ) ) {
+		$result = 'none';
+	} elseif ( preg_match( '/\bclosed\b/', strtolower( $status ) ) && ! preg_match( '/\b(vehicles|trucks|high[- ]profile|trailers)\b/', strtolower( $status ) ) ) {
+		$result = 'closed';
+	} elseif ( preg_match( '/\b(chains?|snow tires)\b/', $text ) ) {
+		$result = 'chains';
+	} elseif ( in_array( strtolower( $status ), array( 'dry', 'clear', 'normal', 'good', 'seasonal' ), true ) ) {
+		$result = 'clear';
+	} else {
+		$result = 'advisory';
+	}
+
+	return array(
+		'status' => $result,
+		'label'  => 'none' === $result ? __( 'No report', 'ltt-dive-in' ) : $status,
+	);
+}
+
+/**
+ * Build one display entry for a Nevada 511 traffic event from its generated description.
+ *
+ * @param array $event Normalized event.
+ * @return array{title: string, text: string, muted: bool, points: array, full: bool}
+ */
+function ltt_dive_in_build_nv511_event_entry( $event ) {
+	$description = $event['description'];
+	$ramp        = preg_match( '/\bon (ramp from .+? to .+?)\./i', $description, $ramp_match );
+	$place       = '';
+
+	if ( $ramp ) {
+		$place = ucfirst( $ramp_match[1] );
+	} elseif ( preg_match( '/\bfrom (.+?) to (.+?)\./', $description, $matches ) ) {
+		/* translators: 1: starting location, 2: ending location. */
+		$place = sprintf( __( '%1$s to %2$s', 'ltt-dive-in' ), $matches[1], $matches[2] );
+	} elseif ( preg_match( '/\bNear (.+?)\./', $description, $matches ) ) {
+		/* translators: %s: location. */
+		$place = sprintf( __( 'Near %s', 'ltt-dive-in' ), $matches[1] );
+	}
+
+	$direction = 'both' === strtolower( $event['direction'] ) ? __( 'Both directions', 'ltt-dive-in' ) : ltt_dive_in_describe_road_directions( array( $event['direction'] ) );
+	$title     = implode( ' · ', array_filter( array( $ramp ? '' : $direction, $place ) ) );
+	$sentences = array();
+
+	if ( preg_match( '/^(?:(?:minor|moderate|major|serious)\s+)?(.+?)\s+on\s+/i', $description, $matches ) ) {
+		$sentences[] = ucfirst( strtolower( $matches[1] ) ) . '.';
+	}
+
+	if ( $event['lanes'] && 'no data' !== strtolower( $event['lanes'] ) ) {
+		$sentences[] = ucfirst( strtolower( str_replace( ' - ', '; ', $event['lanes'] ) ) ) . '.';
+	}
+
+	$sentences[] = ltt_dive_in_format_road_end_time( $event['ends_at'] );
+
+	if ( preg_match( '/Public Details:\s*(.+)$/is', $description, $matches ) || preg_match( '/End time:[^.]*?[AP]M\.\s*(.+)$/is', $description, $matches ) ) {
+		$details = trim( preg_replace( array( '/\s*\.(?:\s*\.)+/', '/\s+/' ), array( '.', ' ' ), $matches[1] ) );
+
+		if ( '' !== $details ) {
+			$sentences[] = preg_match( '/[.!?]$/', $details ) ? $details : $details . '.';
+		}
+	}
+
+	return array(
+		'title'  => '' !== $title ? $title : __( 'Traffic event', 'ltt-dive-in' ),
+		'text'   => implode( ' ', $sentences ),
+		'muted'  => false,
+		'points' => $event['points'],
+		'full'   => $event['full_closure'] && ! $ramp,
+	);
+}
+
+/**
+ * Build a Nevada highway card.
+ *
+ * Road-condition segments become the rows; traffic events in effect become the entries.
+ *
+ * @param array $highway Highway.
+ * @param array $sources Sources from ltt_dive_in_get_road_conditions().
+ * @param array $area    Area.
+ * @return array
+ */
+function ltt_dive_in_build_nevada_road_card( $highway, $sources, $area ) {
+	$card           = ltt_dive_in_road_card_base( $highway, 'nevada' );
+	$card['status'] = 'clear';
+	$route          = $highway['route'];
+	$rows           = array();
+
+	foreach ( ltt_dive_in_get_route_items( $sources, 'nv_conditions', $route ) as $segment ) {
+		$classification = ltt_dive_in_classify_nv511_condition( $segment['status'], $segment['secondary'] );
+		$label          = $segment['location'] ? $segment['location'] : $segment['area'];
+		$key            = strtolower( $label );
+
+		if ( '' === $label || ( isset( $rows[ $key ] ) && ltt_dive_in_worst_road_status( $rows[ $key ]['status'], $classification['status'] ) === $rows[ $key ]['status'] ) ) {
+			continue;
+		}
+
+		$rows[ $key ] = array(
+			'label'  => $label,
+			'value'  => $classification['label'],
+			'detail' => implode( ' · ', $segment['secondary'] ),
+			'status' => $classification['status'],
+		);
+
+		if ( 'none' !== $classification['status'] ) {
+			$card['status'] = ltt_dive_in_worst_road_status( $card['status'], $classification['status'] );
+		}
+	}
+
+	if ( $rows ) {
+		$statuses   = wp_list_pluck( $rows, 'status' );
+		$count      = count( $rows );
+		$restricted = count( array_intersect( $statuses, array( 'closed', 'chains', 'advisory' ) ) );
+
+		if ( $restricted ) {
+			/* translators: 1: number of road segments, 2: number with restrictions. */
+			$card['summary'] = sprintf( _n( '%1$d segment reporting · %2$d with restrictions', '%1$d segments reporting · %2$d with restrictions', $count, 'ltt-dive-in' ), $count, $restricted );
+		} elseif ( array_diff( $statuses, array( 'none' ) ) ) {
+			/* translators: %d: number of road segments. */
+			$card['summary'] = sprintf( _n( '%d segment reporting · no restrictions', '%d segments reporting · no restrictions', $count, 'ltt-dive-in' ), $count );
+		} else {
+			/* translators: %d: number of road segments. */
+			$card['summary'] = sprintf( _n( '%d segment reporting · no reports', '%d segments reporting · no reports', $count, 'ltt-dive-in' ), $count );
+		}
+
+		$card['checkpoints'] = array_values( $rows );
+	}
+
+	foreach ( ltt_dive_in_get_route_items( $sources, 'nv_events', $route ) as $event ) {
+		$entry           = ltt_dive_in_build_nv511_event_entry( $event );
+		$card['status']  = ltt_dive_in_worst_road_status( $card['status'], $entry['full'] ? 'closed' : 'advisory' );
+		$card['entries'] = array_merge( $card['entries'], array( $entry ) );
+	}
+
+	if ( ! $card['entries'] ) {
+		$card['entries'][] = array(
+			'title'  => __( 'Closures and lane restrictions', 'ltt-dive-in' ),
+			'text'   => __( 'No traffic restrictions are reported for this area.', 'ltt-dive-in' ),
+			'muted'  => true,
+			'points' => array( array( $area['latitude'], $area['longitude'] ) ),
+			'full'   => false,
+		);
+	}
+
+	return ltt_dive_in_attach_road_cameras( $card, $highway, $sources['nv_cameras']['items'] ?? array() );
 }
 
 /**

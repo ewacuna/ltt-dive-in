@@ -233,7 +233,7 @@ function ltt_dive_in_get_distance_miles( $lat1, $lng1, $lat2, $lng2 ) {
  * @return string Canonical ID such as `I-80`, `US-50`, or `SR-28`; empty when unrecognized.
  */
 function ltt_dive_in_normalize_route( $name ) {
-	if ( ! preg_match( '/^\s*(I|IR|IH|INTERSTATE|US|USA|SR|NV|CA|STATE ROUTE|HWY|HIGHWAY)?[\s\-]*(\d{1,3})\b/i', (string) $name, $matches ) ) {
+	if ( ! preg_match( '/^\s*(I|IR|IH|INTERSTATE|US|USA|SR|NV|CA|STATE ROUTE|HWY|HIGHWAY)?[\s\-]*(\d{1,3})\b(?![\s\-]*(?:ALT|BUS|BYP)\b)/i', (string) $name, $matches ) ) {
 		return '';
 	}
 
@@ -768,11 +768,23 @@ function ltt_dive_in_set_nv511_status( $status ) {
  *
  * Only used to test whether a segment reaches the area, so a sample is enough.
  *
- * @param string $encoded Encoded polyline.
- * @param int    $limit   Maximum points kept, including both ends.
+ * @param string|string[] $encoded Encoded polyline, or a list of polylines (Nevada 511 sends a list).
+ * @param int             $limit   Maximum points kept, including both ends.
  * @return array<int, array{0: float, 1: float}>
  */
 function ltt_dive_in_decode_polyline_sample( $encoded, $limit = 12 ) {
+	if ( is_array( $encoded ) ) {
+		$points = array();
+
+		foreach ( $encoded as $part ) {
+			if ( is_string( $part ) ) {
+				$points = array_merge( $points, ltt_dive_in_decode_polyline_sample( $part, PHP_INT_MAX ) );
+			}
+		}
+
+		return ltt_dive_in_sample_road_points( $points, $limit );
+	}
+
 	$points = array();
 	$length = strlen( (string) $encoded );
 	$index  = 0;
@@ -810,6 +822,17 @@ function ltt_dive_in_decode_polyline_sample( $encoded, $limit = 12 ) {
 		}
 	}
 
+	return ltt_dive_in_sample_road_points( $points, $limit );
+}
+
+/**
+ * Keep an evenly spaced sample of points, including both ends.
+ *
+ * @param array $points Points.
+ * @param int   $limit  Maximum points kept.
+ * @return array
+ */
+function ltt_dive_in_sample_road_points( $points, $limit ) {
 	$count = count( $points );
 
 	if ( $count <= $limit ) {
@@ -835,7 +858,7 @@ function ltt_dive_in_normalize_nv511_condition( $record ) {
 	$route  = ltt_dive_in_normalize_route( $record['RoadwayName'] ?? '' );
 	$points = ltt_dive_in_decode_polyline_sample( $record['EncodedPolyline'] ?? '' );
 
-	if ( ! isset( $record['Id'] ) || ! $route || ! $points ) {
+	if ( ! isset( $record['Id'] ) || ! $route || ! $points || 'california' === strtolower( trim( (string) ( $record['AreaName'] ?? '' ) ) ) ) {
 		return null;
 	}
 
