@@ -149,11 +149,12 @@
               "key": "field_ltt_dive_in_content_module_copy_list_item_text",
               "label": "Text",
               "name": "text",
-              "type": "textarea",
+              "type": "wysiwyg",
               "required": 1,
-              "rows": 3,
-              "maxlength": 500,
-              "new_lines": "",
+              "tabs": "all",
+              "toolbar": "full",
+              "media_upload": 0,
+              "delay": 0,
               "parent_repeater": "field_ltt_dive_in_content_module_copy_list_items"
             }
           ]

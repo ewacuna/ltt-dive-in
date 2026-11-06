@@ -291,7 +291,7 @@ if ( $heading ) {
 						?>
 						<<?php echo esc_attr( $tag ); ?> class="content-module__styled-list content-module__styled-list--<?php echo esc_attr( $type ); ?>"<?php echo 'icon' === $type ? ' role="list"' : ''; ?>>
 							<?php foreach ( $items as $item ) : ?>
-								<li><?php echo esc_html( $get_text( $item['text'] ) ); ?></li>
+								<li><div class="content-module__list-item-content"><?php echo wp_kses_post( wpautop( $get_text( $item['text'] ) ) ); ?></div></li>
 							<?php endforeach; ?>
 						</<?php echo esc_attr( $tag ); ?>>
 					<?php endforeach; ?>
