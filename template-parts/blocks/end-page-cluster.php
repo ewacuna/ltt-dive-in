@@ -101,41 +101,20 @@ if ( 'page_driver' === $variant ) {
 		$empty_notice( __( 'Add a title and three cards to preview the Page Driver.', 'ltt-dive-in' ) );
 		return;
 	}
-	$is_navy = 'navy' === get_field( 'ltt_dive_in_end_page_cluster_page_driver_background' );
-	$classes = array( 'end-page-cluster', 'end-page-cluster--page-driver' );
-	if ( $is_navy ) {
-		$classes[] = 'end-page-cluster--page-driver-navy';
-	}
-	if ( $is_full ) {
-		$classes[] = 'alignfull';
-	}
-	?>
-	<section id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" aria-labelledby="<?php echo esc_attr( $id ); ?>-title">
-		<div class="end-page-cluster__container">
-			<header class="end-page-cluster__header">
-				<?php if ( $tag ) : ?><p class="end-page-cluster__tag ltt-tag<?php echo $is_navy ? ' ltt-tag--dark' : ''; ?>"><?php echo esc_html( $tag ); ?></p><?php endif; ?>
-				<h2 id="<?php echo esc_attr( $id ); ?>-title" class="end-page-cluster__title"><?php echo esc_html( $title ); ?></h2>
-				<?php if ( $body ) : ?><p class="end-page-cluster__body"><?php echo esc_html( $body ); ?></p><?php endif; ?>
-			</header>
-			<div class="end-page-cluster__cards">
-				<?php foreach ( $cards as $card ) : ?>
-					<article class="end-page-cluster__card">
-						<?php if ( ! empty( $card['image'] ) ) : ?>
-							<div class="end-page-cluster__card-media" aria-hidden="true"><?php echo wp_get_attachment_image( absint( $card['image'] ), 'large', false, array( 'alt' => '', 'loading' => 'lazy', 'sizes' => '(max-width: 767.98px) 100vw, 33vw' ) ); ?></div>
-						<?php endif; ?>
-						<div class="end-page-cluster__card-content">
-							<h3 class="end-page-cluster__card-title"><?php echo esc_html( trim( $card['title'] ) ); ?></h3>
-							<?php if ( '' !== trim( (string) ( $card['copy'] ?? '' ) ) ) : ?>
-								<p class="end-page-cluster__card-body"><?php echo esc_html( trim( $card['copy'] ) ); ?></p>
-							<?php endif; ?>
-							<?php $render_cta( $card['cta'] ?? null, 'glass', 'end-page-cluster__card-cta' ); ?>
-						</div>
-					</article>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-	<?php
+	get_template_part(
+		'template-parts/components/page-driver-cluster',
+		null,
+		array(
+			'id'      => $id,
+			'tag'     => $tag,
+			'title'   => $title,
+			'body'    => $body,
+			'cards'   => $cards,
+			'navy'    => 'navy' === get_field( 'ltt_dive_in_end_page_cluster_page_driver_background' ),
+			'full'    => $is_full,
+			'preview' => $is_preview,
+		)
+	);
 	return;
 }
 

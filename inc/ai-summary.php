@@ -252,12 +252,14 @@ function ltt_dive_in_request_gemini_summary( $title, $content ) {
 	);
 	$models       = array_unique( array( ltt_dive_in_get_gemini_model(), ltt_dive_in_get_gemini_fallback_model() ) );
 
-	// Overloaded models answer 500/503; retry once with the fallback model.
+	// Overloaded models answer 500/503 or stop responding; retry once with the
+	// fallback model. The primary timeout leaves room for the retry.
+	$last_model = end( $models );
 	foreach ( $models as $model ) {
 		$response = wp_remote_post(
 			'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode( $model ) . ':generateContent',
 			array(
-				'timeout' => 45,
+				'timeout' => $model === $last_model ? 30 : 25,
 				'headers' => array(
 					'Content-Type'   => 'application/json',
 					'x-goog-api-key' => $api_key,
@@ -266,7 +268,7 @@ function ltt_dive_in_request_gemini_summary( $title, $content ) {
 			)
 		);
 
-		if ( is_wp_error( $response ) || ! in_array( (int) wp_remote_retrieve_response_code( $response ), array( 500, 503 ), true ) ) {
+		if ( ! is_wp_error( $response ) && ! in_array( (int) wp_remote_retrieve_response_code( $response ), array( 500, 503 ), true ) ) {
 			break;
 		}
 	}

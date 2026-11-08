@@ -256,6 +256,11 @@ function ltt_dive_in_enqueue_assets() {
 			file_exists( $stories_hero_path ) ? (string) filemtime( $stories_hero_path ) : LTT_DIVE_IN_VERSION
 		);
 
+		// The end-of-post Page Driver reuses the End Page Cluster styles.
+		if ( function_exists( 'ltt_dive_in_get_post_page_driver' ) && ltt_dive_in_get_post_page_driver( get_queried_object_id() ) ) {
+			wp_enqueue_style( 'ltt-dive-in-end-page-cluster' );
+		}
+
 		// The hero's "Show Summary" disclosure reuses the shared accordion script.
 		if ( '' !== ltt_dive_in_get_ai_summary( get_queried_object_id() ) ) {
 			wp_enqueue_script( 'ltt-dive-in-accordion' );

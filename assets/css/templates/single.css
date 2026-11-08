@@ -21,8 +21,7 @@
 }
 
 .single-main .entry-content > :not(.alignfull, .alignwide),
-.single-main .page-links,
-.single-main__navigation {
+.single-main .page-links {
     width: min(calc(100% - 8rem), var(--content-width));
     margin-inline: auto;
 }
@@ -101,76 +100,21 @@
     width: 100%;
 }
 
-/* Previous / next post */
-.single-main__navigation {
-    padding-top: 1.5rem;
-    border-top: 1px solid #e2e2e5;
-    margin-top: clamp(2.5rem, 5vw, 4rem);
-    margin-bottom: clamp(3rem, 7vw, 6rem);
-}
-
-.single-main__navigation .nav-links {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-}
-
-.single-main__navigation .nav-next {
-    grid-column: 2;
-    text-align: right;
-}
-
-.single-main__navigation a {
-    display: flex;
-    min-height: 2.75rem;
-    flex-direction: column;
-    gap: 0.25rem;
-    color: #073959;
-    text-decoration: none;
-}
-
-.single-main__navigation .post-navigation__label {
-    color: #525062;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    line-height: 1.45;
-    text-transform: uppercase;
-}
-
-.single-main__navigation .post-navigation__title {
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.45;
-    text-decoration: underline;
-}
-
-.single-main__navigation a:hover .post-navigation__title,
-.single-main__navigation a:focus .post-navigation__title {
-    text-decoration-thickness: 2px;
+/* Space before the end-of-post Page Driver or the footer. */
+.single-main__content {
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
 @media (max-width: 1199.98px) {
     .single-main .entry-content > :not(.alignfull, .alignwide),
-    .single-main .page-links,
-    .single-main__navigation {
+    .single-main .page-links {
         width: min(calc(100% - 4rem), var(--content-width));
     }
 }
 
 @media (max-width: 767.98px) {
     .single-main .entry-content > :not(.alignfull, .alignwide),
-    .single-main .page-links,
-    .single-main__navigation {
+    .single-main .page-links {
         width: calc(100% - 2.5rem);
-    }
-
-    .single-main__navigation .nav-links {
-        grid-template-columns: 1fr;
-    }
-
-    .single-main__navigation .nav-next {
-        grid-column: auto;
-        text-align: left;
     }
 }
