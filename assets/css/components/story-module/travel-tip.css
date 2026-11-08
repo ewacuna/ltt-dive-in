@@ -1,0 +1,129 @@
+/*
+ * Story Module — Responsible Travel Tip.
+ * Figma: Blog Templates, desktop 2991:82833 and mobile 2991:82952.
+ *
+ * Desktop: the section's 48px gutter plus the text frame's 48px give a 96px
+ * side inset, with 24px above and 24px + 36px below the panel. Mobile keeps
+ * a 12px side inset.
+ *
+ * Deliberate deviation: Figma's label color #91D9D1 has 4.45:1 contrast on
+ * #296154, below WCAG AA for 18px text. The label uses the palette's #C0E7E2
+ * (5.4:1), the same tertiary shade the panel uses for links. The icon keeps
+ * its exported #91D9D1.
+ */
+.story-module--travel-tip {
+    margin: 0;
+    padding: 1.5rem 6rem 3.75rem;
+    background: #ffffff;
+}
+
+.story-travel-tip {
+    display: flex;
+    max-width: 78rem;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.25rem;
+    margin-inline: auto;
+    background: #296154;
+    color: #ffffff;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+}
+
+.story-travel-tip__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.story-travel-tip__label {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin: 0;
+    color: #c0e7e2;
+    font-size: 1.125rem;
+    line-height: 1.45;
+    text-transform: uppercase;
+}
+
+.story-travel-tip__icon {
+    flex: none;
+}
+
+.story-travel-tip__title {
+    max-width: 30.25rem;
+    margin: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.0025em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-travel-tip__body {
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.story-travel-tip__body > * {
+    margin: 0;
+}
+
+.story-travel-tip__body > * + * {
+    margin-top: 1rem;
+}
+
+.story-travel-tip__body a {
+    color: #c0e7e2;
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.story-travel-tip__body a:hover,
+.story-travel-tip__body a:focus {
+    text-decoration-thickness: 2px;
+}
+
+.story-travel-tip__body a:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+    .story-travel-tip {
+        border: 1px solid CanvasText;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .story-module--travel-tip {
+        padding-inline: 4rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .story-module--travel-tip {
+        padding-inline: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .story-module--travel-tip {
+        padding-inline: 0.75rem;
+    }
+
+    .story-travel-tip__label {
+        line-height: 1.25;
+    }
+
+    .story-travel-tip__title {
+        max-width: none;
+    }
+
+    .story-travel-tip__body {
+        font-size: 0.875rem;
+    }
+}

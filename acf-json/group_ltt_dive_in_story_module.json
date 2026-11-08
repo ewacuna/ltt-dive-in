@@ -1,0 +1,140 @@
+{
+    "key": "group_ltt_dive_in_story_module",
+    "title": "LTT Dive In — Story Module",
+    "fields": [
+        {
+            "key": "field_ltt_dive_in_story_module_variant",
+            "label": "Variant",
+            "name": "ltt_dive_in_story_module_variant",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Choose the blog section to add. Its fields appear below.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "travel_tip": "Responsible Travel Tip"
+            },
+            "default_value": "travel_tip",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_travel_tip",
+            "label": "Responsible Travel Tip",
+            "name": "ltt_dive_in_story_module_travel_tip",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "travel_tip"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_travel_tip_label",
+                    "label": "Label",
+                    "name": "label",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Shown in capitals above the title. Leave empty for “Responsible Travel Tip”.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "Responsible Travel Tip",
+                    "maxlength": 40,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_travel_tip_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "A short heading for the tip.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 100,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_travel_tip_body",
+                    "label": "Tip",
+                    "name": "body",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "One or two short paragraphs. Links use descriptive text, such as the organization’s name.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "tabs": "visual",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "ltt-dive-in/story-module"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Blog post sections. Each variant keeps its fields in its own group.",
+    "show_in_rest": 0,
+    "modified": 1794112000
+}

@@ -54,6 +54,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/end-page-cluster-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/ai-summary.php';
 require_once LTT_DIVE_IN_DIR . '/inc/ai-summary-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/blog-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/story-module.php';
 require_once LTT_DIVE_IN_DIR . '/inc/story-drivers.php';
 require_once LTT_DIVE_IN_DIR . '/inc/story-driver-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/map-settings.php';
