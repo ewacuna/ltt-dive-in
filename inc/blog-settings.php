@@ -382,7 +382,9 @@ function ltt_dive_in_get_post_page_driver( $post_id ) {
 		return null;
 	}
 
-	$mode = (string) get_field( 'ltt_dive_in_post_driver_mode', $post_id );
+	// Read by field key: by name, ACF cannot resolve a value that was never
+	// saved, so unsaved Blog Settings would skip their default values.
+	$mode = (string) get_field( 'field_ltt_dive_in_post_driver_mode', $post_id );
 	if ( 'hide' === $mode ) {
 		return null;
 	}
@@ -390,15 +392,15 @@ function ltt_dive_in_get_post_page_driver( $post_id ) {
 	if ( 'custom' === $mode ) {
 		$prefix = 'ltt_dive_in_post_driver';
 		$source = $post_id;
-		$cards  = get_field( 'ltt_dive_in_post_driver_cards', $post_id );
+		$cards  = get_field( 'field_ltt_dive_in_post_driver_cards', $post_id );
 	} else {
 		$prefix = 'ltt_dive_in_blog_driver';
 		$source = 'option';
-		$chosen = 'posts' === $mode ? get_field( 'ltt_dive_in_post_driver_posts', $post_id ) : null;
+		$chosen = 'posts' === $mode ? get_field( 'field_ltt_dive_in_post_driver_posts', $post_id ) : null;
 		$cards  = ltt_dive_in_post_driver_cards_from_posts( 'posts' === $mode ? (array) $chosen : ltt_dive_in_get_related_post_ids( $post_id ) );
 	}
 
-	$title = trim( (string) get_field( $prefix . '_title', $source ) );
+	$title = trim( (string) get_field( 'field_' . $prefix . '_title', $source ) );
 	$cards = is_array( $cards ) ? array_slice( array_values( array_filter( $cards, static function ( $card ) {
 		return is_array( $card ) && '' !== trim( (string) ( $card['title'] ?? '' ) );
 	} ) ), 0, 3 ) : array();
@@ -409,11 +411,11 @@ function ltt_dive_in_get_post_page_driver( $post_id ) {
 
 	$cache[ $post_id ] = array(
 		'id'    => 'post-page-driver',
-		'tag'   => (string) get_field( $prefix . '_tag', $source ),
+		'tag'   => (string) get_field( 'field_' . $prefix . '_tag', $source ),
 		'title' => $title,
-		'body'  => (string) get_field( $prefix . '_body', $source ),
+		'body'  => (string) get_field( 'field_' . $prefix . '_body', $source ),
 		'cards' => $cards,
-		'navy'  => 'navy' === get_field( $prefix . '_background', $source ),
+		'navy'  => 'navy' === get_field( 'field_' . $prefix . '_background', $source ),
 		'full'  => true,
 	);
 
