@@ -433,7 +433,7 @@ If an editor-visible pattern or component needs additional parity, add its focus
 
 - Self-host fonts from `assets/fonts/`; do not use CSS `@import`, Google Fonts, or another third-party font request.
 - Prefer WOFF2 and declare faces once at the top of the global `assets/css/main.css` because typography is a site-wide foundation.
-- The available Gotham files are Book `400`, Medium `500`, and Bold `700`. Figma's Gotham text styles use Medium. Do not label one weight as another or synthesize a missing weight.
+- The available Gotham files are Book `400`, Medium `500`, Bold `700`, and Light Italic `300` italic. Figma's Gotham text styles use Medium; Light Italic is only for the Testimonials “Light italic quote” style. Do not label one weight as another or synthesize a missing weight or style.
 - Preload only the regular Gotham Book face used for body content. Allow Medium and Bold to load on demand unless measurement proves either is consistently critical above the fold.
 - Keep `font-display: swap` so text remains visible while the font loads and always provide a system-font fallback stack.
 - Use the WordPress `wp_preload_resources` filter for preload markup. Do not hard-code preload tags in `header.php`.

@@ -43,6 +43,7 @@ if ( 'testimonial_block' === $variant ) {
 		null,
 		array(
 			'rows'       => get_field( 'ltt_dive_in_content_module_testimonials' ),
+			'style'      => get_field( 'ltt_dive_in_content_module_testimonial_style' ),
 			'block'      => $block,
 			'id'         => $testimonial_id,
 			'is_preview' => $is_preview,

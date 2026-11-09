@@ -621,6 +621,19 @@
       "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"comparison_table"}]]
     },
     {
+      "key": "field_ltt_dive_in_content_module_testimonial_style",
+      "label": "Style",
+      "name": "ltt_dive_in_content_module_testimonial_style",
+      "type": "button_group",
+      "instructions": "Default shows a large quote. Light italic quote shows a smaller centered quote in Gotham Light Italic.",
+      "choices": {"default":"Default","italic":"Light italic quote"},
+      "default_value": "default",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal",
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"testimonial_block"}]]
+    },
+    {
       "key": "field_ltt_dive_in_content_module_testimonials",
       "label": "Testimonials",
       "name": "ltt_dive_in_content_module_testimonials",
@@ -684,5 +697,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1791859400
+  "modified": 1794246289
 }

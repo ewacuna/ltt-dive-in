@@ -102,6 +102,24 @@
     line-height: 1.45;
 }
 
+/*
+ * Light italic quote style (Blog Templates “Testimonial Block”, desktop
+ * 2991:82029, mobile 2991:82929): a smaller centered quote in Gotham HTF
+ * Light Italic, 32px above and below on desktop and 12px on mobile.
+ */
+.testimonials--italic {
+    padding-block: 2rem;
+}
+
+.testimonials--italic .testimonials__quote {
+    max-width: 48rem;
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: -0.0025em;
+    line-height: 1.2;
+}
+
 /* Placement; the shared component owns colors and interaction states. */
 .testimonials .testimonials__control {
     width: 2.8125rem;
@@ -166,6 +184,15 @@
     .testimonials__quote {
         font-size: 0.875rem;
         line-height: 1.45;
+    }
+
+    .testimonials--italic {
+        padding-block: 0.75rem;
+    }
+
+    .testimonials--italic .testimonials__quote {
+        font-size: 1rem;
+        line-height: 1.2;
     }
 
     .testimonials[data-testimonials-carousel] .testimonials__pagination {

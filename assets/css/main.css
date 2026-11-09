@@ -22,6 +22,15 @@
     src: url("../fonts/gotham/Gotham-Bold.woff2") format("woff2");
 }
 
+/* Used only by the Testimonials "Light italic quote" style; not preloaded. */
+@font-face {
+    font-family: "Gotham HTF";
+    font-style: italic;
+    font-weight: 300;
+    font-display: swap;
+    src: url("../fonts/gotham/Gotham-LightItalic.woff2") format("woff2");
+}
+
 @font-face {
     font-family: "Roboto";
     font-style: normal;

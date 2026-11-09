@@ -5,8 +5,9 @@
  * article-body composition yet, so body copy is held to the shared
  * --content-width reading measure and DESIGN.md's annotated type scale.
  * Full-width and wide blocks keep their own containers. Story Modules
- * (blocks/story-module) and Interactive Accordions own their spacing and
- * typography, so the article heading and link rules below skip them.
+ * (blocks/story-module), Interactive Accordions, and Testimonials own their
+ * spacing and typography, so the article heading, link, and blockquote rules
+ * below skip them.
  */
 .single-main {
     padding-block: 0;
@@ -38,25 +39,25 @@
     margin-block: 0 1.5rem;
 }
 
-.single-main .entry-content a:where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content a:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     color: #073959;
     text-decoration: underline;
 }
 
-.single-main .entry-content a:where(:not(.story-module *, .global-accordion *)):hover,
-.single-main .entry-content a:where(:not(.story-module *, .global-accordion *)):focus {
+.single-main .entry-content a:where(:not(.story-module *, .global-accordion *, .testimonials *)):hover,
+.single-main .entry-content a:where(:not(.story-module *, .global-accordion *, .testimonials *)):focus {
     color: #06304d;
     text-decoration-thickness: 2px;
 }
 
 /* H2 and H3 are the highest levels available below the hero's H1. */
-.single-main .entry-content :is(h2, h3, h4, h5, h6):where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content :is(h2, h3, h4, h5, h6):where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     margin-top: 2.5rem;
     color: #073959;
     overflow-wrap: anywhere;
 }
 
-.single-main .entry-content h2:where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content h2:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
     font-size: 2.5rem;
     font-synthesis: none;
@@ -65,33 +66,33 @@
     line-height: 1.1;
 }
 
-.single-main .entry-content h3:where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content h3:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     font-size: 2rem;
     font-weight: 500;
     letter-spacing: -0.005em;
     line-height: 1.2;
 }
 
-.single-main .entry-content h4:where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content h4:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     font-size: 1.5rem;
     font-weight: 500;
     letter-spacing: -0.0025em;
     line-height: 1.25;
 }
 
-.single-main .entry-content :is(h5, h6):where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content :is(h5, h6):where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.45;
 }
 
-.single-main .entry-content blockquote:where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content blockquote:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     padding-left: 1.5rem;
     border-left: 4px solid #073959;
     margin-inline: 0;
 }
 
-.single-main .entry-content figcaption:where(:not(.story-module *, .global-accordion *)) {
+.single-main .entry-content figcaption:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
     margin-top: 0.5rem;
     color: #525062;
     font-size: 0.75rem;

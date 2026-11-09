@@ -9,7 +9,7 @@
  *
  * @var array $block      Block settings and attributes.
  * @var bool  $is_preview Whether the block is being rendered in the editor.
- * @var array $args       Optional Content Module rows and block context.
+ * @var array $args       Optional Content Module rows, style, and block context.
  */
 
 if ( ! defined( 'ABSPATH' ) || ! function_exists( 'get_field' ) ) {
@@ -38,6 +38,11 @@ if ( ! $testimonials ) {
 $has_carousel = count( $testimonials ) > 1;
 $block_id     = ! empty( $block['id'] ) ? $block['id'] : wp_unique_id();
 $classes      = array( 'testimonials' );
+$style        = array_key_exists( 'style', $context ) ? $context['style'] : get_field( 'ltt_dive_in_testimonials_style' );
+
+if ( 'italic' === $style ) {
+	$classes[] = 'testimonials--italic';
+}
 
 if ( ! empty( $context['id'] ) ) {
 	$id = sanitize_html_class( $context['id'] );

@@ -2,6 +2,7 @@
   "key": "group_ltt_dive_in_testimonials_block",
   "title": "LTT Dive In — Testimonials",
   "fields": [
+    {"key":"field_ltt_dive_in_testimonials_style","label":"Style","name":"ltt_dive_in_testimonials_style","type":"button_group","instructions":"Default shows a large quote. Light italic quote shows a smaller centered quote in Gotham Light Italic.","choices":{"default":"Default","italic":"Light italic quote"},"default_value":"default","return_format":"value","allow_null":0,"layout":"horizontal"},
     {"key":"field_ltt_dive_in_testimonials_items","label":"Testimonials","name":"ltt_dive_in_testimonials_items","type":"repeater","instructions":"Add between one and ten testimonials. With two or more, visitors browse them one at a time with arrow and dot controls.","required":1,"min":1,"max":10,"layout":"block","collapsed":"field_ltt_dive_in_testimonial_name","button_label":"Add testimonial","rows_per_page":20,"sub_fields":[
       {"key":"field_ltt_dive_in_testimonial_quote","label":"Quote","name":"quote","type":"textarea","instructions":"Enter the quote without quotation marks; they are added automatically.","required":1,"maxlength":200,"rows":3,"new_lines":"","parent_repeater":"field_ltt_dive_in_testimonials_items"},
       {"key":"field_ltt_dive_in_testimonial_photo","label":"Photo","name":"photo","type":"image","instructions":"Optional square portrait, shown as a small circle. The photo is decorative because the person’s name appears directly below it.","return_format":"id","preview_size":"thumbnail","library":"all","mime_types":"jpg,jpeg,png,webp","parent_repeater":"field_ltt_dive_in_testimonials_items"},
@@ -16,5 +17,5 @@
   "instruction_placement":"label",
   "active":true,
   "show_in_rest":0,
-  "modified":1789862400
+  "modified":1794246289
 }
