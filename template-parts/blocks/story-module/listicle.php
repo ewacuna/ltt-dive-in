@@ -2,8 +2,10 @@
 /**
  * Story Module — Listicle.
  *
- * One numbered item of a round-up list: number, title, location line, copy,
- * and a gallery of one to four images beside the text.
+ * One numbered item of a list: number, title, optional subtitle, content,
+ * and a gallery of one to four images beside the text. The subtitle and
+ * content are stored in the `location` and `body` fields; their names are
+ * kept so saved blocks stay valid.
  *
  * Figma: Blog Templates `464gNuDz4jnsCACmxyGie3`, “Round-Up • Listicle: Fine
  * Dining”. Desktop 4 `2991:82108`, 3 `2991:82131`, 2 `2991:82121`,
@@ -29,14 +31,14 @@ $fields   = $args['fields'] ?? array();
 $id       = $args['id'] ?? wp_unique_id( 'story-module-' );
 $number   = isset( $fields['number'] ) && is_numeric( $fields['number'] ) ? absint( $fields['number'] ) : 0;
 $title    = trim( (string) ( $fields['title'] ?? '' ) );
-$location = trim( (string) ( $fields['location'] ?? '' ) );
+$subtitle = trim( (string) ( $fields['location'] ?? '' ) );
 $body     = trim( (string) ( $fields['body'] ?? '' ) );
 $position = 'left' === ( $fields['image_position'] ?? '' ) ? 'left' : 'right';
 $images   = array_slice( array_values( array_filter( array_map( 'absint', (array) ( $fields['images'] ?? array() ) ) ) ), 0, 4 );
 
 if ( '' === $title ) {
 	if ( ! empty( $args['is_preview'] ) ) {
-		echo '<p>' . esc_html__( 'Add a title, copy, and images to preview the Listicle item.', 'ltt-dive-in' ) . '</p>';
+		echo '<p>' . esc_html__( 'Add a title, content, and images to preview the Listicle item.', 'ltt-dive-in' ) . '</p>';
 	}
 
 	return;
@@ -74,8 +76,8 @@ $image_sizes = static function ( $index ) use ( $count ) {
 					<?php endif; ?>
 					<?php echo esc_html( $title ); ?>
 				</h3>
-				<?php if ( $location ) : ?>
-					<p class="story-listicle__location"><?php echo esc_html( $location ); ?></p>
+				<?php if ( $subtitle ) : ?>
+					<p class="story-listicle__subtitle"><?php echo esc_html( $subtitle ); ?></p>
 				<?php endif; ?>
 				<?php if ( $body ) : ?>
 					<div class="story-listicle__body"><?php echo wp_kses_post( $body ); ?></div>

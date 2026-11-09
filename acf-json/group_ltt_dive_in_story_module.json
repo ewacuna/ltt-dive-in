@@ -82,7 +82,7 @@
                     "name": "title",
                     "aria-label": "",
                     "type": "text",
-                    "instructions": "The place or item name.",
+                    "instructions": "",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -99,11 +99,11 @@
                 },
                 {
                     "key": "field_ltt_dive_in_story_module_listicle_location",
-                    "label": "Location",
+                    "label": "Subtitle",
                     "name": "location",
                     "aria-label": "",
                     "type": "text",
-                    "instructions": "Optional. For example: “WEST SHORE | 5055 West Lake Blvd., Homewood, CA 96141”.",
+                    "instructions": "Optional. Shown below the title.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -120,11 +120,11 @@
                 },
                 {
                     "key": "field_ltt_dive_in_story_module_listicle_body",
-                    "label": "Copy",
+                    "label": "Content",
                     "name": "body",
                     "aria-label": "",
                     "type": "wysiwyg",
-                    "instructions": "One or more short paragraphs. Links use descriptive text, such as the place’s name.",
+                    "instructions": "Use descriptive link text.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -145,7 +145,7 @@
                     "name": "images",
                     "aria-label": "",
                     "type": "gallery",
-                    "instructions": "One to four images. The layout adapts to the number of images: four tiles, two tiles over one wide image, two tall images, or one large image. Add alt text to each image in the Media Library.",
+                    "instructions": "One to four images. The layout adapts to the number of images. Add alt text to each image in the Media Library.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -244,7 +244,7 @@
                     "name": "title",
                     "aria-label": "",
                     "type": "text",
-                    "instructions": "A short heading for the tip.",
+                    "instructions": "",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -261,11 +261,11 @@
                 },
                 {
                     "key": "field_ltt_dive_in_story_module_travel_tip_body",
-                    "label": "Tip",
+                    "label": "Content",
                     "name": "body",
                     "aria-label": "",
                     "type": "wysiwyg",
-                    "instructions": "One or two short paragraphs. Links use descriptive text, such as the organization’s name.",
+                    "instructions": "Use descriptive link text.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -301,5 +301,5 @@
     "active": true,
     "description": "Blog post sections. Each variant keeps its fields in its own group.",
     "show_in_rest": 0,
-    "modified": 1794241430
+    "modified": 1794243004
 }

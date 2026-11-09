@@ -13,7 +13,7 @@
  *   specified for numbered Copy Block lists.
  * - Body links use navy, as in Figma's Le Bistro item, instead of #319D8E
  *   (3.3:1 at 18px).
- * - The #319D8E location line stays 24px on mobile (large text, 3:1) instead
+ * - The #319D8E subtitle stays 24px on mobile (large text, 3:1) instead
  *   of Figma's 20px, which would need 4.5:1.
  * - Figma's navy “Photo with Navy Color Filter” marks placeholder photos; real
  *   photographs render unfiltered, like the other image galleries.
@@ -80,7 +80,7 @@
     overflow-wrap: anywhere;
 }
 
-.story-listicle__location {
+.story-listicle__subtitle {
     margin: 0;
     color: #319d8e;
     font-size: 1.5rem;
