@@ -17,9 +17,10 @@
                 "id": ""
             },
             "choices": {
+                "listicle": "Listicle",
                 "travel_tip": "Responsible Travel Tip"
             },
-            "default_value": "travel_tip",
+            "default_value": "listicle",
             "return_format": "value",
             "multiple": 0,
             "allow_null": 0,
@@ -27,6 +28,170 @@
             "ui": 0,
             "ajax": 0,
             "placeholder": ""
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_listicle",
+            "label": "Listicle",
+            "name": "ltt_dive_in_story_module_listicle",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "listicle"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_listicle_number",
+                    "label": "Number",
+                    "name": "number",
+                    "aria-label": "",
+                    "type": "number",
+                    "instructions": "Position in the list, shown large beside the title.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "min": 1,
+                    "max": 999,
+                    "step": 1,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_listicle_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "The place or item name.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 100,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_listicle_location",
+                    "label": "Location",
+                    "name": "location",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Optional. For example: “WEST SHORE | 5055 West Lake Blvd., Homewood, CA 96141”.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 150,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_listicle_body",
+                    "label": "Copy",
+                    "name": "body",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "One or more short paragraphs. Links use descriptive text, such as the place’s name.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "tabs": "visual",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_listicle_images",
+                    "label": "Images",
+                    "name": "images",
+                    "aria-label": "",
+                    "type": "gallery",
+                    "instructions": "One to four images. The layout adapts to the number of images: four tiles, two tiles over one wide image, two tall images, or one large image. Add alt text to each image in the Media Library.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min": 1,
+                    "max": 4,
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "jpg,jpeg,png,webp",
+                    "insert": "append",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_listicle_image_position",
+                    "label": "Image position",
+                    "name": "image_position",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "Side of the images on desktop. Alternate items for a staggered list. On mobile the images always follow the text.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "right": "Right",
+                        "left": "Left"
+                    },
+                    "default_value": "right",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "allow_in_bindings": 0,
+                    "layout": "horizontal"
+                }
+            ]
         },
         {
             "key": "field_ltt_dive_in_story_module_travel_tip",
@@ -136,5 +301,5 @@
     "active": true,
     "description": "Blog post sections. Each variant keeps its fields in its own group.",
     "show_in_rest": 0,
-    "modified": 1794112000
+    "modified": 1794241430
 }

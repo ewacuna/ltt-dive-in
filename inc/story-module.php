@@ -27,6 +27,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function ltt_dive_in_story_module_variants() {
 	return array(
+		'listicle'   => array(
+			'label' => __( 'Listicle', 'ltt-dive-in' ),
+			'slug'  => 'listicle',
+		),
 		'travel_tip' => array(
 			'label' => __( 'Responsible Travel Tip', 'ltt-dive-in' ),
 			'slug'  => 'travel-tip',

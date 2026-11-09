@@ -1,0 +1,199 @@
+/*
+ * Story Module — Listicle.
+ * Figma: Blog Templates, “Round-Up • Listicle: Fine Dining” (desktop 2991:82079,
+ * mobile 2991:82956).
+ *
+ * Every Figma gallery is a square: 558 × 558 on desktop (2 × 2 tiles of 274
+ * with a 10px gap, two tiles 556 high, or one image) and 375 × 375 on mobile.
+ * The media column keeps that square for one to four images, and the third
+ * of three spans both columns.
+ *
+ * Deliberate deviations, for WCAG AA contrast on white:
+ * - The cyan numeral #61C2B7 (2.1:1) gets the thin navy outline already
+ *   specified for numbered Copy Block lists.
+ * - Body links use navy, as in Figma's Le Bistro item, instead of #319D8E
+ *   (3.3:1 at 18px).
+ * - The #319D8E location line stays 24px on mobile (large text, 3:1) instead
+ *   of Figma's 20px, which would need 4.5:1.
+ * - Figma's navy “Photo with Navy Color Filter” marks placeholder photos; real
+ *   photographs render unfiltered, like the other image galleries.
+ */
+.story-module--listicle {
+    margin: 0;
+    padding-block: 1.125rem;
+    background: #ffffff;
+    color: #073959;
+}
+
+.story-listicle {
+    display: grid;
+    max-width: 90rem;
+    align-items: center;
+    margin-inline: auto;
+    grid-template-areas: "content media";
+    grid-template-columns: minmax(0, 1fr) 38.75%;
+}
+
+.story-module--listicle-media-left .story-listicle {
+    grid-template-areas: "media content";
+    grid-template-columns: 38.75% minmax(0, 1fr);
+}
+
+.story-listicle__content {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 3rem;
+    padding: 2.25rem 4rem;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+    grid-area: content;
+}
+
+.story-listicle__number {
+    flex: none;
+    margin: 0;
+    color: #61c2b7;
+    font-size: 6rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 2px #073959;
+}
+
+.story-listicle__text {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.story-listicle__title {
+    margin: 0;
+    color: #073959;
+    font-family: inherit;
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-listicle__location {
+    margin: 0;
+    color: #319d8e;
+    font-size: 1.5rem;
+    letter-spacing: -0.0025em;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.story-listicle__body {
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.story-listicle__body > * {
+    margin: 0;
+}
+
+/* Figma separates paragraphs with one empty line. */
+.story-listicle__body > * + * {
+    margin-top: 1.45em;
+}
+
+.story-listicle__body a {
+    color: #073959;
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.story-listicle__body a:hover,
+.story-listicle__body a:focus {
+    text-decoration-thickness: 2px;
+}
+
+.story-listicle__body a:focus-visible {
+    outline: 2px solid #073959;
+    outline-offset: 2px;
+}
+
+.story-listicle__media {
+    display: grid;
+    aspect-ratio: 1;
+    gap: 0.625rem;
+    grid-area: media;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.story-listicle__media--count-1 {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+}
+
+.story-listicle__media--count-2 {
+    grid-template-rows: minmax(0, 1fr);
+}
+
+.story-listicle__media--count-3 .story-listicle__image:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+.story-listicle__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+}
+
+@media (max-width: 1199.98px) {
+    .story-listicle__content {
+        gap: 2rem;
+        padding-inline: 3rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .story-listicle {
+        grid-template-columns: minmax(0, 1fr) 45%;
+    }
+
+    .story-module--listicle-media-left .story-listicle {
+        grid-template-columns: 45% minmax(0, 1fr);
+    }
+
+    .story-listicle__content {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-inline: 2rem;
+    }
+}
+
+/* Mobile: the text comes first and the gallery spans the full width below. */
+@media (max-width: 767.98px) {
+    .story-module--listicle {
+        padding-block: 0.75rem 0;
+    }
+
+    .story-listicle,
+    .story-module--listicle-media-left .story-listicle {
+        align-items: stretch;
+        grid-template-areas:
+            "content"
+            "media";
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .story-listicle__content {
+        padding: 0 0.75rem 1.5rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .story-listicle__body {
+        font-size: 0.875rem;
+    }
+}
