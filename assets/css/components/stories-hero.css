@@ -209,14 +209,42 @@
 
 /* Full-bleed image: cancel the section's side padding. */
 .stories-hero__media {
-    margin-inline: -4rem;
+    margin: 0 -4rem;
 }
 
 .stories-hero__image {
+    display: block;
     width: 100%;
     height: auto;
     aspect-ratio: 1436 / 673;
     object-fit: cover;
+}
+
+/*
+ * Figma "Photo Caption" (desktop 2991:82021, mobile 2991:82915): the image's
+ * Media Library caption and photo credit, grey/700 #3E3C4A.
+ */
+.stories-hero__caption {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 4rem;
+    color: #3e3c4a;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+.stories-hero__caption > * {
+    max-width: 73.125rem;
+}
+
+.stories-hero__caption a {
+    color: inherit;
+}
+
+.stories-hero__credit strong {
+    font-weight: 700;
 }
 
 @media (max-width: 767.98px) {
@@ -264,6 +292,17 @@
 
     .stories-hero__image {
         aspect-ratio: 375 / 252;
+    }
+
+    /*
+     * Figma uses 10px Book; 12px keeps the caption legible and matches the
+     * article's figcaption size.
+     */
+    .stories-hero__caption {
+        padding: 0.375rem 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 400;
+        line-height: 1.4;
     }
 }
 

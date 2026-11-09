@@ -23,15 +23,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the registered Story Module variants.
  *
- * @return array<string, array{label:string, slug:string}> Variants keyed by stored value.
+ * @return array<string, array{label:string, slug:string, deps?:string[]}> Variants keyed
+ *         by stored value; `deps` lists shared style handles the variant needs.
  */
 function ltt_dive_in_story_module_variants() {
 	return array(
-		'listicle'   => array(
+		'listicle'     => array(
 			'label' => __( 'Listicle', 'ltt-dive-in' ),
 			'slug'  => 'listicle',
 		),
-		'travel_tip' => array(
+		'side_by_side' => array(
+			'label' => __( 'Side by Side', 'ltt-dive-in' ),
+			'slug'  => 'side-by-side',
+			'deps'  => array( 'ltt-dive-in-buttons' ),
+		),
+		'travel_tip'   => array(
 			'label' => __( 'Responsible Travel Tip', 'ltt-dive-in' ),
 			'slug'  => 'travel-tip',
 		),
@@ -64,7 +70,7 @@ function ltt_dive_in_register_story_module() {
 
 		$handle    = ltt_dive_in_story_module_style_handle( $variant );
 		$handles[] = $handle;
-		wp_register_style( $handle, LTT_DIVE_IN_URI . $relative, array(), (string) filemtime( $path ) );
+		wp_register_style( $handle, LTT_DIVE_IN_URI . $relative, $config['deps'] ?? array(), (string) filemtime( $path ) );
 	}
 
 	// The editor previews every variant, so its handle pulls in all of them.

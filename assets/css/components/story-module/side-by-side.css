@@ -1,0 +1,244 @@
+/*
+ * Story Module — Side by Side.
+ * Figma: Blog Templates, Profiles “Side by Side 1 Up Image”: desktop
+ * 2991:82026 and 2991:82046, mobile 2991:82919 and 2991:82931.
+ *
+ * Desktop: the text keeps a 64px gutter on its outer side and the 616 × 514
+ * image runs to the edge of the 1440px frame (42.78%), with a 48px gap and
+ * 19px above and below. Mobile stacks the text, CTA, and a full-width
+ * 335 × 348 image inside 20px gutters.
+ *
+ * Bulleted lists in the content use the mountain marker of Copy Block icon
+ * lists (assets/images/content-module/copy-list-markers.svg, first icon).
+ */
+.story-module--side-by-side {
+    margin: 0;
+    padding-block: 1.1875rem;
+    background: #ffffff;
+    color: #073959;
+}
+
+.story-side-by-side {
+    display: grid;
+    max-width: 90rem;
+    align-items: start;
+    gap: 3rem;
+    margin-inline: auto;
+    grid-template-areas: "content media";
+    grid-template-columns: minmax(0, 1fr) 42.78%;
+    padding-inline-start: 4rem;
+}
+
+.story-module--side-by-side-media-left .story-side-by-side {
+    grid-template-areas: "media content";
+    grid-template-columns: 42.78% minmax(0, 1fr);
+    padding-inline: 0 4rem;
+}
+
+.story-module--side-by-side-no-media .story-side-by-side {
+    grid-template-areas: "content";
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 4rem;
+}
+
+.story-side-by-side__content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-self: center;
+    gap: 1.5rem;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+    grid-area: content;
+}
+
+.story-side-by-side__eyebrow {
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-side-by-side__title {
+    margin: 0;
+    color: #073959;
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 3rem;
+    font-synthesis: none;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-side-by-side__body {
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.story-side-by-side__body > * {
+    margin: 0;
+}
+
+.story-side-by-side__body > * + * {
+    margin-top: 1.5rem;
+}
+
+.story-side-by-side__body a {
+    color: #073959;
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.story-side-by-side__body a:hover,
+.story-side-by-side__body a:focus {
+    text-decoration-thickness: 2px;
+}
+
+.story-side-by-side__body a:focus-visible {
+    outline: 2px solid #073959;
+    outline-offset: 2px;
+}
+
+.story-side-by-side__body ul {
+    padding: 0;
+    list-style: none;
+}
+
+.story-side-by-side__body ul > li {
+    position: relative;
+    min-height: 2.0625rem;
+    padding-inline-start: 2.9375rem;
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.story-side-by-side__body ul > li + li {
+    margin-top: 1.5rem;
+}
+
+.story-side-by-side__body ul > li::before {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 1.4375rem;
+    height: 2.0625rem;
+    background: url("../../../images/content-module/copy-list-markers.svg") no-repeat left top / 1.4375rem 11.3125rem;
+    content: "";
+}
+
+.story-side-by-side__body ol {
+    padding-inline-start: 1.5rem;
+}
+
+.story-side-by-side__cta {
+    align-self: flex-start;
+}
+
+.story-side-by-side__media {
+    grid-area: media;
+}
+
+.story-side-by-side__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 616 / 514;
+    object-fit: cover;
+}
+
+@media (forced-colors: active) {
+    .story-side-by-side__body ul {
+        list-style: disc;
+        padding-inline-start: 1.5rem;
+    }
+
+    .story-side-by-side__body ul > li {
+        padding-inline-start: 0;
+    }
+
+    .story-side-by-side__body ul > li::before {
+        content: none;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .story-side-by-side {
+        gap: 2rem;
+        padding-inline-start: 3rem;
+    }
+
+    .story-module--side-by-side-media-left .story-side-by-side {
+        padding-inline: 0 3rem;
+    }
+
+    .story-module--side-by-side-no-media .story-side-by-side {
+        padding-inline: 3rem;
+    }
+
+    .story-side-by-side__title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .story-side-by-side {
+        grid-template-columns: minmax(0, 1fr) 45%;
+    }
+
+    .story-module--side-by-side-media-left .story-side-by-side {
+        grid-template-columns: 45% minmax(0, 1fr);
+    }
+
+    .story-side-by-side__eyebrow {
+        font-size: 1.5rem;
+        letter-spacing: -0.0025em;
+    }
+}
+
+/* Mobile: text, CTA, then the image, all inside 20px gutters. */
+@media (max-width: 767.98px) {
+    .story-module--side-by-side {
+        padding-block: 1.5rem;
+    }
+
+    .story-side-by-side,
+    .story-module--side-by-side-media-left .story-side-by-side,
+    .story-module--side-by-side-no-media .story-side-by-side {
+        gap: 1.5rem;
+        grid-template-areas:
+            "content"
+            "media";
+        grid-template-columns: minmax(0, 1fr);
+        padding-inline: 1.25rem;
+    }
+
+    .story-side-by-side__content {
+        gap: 1.25rem;
+    }
+
+    .story-side-by-side__title {
+        font-size: 2.25rem;
+    }
+
+    .story-side-by-side__body {
+        font-size: 1rem;
+        letter-spacing: -0.0025em;
+        line-height: 1.5;
+    }
+
+    /* Figma keeps the list items at 18px on mobile. */
+    .story-side-by-side__body ul > li {
+        font-size: 1.125rem;
+        letter-spacing: 0;
+        line-height: 1.45;
+    }
+
+    .story-side-by-side__cta {
+        margin-top: 0.25rem;
+    }
+
+    .story-side-by-side__image {
+        aspect-ratio: 335 / 348;
+    }
+}
