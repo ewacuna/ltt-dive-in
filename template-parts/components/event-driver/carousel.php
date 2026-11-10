@@ -1,6 +1,6 @@
 <?php
 /**
- * Events Carousel (Figma nodes 1:11658 desktop, 1:11659 mobile).
+ * Events Carousel.
  *
  * @package LTT_Dive_In
  */

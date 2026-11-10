@@ -1,6 +1,6 @@
 <?php
 /**
- * Stories Hero (Figma "Blog Post Header": Stories Hero Desktop / Mobile).
+ * Stories Hero.
  *
  * Renders the current post's title, published month, read time, excerpt,
  * and featured image. Unlike the Internal Page Hero, it sits below the site
@@ -29,7 +29,7 @@ $image_id = get_post_thumbnail_id();
 
 	<?php if ( $image_id ) : ?>
 		<?php
-		// Figma "Photo Caption": the image's Media Library caption and photo credit.
+		// Photo caption: the image's Media Library caption and photo credit.
 		$caption = trim( (string) wp_get_attachment_caption( $image_id ) );
 		$credit  = function_exists( 'get_field' ) ? trim( (string) get_field( 'field_ltt_dive_in_photo_credit', $image_id ) ) : '';
 		?>

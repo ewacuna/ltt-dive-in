@@ -1,6 +1,5 @@
 /*
- * Meet the Team block. Figma: dev-access node 2145:14909 (desktop 1:5596,
- * mobile 1:5782).
+ * Meet the Team block.
  */
 .meet-the-team {
     padding-block: 3.125rem;
@@ -133,7 +132,7 @@
 }
 
 /*
- * Figma uses primary tint 300 (#85A2B2) for these icons, which is 2.6:1 on
+ * The design uses primary tint 300 (#85A2B2) for these icons, which is 2.6:1 on
  * white and fails WCAG 1.4.11 for the only visible cue of each link. Primary
  * navy is the accessible substitution.
  */
@@ -171,7 +170,7 @@
 }
 
 /*
- * Facebook, Instagram, and YouTube are the same Figma glyph family as the
+ * Facebook, Instagram, and YouTube are the same glyph family as the
  * footer icons but are exported without the 3px inset the 24px team icons
  * carry, so they are scaled to the same 18px glyph area.
  */

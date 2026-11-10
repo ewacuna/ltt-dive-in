@@ -1,7 +1,6 @@
 <?php
 /**
- * Reusable story tile (Figma “Story Card – Default”, “Story Card – Expanded”,
- * and “Story Card – Mobile”).
+ * Reusable story tile.
  *
  * The static tile shows the image under a navy overlay with the category and
  * title. Hover, keyboard focus, or the `is-expanded` class set by

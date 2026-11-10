@@ -1,12 +1,11 @@
 /*
  * Story Module — Responsible Travel Tip.
- * Figma: Blog Templates, desktop 2991:82833 and mobile 2991:82952.
  *
  * Desktop: the section's 48px gutter plus the text frame's 48px give a 96px
  * side inset, with 24px above and 24px + 36px below the panel. Mobile keeps
  * a 12px side inset.
  *
- * Deliberate deviation: Figma's label color #91D9D1 has 4.45:1 contrast on
+ * Deliberate deviation: the design's label color #91D9D1 has 4.45:1 contrast on
  * #296154, below WCAG AA for 18px text. The label uses the palette's #C0E7E2
  * (5.4:1), the same tertiary shade the panel uses for links. The icon keeps
  * its exported #91D9D1.

@@ -53,7 +53,7 @@
 
 .home-hero__title {
 	margin: 0;
-	/* Map Figma's gradient to Big Caslon's visible capitals, not its line box.
+	/* Map the gradient to Big Caslon's visible capitals, not its line box.
 	 * At line-height: 1, capitals start at ~0.117em and end at ~0.845em.
 	 * The two inner stops preserve the source's 32.6923% and 66.3462% positions.
 	 */
@@ -120,7 +120,7 @@
 	text-decoration: none;
 }
 
-/* Figma Scroll Module (95:97473): the glass pill appears only on hover. */
+/* Scroll Module: the glass pill appears only on hover. */
 .home-hero__scroll span {
 	display: inline-flex;
 	min-height: 1.625rem;
@@ -134,7 +134,7 @@
 }
 
 .home-hero__scroll:is(:hover, :focus-visible) span {
-	/* User-approved: lighter fill and stronger blur than Figma's 60% white for a clearer glass effect. */
+	/* User-approved: lighter fill and stronger blur than the original 60% white for a clearer glass effect. */
 	background-color: rgba(255, 255, 255, 0.3);
 	-webkit-backdrop-filter: blur(0.5rem);
 	backdrop-filter: blur(0.5rem);

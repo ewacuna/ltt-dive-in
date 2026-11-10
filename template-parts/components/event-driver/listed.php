@@ -1,6 +1,6 @@
 <?php
 /**
- * Listed Events (Figma nodes 1:11591 desktop, 1:11592 mobile).
+ * Listed Events.
  *
  * The filters are a GET form, so filtering and Load More work without
  * JavaScript. event-driver.js replaces full-page submissions with requests to

@@ -3,7 +3,7 @@
  * Reusable event card.
  *
  * Styles:
- * - `card`: navy card with the image above its content (Figma “Card with Date”).
+ * - `card`: navy card with the image above its content.
  * - `tile`: full-image Story Card – Event on wider screens that reveals its
  *   details on hover or keyboard focus, and the `card` presentation on small
  *   screens.

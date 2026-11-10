@@ -1,9 +1,7 @@
 /*
  * Story Module — Listicle.
- * Figma: Blog Templates, “Round-Up • Listicle: Fine Dining” (desktop 2991:82079,
- * mobile 2991:82956).
  *
- * Every Figma gallery is a square: 558 × 558 on desktop (2 × 2 tiles of 274
+ * Every gallery is a square: 558 × 558 on desktop (2 × 2 tiles of 274
  * with a 10px gap, two tiles 556 high, or one image) and 375 × 375 on mobile.
  * The media column keeps that square for one to four images, and the third
  * of three spans both columns.
@@ -11,11 +9,11 @@
  * Deliberate deviations, for WCAG AA contrast on white:
  * - The cyan numeral #61C2B7 (2.1:1) gets the thin navy outline already
  *   specified for numbered Copy Block lists.
- * - Body links use navy, as in Figma's Le Bistro item, instead of #319D8E
+ * - Body links use navy, as in the design's Le Bistro item, instead of #319D8E
  *   (3.3:1 at 18px).
  * - The #319D8E subtitle stays 24px on mobile (large text, 3:1) instead
- *   of Figma's 20px, which would need 4.5:1.
- * - Figma's navy “Photo with Navy Color Filter” marks placeholder photos; real
+ *   of the design's 20px, which would need 4.5:1.
+ * - The design's navy “Photo with Navy Color Filter” marks placeholder photos; real
  *   photographs render unfiltered, like the other image galleries.
  */
 .story-module--listicle {
@@ -98,7 +96,7 @@
     margin: 0;
 }
 
-/* Figma separates paragraphs with one empty line. */
+/* Paragraphs are separated by one empty line. */
 .story-listicle__body > * + * {
     margin-top: 1.45em;
 }

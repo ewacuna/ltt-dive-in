@@ -1,5 +1,5 @@
 /*
- * End Page Cluster (Figma END PAGE CLUSTER, 2145:14874).
+ * End Page Cluster.
  * Variants: Copy/CTA Driver, Page Driver, and Content Trail. Tags, buttons,
  * slider controls, and the Story and Event cards keep their shared styles;
  * this file owns only composition and the Content Trail place tile.
@@ -169,7 +169,7 @@
     object-fit: cover;
 }
 
-/* Darkened from Figma's 51% to the 65% Page Cluster treatment so white copy stays readable over bright photos. */
+/* Darkened to the 65% Page Cluster treatment so white copy stays readable over bright photos. */
 .end-page-cluster__card-media::after {
     position: absolute;
     inset: 0;
@@ -234,8 +234,8 @@
 }
 
 /*
- * The track bleeds past the container to the right edge of the viewport, as in
- * Figma. Selectors are qualified so they win over Swiper's later-loading
+ * The track bleeds past the container to the right edge of the viewport.
+ * Selectors are qualified so they win over Swiper's later-loading
  * `.swiper` and `.swiper-slide` defaults.
  */
 .end-page-cluster__trail > .end-page-cluster__viewport {
@@ -315,7 +315,7 @@
 }
 
 /*
- * Inspiration Panels hover (Figma 1:45073): a 60% swatch over a darker
+ * Inspiration Panels hover: a 60% swatch over a darker
  * gradient rises from the bottom and the excerpt opens above the title;
  * both reverse on leave. Swatches rotate Navy, Teal, Yellow, Red.
  */
@@ -520,7 +520,7 @@
         margin-top: 1.5rem;
     }
 
-    /* On white, Figma left-aligns the copy and centers the buttons. */
+    /* On white, the copy is left-aligned and the buttons centered. */
     .end-page-cluster--bg-white .end-page-cluster__callout {
         align-items: stretch;
         text-align: left;

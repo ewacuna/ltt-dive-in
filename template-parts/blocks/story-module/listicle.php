@@ -7,10 +7,6 @@
  * content are stored in the `location` and `body` fields; their names are
  * kept so saved blocks stay valid.
  *
- * Figma: Blog Templates `464gNuDz4jnsCACmxyGie3`, “Round-Up • Listicle: Fine
- * Dining”. Desktop 4 `2991:82108`, 3 `2991:82131`, 2 `2991:82121`,
- * 1 `2991:82143`; mobile 4 `2991:82964`, 3 `2991:82987`, 2 `2991:82977`,
- * 1 `2991:82999`.
  * Styles: assets/css/components/story-module/listicle.css.
  *
  * @package LTT_Dive_In

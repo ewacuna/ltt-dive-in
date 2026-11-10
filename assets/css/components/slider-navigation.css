@@ -91,7 +91,7 @@
     --slider-navigation-icon: url("../../images/icons/carousel-arrow-next.svg");
 }
 
-/* Optical alignment follows Figma's asymmetric 12px/16px arrow padding. */
+/* Optical alignment for the asymmetric 12px/16px arrow padding. */
 .ltt-slider-navigation--previous > .ltt-slider-navigation__icon,
 .ltt-slider-navigation--previous > img {
     translate: -0.125rem 0;

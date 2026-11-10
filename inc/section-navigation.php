@@ -78,7 +78,7 @@ function ltt_dive_in_register_section_navigation() {
 					'name'               => 'ltt_dive_in_meetings_hero_icon',
 					'label'              => __( 'Immersive Hero icon (SVG)', 'ltt-dive-in' ),
 					'type'               => 'file',
-					'instructions'       => __( 'Optional. Choose a transparent SVG from the Media Library. Its own colors and transparency are preserved; the Figma icon is used when this is empty.', 'ltt-dive-in' ),
+					'instructions'       => __( 'Optional. Choose a transparent SVG from the Media Library. Its own colors and transparency are preserved; the default icon is used when this is empty.', 'ltt-dive-in' ),
 					'required'           => 0,
 					'return_format'      => 'id',
 					'library'            => 'all',

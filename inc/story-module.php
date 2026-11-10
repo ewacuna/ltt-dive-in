@@ -2,7 +2,7 @@
 /**
  * Story Module: blog post sections from the Blog Templates design.
  *
- * One ACF block with one variant per Figma section. Each variant owns:
+ * One ACF block with one variant per design section. Each variant owns:
  *
  * - its fields: an ACF group field named `ltt_dive_in_story_module_{key}`
  *   in acf-json/group_ltt_dive_in_story_module.json;

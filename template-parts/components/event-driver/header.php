@@ -1,6 +1,6 @@
 <?php
 /**
- * Event Driver section header (Figma “Left-Align Header w CTA”).
+ * Event Driver section header.
  *
  * @package LTT_Dive_In
  */

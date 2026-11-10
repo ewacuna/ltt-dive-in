@@ -152,7 +152,7 @@ a.feature-image-driver__card-link:is(:hover, :focus-visible)
     background-color: rgba(2, 22, 43, 0.3);
 }
 
-/* Short Feature Driver Single — Figma node 1:11346. */
+/* Short Feature Driver Single. */
 .feature-image-driver--short .feature-image-driver__title {
     font-family: "Roboto", Arial, sans-serif;
     font-size: 3rem;

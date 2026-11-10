@@ -55,7 +55,7 @@ if ( 'copy_cta' === $variant ) {
 	} elseif ( in_array( $color, array( 'gold', 'green', 'cyan' ), true ) ) {
 		$cta_style = 'primary-fill';
 	}
-	// Figma's 3 up White frame alone gives the second CTA the secondary outline.
+	// Only the 3 up white layout gives the second CTA the secondary outline.
 	$secondary_style = ( '' === $color && 3 === count( $callouts ) ) ? 'secondary-outline' : $cta_style;
 	$classes = array( 'end-page-cluster', 'end-page-cluster--copy-cta', 'end-page-cluster--count-' . count( $callouts ) );
 	$classes[] = $color ? 'end-page-cluster--bg-' . $color : 'end-page-cluster--bg-white';
@@ -197,7 +197,7 @@ $place_index  = 0;
 							} else {
 								$place_title   = get_the_title( $item['place'] );
 								$place_excerpt = has_excerpt( $item['place'] ) ? wp_trim_words( wp_strip_all_tags( get_the_excerpt( $item['place'] ) ), 40 ) : '';
-								// Inspiration Panels hover swatches rotate in Figma's order.
+								// Inspiration Panels hover swatches rotate in a fixed order.
 								$place_hover = $place_hovers[ $place_index++ % count( $place_hovers ) ];
 								?>
 								<article class="end-page-cluster__place end-page-cluster__place--<?php echo esc_attr( $place_hover ); ?>">

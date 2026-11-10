@@ -1,11 +1,10 @@
 <?php
 /**
- * "Show Summary" disclosure in the Stories Hero (Figma review file, Stories
- * Hero Desktop 95:86676, "EXPANDED" instance and its open state).
+ * "Show Summary" disclosure in the Stories Hero.
  *
  * The summary sits above its toggle, so it comes first in the DOM to keep the
  * reading order equal to the visual order. Driven by the shared accordion
- * script; the closed icon is the Figma instance's own, the open icon is the
+ * script; the closed icon is its own, the open icon is the
  * shared accordion one. The text stays in the server-rendered HTML while
  * collapsed. Renders nothing when the post has no saved summary.
  *

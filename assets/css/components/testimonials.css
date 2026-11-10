@@ -1,6 +1,5 @@
 /*
- * Testimonials block. Figma has no dev-access component for this block; values
- * are measured from the approved 1440px and 375px exports.
+ * Testimonials block. Values are measured from the approved 1440px and 375px exports.
  *
  * Arrows and dots reuse the shared slider-navigation and carousel-indicators
  * components, which load only when a block has two or more testimonials.
