@@ -46,6 +46,10 @@ function ltt_dive_in_story_module_variants() {
 			'slug'  => 'conclusion',
 			'deps'  => array( 'ltt-dive-in-buttons' ),
 		),
+		'comparison_table' => array(
+			'label' => __( 'Comparison Table', 'ltt-dive-in' ),
+			'slug'  => 'comparison-table',
+		),
 	);
 }
 

@@ -1,0 +1,116 @@
+/*
+ * Story Module — Comparison Table.
+ * Figma: Blog Templates, desktop 2991:82159 and mobile 2991:83009.
+ *
+ * Desktop: 50px 64px padding, table up to 1280px, a 200px row-name column,
+ * 10px between columns, 12px row padding, and 2px navy rules under the
+ * header and between rows. Text is navy Gotham 18px: Bold for the first
+ * column heading, Medium for headings and row names, Book for text values.
+ *
+ * Small screens (designer's note on the mobile frame): the table keeps its
+ * size and pans sideways, with ~127px value columns as in the mobile frame.
+ * Each column-count modifier sets the width below which the table scrolls.
+ * Row names stay fixed at the left while panning, and a soft shadow at the
+ * right edge shows that more columns follow (it disappears at the end).
+ */
+.story-module--comparison-table {
+    margin: 0;
+    padding: 3.125rem 4rem;
+    background: #ffffff;
+}
+
+.story-comparison {
+    max-width: 80rem;
+    margin-inline: auto;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    background:
+        linear-gradient(to left, #ffffff 30%, rgb(255 255 255 / 0)) right center / 2.5rem 100% no-repeat local,
+        radial-gradient(farthest-side at 100% 50%, rgb(7 57 89 / 0.2), rgb(7 57 89 / 0)) right center / 0.75rem 100% no-repeat scroll;
+}
+
+.story-comparison:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+.story-comparison__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 1.125rem;
+    table-layout: fixed;
+}
+
+.story-comparison__table--columns-1 { min-width: 21.375rem; }
+.story-comparison__table--columns-2 { min-width: 29.9375rem; }
+.story-comparison__table--columns-3 { min-width: 38.5rem; }
+.story-comparison__table--columns-4 { min-width: 47.0625rem; }
+.story-comparison__table--columns-5 { min-width: 55.625rem; }
+.story-comparison__table--columns-6 { min-width: 64.1875rem; }
+.story-comparison__table--columns-7 { min-width: 72.75rem; }
+
+.story-comparison__table :is(th, td) {
+    padding: 0.75rem 0.3125rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+}
+
+.story-comparison__table td {
+    font-weight: 400;
+}
+
+.story-comparison__table :is(th, td):last-child {
+    padding-right: 0;
+}
+
+.story-comparison__table thead th {
+    border-bottom: 2px solid #073959;
+}
+
+.story-comparison__table tbody tr:not(:last-child) > * {
+    border-bottom: 2px solid #073959;
+}
+
+.story-comparison__table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    width: 12.8125rem;
+    padding-left: 0;
+    background: #ffffff;
+    line-height: 1.45;
+    text-align: left;
+}
+
+.story-comparison__table .story-comparison__corner {
+    font-weight: 700;
+}
+
+.story-comparison__icon {
+    display: block;
+    margin-inline: auto;
+}
+
+@media (forced-colors: active) {
+    .story-comparison__table :is(th, td) {
+        border-color: CanvasText;
+    }
+
+    .story-comparison__icon {
+        forced-color-adjust: none;
+        background: #ffffff;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .story-module--comparison-table {
+        padding: 1.5rem;
+    }
+}
+

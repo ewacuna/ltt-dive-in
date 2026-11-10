@@ -20,7 +20,8 @@
                 "listicle": "Listicle",
                 "side_by_side": "Side by Side",
                 "travel_tip": "Responsible Travel Tip",
-                "conclusion": "Article Conclusion"
+                "conclusion": "Article Conclusion",
+                "comparison_table": "Comparison Table"
             },
             "default_value": "listicle",
             "return_format": "value",
@@ -503,6 +504,242 @@
                     "allow_in_bindings": 0
                 }
             ]
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_comparison_table",
+            "label": "Comparison Table",
+            "name": "ltt_dive_in_story_module_comparison_table",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "comparison_table"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_comparison_table_caption",
+                    "label": "Caption",
+                    "name": "caption",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Describes the table for screen readers. It is not shown on the page.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 150,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_comparison_table_row_heading",
+                    "label": "First column heading",
+                    "name": "row_heading",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Heading above the row names.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 40,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_comparison_table_columns",
+                    "label": "Columns",
+                    "name": "columns",
+                    "aria-label": "",
+                    "type": "repeater",
+                    "instructions": "One to seven columns. On small screens the table scrolls sideways.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "layout": "table",
+                    "pagination": 0,
+                    "min": 1,
+                    "max": 7,
+                    "collapsed": "",
+                    "button_label": "Add column",
+                    "rows_per_page": 20,
+                    "sub_fields": [
+                        {
+                            "key": "field_ltt_dive_in_story_module_comparison_table_column_heading",
+                            "label": "Heading",
+                            "name": "heading",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": 40,
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ]
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_comparison_table_rows",
+                    "label": "Rows",
+                    "name": "rows",
+                    "aria-label": "",
+                    "type": "repeater",
+                    "instructions": "Each row needs one value per column, in the same order as the columns.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "layout": "block",
+                    "pagination": 0,
+                    "min": 1,
+                    "max": 20,
+                    "collapsed": "field_ltt_dive_in_story_module_comparison_table_row_name",
+                    "button_label": "Add row",
+                    "rows_per_page": 20,
+                    "sub_fields": [
+                        {
+                            "key": "field_ltt_dive_in_story_module_comparison_table_row_name",
+                            "label": "Name",
+                            "name": "name",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": 60,
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_ltt_dive_in_story_module_comparison_table_cells",
+                            "label": "Values",
+                            "name": "cells",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "layout": "table",
+                            "pagination": 0,
+                            "min": 1,
+                            "max": 7,
+                            "collapsed": "",
+                            "button_label": "Add value",
+                            "rows_per_page": 20,
+                            "sub_fields": [
+                                {
+                                    "key": "field_ltt_dive_in_story_module_comparison_table_cell_value",
+                                    "label": "Value",
+                                    "name": "value",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "40",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "yes": "Check",
+                                        "no": "Cross",
+                                        "text": "Text"
+                                    },
+                                    "default_value": "yes",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "allow_in_bindings": 0,
+                                    "layout": "horizontal"
+                                },
+                                {
+                                    "key": "field_ltt_dive_in_story_module_comparison_table_cell_text",
+                                    "label": "Text",
+                                    "name": "text",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 1,
+                                    "conditional_logic": [
+                                        [
+                                            {
+                                                "field": "field_ltt_dive_in_story_module_comparison_table_cell_value",
+                                                "operator": "==",
+                                                "value": "text"
+                                            }
+                                        ]
+                                    ],
+                                    "wrapper": {
+                                        "width": "60",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": 30,
+                                    "allow_in_bindings": 0,
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "location": [
@@ -523,5 +760,5 @@
     "active": true,
     "description": "Blog post sections. Each variant keeps its fields in its own group.",
     "show_in_rest": 0,
-    "modified": 1794279475
+    "modified": 1794280524
 }
