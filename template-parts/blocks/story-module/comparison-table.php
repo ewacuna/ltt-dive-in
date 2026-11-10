@@ -2,16 +2,6 @@
 /**
  * Story Module — Comparison Table.
  *
- * A data table: named rows compared across one to seven columns, each value a
- * check, a cross, or short text. The table keeps its full size on small
- * screens and scrolls sideways inside a focusable region, with the row names
- * fixed at the left (designer's note on the mobile frame).
- *
- * Figma: Blog Templates `464gNuDz4jnsCACmxyGie3`, “Comparison Table” in
- * “Round-Up • Listicle: Fine Dining” (desktop `2991:82159`, mobile
- * `2991:83009`).
- * Styles: assets/css/components/story-module/comparison-table.css.
- *
  * @package LTT_Dive_In
  *
  * @var array $args {

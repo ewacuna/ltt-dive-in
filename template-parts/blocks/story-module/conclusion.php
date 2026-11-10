@@ -2,14 +2,6 @@
 /**
  * Story Module — Article Conclusion.
  *
- * Closing copy centered between two navy rules, with an optional CTA. It has
- * no heading: it closes the article rather than starting a new section.
- *
- * Figma: Blog Templates `464gNuDz4jnsCACmxyGie3`, closing “Copy Block” in
- * “Round-Up • Listicle: Fine Dining” (desktop `2991:82280`, mobile
- * `2991:83101`).
- * Styles: assets/css/components/story-module/conclusion.css.
- *
  * @package LTT_Dive_In
  *
  * @var array $args {

@@ -1,18 +1,4 @@
-/*
- * Story Module — Comparison Table.
- * Figma: Blog Templates, desktop 2991:82159 and mobile 2991:83009.
- *
- * Desktop: 50px 64px padding, table up to 1280px, a 200px row-name column,
- * 10px between columns, 12px row padding, and 2px navy rules under the
- * header and between rows. Text is navy Gotham 18px: Bold for the first
- * column heading, Medium for headings and row names, Book for text values.
- *
- * Small screens (designer's note on the mobile frame): the table keeps its
- * size and pans sideways, with ~127px value columns as in the mobile frame.
- * Each column-count modifier sets the width below which the table scrolls.
- * Row names stay fixed at the left while panning, and a soft shadow at the
- * right edge shows that more columns follow (it disappears at the end).
- */
+/* Story Module — Comparison Table. */
 .story-module--comparison-table {
     margin: 0;
     padding: 3.125rem 4rem;
@@ -44,6 +30,7 @@
     table-layout: fixed;
 }
 
+/* Width below which the table scrolls sideways. */
 .story-comparison__table--columns-1 { min-width: 21.375rem; }
 .story-comparison__table--columns-2 { min-width: 29.9375rem; }
 .story-comparison__table--columns-3 { min-width: 38.5rem; }

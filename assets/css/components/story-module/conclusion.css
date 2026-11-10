@@ -1,12 +1,4 @@
-/*
- * Story Module — Article Conclusion.
- * Figma: Blog Templates, desktop 2991:82280 and mobile 2991:83101.
- *
- * Two 2px navy rules frame centered copy and an optional CTA, 32px apart.
- * Desktop: 36px 64px padding, copy up to 880px. Mobile: 24px side padding,
- * copy at full width. The rules are borders so they also show in forced
- * colors.
- */
+/* Story Module — Article Conclusion. */
 .story-module--conclusion {
     margin: 0;
     padding: 2.25rem 4rem;
