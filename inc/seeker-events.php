@@ -264,7 +264,7 @@ function ltt_dive_in_get_event_date_filters() {
  * - `sort` `soonest` or `recent`
  *
  * @param array $args Query arguments.
- * @return array{events: array[], total: int}|WP_Error
+ * @return array{events: array[], fetched: int, total: int}|WP_Error Fetched counts feed records, including any that were not displayable.
  */
 function ltt_dive_in_get_seeker_events( $args = array() ) {
 	$args  = wp_parse_args(
@@ -315,11 +315,22 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 		return $body;
 	}
 
-	$events = array_values( array_filter( array_map( 'ltt_dive_in_normalize_seeker_event', ltt_dive_in_get_seeker_items( $body ) ) ) );
+	$items  = ltt_dive_in_get_seeker_items( $body );
+	$events = array();
+
+	foreach ( $items as $item ) {
+		$event = ltt_dive_in_normalize_seeker_event( $item, $range['from'] );
+
+		// A recurring series can span the range without an occurrence inside it.
+		if ( $event && ( '' === $range['to'] || $event['start']->format( 'Y-m-d' ) <= $range['to'] ) ) {
+			$events[] = $event;
+		}
+	}
 
 	return array(
-		'events' => $events,
-		'total'  => isset( $body['total'] ) ? absint( $body['total'] ) : $query['offset'] + count( $events ),
+		'events'  => $events,
+		'fetched' => count( $items ),
+		'total'   => isset( $body['total'] ) ? absint( $body['total'] ) : $query['offset'] + count( $items ),
 	);
 }
 
@@ -353,7 +364,7 @@ function ltt_dive_in_get_seeker_events_by_id( $uuids ) {
 			}
 		}
 
-		if ( count( $result['events'] ) < 100 || $offset + 100 >= $result['total'] ) {
+		if ( $result['fetched'] < 100 || $offset + 100 >= $result['total'] ) {
 			break;
 		}
 	}
@@ -461,41 +472,180 @@ function ltt_dive_in_seeker_date( $date, $time, $timezone ) {
 }
 
 /**
- * Pick the next upcoming occurrence for a recurring Seeker event.
+ * Parse the RRULE line of a Seeker recurrence rule.
+ *
+ * @param mixed $rrule iCalendar recurrence text, with or without DTSTART.
+ * @return array<string, string> Upper-case rule parts, or an empty array.
+ */
+function ltt_dive_in_parse_seeker_rrule( $rrule ) {
+	if ( ! is_string( $rrule ) || ! preg_match( '/(?:^|\n)(?:RRULE:)?(FREQ=[^\r\n]+)/i', $rrule, $match ) ) {
+		return array();
+	}
+
+	$parts = array();
+
+	foreach ( explode( ';', strtoupper( trim( $match[1] ) ) ) as $part ) {
+		$pair = explode( '=', $part, 2 );
+
+		if ( 2 === count( $pair ) && '' !== $pair[0] ) {
+			$parts[ $pair[0] ] = $pair[1];
+		}
+	}
+
+	return $parts;
+}
+
+/**
+ * Whether a day belongs to a parsed recurrence rule.
+ *
+ * @param DateTimeImmutable $day   Candidate day.
+ * @param DateTimeImmutable $first First day of the series.
+ * @param array             $rule  Parsed rule from ltt_dive_in_parse_seeker_rrule().
+ * @return bool
+ */
+function ltt_dive_in_seeker_rrule_matches( $day, $first, $rule ) {
+	$weekdays = array( 'MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7 );
+	$interval = max( 1, absint( $rule['INTERVAL'] ?? 1 ) );
+	$byday    = array();
+
+	foreach ( array_filter( explode( ',', $rule['BYDAY'] ?? '' ) ) as $code ) {
+		if ( preg_match( '/^([+-]?\d{1,2})?(MO|TU|WE|TH|FR|SA|SU)$/', $code, $match ) ) {
+			$byday[] = array( (int) $match[1], $weekdays[ $match[2] ] );
+		}
+	}
+
+	switch ( $rule['FREQ'] ?? '' ) {
+		case 'DAILY':
+			return 0 === (int) $first->diff( $day )->days % $interval;
+
+		case 'WEEKLY':
+			$week_start = $first->modify( '-' . ( (int) $first->format( 'N' ) - 1 ) . ' days' );
+			$days       = $byday ? wp_list_pluck( $byday, 1 ) : array( (int) $first->format( 'N' ) );
+
+			return 0 === intdiv( (int) $week_start->diff( $day )->days, 7 ) % $interval && in_array( (int) $day->format( 'N' ), $days, true );
+
+		case 'MONTHLY':
+			$months = ( (int) $day->format( 'Y' ) - (int) $first->format( 'Y' ) ) * 12 + (int) $day->format( 'n' ) - (int) $first->format( 'n' );
+
+			if ( 0 !== $months % $interval ) {
+				return false;
+			}
+
+			if ( $byday ) {
+				$from_start = intdiv( (int) $day->format( 'j' ) - 1, 7 ) + 1;
+				$from_end   = -1 * ( intdiv( (int) $day->format( 't' ) - (int) $day->format( 'j' ), 7 ) + 1 );
+
+				foreach ( $byday as $code ) {
+					if ( (int) $day->format( 'N' ) === $code[1] && in_array( $code[0], array( 0, $from_start, $from_end ), true ) ) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			$monthdays = array_filter( array_map( 'intval', explode( ',', $rule['BYMONTHDAY'] ?? '' ) ) );
+			$monthdays = $monthdays ? $monthdays : array( (int) $first->format( 'j' ) );
+
+			foreach ( $monthdays as $monthday ) {
+				if ( (int) $day->format( 'j' ) === ( $monthday > 0 ? $monthday : (int) $day->format( 't' ) + $monthday + 1 ) ) {
+					return true;
+				}
+			}
+
+			return false;
+
+		case 'YEARLY':
+			return 0 === ( (int) $day->format( 'Y' ) - (int) $first->format( 'Y' ) ) % $interval && $day->format( 'm-d' ) === $first->format( 'm-d' );
+	}
+
+	return false;
+}
+
+/**
+ * Pick the first occurrence of a recurring Seeker event on or after a date.
  *
  * Seeker reports a recurring series by its first `startdate`, which may be in
- * the past; the `occurrences` list carries the individual dates.
+ * the past, and describes the individual dates with an iCalendar `rrule` and
+ * an `exceptions` list.
  *
  * @param array        $event    Raw Seeker event.
  * @param DateTimeZone $timezone Event timezone.
+ * @param string       $from     Earliest occurrence date in `YYYY-MM-DD`.
  * @return array{start: DateTimeImmutable, end: DateTimeImmutable|null}|null
  */
-function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone ) {
-	$today = new DateTimeImmutable( 'today', $timezone );
-	$next  = null;
+function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
+	$rule  = ltt_dive_in_parse_seeker_rrule( $event['rrule'] ?? '' );
+	$first = ltt_dive_in_seeker_date( $event['startdate'] ?? '', '', $timezone );
 
-	foreach ( (array) ( $event['occurrences'] ?? array() ) as $occurrence ) {
-		if ( is_string( $occurrence ) ) {
-			$occurrence = array( 'startdate' => substr( $occurrence, 0, 10 ) );
+	if ( ! $first || ! in_array( $rule['FREQ'] ?? '', array( 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY' ), true ) ) {
+		return null;
+	}
+
+	$last  = $first->modify( '+10 years' );
+	$until = ltt_dive_in_seeker_date( $event['enddate'] ?? '', '', $timezone );
+
+	if ( $until && $until < $last ) {
+		$last = $until;
+	}
+
+	if ( ! empty( $rule['UNTIL'] ) && preg_match( '/^(\d{8})(T\d{6}Z?)?$/', $rule['UNTIL'], $match ) ) {
+		$until = isset( $match[2] ) && 'Z' === substr( $match[2], -1 )
+			? DateTimeImmutable::createFromFormat( 'Ymd\THis\Z', $rule['UNTIL'], new DateTimeZone( 'UTC' ) )
+			: DateTimeImmutable::createFromFormat( '!Ymd', $match[1], $timezone );
+
+		if ( $until instanceof DateTimeImmutable ) {
+			$until = $until->setTimezone( $timezone )->setTime( 0, 0 );
+			$last  = $until < $last ? $until : $last;
 		}
+	}
 
-		if ( ! is_array( $occurrence ) ) {
+	$excluded = array();
+
+	foreach ( (array) ( $event['exceptions'] ?? array() ) as $exception ) {
+		$value = is_array( $exception ) ? ( $exception['startdate'] ?? $exception['date'] ?? '' ) : $exception;
+
+		if ( is_string( $value ) && preg_match( '/^(\d{4})-?(\d{2})-?(\d{2})/', $value, $match ) ) {
+			$excluded[ $match[1] . '-' . $match[2] . '-' . $match[3] ] = true;
+		}
+	}
+
+	$count    = absint( $rule['COUNT'] ?? 0 );
+	$matched  = 0;
+	$start    = ltt_dive_in_seeker_date( $event['startdate'], $event['starttime'] ?? '', $timezone );
+	$end      = ltt_dive_in_seeker_date( $event['startdate'], $event['endtime'] ?? '', $timezone );
+	$duration = $start && $end && ! empty( $event['endtime'] ) ? $end->getTimestamp() - $start->getTimestamp() : null;
+
+	if ( null !== $duration && $duration <= 0 ) {
+		$duration += DAY_IN_SECONDS;
+	}
+
+	for ( $day = $first; $day <= $last; $day = $day->modify( '+1 day' ) ) {
+		if ( ! ltt_dive_in_seeker_rrule_matches( $day, $first, $rule ) ) {
 			continue;
 		}
 
-		$start = ltt_dive_in_seeker_date( $occurrence['startdate'] ?? '', $occurrence['starttime'] ?? ( $event['starttime'] ?? '' ), $timezone );
+		++$matched;
 
-		if ( ! $start || $start < $today || ( $next && $start >= $next['start'] ) ) {
+		if ( $count && $matched > $count ) {
+			break;
+		}
+
+		$date = $day->format( 'Y-m-d' );
+
+		if ( $date < $from || isset( $excluded[ $date ] ) ) {
 			continue;
 		}
 
-		$next = array(
-			'start' => $start,
-			'end'   => ltt_dive_in_seeker_date( $occurrence['enddate'] ?? '', $occurrence['endtime'] ?? ( $event['endtime'] ?? '' ), $timezone ),
+		$occurrence = ltt_dive_in_seeker_date( $date, $event['starttime'] ?? '', $timezone );
+
+		return array(
+			'start' => $occurrence,
+			'end'   => null !== $duration ? $occurrence->modify( '+' . $duration . ' seconds' ) : null,
 		);
 	}
 
-	return $next;
+	return null;
 }
 
 /**
@@ -567,12 +717,17 @@ function ltt_dive_in_get_seeker_image( $images ) {
 /**
  * Normalize one Seeker event for templates.
  *
- * @param array $raw Raw Seeker event.
+ * @param array  $raw  Raw Seeker event.
+ * @param string $from Earliest date in `YYYY-MM-DD` for a recurring occurrence; defaults to today.
  * @return array|null Null when the event cannot be displayed.
  */
-function ltt_dive_in_normalize_seeker_event( $raw ) {
+function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
 	if ( ! is_array( $raw ) ) {
 		return null;
+	}
+
+	if ( ! is_string( $from ) || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $from ) ) {
+		$from = wp_date( 'Y-m-d' );
 	}
 
 	$id    = ltt_dive_in_sanitize_seeker_uuid( $raw['uuid'] ?? '' );
@@ -592,11 +747,13 @@ function ltt_dive_in_normalize_seeker_event( $raw ) {
 	$end   = ltt_dive_in_seeker_date( $raw['enddate'] ?? '', $raw['endtime'] ?? '', $timezone );
 
 	if ( ! empty( $raw['recurring'] ) ) {
-		$next = ltt_dive_in_get_seeker_next_occurrence( $raw, $timezone );
+		$next = ltt_dive_in_get_seeker_next_occurrence( $raw, $timezone, $from );
 
 		if ( $next ) {
 			$start = $next['start'];
 			$end   = $next['end'];
+		} elseif ( $start && $start->format( 'Y-m-d' ) < $from ) {
+			return null;
 		}
 	}
 

@@ -170,7 +170,7 @@ $show_filters  = $show_category || $config['show_date'] || $config['show_search'
 				</div>
 			</div>
 
-			<button class="event-driver__load-more" type="submit" form="<?php echo esc_attr( $form_id ); ?>" name="event_page" value="<?php echo esc_attr( (string) ( $filters['page'] + 1 ) ); ?>" data-event-driver-load-more data-offset="<?php echo esc_attr( (string) count( $events ) ); ?>"<?php echo $result['has_more'] ? '' : ' hidden'; ?><?php echo $is_preview ? ' disabled' : ''; ?>>
+			<button class="event-driver__load-more" type="submit" form="<?php echo esc_attr( $form_id ); ?>" name="event_page" value="<?php echo esc_attr( (string) ( $filters['page'] + 1 ) ); ?>" data-event-driver-load-more data-offset="<?php echo esc_attr( (string) $result['fetched'] ); ?>"<?php echo $result['has_more'] ? '' : ' hidden'; ?><?php echo $is_preview ? ' disabled' : ''; ?>>
 				<span class="event-driver__load-more-label"><?php esc_html_e( 'Load More', 'ltt-dive-in' ); ?></span>
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/header/scroll-arrow.svg' ) ); ?>" alt="" width="14" height="12" />
 			</button>

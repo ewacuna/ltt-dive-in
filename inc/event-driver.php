@@ -171,7 +171,7 @@ function ltt_dive_in_get_event_driver_listed_filters( $config, $params ) {
  * @param array $filters Sanitized filters.
  * @param int   $offset  Zero-based offset.
  * @param int   $limit   Number of events.
- * @return array{events: array[], total: int, has_more: bool}|WP_Error
+ * @return array{events: array[], fetched: int, total: int, has_more: bool}|WP_Error
  */
 function ltt_dive_in_query_event_driver_listed_events( $config, $filters, $offset, $limit ) {
 	$result = ltt_dive_in_get_seeker_events(
@@ -188,7 +188,7 @@ function ltt_dive_in_query_event_driver_listed_events( $config, $filters, $offse
 		return $result;
 	}
 
-	$result['has_more'] = $result['total'] > $offset + count( $result['events'] ) && count( $result['events'] ) === $limit;
+	$result['has_more'] = $result['total'] > $offset + $result['fetched'] && $result['fetched'] === $limit;
 
 	return $result;
 }
@@ -321,7 +321,7 @@ function ltt_dive_in_get_event_driver_rest_events( WP_REST_Request $request ) {
 			'html'       => ltt_dive_in_render_event_driver_listed_cards( $result['events'] ),
 			'count'      => count( $result['events'] ),
 			'total'      => $result['total'],
-			'nextOffset' => $offset + count( $result['events'] ),
+			'nextOffset' => $offset + $result['fetched'],
 			'hasMore'    => $result['has_more'],
 		)
 	);
