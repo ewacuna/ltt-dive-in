@@ -111,6 +111,8 @@
 			spaceBetween: 24,
 			watchSlidesProgress: true,
 			watchOverflow: true,
+			// Rewind instead of loop: loop reorders slides, which would break Load More appends.
+			rewind: true,
 			speed: reducedMotion ? 0 : 350,
 			breakpoints: {
 				768: {
