@@ -46,6 +46,21 @@
     line-height: 1.45;
 }
 
+.static-image-cluster__intro > :first-child,
+.static-image-cluster__hero-caption > :first-child {
+    margin-top: 0;
+}
+
+.static-image-cluster__intro > :last-child,
+.static-image-cluster__hero-caption > :last-child {
+    margin-bottom: 0;
+}
+
+.static-image-cluster__intro,
+.static-image-cluster__hero-caption {
+    overflow-wrap: anywhere;
+}
+
 .static-image-cluster__actions {
     display: flex;
     height: 100%;

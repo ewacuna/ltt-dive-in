@@ -197,7 +197,10 @@ function ltt_dive_in_validate_static_image_cluster_intro( $valid, $value ) {
 
 	$variant = ltt_dive_in_get_static_image_cluster_submitted_value( 'field_ltt_dive_in_static_image_cluster_variant' );
 
-	if ( 'hero_caption' === $variant && '' === trim( (string) $value ) ) {
+	$text = html_entity_decode( wp_strip_all_tags( (string) $value ), ENT_QUOTES, 'UTF-8' );
+	$text = trim( str_replace( "\xc2\xa0", ' ', $text ) );
+
+	if ( 'hero_caption' === $variant && '' === $text ) {
 		return __( 'Introduction is required for Hero With Caption.', 'ltt-dive-in' );
 	}
 

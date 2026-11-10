@@ -264,7 +264,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 						<h2 id="<?php echo esc_attr( $heading_id ); ?>" class="static-image-cluster__title"><?php echo esc_html( $heading ); ?></h2>
 					<?php endif; ?>
 					<?php if ( $intro ) : ?>
-						<p class="static-image-cluster__intro"><?php echo esc_html( $intro ); ?></p>
+						<div class="static-image-cluster__intro"><?php echo wp_kses_post( wpautop( $intro ) ); ?></div>
 					<?php endif; ?>
 				</div>
 				<?php if ( $ctas ) : ?>
@@ -330,7 +330,7 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 							<?php echo $render_image( $image, $image_sizes, $mobile_image_source ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<?php endif; ?>
 						<?php if ( 'hero_caption' === $variant && 0 === $index && $hero_caption ) : ?>
-							<figcaption class="static-image-cluster__hero-caption"><?php echo esc_html( $hero_caption ); ?></figcaption>
+							<figcaption class="static-image-cluster__hero-caption"><?php echo wp_kses_post( wpautop( $hero_caption ) ); ?></figcaption>
 						<?php endif; ?>
 					</figure>
 				<?php endif; ?>

@@ -78,7 +78,7 @@
             "key": "field_ltt_dive_in_static_image_cluster_intro",
             "label": "Introduction",
             "name": "ltt_dive_in_static_image_cluster_intro",
-            "type": "textarea",
+            "type": "wysiwyg",
             "required": 0,
             "conditional_logic": [
                 [
@@ -89,9 +89,11 @@
                     }
                 ]
             ],
-            "maxlength": 420,
-            "rows": 4,
-            "new_lines": ""
+            "instructions": "Add introductory copy with paragraphs, emphasis, lists, or meaningful links. Also used as the caption for Hero With Caption.",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
         },
         {
             "key": "field_ltt_dive_in_static_image_cluster_primary_link",
@@ -242,5 +244,5 @@
     "instruction_placement": "label",
     "active": true,
     "show_in_rest": 0,
-    "modified": 1793205793
+    "modified": 1794327776
 }

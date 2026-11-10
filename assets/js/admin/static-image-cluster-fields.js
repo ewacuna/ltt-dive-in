@@ -46,7 +46,10 @@
 
 		const required = 'hero_caption' === variant;
 		const $input = $field.find( 'textarea' ).first();
-		const valid = ! required || $.trim( $input.val() || '' ).length > 0;
+		const editor = window.tinymce && window.tinymce.get( $input.attr( 'id' ) );
+		const content = editor && ! editor.isHidden() ? editor.getContent() : ( $input.val() || '' );
+		const text = $( '<div>' ).html( content ).text().replace( /\u00a0/g, ' ' ).trim();
+		const valid = ! required || text.length > 0;
 		let $requiredMark = $field.find( '> .acf-label label > .acf-required' );
 		let $error = $field.find( '> .acf-input > .ltt-static-image-cluster-intro-error' );
 
@@ -173,6 +176,19 @@
 			} );
 		syncSavingLock();
 	};
+
+	acf.addAction( 'wysiwyg_tinymce_init', function ( editor, id, init, field ) {
+		if ( field.get( 'key' ) !== introKey ) {
+			return;
+		}
+
+		editor.on( 'input change undo redo SetContent', function () {
+			updateIntroductionRequirement( field.$el.closest( '.acf-fields' ) );
+			syncSavingLock();
+		} );
+		updateIntroductionRequirement( field.$el.closest( '.acf-fields' ) );
+		syncSavingLock();
+	} );
 
 	acf.addAction( 'ready', updateWithin );
 	acf.addAction( 'append', updateWithin );
