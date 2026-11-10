@@ -402,19 +402,29 @@
     display: none;
 }
 
+/*
+ * The hover zoom grows the image box instead of using transform. A transform
+ * animation gives the image its own compositing layer, and Safari then stops
+ * painting the frame's mix-blend-mode over it.
+ */
 .ltt-listing-module__image {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    z-index: 0;
     display: block;
     width: 100%;
+    max-width: none;
     height: 100%;
     object-fit: cover;
-    transform: scale(1);
-    transition: transform 300ms ease-out;
+    transition: top 300ms ease-out, left 300ms ease-out, width 300ms ease-out, height 300ms ease-out;
 }
 
 .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__image {
-    transform: scale(1.04);
+    top: -2%;
+    left: -2%;
+    width: 104%;
+    height: 104%;
 }
 
 .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__media::after {
