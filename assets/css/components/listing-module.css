@@ -348,10 +348,12 @@
     --listing-frame-blend: hard-light;
     --listing-frame-opacity: 1;
     position: relative;
-    display: grid;
+    /* Flex, not grid: iOS 18 Safari does not stretch an implicit grid row to an aspect-ratio height. */
+    display: flex;
     min-width: 0;
     aspect-ratio: 472 / 575;
-    place-items: center;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     isolation: isolate;
     background: #073959;
