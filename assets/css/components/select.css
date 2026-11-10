@@ -137,17 +137,17 @@
     transition: opacity 200ms ease-out, transform 200ms ease-out;
 }
 
-.ltt-select--light .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon,
+.ltt-select--light .ltt-select__trigger:not(:disabled):is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon,
 .ltt-select--light:is(:hover, :active, :focus-within) > .ltt-select__native-icon {
     background-color: #eeb040;
 }
 
-.ltt-select--light .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon img,
+.ltt-select--light .ltt-select__trigger:not(:disabled):is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon img,
 .ltt-select--light:is(:hover, :active, :focus-within) > .ltt-select__native-icon img {
     opacity: 0;
 }
 
-.ltt-select--light .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon::after,
+.ltt-select--light .ltt-select__trigger:not(:disabled):is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon::after,
 .ltt-select--light:is(:hover, :active, :focus-within) > .ltt-select__native-icon::after {
     opacity: 1;
 }
@@ -186,7 +186,7 @@
     overflow-wrap: anywhere;
 }
 
-.ltt-select__option:is(:hover, [aria-pressed="true"]) {
+.ltt-select__option:is(:not(:disabled):hover, [aria-pressed="true"]) {
     background: #c7d1d8;
     color: #073959;
 }
@@ -215,7 +215,7 @@
     transition: background-color 200ms ease-out;
 }
 
-.ltt-select--dark .ltt-select__trigger:is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon,
+.ltt-select--dark .ltt-select__trigger:not(:disabled):is(:hover, :active, :focus-visible, [aria-expanded="true"]) .ltt-select__trigger-icon,
 .ltt-select--dark:is(:hover, :active, :focus-within) > .ltt-select__native-icon {
     background-color: #eeb040;
 }
