@@ -326,6 +326,7 @@ if ( $heading ) {
 					the_row();
 					$blurbs[] = array(
 						'icon'  => get_sub_field( 'icon', false ),
+						'color' => get_sub_field( 'color', false ),
 						'title' => get_sub_field( 'title', false ),
 						'copy'  => get_sub_field( 'copy', false ),
 					);
@@ -339,6 +340,8 @@ if ( $heading ) {
 						$icon_value = $blurb['icon'] ?? 0;
 						$icon_id    = absint( $icon_value );
 						$icon_uri   = '';
+						$icon_color = $get_text( $blurb['color'] ?? '' );
+						$use_icon_color = in_array( $icon_color, array( 'navy', 'orange', 'green', 'forest', 'blue', 'teal', 'burgundy', 'red', 'gray' ), true );
 						$title      = $get_text( $blurb['title'] ?? '' );
 						$copy       = $get_text( $blurb['copy'] ?? '' );
 
@@ -349,7 +352,11 @@ if ( $heading ) {
 						<?php if ( $title && $copy ) : ?>
 							<li class="content-module__icon-item">
 								<?php if ( $icon_uri ) : ?>
-									<img class="content-module__icon" src="<?php echo esc_url( $icon_uri ); ?>" alt="" aria-hidden="true" />
+									<?php if ( $use_icon_color ) : ?>
+										<span class="content-module__icon content-module__icon--colored content-module__icon--<?php echo esc_attr( $icon_color ); ?>" style="<?php echo esc_attr( '--ltt-content-module-icon-mask: url("' . esc_url_raw( $icon_uri ) . '");' ); ?>" aria-hidden="true"></span>
+									<?php else : ?>
+										<img class="content-module__icon" src="<?php echo esc_url( $icon_uri ); ?>" alt="" aria-hidden="true" />
+									<?php endif; ?>
 								<?php endif; ?>
 								<h3 class="content-module__icon-title"><?php echo esc_html( $title ); ?></h3>
 								<p class="content-module__icon-copy"><?php echo esc_html( $copy ); ?></p>

@@ -237,6 +237,28 @@
           "parent_repeater": "field_ltt_dive_in_content_module_icon_blurbs"
         },
         {
+          "key": "field_ltt_dive_in_content_module_icon_blurb_color",
+          "label": "Icon color",
+          "name": "color",
+          "type": "select",
+          "choices": {
+            "navy": "Deep Navy",
+            "orange": "Orange",
+            "green": "Green",
+            "forest": "Forest Green",
+            "blue": "Blue",
+            "teal": "Teal",
+            "burgundy": "Burgundy",
+            "red": "Red",
+            "gray": "Gray"
+          },
+          "default_value": "",
+          "return_format": "value",
+          "ui": 1,
+          "allow_null": 1,
+          "parent_repeater": "field_ltt_dive_in_content_module_icon_blurbs"
+        },
+        {
           "key": "field_ltt_dive_in_content_module_icon_blurb_title",
           "label": "Title",
           "name": "title",
@@ -720,5 +742,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1794346068
+  "modified": 1794349999
 }

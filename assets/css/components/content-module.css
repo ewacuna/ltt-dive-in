@@ -502,6 +502,54 @@
 	object-fit: contain;
 }
 
+.content-module__icon--colored {
+	background-color: var(--ltt-content-module-icon-color);
+	-webkit-mask-image: var(--ltt-content-module-icon-mask);
+	mask-image: var(--ltt-content-module-icon-mask);
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+.content-module__icon--navy {
+	--ltt-content-module-icon-color: #073959;
+}
+
+.content-module__icon--orange {
+	--ltt-content-module-icon-color: #e1841a;
+}
+
+.content-module__icon--green {
+	--ltt-content-module-icon-color: #4fa154;
+}
+
+.content-module__icon--forest {
+	--ltt-content-module-icon-color: #296154;
+}
+
+.content-module__icon--blue {
+	--ltt-content-module-icon-color: #397398;
+}
+
+.content-module__icon--teal {
+	--ltt-content-module-icon-color: #319d8e;
+}
+
+.content-module__icon--burgundy {
+	--ltt-content-module-icon-color: #5e3236;
+}
+
+.content-module__icon--red {
+	--ltt-content-module-icon-color: #9e3f3d;
+}
+
+.content-module__icon--gray {
+	--ltt-content-module-icon-color: #6f6d7c;
+}
+
 .content-module__icon-title {
 	margin: 0;
 	color: inherit;
