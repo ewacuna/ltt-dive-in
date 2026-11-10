@@ -41,6 +41,11 @@ function ltt_dive_in_story_module_variants() {
 			'label' => __( 'Responsible Travel Tip', 'ltt-dive-in' ),
 			'slug'  => 'travel-tip',
 		),
+		'conclusion'   => array(
+			'label' => __( 'Article Conclusion', 'ltt-dive-in' ),
+			'slug'  => 'conclusion',
+			'deps'  => array( 'ltt-dive-in-buttons' ),
+		),
 	);
 }
 
