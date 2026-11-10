@@ -93,6 +93,24 @@ if ( $use_facets ) {
 
 $query = new WP_Query( $query_args );
 
+// Frame colors follow each post's place in the unfiltered order, so a card keeps its color when filters move it.
+$frame_variants  = array( 'blue', 'gold', 'green' );
+$frame_positions = array_flip(
+	get_posts(
+		array(
+			'post_type'           => $source,
+			'post_status'         => 'publish',
+			'posts_per_page'      => -1,
+			'orderby'             => $query_args['orderby'],
+			'ignore_sticky_posts' => true,
+			'has_password'        => false,
+			'fields'              => 'ids',
+			'no_found_rows'       => true,
+			'facetwp'             => false,
+		)
+	)
+);
+
 $reset_facets = array_keys( $facets );
 if ( $search_facet ) {
 	$reset_facets[] = $search_name;
@@ -159,6 +177,7 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 							'copy'       => wp_trim_words( wp_strip_all_tags( get_the_excerpt( $listing_post ) ), 24, '…' ),
 							'buttons'    => ltt_dive_in_listing_card_buttons( $listing_post ),
 							'is_preview' => $is_preview,
+							'frame'      => $frame_variants[ ( $frame_positions[ $listing_post->ID ] ?? $listing_post->ID ) % 3 ],
 						)
 					);
 					?>

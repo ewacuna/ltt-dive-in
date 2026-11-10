@@ -358,17 +358,17 @@
     color: #ffffff;
 }
 
-.ltt-listing-module__card:nth-child(3n + 1) .ltt-listing-module__media {
+.ltt-listing-module__card--frame-blue .ltt-listing-module__media {
     --listing-frame-gradient: linear-gradient(20deg, #397398, #61c2b7);
     --listing-frame-blend: hard-light;
 }
 
-.ltt-listing-module__card:nth-child(3n + 2) .ltt-listing-module__media {
+.ltt-listing-module__card--frame-gold .ltt-listing-module__media {
     --listing-frame-gradient: linear-gradient(180deg, rgba(225, 132, 26, 0.77) 0%, rgba(238, 176, 64, 0.77) 100%);
     --listing-frame-blend: screen;
 }
 
-.ltt-listing-module__card:nth-child(3n) .ltt-listing-module__media {
+.ltt-listing-module__card--frame-green .ltt-listing-module__media {
     --listing-frame-gradient: linear-gradient(19deg, #296154, #4fa154);
     --listing-frame-blend: hard-light;
 }

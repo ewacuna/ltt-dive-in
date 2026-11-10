@@ -15,6 +15,7 @@ $image_id   = isset( $args['image_id'] ) ? absint( $args['image_id'] ) : 0;
 $url        = isset( $args['url'] ) && is_string( $args['url'] ) ? esc_url_raw( $args['url'] ) : '';
 $buttons    = isset( $args['buttons'] ) && is_array( $args['buttons'] ) ? $args['buttons'] : array();
 $is_preview = ! empty( $args['is_preview'] );
+$frame      = isset( $args['frame'] ) && in_array( $args['frame'], array( 'blue', 'gold', 'green' ), true ) ? $args['frame'] : 'blue';
 
 $buttons = array_slice(
 	array_values(
@@ -33,7 +34,7 @@ if ( '' === $title ) {
 	return;
 }
 ?>
-<article class="ltt-listing-module__card<?php echo $buttons ? '' : ' ltt-listing-module__card--without-buttons'; ?>">
+<article class="ltt-listing-module__card ltt-listing-module__card--frame-<?php echo esc_attr( $frame ); ?><?php echo $buttons ? '' : ' ltt-listing-module__card--without-buttons'; ?>">
 	<?php if ( ! $is_preview && '' !== $url ) : ?>
 		<a class="ltt-listing-module__card-link" href="<?php echo esc_url( $url ); ?>" aria-label="<?php
 			/* translators: %s: listing title. */
