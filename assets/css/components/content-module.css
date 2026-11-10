@@ -47,41 +47,49 @@
 	color: #ffffff;
 }
 
-.content-module--stats-bg-navy {
+.content-module--stats-bg-navy,
+.content-module--icon-bg-navy {
 	background: #003a5c;
 	color: #ffffff;
 }
 
-.content-module--stats-bg-gold {
+.content-module--stats-bg-gold,
+.content-module--icon-bg-gold {
 	background: var(--ltt-content-module-peak-gold);
 }
 
-.content-module--stats-bg-burgundy {
+.content-module--stats-bg-burgundy,
+.content-module--icon-bg-burgundy {
 	background: #5e3236;
 	color: #ffffff;
 }
 
-.content-module--stats-bg-red {
+.content-module--stats-bg-red,
+.content-module--icon-bg-red {
 	background: #9e3f3d;
 	color: #ffffff;
 }
 
-.content-module--stats-bg-forest {
+.content-module--stats-bg-forest,
+.content-module--icon-bg-forest {
 	background: #296154;
 	color: #ffffff;
 }
 
-.content-module--stats-bg-green {
+.content-module--stats-bg-green,
+.content-module--icon-bg-green {
 	background: #4fa154;
 	color: #042742;
 }
 
-.content-module--stats-bg-blue {
+.content-module--stats-bg-blue,
+.content-module--icon-bg-blue {
 	background: #397398;
 	color: #ffffff;
 }
 
-.content-module--stats-bg-cyan {
+.content-module--stats-bg-cyan,
+.content-module--icon-bg-cyan {
 	background: #61c2b7;
 }
 

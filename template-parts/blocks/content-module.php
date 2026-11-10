@@ -59,6 +59,8 @@ $classes  = array( 'content-module', 'content-module--' . $variant );
 $heading  = '';
 $bg_image = 0;
 $stats_background_color = '';
+$icon_background_color  = '';
+$icon_cta_style         = 'primary-outline';
 $stats_tag = '';
 $stats_intro = '';
 $stats_cta = array();
@@ -192,7 +194,14 @@ switch ( $variant ) {
 		$heading = $get_text( get_field( 'ltt_dive_in_content_module_copy_list_heading' ) );
 		break;
 	case 'icon_block':
-		$heading = $get_text( get_field( 'ltt_dive_in_content_module_icon_heading' ) );
+		$heading               = $get_text( get_field( 'ltt_dive_in_content_module_icon_heading' ) );
+		$icon_background_color = $get_text( get_field( 'field_ltt_dive_in_content_module_icon_background_color' ) );
+
+		if ( in_array( $icon_background_color, array( 'navy', 'burgundy', 'red', 'forest', 'blue' ), true ) ) {
+			$icon_cta_style = 'dark-standard';
+		} elseif ( in_array( $icon_background_color, array( 'gold', 'green', 'cyan' ), true ) ) {
+			$icon_cta_style = 'primary-fill';
+		}
 		break;
 	case 'newsletter_signup':
 		$heading  = $get_text( get_field( 'ltt_dive_in_content_module_newsletter_heading' ) );
@@ -223,6 +232,8 @@ if ( $heading ) {
 		$classes[] = 'content-module--image-background';
 	} elseif ( 'stats' === $variant && in_array( $stats_background_color, array( 'navy', 'gold', 'burgundy', 'red', 'forest', 'green', 'blue', 'cyan' ), true ) ) {
 		$classes[] = 'content-module--stats-bg-' . $stats_background_color;
+	} elseif ( 'icon_block' === $variant && in_array( $icon_background_color, array( 'navy', 'gold', 'burgundy', 'red', 'forest', 'green', 'blue', 'cyan' ), true ) ) {
+		$classes[] = 'content-module--icon-bg-' . $icon_background_color;
 	} else {
 		$classes[] = 'content-module--white-background';
 	}
@@ -305,7 +316,7 @@ if ( $heading ) {
 			<header class="content-module__section-header">
 				<h2 id="<?php echo esc_attr( $id . '-heading' ); ?>" class="content-module__heading"><?php echo esc_html( $heading ); ?></h2>
 				<?php $render_copy( get_field( 'ltt_dive_in_content_module_icon_intro', false, false ) ); ?>
-				<?php $render_cta( get_field( 'ltt_dive_in_content_module_icon_cta' ), 'primary-outline', 'content-module__header-cta' ); ?>
+				<?php $render_cta( get_field( 'ltt_dive_in_content_module_icon_cta' ), $icon_cta_style, 'content-module__header-cta' ); ?>
 			</header>
 			<?php
 			$blurbs = array();

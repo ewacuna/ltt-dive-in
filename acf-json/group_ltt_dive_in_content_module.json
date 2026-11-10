@@ -190,6 +190,29 @@
       "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"icon_block"}]]
     },
     {
+      "key": "field_ltt_dive_in_content_module_icon_background_color",
+      "label": "Background color",
+      "name": "ltt_dive_in_content_module_icon_background_color",
+      "type": "select",
+      "instructions": "Leave empty for white.",
+      "choices": {
+        "white": "White",
+        "navy": "Deep Navy",
+        "gold": "Peak Gold",
+        "burgundy": "Burgundy",
+        "red": "Red",
+        "forest": "Forest Green",
+        "green": "Green",
+        "blue": "Blue",
+        "cyan": "Crystal Clear Cyan"
+      },
+      "default_value": "",
+      "return_format": "value",
+      "ui": 1,
+      "allow_null": 1,
+      "conditional_logic": [[{"field":"field_ltt_dive_in_content_module_variant","operator":"==","value":"icon_block"}]]
+    },
+    {
       "key": "field_ltt_dive_in_content_module_icon_blurbs",
       "label": "Icon blurbs",
       "name": "ltt_dive_in_content_module_icon_blurbs",
@@ -697,5 +720,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1794246289
+  "modified": 1794346068
 }
