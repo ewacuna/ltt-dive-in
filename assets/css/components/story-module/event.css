@@ -1,0 +1,149 @@
+/* Story Module — Event. */
+.story-module--event {
+    margin: 0;
+    padding: 1rem 4rem;
+    background: #ffffff;
+}
+
+.story-event {
+    display: flex;
+    max-width: 82rem;
+    align-items: center;
+    margin-inline: auto;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+}
+
+.story-event__content {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.25rem 4rem;
+}
+
+.story-module--event-no-media .story-event__content {
+    padding-block: 0;
+}
+
+.story-event__title {
+    margin: 0;
+    color: #073959;
+    font-family: inherit;
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-event__details > * {
+    margin: 0;
+}
+
+/* Teal passes AA only as large text, so the date stays 24px on mobile. */
+.story-event__date {
+    color: #319d8e;
+    font-size: 1.5rem;
+    letter-spacing: -0.0025em;
+    line-height: 1.45;
+}
+
+.story-event__location,
+.story-event__body {
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.story-event__body > * {
+    margin: 0;
+}
+
+.story-event__body > * + * {
+    margin-top: 1.45em;
+}
+
+.story-event__body a {
+    color: #073959;
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.story-event__body a:hover,
+.story-event__body a:focus {
+    text-decoration-thickness: 2px;
+}
+
+.story-event__body a:focus-visible {
+    outline: 2px solid #073959;
+    outline-offset: 2px;
+}
+
+.story-event__media {
+    flex: none;
+    width: 24.875rem;
+    aspect-ratio: 398 / 407;
+}
+
+.story-event__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 1199.98px) {
+    .story-event__content {
+        padding-inline: 3rem;
+    }
+
+    .story-event__media {
+        width: 20rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .story-event__content {
+        padding-inline: 0 2rem;
+    }
+
+    .story-module--event-no-media .story-event__content {
+        padding-inline: 0;
+    }
+
+    .story-event__media {
+        width: 40%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .story-module--event {
+        padding-inline: 0;
+    }
+
+    .story-event {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .story-event__content,
+    .story-module--event-no-media .story-event__content {
+        padding: 2.25rem 1.5rem;
+    }
+
+    .story-event__title {
+        font-size: 1.5rem;
+        letter-spacing: -0.0025em;
+    }
+
+    .story-event__location,
+    .story-event__body {
+        font-size: 0.875rem;
+    }
+
+    .story-event__media {
+        width: 100%;
+    }
+}

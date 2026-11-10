@@ -1,6 +1,6 @@
 <?php
 /**
- * Hero Featured Events (Figma nodes 1:11652 desktop, 1:11653 mobile).
+ * Hero Featured Events.
  *
  * @package LTT_Dive_In
  */

@@ -1,7 +1,5 @@
 /*
  * Story Module — Side by Side.
- * Figma: Blog Templates, Profiles “Side by Side 1 Up Image”: desktop
- * 2991:82026 and 2991:82046, mobile 2991:82919 and 2991:82931.
  *
  * Desktop: the text keeps a 64px gutter on its outer side and the 616 × 514
  * image runs to the edge of the 1440px frame (42.78%), with a 48px gap and
@@ -227,7 +225,7 @@
         line-height: 1.5;
     }
 
-    /* Figma keeps the list items at 18px on mobile. */
+    /* List items stay at 18px on mobile. */
     .story-side-by-side__body ul > li {
         font-size: 1.125rem;
         letter-spacing: 0;

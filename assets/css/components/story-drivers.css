@@ -16,7 +16,7 @@
     margin-inline: auto;
 }
 
-/* The 1 Up feature story is a full-bleed band (Figma “On Page Driver”). */
+/* The 1 Up feature story is a full-bleed band. */
 .story-drivers--one-up {
     padding-block: 0;
 }
@@ -75,8 +75,7 @@
 
 /*
  * 2, 3, and 4 Up rows. In 2 and 3 Up, hover only swaps the tile's overlay for
- * its panel (Figma “Story Card – Default” → “Hover”, Smart Animate 300ms
- * ease-out); tiles keep their width. In 4 Up the hovered tile also widens.
+ * its panel (300ms ease-out); tiles keep their width. In 4 Up the hovered tile also widens.
  */
 .story-drivers__row {
     --story-card-height: 43.125rem;
@@ -107,7 +106,7 @@
     align-items: center;
 }
 
-/* Figma uses the approved 18px desktop tag size for this centered header. */
+/* The approved 18px desktop tag size for this centered header. */
 .story-drivers--carousel .story-drivers__tag {
     font-size: 1.125rem;
 }
@@ -349,7 +348,7 @@
     pointer-events: auto;
 }
 
-/* Figma's “Floating Carousel” arrow glyph is 18 × 21px, not the shared 24px box. */
+/* The “Floating Carousel” arrow glyph is 18 × 21px, not the shared 24px box. */
 .story-drivers .ltt-slider-navigation--image img {
     width: 1.125rem;
     height: 1.3125rem;
@@ -707,7 +706,7 @@
         translate: none;
     }
 
-    /* Figma's mobile Hero + Page Grid header stays left aligned. */
+    /* The mobile Hero + Page Grid header stays left aligned. */
     .story-drivers--hero-grid .story-drivers__header {
         align-items: flex-start;
         margin-bottom: 2.125rem;
@@ -730,7 +729,7 @@
         margin-bottom: 2.125rem;
     }
 
-    /* Matches the Event Driver: Figma places the search field above the dropdowns. */
+    /* Matches the Event Driver: the search field sits above the dropdowns. */
     .story-drivers__filters .story-drivers__search {
         grid-column: 1 / -1;
         grid-row: 1;

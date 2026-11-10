@@ -1,7 +1,6 @@
 <?php
 /**
- * Story Drivers section header (Figma “Left-Align Header w CTA” and
- * “Section Intro Header – White BG”).
+ * Story Drivers section header.
  *
  * @package LTT_Dive_In
  */

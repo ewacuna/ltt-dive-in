@@ -1,7 +1,7 @@
 /*
  * Single post (single.php).
  *
- * The Stories Hero (components/stories-hero.css) opens the page. Figma has no
+ * The Stories Hero (components/stories-hero.css) opens the page. The design has no
  * article-body composition yet, so body copy is held to the shared
  * --content-width reading measure and DESIGN.md's annotated type scale.
  * Full-width and wide blocks keep their own containers. Story Modules

@@ -1,11 +1,11 @@
 /*
- * Internal Page Hero (Figma dev-access file, node 1:1701 desktop / 1:2180 mobile).
+ * Internal Page Hero.
  */
 .site-main--has-hero {
 	padding-top: 0;
 }
 
-/* The hero sits directly under the solid header; Figma shows no divider. */
+/* The hero sits directly under the solid header, with no divider. */
 .site-header {
 	border-bottom: 0;
 }
@@ -112,7 +112,7 @@
 	text-decoration: none;
 }
 
-/* Figma Scroll Module (95:97473): the glass pill appears only on hover. */
+/* Scroll Module: the glass pill appears only on hover. */
 .page-hero__scroll span {
 	display: inline-flex;
 	min-height: 1.625rem;
@@ -126,7 +126,7 @@
 }
 
 .page-hero__scroll:is(:hover, :focus-visible) span {
-	/* User-approved: lighter fill and stronger blur than Figma's 60% white for a clearer glass effect. */
+	/* User-approved: lighter fill and stronger blur than the original 60% white for a clearer glass effect. */
 	background-color: rgba(255, 255, 255, 0.3);
 	-webkit-backdrop-filter: blur(0.5rem);
 	backdrop-filter: blur(0.5rem);
@@ -201,7 +201,7 @@
 	}
 
 	.page-hero__title {
-		/* Client-approved reduction from the Figma 64px mobile H1. */
+		/* Client-approved reduction from the original 64px mobile H1. */
 		font-size: 3.5rem;
 		letter-spacing: 0;
 		line-height: 1.2;

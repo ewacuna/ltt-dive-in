@@ -1,8 +1,7 @@
 /*
  * Map block. Follows the client's map prototype (supplied 2026-10-16): gold
  * destination names with a dark popup, attraction icons with a name tooltip,
- * and white town and gateway labels. Figma still reserves only a "MAP HERE
- * FPO" frame, so the frame height is provisional.
+ * and white town and gateway labels. The frame height is provisional.
  *
  * Deliberate differences from the prototype: the snow effect has a play/pause
  * map control (WCAG 2.2.2), Gotham and Big Caslon replace

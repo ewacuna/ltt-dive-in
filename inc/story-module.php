@@ -2,7 +2,7 @@
 /**
  * Story Module: blog post sections from the Blog Templates design.
  *
- * One ACF block with one variant per Figma section. Each variant owns:
+ * One ACF block with one variant per design section. Each variant owns:
  *
  * - its fields: an ACF group field named `ltt_dive_in_story_module_{key}`
  *   in acf-json/group_ltt_dive_in_story_module.json;
@@ -40,6 +40,32 @@ function ltt_dive_in_story_module_variants() {
 		'travel_tip'   => array(
 			'label' => __( 'Responsible Travel Tip', 'ltt-dive-in' ),
 			'slug'  => 'travel-tip',
+		),
+		'conclusion'   => array(
+			'label' => __( 'Article Conclusion', 'ltt-dive-in' ),
+			'slug'  => 'conclusion',
+			'deps'  => array( 'ltt-dive-in-buttons' ),
+		),
+		'comparison_table' => array(
+			'label' => __( 'Comparison Table', 'ltt-dive-in' ),
+			'slug'  => 'comparison-table',
+		),
+		'numbered_heading' => array(
+			'label' => __( 'Numbered Heading', 'ltt-dive-in' ),
+			'slug'  => 'numbered-heading',
+		),
+		'event'            => array(
+			'label' => __( 'Event', 'ltt-dive-in' ),
+			'slug'  => 'event',
+		),
+		'resource_links'   => array(
+			'label' => __( 'Resource Links', 'ltt-dive-in' ),
+			'slug'  => 'resource-links',
+			'deps'  => array( 'ltt-dive-in-buttons' ),
+		),
+		'explainer'        => array(
+			'label' => __( 'Explainer Q&A', 'ltt-dive-in' ),
+			'slug'  => 'explainer',
 		),
 	);
 }

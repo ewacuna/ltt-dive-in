@@ -2,8 +2,6 @@
 /**
  * Story Module — Responsible Travel Tip.
  *
- * Figma: Blog Templates `464gNuDz4jnsCACmxyGie3`, “RESPONSIBLE TRAVELER TIP”
- * (desktop `2991:82833`, mobile `2991:82952`).
  * Styles: assets/css/components/story-module/travel-tip.css.
  *
  * @package LTT_Dive_In

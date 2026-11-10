@@ -9,7 +9,7 @@
  * - image_id: Optional background image attachment ID.
  * - links: Optional ACF link arrays; at most two glass buttons are shown.
  * - scroll_target: Optional fragment ID for the "Scroll for more" link.
- * - icon_id: Optional SVG attachment ID; falls back to the Figma artwork.
+ * - icon_id: Optional SVG attachment ID; falls back to the bundled artwork.
  *
  * @package LTT_Dive_In
  */

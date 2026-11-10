@@ -1,4 +1,4 @@
-/* Review Figma 95:87898: 40px desktop bar, 16px Link 1. */
+/* 40px desktop bar, 16px Link 1. */
 .ltt-section-navigation {
 	padding-inline: 4rem;
 	background: #042742;
@@ -54,7 +54,7 @@
 	outline-offset: -4px;
 }
 
-/* Review Figma 95:24452: narrower screens keep the 40px row and slide it horizontally. */
+/* Narrower screens keep the 40px row and slide it horizontally. */
 @media (max-width: 1399.98px) {
 	.ltt-section-navigation {
 		padding-inline: 1.25rem;
@@ -62,7 +62,7 @@
 		overscroll-behavior-x: contain;
 		scroll-padding-inline: 1.25rem;
 		scroll-snap-type: x proximity;
-		/* No-JavaScript fallback: Figma shows no scrollbar; swipe, trackpad, Shift+wheel, and Tab still scroll the row. */
+		/* No-JavaScript fallback: the scrollbar stays hidden; swipe, trackpad, Shift+wheel, and Tab still scroll the row. */
 		scrollbar-width: none;
 	}
 
@@ -88,7 +88,7 @@
 	}
 
 	/*
-	 * Approved addition, not in Figma: edge fades signal more links in that direction.
+	 * Approved addition: edge fades signal more links in that direction.
 	 * 40px stays clear of link text beside Swiper's 20px offset, so focused links remain unobscured.
 	 */
 	.ltt-section-navigation.is-swiper::before,

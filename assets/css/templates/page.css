@@ -1,7 +1,7 @@
 /*
  * Internal pages (page.php and the Full Width template).
  *
- * Figma composes internal pages as a hero followed by edge-to-edge sections,
+ * Internal pages are composed as a hero followed by edge-to-edge sections,
  * so the content is not boxed. Full-width blocks own their own container and
  * spacing; .alignwide centers itself from main.css; other loose editor
  * content keeps the shared content width.

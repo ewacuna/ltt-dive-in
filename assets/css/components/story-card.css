@@ -1,7 +1,6 @@
 /*
- * Story tile (Figma “Story Card – Default”, “Story Card – Expanded”, and
- * “Story Card – Mobile”). Consumers own placement and set the tile height
- * through `--story-card-height`.
+ * Story tile. Consumers own placement and set the tile height through
+ * `--story-card-height`.
  */
 .ltt-story-card {
     position: relative;
@@ -92,7 +91,7 @@
 }
 
 /*
- * Read time follows Figma's tertiary shade 300 (#319D8E), as on the Stories
+ * Read time uses tertiary shade 300 (#319D8E), as on the Stories
  * Hero. It is below WCAG AA's 4.5:1 for 14px text on white; see DESIGN.md.
  */
 .ltt-story-card__read-time {
@@ -161,7 +160,7 @@
     line-height: 1.45;
 }
 
-/* Sits above the title link's overlay so it has its own hover (Figma “Read More Carrot – Hover”). */
+/* Sits above the title link's overlay so it has its own hover. */
 .ltt-story-card__read-more,
 .ltt-story-card__read-more:visited {
     position: relative;

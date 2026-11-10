@@ -1,4 +1,4 @@
-/* Meetings Hero (Figma 1:10709 desktop and 95:24749 mobile). */
+/* Meetings Hero. */
 .meetings-hero {
 	--meetings-hero-offset: calc(5.625rem + var(--wp-admin--admin-bar--height, 0px));
 	position: relative;

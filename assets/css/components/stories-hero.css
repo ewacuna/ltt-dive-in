@@ -1,6 +1,5 @@
 /*
- * Stories Hero (Figma review file, Website Components > HERO > "Blog Post
- * Header": Stories Hero Desktop 95:86676 / Mobile 95:86677).
+ * Stories Hero.
  *
  * A white block below the site header, not anchored to the navigation like
  * the Internal Page Hero.
@@ -23,7 +22,7 @@
     text-align: center;
 }
 
-/* DESIGN.md H1 (48px) replaces Figma's raw 54px layer, as agreed. */
+/* DESIGN.md H1 (48px), as agreed. */
 .stories-hero__title {
     margin: 0 0 0.75rem;
     color: #073959;
@@ -48,7 +47,7 @@
 }
 
 /*
- * Read time follows Figma's cyan #319D8E (tertiary shade 300) at the design
+ * Read time uses cyan #319D8E (tertiary shade 300) at the design
  * owner's request. It is 3.31:1 on white, below WCAG AA's 4.5:1 for 14px text.
  */
 .stories-hero__meta .reading-time {
@@ -74,10 +73,9 @@
 }
 
 /*
- * "Show Summary" disclosure (Figma "EXPANDED" instance: Gotham 18px,
- * primary #073959, 10px gap, 40px row, closed/open expand icons).
- * Figma has no inspectable open state; the panel values are measured from
- * the 1440px review composition and use existing tokens.
+ * "Show Summary" disclosure (Gotham 18px, primary #073959, 10px gap, 40px
+ * row, closed/open expand icons). The open-state panel values are measured
+ * from the 1440px review composition and use existing tokens.
  */
 .stories-hero__summary {
     --summary-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -190,7 +188,7 @@
     flex-shrink: 0;
 }
 
-/* Closed: faint up chevron (Figma "EXPANDED" instance). Open: the up chevron strengthens. */
+/* Closed: faint up chevron. Open: the up chevron strengthens. */
 .stories-hero__summary-icon img {
     position: absolute;
     inset: 0;
@@ -221,8 +219,8 @@
 }
 
 /*
- * Figma "Photo Caption" (desktop 2991:82021, mobile 2991:82915): the image's
- * Media Library caption and photo credit, grey/700 #3E3C4A.
+ * Photo caption: the image's Media Library caption and photo credit,
+ * grey/700 #3E3C4A.
  */
 .stories-hero__caption {
     display: flex;
@@ -295,7 +293,7 @@
     }
 
     /*
-     * Figma uses 10px Book; 12px keeps the caption legible and matches the
+     * 12px (not 10px) keeps the caption legible and matches the
      * article's figcaption size.
      */
     .stories-hero__caption {

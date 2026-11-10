@@ -1,8 +1,8 @@
 /*
- * Category tag (Figma typography board, CATEGORY TAG - WHITE BG / DARK BG).
+ * Category tag (white and dark backgrounds).
  * Components own only placement and the approved desktop size override.
  *
- * `line-height: normal` reproduces Figma's auto line height from Gotham
+ * `line-height: normal` reproduces the design's auto line height from Gotham
  * Medium's own metrics, so the 14px tag is 23px tall with the caps optically
  * centered. A fixed line height or another Gotham weight shifts the caps.
  */

@@ -6,9 +6,6 @@
  * bulleted lists use the mountain icon), optional CTA, and the image on the
  * right or left.
  *
- * Figma: Blog Templates `464gNuDz4jnsCACmxyGie3`, “Side by Side 1 Up Image”
- * in Profiles: desktop `2991:82026` and `2991:82046` (with eyebrow, list,
- * and CTA), mobile `2991:82919` and `2991:82931`.
  * Styles: assets/css/components/story-module/side-by-side.css.
  *
  * @package LTT_Dive_In

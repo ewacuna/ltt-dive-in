@@ -1,0 +1,81 @@
+/* Story Module — Numbered Heading. */
+.story-module--numbered-heading {
+    margin: 0;
+    padding: 2.25rem 4rem;
+    background: #ffffff;
+}
+
+.story-numbered-heading {
+    display: flex;
+    max-width: 82rem;
+    align-items: flex-start;
+    gap: 3rem;
+    margin-inline: auto;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+}
+
+/* The navy outline keeps the light numeral distinguishable on white. */
+.story-numbered-heading__number {
+    flex: none;
+    margin: 0;
+    color: #61c2b7;
+    font-size: 6rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 2px #073959;
+}
+
+.story-numbered-heading__text {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.story-numbered-heading__title {
+    margin: 0;
+    color: #073959;
+    font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    font-size: 3rem;
+    font-synthesis: none;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-numbered-heading__intro {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+}
+
+@media (max-width: 1199.98px) {
+    .story-numbered-heading {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .story-module--numbered-heading {
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .story-numbered-heading {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .story-numbered-heading__title {
+        font-size: 2.25rem;
+    }
+
+    .story-numbered-heading__intro {
+        font-size: 0.875rem;
+    }
+}

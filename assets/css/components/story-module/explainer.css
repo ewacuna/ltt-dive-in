@@ -1,0 +1,99 @@
+/* Story Module — Explainer Q&A. */
+.story-module--explainer {
+    margin: 0;
+    padding: 2.25rem 4rem;
+    background: #ffffff;
+}
+
+.story-explainer {
+    display: flex;
+    max-width: 82rem;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-inline: auto;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+}
+
+.story-explainer__question {
+    max-width: 55.125rem;
+    margin: 0;
+    color: #073959;
+    font-family: inherit;
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-explainer__answer {
+    max-width: 73.125rem;
+    font-size: 1.125rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+}
+
+.story-explainer__answer > * {
+    margin: 0;
+}
+
+.story-explainer__answer > * + * {
+    margin-top: 1.5rem;
+}
+
+.story-explainer__answer :is(ul, ol) {
+    padding-left: 1.6875rem;
+}
+
+.story-explainer__answer ul {
+    list-style: disc;
+}
+
+.story-explainer__answer li + li {
+    margin-top: 1.125rem;
+}
+
+.story-explainer__answer :is(strong, b) {
+    font-weight: 700;
+}
+
+.story-explainer__answer a {
+    color: #073959;
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.story-explainer__answer a:hover,
+.story-explainer__answer a:focus {
+    text-decoration-thickness: 2px;
+}
+
+.story-explainer__answer a:focus-visible {
+    outline: 2px solid #073959;
+    outline-offset: 2px;
+}
+
+@media (max-width: 767.98px) {
+    .story-module--explainer {
+        padding: 1.5rem;
+    }
+
+    .story-explainer__question {
+        font-size: 1.5rem;
+        letter-spacing: -0.0025em;
+    }
+
+    .story-explainer__answer {
+        font-size: 0.875rem;
+    }
+
+    .story-explainer__answer :is(ul, ol) {
+        padding-left: 1.3125rem;
+    }
+
+    .story-explainer__answer li + li {
+        margin-top: 0.75rem;
+    }
+}

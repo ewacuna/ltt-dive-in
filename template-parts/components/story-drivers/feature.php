@@ -1,6 +1,6 @@
 <?php
 /**
- * Feature story slideshow (Figma “Feature Story Driver” desktop and mobile).
+ * Feature story slideshow.
  *
  * Used by the 1 Up layout and as the hero of Hero + Page Grid. Without
  * JavaScript, slides fall back to a horizontally scrolling row. Pass `lazy`

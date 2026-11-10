@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return the permitted image count for each cluster variant.
  *
- * The Inspired Gallery uses six-image groups matching its approved Figma
+ * The Inspired Gallery uses six-image groups matching its approved
  * composition.
  *
  * The display value limits rendering without discarding extra editor-selected
