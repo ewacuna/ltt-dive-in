@@ -94,7 +94,7 @@
           "label": "Short copy",
           "type": "textarea",
           "rows": 3,
-          "maxlength": 150,
+          "maxlength": 250,
           "new_lines": "",
           "required": 1
         },
