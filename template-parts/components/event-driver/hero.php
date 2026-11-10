@@ -102,8 +102,9 @@ $meta_icons = array(
 						<?php if ( $actions ) : ?>
 							<div class="event-driver__hero-actions">
 								<?php foreach ( $actions as $action ) : ?>
-									<<?php echo esc_attr( $link_tag ); ?> class="ltt-button ltt-button--glass"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $action['url'] ); ?>"<?php endif; ?>>
-										<?php echo esc_html( $action['label'] ); ?><span class="screen-reader-text"><?php echo esc_html( ': ' . $action['name'] ); ?></span>
+									<?php $new_tab = ! $is_preview && ltt_dive_in_is_external_event_url( $action['url'] ); ?>
+									<<?php echo esc_attr( $link_tag ); ?> class="ltt-button ltt-button--glass"<?php if ( ! $is_preview ) : ?> href="<?php echo esc_url( $action['url'] ); ?>"<?php echo $new_tab ? ' target="_blank" rel="noopener noreferrer"' : ''; ?><?php endif; ?>>
+										<?php echo esc_html( $action['label'] ); ?><span class="screen-reader-text"><?php echo esc_html( ': ' . $action['name'] . ( $new_tab ? ' ' . __( '(opens in a new tab)', 'ltt-dive-in' ) : '' ) ); ?></span>
 									</<?php echo esc_attr( $link_tag ); ?>>
 								<?php endforeach; ?>
 							</div>

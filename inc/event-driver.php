@@ -79,6 +79,18 @@ function ltt_dive_in_get_event_driver_config( $get ) {
 }
 
 /**
+ * Whether an event URL points away from this site.
+ *
+ * @param string $url Absolute or relative URL.
+ * @return bool
+ */
+function ltt_dive_in_is_external_event_url( $url ) {
+	$host = strtolower( (string) wp_parse_url( (string) $url, PHP_URL_HOST ) );
+
+	return '' !== $host && strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) !== $host;
+}
+
+/**
  * Return the events for the Hero Featured Events variant.
  *
  * @param array $config Normalized block settings.
