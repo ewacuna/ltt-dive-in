@@ -332,10 +332,18 @@
     isolation: isolate;
 }
 
-.ltt-listing-module__card-link {
+.ltt-listing-module__card-link,
+.ltt-listing-module__media::before,
+.ltt-listing-module__media::after {
     position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.ltt-listing-module__card-link {
     z-index: 4;
-    inset: 0;
 }
 
 .ltt-listing-module__card-link:focus-visible {
@@ -379,11 +387,14 @@
     aspect-ratio: 472 / 690;
 }
 
+.ltt-listing-module__media-sizer {
+    display: none;
+}
+
 .ltt-listing-module__media::before {
-    position: absolute;
     z-index: 2;
-    inset: 0;
-    border: 0.8125rem solid transparent;
+    /* Safari 14 can skip painting border-image when the base border is transparent. */
+    border: 0.8125rem solid;
     border-image: var(--listing-frame-gradient) 1;
     opacity: var(--listing-frame-opacity);
     mix-blend-mode: var(--listing-frame-blend);
@@ -392,9 +403,7 @@
 }
 
 .ltt-listing-module__media::after {
-    position: absolute;
     z-index: 1;
-    inset: 0;
     background: radial-gradient(ellipse 80% 28% at center, rgba(0, 0, 0, 0.8), rgba(21, 20, 25, 0) 60.577%), rgba(0, 0, 0, 0.2);
     transition: background-color 200ms ease-out;
     content: "";
@@ -801,6 +810,15 @@
     .ltt-listing-module__media,
     .ltt-listing-module__card--without-buttons .ltt-listing-module__media {
         aspect-ratio: 335 / 473;
+    }
+
+    @supports not (aspect-ratio: 1 / 1) {
+        /* Reserve the same mobile height in Safari 14 and allow longer copy to grow. */
+        .ltt-listing-module__media-sizer {
+            display: block;
+            flex: 0 0 0;
+            padding-top: calc(100% * 473 / 335);
+        }
     }
 
     .ltt-listing-module__card-title {

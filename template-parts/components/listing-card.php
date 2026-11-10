@@ -42,6 +42,7 @@ if ( '' === $title ) {
 		?>"></a>
 	<?php endif; ?>
 	<div class="ltt-listing-module__media<?php echo $image_id ? '' : ' ltt-listing-module__media--empty'; ?>">
+		<span class="ltt-listing-module__media-sizer" aria-hidden="true"></span>
 		<?php if ( $image_id ) : ?>
 			<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'class' => 'ltt-listing-module__image', 'sizes' => '(max-width: 767.98px) 100vw, (max-width: 1199.98px) 50vw, 33vw' ) ); ?>
 		<?php endif; ?>
