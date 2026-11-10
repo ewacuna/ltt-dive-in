@@ -63,6 +63,10 @@ function ltt_dive_in_story_module_variants() {
 			'slug'  => 'resource-links',
 			'deps'  => array( 'ltt-dive-in-buttons' ),
 		),
+		'explainer'        => array(
+			'label' => __( 'Explainer Q&A', 'ltt-dive-in' ),
+			'slug'  => 'explainer',
+		),
 	);
 }
 

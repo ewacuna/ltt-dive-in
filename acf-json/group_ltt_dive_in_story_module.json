@@ -24,7 +24,8 @@
                 "comparison_table": "Comparison Table",
                 "numbered_heading": "Numbered Heading",
                 "event": "Event",
-                "resource_links": "Resource Links"
+                "resource_links": "Resource Links",
+                "explainer": "Explainer Q&A"
             },
             "default_value": "listicle",
             "return_format": "value",
@@ -1079,6 +1080,74 @@
                     ]
                 }
             ]
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_explainer",
+            "label": "Explainer Q&A",
+            "name": "ltt_dive_in_story_module_explainer",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "explainer"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_explainer_question",
+                    "label": "Question",
+                    "name": "question",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 150,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_explainer_answer",
+                    "label": "Answer",
+                    "name": "answer",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "Use descriptive link text.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "tabs": "visual",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0
+                }
+            ]
         }
     ],
     "location": [
@@ -1099,5 +1168,5 @@
     "active": true,
     "description": "Blog post sections. Each variant keeps its fields in its own group.",
     "show_in_rest": 0,
-    "modified": 1794281837
+    "modified": 1794283002
 }
