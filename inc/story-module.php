@@ -50,6 +50,19 @@ function ltt_dive_in_story_module_variants() {
 			'label' => __( 'Comparison Table', 'ltt-dive-in' ),
 			'slug'  => 'comparison-table',
 		),
+		'numbered_heading' => array(
+			'label' => __( 'Numbered Heading', 'ltt-dive-in' ),
+			'slug'  => 'numbered-heading',
+		),
+		'event'            => array(
+			'label' => __( 'Event', 'ltt-dive-in' ),
+			'slug'  => 'event',
+		),
+		'resource_links'   => array(
+			'label' => __( 'Resource Links', 'ltt-dive-in' ),
+			'slug'  => 'resource-links',
+			'deps'  => array( 'ltt-dive-in-buttons' ),
+		),
 	);
 }
 
