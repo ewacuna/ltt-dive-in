@@ -1,0 +1,25 @@
+/* Story Module — Numbers Guide. */
+.story-guide__list--numbers .story-guide__item {
+    min-height: 5.0625rem;
+}
+
+/* #319D8E passes AA only as large text, which these numerals are. */
+.story-guide__list--numbers .story-guide__marker {
+    width: 4.0625rem;
+    color: #319d8e;
+    font-size: 3.375rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-align: center;
+}
+
+@media (max-width: 767.98px) {
+    .story-guide__list--numbers .story-guide__item {
+        min-height: 4.1875rem;
+    }
+
+    .story-guide__list--numbers .story-guide__marker {
+        width: 2rem;
+        font-size: 2.75rem;
+    }
+}

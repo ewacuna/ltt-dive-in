@@ -75,6 +75,21 @@ function ltt_dive_in_story_module_variants() {
 			'label' => __( 'Itinerary Item', 'ltt-dive-in' ),
 			'slug'  => 'itinerary-item',
 		),
+		'numbers_guide'    => array(
+			'label' => __( 'Numbers Guide', 'ltt-dive-in' ),
+			'slug'  => 'numbers-guide',
+			'deps'  => array( 'ltt-dive-in-story-module-guide' ),
+		),
+		'bullet_guide'     => array(
+			'label' => __( 'Bullet Guide', 'ltt-dive-in' ),
+			'slug'  => 'bullet-guide',
+			'deps'  => array( 'ltt-dive-in-story-module-guide' ),
+		),
+		'guide_1up'        => array(
+			'label' => __( 'Guide 1-Up', 'ltt-dive-in' ),
+			'slug'  => 'guide-1up',
+			'deps'  => array( 'ltt-dive-in-story-module-guide' ),
+		),
 	);
 }
 
@@ -141,7 +156,36 @@ function ltt_dive_in_story_module_style_handle( $variant ) {
  * Register the block and one stylesheet per variant.
  */
 function ltt_dive_in_register_story_module() {
-	$handles = array();
+	$handles     = array();
+	$guide_style = LTT_DIVE_IN_DIR . '/assets/css/components/story-module/guide.css';
+	$guide_js    = LTT_DIVE_IN_DIR . '/assets/js/components/story-module-guide.js';
+
+	wp_register_style(
+		'ltt-dive-in-story-module-guide',
+		LTT_DIVE_IN_URI . '/assets/css/components/story-module/guide.css',
+		array( 'ltt-dive-in-swiper', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators' ),
+		file_exists( $guide_style ) ? (string) filemtime( $guide_style ) : LTT_DIVE_IN_VERSION
+	);
+	wp_register_script(
+		'ltt-dive-in-story-module-guide',
+		LTT_DIVE_IN_URI . '/assets/js/components/story-module-guide.js',
+		array( 'ltt-dive-in-swiper' ),
+		file_exists( $guide_js ) ? (string) filemtime( $guide_js ) : LTT_DIVE_IN_VERSION,
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => true,
+		)
+	);
+	wp_localize_script(
+		'ltt-dive-in-story-module-guide',
+		'ltt_dive_in_story_module_guide',
+		array(
+			/* translators: %d: Image number. */
+			'goToImage' => __( 'Go to image %d', 'ltt-dive-in' ),
+			'previous'  => __( 'Previous image', 'ltt-dive-in' ),
+			'next'      => __( 'Next image', 'ltt-dive-in' ),
+		)
+	);
 
 	foreach ( ltt_dive_in_story_module_variants() as $variant => $config ) {
 		$relative = '/assets/css/components/story-module/' . $config['slug'] . '.css';

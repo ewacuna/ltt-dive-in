@@ -1,0 +1,23 @@
+/* Story Module — Bullet Guide. */
+.story-guide__list--bullets .story-guide__item {
+    padding-block: 0.75rem;
+}
+
+.story-guide__list--bullets .story-guide__marker {
+    width: 2.9375rem;
+    height: 4.2125rem;
+    background: url("../../../images/content-module/copy-list-markers.svg") no-repeat left top / 2.9375rem 23.1188rem;
+}
+
+@media (max-width: 767.98px) {
+    .story-guide__list--bullets .story-guide__item {
+        padding-block: 0;
+    }
+
+    .story-guide__list--bullets .story-guide__marker {
+        width: 1.875rem;
+        height: 2.6875rem;
+        background-size: 1.875rem 14.7563rem;
+    }
+}
+

@@ -1,0 +1,257 @@
+/* Story Module — shared Guide layout. */
+.story-guide-section {
+    margin: 0;
+    padding: 1.5rem 3rem;
+    background: #ffffff;
+}
+
+.story-guide {
+    display: flex;
+    max-width: 84.125rem;
+    align-items: stretch;
+    margin-inline: auto;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-weight: 500;
+}
+
+.story-guide__content {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2.25rem 5.25rem 2.25rem 3rem;
+}
+
+.story-guide__title {
+    margin: 0;
+    color: #073959;
+    font-family: inherit;
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.story-guide__body {
+    font-size: 1.125rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+}
+
+.story-guide__body > * {
+    margin: 0;
+}
+
+.story-guide__body > * + * {
+    margin-top: 1.45em;
+}
+
+.story-guide__body :is(strong, b) {
+    font-weight: 700;
+}
+
+.story-guide__body a {
+    color: #073959;
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.story-guide__body a:hover,
+.story-guide__body a:focus {
+    text-decoration-thickness: 2px;
+}
+
+.story-guide__body a:focus-visible {
+    outline: 2px solid #073959;
+    outline-offset: 2px;
+}
+
+.story-guide__list-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.story-guide__list-heading,
+.story-guide__item-text {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: -0.0025em;
+    line-height: 1.2;
+}
+
+.story-guide__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.story-guide__item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.story-guide__marker {
+    flex: none;
+}
+
+.story-guide__item-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.story-guide__media {
+    display: flex;
+    width: 29.6875rem;
+    flex: none;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.story-guide__viewport {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    min-height: 16rem;
+    flex: 1 1 0;
+    overflow: hidden;
+}
+
+.story-guide__track {
+    display: flex;
+    height: 100%;
+}
+
+.story-guide__slide {
+    width: 100%;
+    height: 100%;
+    flex: none;
+}
+
+.story-guide__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Without JavaScript the images scroll sideways. */
+.story-guide__media--carousel .story-guide__viewport:not(.swiper) {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.story-guide__media--carousel .story-guide__viewport:not(.swiper) .story-guide__slide {
+    scroll-snap-align: start;
+}
+
+.story-guide__viewport:focus-visible {
+    outline: 3px solid #073959;
+    outline-offset: 3px;
+}
+
+.story-guide__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.story-guide__controls[hidden] {
+    display: none;
+}
+
+.story-guide__pagination .ltt-carousel-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    min-height: auto;
+}
+
+.story-guide__pagination.ltt-carousel-indicators {
+    gap: 0.5rem;
+}
+
+.story-guide__arrows {
+    display: flex;
+    gap: 1rem;
+}
+
+@media (max-width: 1199.98px) {
+    .story-guide__content {
+        padding-right: 3rem;
+    }
+
+    .story-guide__media {
+        width: 22rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .story-guide-section {
+        padding-inline: 2rem;
+    }
+
+    .story-guide__content {
+        padding-inline: 0 2rem;
+    }
+
+    .story-guide-section--no-media .story-guide__content {
+        padding-right: 0;
+    }
+
+    .story-guide__media {
+        width: 40%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .story-guide-section {
+        padding: 0.75rem 1.5rem 1.5rem;
+    }
+
+    .story-guide {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .story-guide__content,
+    .story-guide-section--no-media .story-guide__content {
+        padding: 0;
+    }
+
+    .story-guide__title {
+        font-size: 1.5rem;
+        letter-spacing: -0.0025em;
+    }
+
+    .story-guide__body {
+        font-size: 0.875rem;
+    }
+
+    .story-guide__item {
+        min-height: 4.1875rem;
+        gap: 0.75rem;
+    }
+
+    .story-guide__item-text {
+        font-size: 1.125rem;
+    }
+
+    .story-guide__media {
+        width: 100%;
+    }
+
+    .story-guide__viewport {
+        min-height: 0;
+        flex: none;
+        aspect-ratio: 327 / 301;
+    }
+}
