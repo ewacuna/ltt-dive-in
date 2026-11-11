@@ -47,6 +47,7 @@
 
 		new window.Swiper( viewport, {
 			slidesPerView: 1,
+			rewind: true,
 			speed: reducedMotion ? 0 : 350,
 			keyboard: {
 				enabled: true,
