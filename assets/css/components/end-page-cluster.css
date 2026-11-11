@@ -234,12 +234,17 @@
 }
 
 /*
- * The track bleeds past the container to the right edge of the viewport.
- * Selectors are qualified so they win over Swiper's later-loading
- * `.swiper` and `.swiper-slide` defaults.
+ * The track bleeds past the container to the right edge of the viewport,
+ * and to the left edge once Swiper runs. Selectors are qualified so they win
+ * over Swiper's later-loading `.swiper` and `.swiper-slide` defaults.
  */
 .end-page-cluster__trail > .end-page-cluster__viewport {
     margin-right: calc(50% - 50vw);
+}
+
+.end-page-cluster__trail > .end-page-cluster__viewport.swiper-initialized {
+    margin-left: calc(50% - 50vw);
+    padding-left: calc(50vw - 50%);
 }
 
 .end-page-cluster__viewport:not(.swiper-initialized) {
