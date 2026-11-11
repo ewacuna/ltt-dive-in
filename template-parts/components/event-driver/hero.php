@@ -40,7 +40,7 @@ $meta_icons = array(
 		<div class="event-driver__hero-track swiper-wrapper">
 			<?php foreach ( $events as $index => $event ) : ?>
 				<?php
-				$tag  = ! empty( $event['categories'][0]['name'] ) ? $event['categories'][0]['name'] : '';
+				$tag  = ! empty( $event['categories'][0]['name'] ) ? $event['categories'][0]['name'] : __( 'Event', 'ltt-dive-in' );
 				$meta = array_filter(
 					array(
 						'date'      => ltt_dive_in_format_event_date( $event ),
