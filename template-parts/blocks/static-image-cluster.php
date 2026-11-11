@@ -259,14 +259,16 @@ $render_image = static function ( $image, $sizes, $mobile_source ) use ( $varian
 	<div class="static-image-cluster__container"<?php echo 'five_plus' === $variant ? ' data-static-image-cluster-carousel' : ''; ?>>
 		<?php if ( $shows_header && ( $heading || $intro || $ctas ) ) : ?>
 			<header class="static-image-cluster__header">
-				<div class="static-image-cluster__header-copy">
-					<?php if ( $heading ) : ?>
-						<h2 id="<?php echo esc_attr( $heading_id ); ?>" class="static-image-cluster__title"><?php echo esc_html( $heading ); ?></h2>
-					<?php endif; ?>
-					<?php if ( $intro ) : ?>
-						<div class="static-image-cluster__intro"><?php echo wp_kses_post( wpautop( $intro ) ); ?></div>
-					<?php endif; ?>
-				</div>
+				<?php if ( $heading || $intro ) : ?>
+					<div class="static-image-cluster__header-copy">
+						<?php if ( $heading ) : ?>
+							<h2 id="<?php echo esc_attr( $heading_id ); ?>" class="static-image-cluster__title"><?php echo esc_html( $heading ); ?></h2>
+						<?php endif; ?>
+						<?php if ( $intro ) : ?>
+							<div class="static-image-cluster__intro"><?php echo wp_kses_post( wpautop( $intro ) ); ?></div>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 				<?php if ( $ctas ) : ?>
 					<div class="static-image-cluster__actions">
 						<?php foreach ( $ctas as $index => $cta ) : ?>

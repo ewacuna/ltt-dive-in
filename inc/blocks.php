@@ -1153,7 +1153,6 @@ function ltt_dive_in_enqueue_static_image_cluster_editor_assets() {
 		array(
 			'requirementPrefix' => __( 'This variant requires ', 'ltt-dive-in' ),
 			'currentlySelected' => __( 'Currently selected: ', 'ltt-dive-in' ),
-			'headingRequired'   => __( 'Section heading is required for this variant.', 'ltt-dive-in' ),
 			'introductionRequired' => __( 'Introduction is required for Hero With Caption.', 'ltt-dive-in' ),
 			'imageLimits'       => $limits,
 		)

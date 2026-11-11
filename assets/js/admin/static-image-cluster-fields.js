@@ -2,11 +2,9 @@
 	'use strict';
 
 	const variantKey = 'field_ltt_dive_in_static_image_cluster_variant';
-	const headingKey = 'field_ltt_dive_in_static_image_cluster_heading';
 	const introKey = 'field_ltt_dive_in_static_image_cluster_intro';
 	const imagesKey = 'field_ltt_dive_in_static_image_cluster_images';
 	const detailsKey = 'field_ltt_dive_in_static_image_cluster_image_details';
-	const optionalHeadingVariants = [ 'hero_caption', 'inspired' ];
 	const settings = window.ltt_dive_in_static_image_cluster_editor || {};
 	const limits = settings.imageLimits || {};
 	const savingLockKey = 'ltt-dive-in-static-image-cluster-count';
@@ -19,7 +17,6 @@
 		const editor = window.wp.data.dispatch( 'core/editor' );
 		const invalid = document.querySelector(
 			'[data-key="' + imagesKey + '"][data-ltt-image-count-invalid="true"], ' +
-			'[data-key="' + headingKey + '"][data-ltt-heading-invalid="true"], ' +
 			'[data-key="' + introKey + '"][data-ltt-intro-invalid="true"]'
 		);
 
@@ -69,41 +66,6 @@
 				$field.children( '.acf-input' ).append( $error );
 			}
 			$error.find( 'p' ).text( settings.introductionRequired || 'Introduction is required for Hero With Caption.' );
-		} else {
-			$error.remove();
-		}
-	};
-
-	const updateHeadingRequirement = function ( $fields ) {
-		const variant = $fields.find( '[data-key="' + variantKey + '"] select' ).first().val();
-		const $field = $fields.find( '[data-key="' + headingKey + '"]' ).first();
-
-		if ( ! $field.length ) {
-			return;
-		}
-
-		const required = optionalHeadingVariants.indexOf( variant ) === -1;
-		const $input = $field.find( 'input[type="text"]' ).first();
-		const valid = ! required || $.trim( $input.val() || '' ).length > 0;
-		let $requiredMark = $field.find( '> .acf-label label > .acf-required' );
-		let $error = $field.find( '> .acf-input > .ltt-static-image-cluster-heading-error' );
-
-		$field.attr( 'data-ltt-heading-invalid', valid ? 'false' : 'true' );
-		$input.attr( 'aria-required', required ? 'true' : 'false' );
-
-		if ( required && ! $requiredMark.length ) {
-			$requiredMark = $( '<span class="acf-required">*</span>' );
-			$field.find( '> .acf-label label' ).first().append( $requiredMark );
-		} else if ( ! required ) {
-			$requiredMark.remove();
-		}
-
-		if ( ! valid ) {
-			if ( ! $error.length ) {
-				$error = $( '<div class="acf-notice -error ltt-static-image-cluster-heading-error" role="alert"><p></p></div>' );
-				$field.children( '.acf-input' ).append( $error );
-			}
-			$error.find( 'p' ).text( settings.headingRequired || 'Section heading is required for this variant.' );
 		} else {
 			$error.remove();
 		}
@@ -159,7 +121,6 @@
 			$error.remove();
 		}
 
-		updateHeadingRequirement( $fields );
 		updateIntroductionRequirement( $fields );
 		if ( 'inspired' === variant ) {
 			syncImageDetails( $fields, count, limit );
@@ -199,13 +160,6 @@
 
 	$( document ).on( 'change', '[data-key="' + variantKey + '"] select', function () {
 		updateField( $( this ).closest( '.acf-fields' ).find( '[data-key="' + imagesKey + '"]' ).first() );
-	} );
-
-	$( document ).on( 'input change', '[data-key="' + headingKey + '"] input[type="text"]', function () {
-		const $fields = $( this ).closest( '.acf-fields' );
-
-		updateHeadingRequirement( $fields );
-		syncSavingLock();
 	} );
 
 	$( document ).on( 'input change', '[data-key="' + introKey + '"] textarea', function () {

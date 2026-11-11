@@ -46,6 +46,10 @@
     line-height: 1.45;
 }
 
+.static-image-cluster__header-copy > .static-image-cluster__intro:first-child {
+    margin-top: 0;
+}
+
 .static-image-cluster__intro > :first-child,
 .static-image-cluster__hero-caption > :first-child {
     margin-top: 0;
@@ -68,6 +72,10 @@
     justify-content: flex-end;
     align-items: end;
     gap: 1rem;
+}
+
+.static-image-cluster__header > .static-image-cluster__actions:only-child {
+    grid-column: 2;
 }
 
 .static-image-cluster__gallery {

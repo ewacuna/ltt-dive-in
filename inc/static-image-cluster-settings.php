@@ -154,36 +154,6 @@ function ltt_dive_in_validate_static_image_cluster_image_details( $valid, $value
 add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_image_details', 'ltt_dive_in_validate_static_image_cluster_image_details', 10, 2 );
 
 /**
- * Require a section heading for the variants that display editorial content.
- *
- * Hero With Caption uses the shared Introduction as its caption. Inspired
- * Gallery does not render the shared editorial header.
- *
- * @param bool|string $valid Current validation result.
- * @param mixed       $value Submitted heading.
- * @return bool|string
- */
-function ltt_dive_in_validate_static_image_cluster_heading( $valid, $value ) {
-	if ( true !== $valid ) {
-		return $valid;
-	}
-
-	$variant = ltt_dive_in_get_static_image_cluster_submitted_value( 'field_ltt_dive_in_static_image_cluster_variant' );
-	$optional_heading_variants = array( 'hero_caption', 'inspired' );
-
-	if ( ! is_string( $variant ) || in_array( $variant, $optional_heading_variants, true ) ) {
-		return $valid;
-	}
-
-	if ( '' === trim( (string) $value ) ) {
-		return __( 'Section heading is required for this variant.', 'ltt-dive-in' );
-	}
-
-	return $valid;
-}
-add_filter( 'acf/validate_value/key=field_ltt_dive_in_static_image_cluster_heading', 'ltt_dive_in_validate_static_image_cluster_heading', 10, 2 );
-
-/**
  * Require the shared Introduction field for Hero With Caption.
  *
  * @param bool|string $valid Current validation result.
