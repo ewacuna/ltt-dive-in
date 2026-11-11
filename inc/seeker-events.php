@@ -407,7 +407,7 @@ function ltt_dive_in_get_seeker_categories() {
 
 		foreach ( $items as $item ) {
 			$id   = isset( $item['id'] ) ? absint( $item['id'] ) : 0;
-			$name = isset( $item['name'] ) ? trim( wp_strip_all_tags( (string) $item['name'] ) ) : '';
+			$name = trim( wp_strip_all_tags( (string) ( $item['category'] ?? $item['name'] ?? '' ) ) );
 
 			if ( $id && '' !== $name ) {
 				$categories[ $id ] = $name;
@@ -764,7 +764,7 @@ function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
 	$categories = array();
 
 	foreach ( (array) ( $raw['categories'] ?? array() ) as $category ) {
-		$name = is_array( $category ) ? ltt_dive_in_seeker_plain_text( $category['name'] ?? '' ) : '';
+		$name = is_array( $category ) ? ltt_dive_in_seeker_plain_text( $category['category'] ?? $category['name'] ?? '' ) : '';
 
 		if ( '' !== $name ) {
 			$categories[] = array(
