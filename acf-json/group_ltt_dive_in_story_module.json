@@ -1148,6 +1148,224 @@
                     "delay": 0
                 }
             ]
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_itinerary_day",
+            "label": "Itinerary Day",
+            "name": "ltt_dive_in_story_module_itinerary_day",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "itinerary_day"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_itinerary_day_number",
+                    "label": "Day number",
+                    "name": "number",
+                    "aria-label": "",
+                    "type": "number",
+                    "instructions": "Shown large beside the title.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "min": 1,
+                    "max": 99,
+                    "step": 1,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "allow_in_bindings": 0
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_itinerary_day_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 120,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "allow_in_bindings": 0
+                }
+            ]
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_itinerary_item",
+            "label": "Itinerary Item",
+            "name": "ltt_dive_in_story_module_itinerary_item",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "itinerary_item"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_itinerary_item_time",
+                    "label": "Time of day",
+                    "name": "time",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "Optional. Shown in capitals above the first stop.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "morning": "Morning",
+                        "midday": "Midday",
+                        "afternoon": "Afternoon",
+                        "evening": "Evening"
+                    },
+                    "default_value": false,
+                    "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 1,
+                    "ui": 0,
+                    "ajax": 0,
+                    "placeholder": "",
+                    "allow_in_bindings": 0
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_itinerary_item_stops",
+                    "label": "Stops",
+                    "name": "stops",
+                    "aria-label": "",
+                    "type": "repeater",
+                    "instructions": "One to four stops.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "layout": "block",
+                    "pagination": 0,
+                    "min": 1,
+                    "max": 4,
+                    "collapsed": "",
+                    "button_label": "Add stop",
+                    "rows_per_page": 20,
+                    "sub_fields": [
+                        {
+                            "key": "field_ltt_dive_in_story_module_itinerary_item_stop_title",
+                            "label": "Title",
+                            "name": "title",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "Select text and use the link button to link part of the title. Use descriptive link text.",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "visual",
+                            "toolbar": "ltt_link_only",
+                            "media_upload": 0,
+                            "delay": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_ltt_dive_in_story_module_itinerary_item_stop_content",
+                            "label": "Content",
+                            "name": "content",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "Optional. Use descriptive link text.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "visual",
+                            "toolbar": "basic",
+                            "media_upload": 0,
+                            "delay": 0,
+                            "allow_in_bindings": 0
+                        }
+                    ],
+                    "allow_in_bindings": 0
+                },
+                {
+                    "key": "field_ltt_dive_in_story_module_itinerary_item_image",
+                    "label": "Image",
+                    "name": "image",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Optional. Shown beside the text on desktop and below it on mobile. Add alt text to the image in the Media Library.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "jpg,jpeg,png,webp",
+                    "preview_size": "medium",
+                    "allow_in_bindings": 0
+                }
+            ]
         }
     ],
     "location": [
@@ -1168,5 +1386,5 @@
     "active": true,
     "description": "Blog post sections. Each variant keeps its fields in its own group.",
     "show_in_rest": 0,
-    "modified": 1794283002
+    "modified": 1794431068
 }

@@ -67,7 +67,64 @@ function ltt_dive_in_story_module_variants() {
 			'label' => __( 'Explainer Q&A', 'ltt-dive-in' ),
 			'slug'  => 'explainer',
 		),
+		'itinerary_day'    => array(
+			'label' => __( 'Itinerary Day', 'ltt-dive-in' ),
+			'slug'  => 'itinerary-day',
+		),
+		'itinerary_item'   => array(
+			'label' => __( 'Itinerary Item', 'ltt-dive-in' ),
+			'slug'  => 'itinerary-item',
+		),
 	);
+}
+
+/**
+ * Get the Itinerary Item time-of-day choices.
+ *
+ * @return array<string, string> Labels keyed by stored value.
+ */
+function ltt_dive_in_story_module_itinerary_times() {
+	return array(
+		'morning'   => __( 'Morning', 'ltt-dive-in' ),
+		'midday'    => __( 'Midday', 'ltt-dive-in' ),
+		'afternoon' => __( 'Afternoon', 'ltt-dive-in' ),
+		'evening'   => __( 'Evening', 'ltt-dive-in' ),
+	);
+}
+
+/**
+ * Add a link-only toolbar for inline titles that may contain a link.
+ *
+ * @param array $toolbars Registered ACF WYSIWYG toolbars.
+ * @return array
+ */
+function ltt_dive_in_register_story_module_link_toolbar( $toolbars ) {
+	$toolbars['LTT Link Only'] = array( 1 => array( 'link', 'unlink' ) );
+
+	return $toolbars;
+}
+add_filter( 'acf/fields/wysiwyg/toolbars', 'ltt_dive_in_register_story_module_link_toolbar' );
+
+/**
+ * Reduce a link-only WYSIWYG value to inline text with links.
+ *
+ * @param string $value Field value.
+ * @return string Safe inline HTML.
+ */
+function ltt_dive_in_story_module_inline_link_text( $value ) {
+	$value = preg_replace( '#</p>\s*<p[^>]*>|<br\s*/?>#i', ' ', (string) $value );
+	$value = wp_kses(
+		$value,
+		array(
+			'a' => array(
+				'href'   => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		)
+	);
+
+	return trim( preg_replace( '/\s+/u', ' ', str_replace( '&nbsp;', ' ', $value ) ) );
 }
 
 /**
