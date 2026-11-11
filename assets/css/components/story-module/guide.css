@@ -191,6 +191,13 @@
 
     .story-guide__media {
         width: 22rem;
+        align-self: flex-start;
+    }
+
+    .story-guide__viewport {
+        min-height: 0;
+        flex: none;
+        aspect-ratio: 327 / 301;
     }
 }
 

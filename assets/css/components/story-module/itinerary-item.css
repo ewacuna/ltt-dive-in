@@ -125,6 +125,8 @@
 
     .story-itinerary-item__media {
         width: 22rem;
+        align-self: flex-start;
+        aspect-ratio: 398 / 407;
     }
 }
 

@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $fields     = $args['fields'] ?? array();
 $id         = $args['id'] ?? wp_unique_id( 'story-module-' );
 $is_preview = ! empty( $args['is_preview'] );
+$title      = trim( (string) ( $fields['title'] ?? '' ) );
 $body       = trim( (string) ( $fields['content'] ?? '' ) );
 $cta        = $fields['cta'] ?? null;
 $has_cta    = is_array( $cta ) && '' !== trim( (string) ( $cta['title'] ?? '' ) ) && ! empty( $cta['url'] ) && (bool) esc_url( $cta['url'] );
@@ -32,7 +33,10 @@ if ( '' === $body ) {
 }
 ?>
 <div id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( implode( ' ', (array) ( $args['classes'] ?? array() ) ) ); ?>">
-	<div class="story-conclusion">
+	<div class="story-conclusion<?php echo $title ? ' story-conclusion--has-title' : ''; ?>">
+		<?php if ( $title ) : ?>
+			<h2 class="story-conclusion__title"><?php echo esc_html( $title ); ?></h2>
+		<?php endif; ?>
 		<div class="story-conclusion__body"><?php echo wp_kses_post( $body ); ?></div>
 		<?php if ( $has_cta && $is_preview ) : ?>
 			<span class="ltt-button ltt-button--primary-outline story-conclusion__cta"><?php echo esc_html( trim( $cta['title'] ) ); ?></span>

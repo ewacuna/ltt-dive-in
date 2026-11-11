@@ -75,6 +75,10 @@ function ltt_dive_in_story_module_variants() {
 			'label' => __( 'Itinerary Item', 'ltt-dive-in' ),
 			'slug'  => 'itinerary-item',
 		),
+		'image_pair'       => array(
+			'label' => __( 'Image Pair', 'ltt-dive-in' ),
+			'slug'  => 'image-pair',
+		),
 		'numbers_guide'    => array(
 			'label' => __( 'Numbers Guide', 'ltt-dive-in' ),
 			'slug'  => 'numbers-guide',

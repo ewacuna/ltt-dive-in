@@ -470,6 +470,27 @@
             "layout": "block",
             "sub_fields": [
                 {
+                    "key": "field_ltt_dive_in_story_module_conclusion_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Optional. Shown above the content.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 100,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
                     "key": "field_ltt_dive_in_story_module_conclusion_content",
                     "label": "Content",
                     "name": "content",
@@ -1791,6 +1812,61 @@
                     "allow_in_bindings": 0
                 }
             ]
+        },
+        {
+            "key": "field_ltt_dive_in_story_module_image_pair",
+            "label": "Image Pair",
+            "name": "ltt_dive_in_story_module_image_pair",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_ltt_dive_in_story_module_variant",
+                        "operator": "==",
+                        "value": "image_pair"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ltt_dive_in_story_module_image_pair_images",
+                    "label": "Images",
+                    "name": "images",
+                    "aria-label": "",
+                    "type": "gallery",
+                    "instructions": "Exactly two images, shown side by side. Add alt text to each image in the Media Library.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min": 2,
+                    "max": 2,
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "jpg,jpeg,png,webp",
+                    "insert": "append",
+                    "preview_size": "medium",
+                    "allow_in_bindings": 0
+                }
+            ]
         }
     ],
     "location": [
@@ -1811,5 +1887,5 @@
     "active": true,
     "description": "Blog post sections. Each variant keeps its fields in its own group.",
     "show_in_rest": 0,
-    "modified": 1794432576
+    "modified": 1794433595
 }
