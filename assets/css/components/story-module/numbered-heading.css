@@ -16,7 +16,6 @@
     font-weight: 500;
 }
 
-/* The navy outline keeps the light numeral distinguishable on white. */
 .story-numbered-heading__number {
     flex: none;
     margin: 0;
@@ -24,8 +23,6 @@
     font-size: 6rem;
     letter-spacing: 0.02em;
     line-height: 1.2;
-    paint-order: stroke fill;
-    -webkit-text-stroke: 2px #073959;
 }
 
 .story-numbered-heading__text {

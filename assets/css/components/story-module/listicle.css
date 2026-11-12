@@ -7,8 +7,6 @@
  * of three spans both columns.
  *
  * Deliberate deviations, for WCAG AA contrast on white:
- * - The cyan numeral #61C2B7 (2.1:1) gets the thin navy outline already
- *   specified for numbered Copy Block lists.
  * - Body links use navy, as in the design's Le Bistro item, instead of #319D8E
  *   (3.3:1 at 18px).
  * - The #319D8E subtitle stays 24px on mobile (large text, 3:1) instead
@@ -55,8 +53,6 @@
     font-size: 6rem;
     letter-spacing: 0.02em;
     line-height: 1.2;
-    paint-order: stroke fill;
-    -webkit-text-stroke: 2px #073959;
 }
 
 .story-listicle__text {
