@@ -117,10 +117,77 @@ function ltt_dive_in_calculate_reading_time( $post = null ) {
 	 * @param int $words_per_minute Average words read per minute.
 	 */
 	$words_per_minute = max( 1, (int) apply_filters( 'ltt_dive_in_reading_words_per_minute', 200 ) );
-	$text             = wp_strip_all_tags( strip_shortcodes( excerpt_remove_blocks( $post->post_content ) ) );
+	$text             = has_blocks( $post->post_content )
+		? ltt_dive_in_blocks_reading_text( parse_blocks( $post->post_content ) )
+		: $post->post_content;
+	$text             = wp_strip_all_tags( strip_shortcodes( preg_replace( '/>\s*</', '> <', $text ) ) );
 	$words            = preg_split( '/\s+/u', trim( $text ), -1, PREG_SPLIT_NO_EMPTY );
 
 	return max( 1, (int) ceil( count( $words ) / $words_per_minute ) );
+}
+
+/**
+ * Collect the readable text of parsed blocks, including ACF block fields.
+ *
+ * @param array[] $blocks Parsed blocks.
+ * @return string
+ */
+function ltt_dive_in_blocks_reading_text( $blocks ) {
+	$text = '';
+
+	foreach ( (array) $blocks as $block ) {
+		if ( ! is_array( $block ) ) {
+			continue;
+		}
+
+		if ( ! empty( $block['innerBlocks'] ) ) {
+			$text .= ' ' . ltt_dive_in_blocks_reading_text( $block['innerBlocks'] );
+		} else {
+			$text .= ' ' . ( $block['innerHTML'] ?? '' );
+		}
+
+		if ( isset( $block['attrs']['data'] ) && is_array( $block['attrs']['data'] ) ) {
+			$text .= ' ' . ltt_dive_in_acf_block_reading_text( $block['attrs']['data'] );
+		}
+	}
+
+	return $text;
+}
+
+/**
+ * Collect the readable text stored in an ACF block's field values.
+ *
+ * Field-key references, IDs, URLs, and short option values are skipped.
+ *
+ * @param array $data ACF block data.
+ * @return string
+ */
+function ltt_dive_in_acf_block_reading_text( array $data ) {
+	$text = '';
+
+	foreach ( $data as $name => $value ) {
+		if ( 0 === strpos( (string) $name, '_' ) ) {
+			continue;
+		}
+
+		if ( is_array( $value ) ) {
+			$text .= isset( $value['title'] ) && is_string( $value['title'] ) ? ' ' . $value['title'] : '';
+			continue;
+		}
+
+		if ( ! is_string( $value ) || is_numeric( $value ) || 0 === strpos( $value, 'field_' ) || wp_http_validate_url( $value ) ) {
+			continue;
+		}
+
+		// Single-word option values such as variant names are not prose.
+		if ( ! preg_match( '/\s/u', trim( $value ) ) && preg_match( '/^[a-z0-9_-]+$/', $value ) ) {
+			continue;
+		}
+
+		$text .= ' ' . $value;
+	}
+
+	return $text;
 }
 
 /**
