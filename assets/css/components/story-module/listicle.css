@@ -7,8 +7,6 @@
  * of three spans both columns.
  *
  * Deliberate deviations, for WCAG AA contrast on white:
- * - Body links use navy, as in the design's Le Bistro item, instead of #319D8E
- *   (3.3:1 at 18px).
  * - The #319D8E subtitle stays 24px on mobile (large text, 3:1) instead
  *   of the design's 20px, which would need 4.5:1.
  * - The design's navy “Photo with Navy Color Filter” marks placeholder photos; real
@@ -98,7 +96,7 @@
 }
 
 .story-listicle__body a {
-    color: #073959;
+    color: #319d8e;
     text-decoration: underline;
     text-underline-position: from-font;
 }

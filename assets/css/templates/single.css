@@ -40,13 +40,12 @@
 }
 
 .single-main .entry-content a:where(:not(.story-module *, .global-accordion *, .testimonials *)) {
-    color: #073959;
+    color: #319d8e;
     text-decoration: underline;
 }
 
 .single-main .entry-content a:where(:not(.story-module *, .global-accordion *, .testimonials *)):hover,
 .single-main .entry-content a:where(:not(.story-module *, .global-accordion *, .testimonials *)):focus {
-    color: #06304d;
     text-decoration-thickness: 2px;
 }
 
