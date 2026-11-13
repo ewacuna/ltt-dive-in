@@ -236,7 +236,7 @@ if ( 'hero_grid' === $layout ) :
 	$filters       = ltt_dive_in_sanitize_story_driver_grid_filters(
 		$is_this_block ? array(
 			'category' => wp_unslash( $_GET['story_category'] ?? 0 ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized by the helper.
-			'tag'      => wp_unslash( $_GET['story_tag'] ?? 0 ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			'sort'     => wp_unslash( $_GET['story_sort'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'search'   => wp_unslash( $_GET['story_search'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'page'     => wp_unslash( $_GET['story_page'] ?? 1 ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		) : array()
@@ -248,7 +248,15 @@ if ( 'hero_grid' === $layout ) :
 	$form_id       = $section_id . '-filters';
 	$results_id    = $section_id . '-results';
 	$categories    = ltt_dive_in_get_story_driver_filter_options( 'category' );
-	$tags          = ltt_dive_in_get_story_driver_filter_options( 'post_tag' );
+	$sort_options  = array();
+
+	foreach ( ltt_dive_in_get_story_driver_sort_options() as $sort_value => $sort_label ) {
+		$sort_options[] = array(
+			'value' => $sort_value,
+			'label' => $sort_label,
+		);
+	}
+
 	$build_options = static function ( $terms ) {
 		$options = array();
 
@@ -305,27 +313,25 @@ if ( 'hero_grid' === $layout ) :
 					</div>
 				<?php endif; ?>
 
-				<?php if ( $tags ) : ?>
-					<div class="story-drivers__filter">
-						<?php
-						get_template_part(
-							'template-parts/components/select',
-							null,
-							array(
-								'id'                => $section_id . '-tag',
-								'name'              => 'story_tag',
-								'label'             => __( 'Story tag', 'ltt-dive-in' ),
-								'placeholder'       => __( 'Tags', 'ltt-dive-in' ),
-								'options'           => $build_options( $tags ),
-								'selected_value'    => $filters['tag'] ? (string) $filters['tag'] : '',
-								'surface'           => 'light',
-								'aria_controls'     => $results_id,
-								'native_attributes' => array( 'data-story-grid-filter' => 'tag' ),
-							)
-						);
-						?>
-					</div>
-				<?php endif; ?>
+				<div class="story-drivers__filter">
+					<?php
+					// Figma labels this dropdown "Upcoming"; the client asked to sort stories by date, most recent first.
+					get_template_part(
+						'template-parts/components/select',
+						null,
+						array(
+							'id'                => $section_id . '-sort',
+							'name'              => 'story_sort',
+							'label'             => __( 'Sort stories by date', 'ltt-dive-in' ),
+							'options'           => $sort_options,
+							'selected_value'    => $filters['sort'],
+							'surface'           => 'light',
+							'aria_controls'     => $results_id,
+							'native_attributes' => array( 'data-story-grid-filter' => 'sort' ),
+						)
+					);
+					?>
+				</div>
 
 				<div class="story-drivers__search ltt-search-bar ltt-search-bar--filter" role="search">
 					<label class="screen-reader-text" for="<?php echo esc_attr( $section_id . '-search' ); ?>"><?php esc_html_e( 'Search stories', 'ltt-dive-in' ); ?></label>
@@ -347,7 +353,7 @@ if ( 'hero_grid' === $layout ) :
 				<?php echo ltt_dive_in_render_story_driver_grid_cards( $result['stories'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the story-card template part. ?>
 			</div>
 
-			<p class="story-drivers__empty" data-story-grid-empty<?php echo $result['stories'] ? ' hidden' : ''; ?>><?php esc_html_e( 'No stories match your filters. Try another category, tag, or search term.', 'ltt-dive-in' ); ?></p>
+			<p class="story-drivers__empty" data-story-grid-empty<?php echo $result['stories'] ? ' hidden' : ''; ?>><?php esc_html_e( 'No stories match your filters. Try another category or search term.', 'ltt-dive-in' ); ?></p>
 
 			<button class="story-drivers__load-more" type="submit" form="<?php echo esc_attr( $form_id ); ?>" name="story_page" value="<?php echo esc_attr( (string) ( $filters['page'] + 1 ) ); ?>" data-story-grid-load-more data-offset="<?php echo esc_attr( (string) count( $result['stories'] ) ); ?>"<?php echo $result['has_more'] ? '' : ' hidden'; ?><?php echo $is_preview ? ' disabled' : ''; ?>>
 				<span class="story-drivers__load-more-label"><?php esc_html_e( 'Load More', 'ltt-dive-in' ); ?></span>

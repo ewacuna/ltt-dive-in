@@ -461,6 +461,10 @@ Implementation rules:
 - Each rendered block prints schema.org `Event` JSON-LD from the Seeker data.
 - Deviations: Roboto labels (hero meta, weekday) use Gotham. The Figma search placeholder color `rgba(197,197,203,.85)` on `#f2f2f2` fails contrast, so grey 600 `#525062` is used. On small screens the search field sits above the dropdowns while the DOM keeps the desktop order (dropdowns, then search). The unused Relume placeholder cards in the mobile frames are not implemented.
 
+### Story Drivers Hero + Page Grid — date sort confirmed
+
+- The second dropdown in Story Drivers "Hero + Page Grid w/ Filters" (`2145:14524`) is labeled "Upcoming" in Figma, without a developer note. Published posts have no upcoming state. On 2026-11-12 the client asked to sort it with the most recent stories at the top, so it sorts by publication date with **Latest** (default) and **Oldest**, replacing the earlier post-tag filter. Sorting combines with the Categories and Search filters, Load More, and the no-JavaScript GET form (`story_sort`).
+
 ### Content modules
 
 Newsletter Sign Up and Meetings Request Contact use Peak Gold (`#EEB040`) for focused field borders and checked consent checkboxes. The photo-background consent checkbox has a centered navy checkmark.
@@ -671,7 +675,6 @@ The following must be resolved before the related production work is considered 
 - Final ACF field-group and page-template mapping for each editable module, including which content is reusable or global.
 - Final Gravity Forms inventory and environment-migration process, including fields, consent, confirmations, notifications, retention, spam protection, email delivery, and external feeds.
 - Event detail pages, the Remind Me behavior, and the date-filter presets for the Seeker-based Event Driver.
-- The second filter dropdown in Story Drivers "Hero + Page Grid w/ Filters" (`2145:14524`). Figma labels it "Upcoming" and includes no developer note. The label appears to be carried over from the Event Driver, because published posts have no upcoming state. The requirements notes list author, category, tag, and date as blog facets. The current implementation filters by post tag. Confirm with the client whether to keep tags or switch to a date filter (for example, latest/oldest or month/year) or an author filter.
 - OpenWeather account's daily call limit and whether paid calls beyond the free 1,000 are allowed (the current-weather refresh plus the history backfill use about 960 a day during the initial backfill), and the lake-temperature data source.
 - Weather Historical Data uses a coarse grid in OpenWeather's history: in local testing (2026-10-29) Tahoe City and Olympic Valley returned identical archive values, as did Incline Village and Mt. Rose, while the live readings differ by elevation (Mt. Rose 33°F, Incline Village 44°F). Mt. Rose's historical rows therefore reflect lake-level conditions. Tell the client; a mountain-specific history needs another source.
 - Weather Historical Data: whether the navy location-comparison tables (Season `2970:79234`, Month `2970:79392`) belong on the page and where; whether liquid-water snowfall is acceptable in the Snowfall column or a snow-depth source is needed; and whether the 10-Day Forecast starting today is acceptable.

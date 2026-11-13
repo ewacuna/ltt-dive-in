@@ -58,7 +58,7 @@
 				per_page: String( perPage ),
 				exclude: section.dataset.exclude || '',
 				category: ( data.get( 'story_category' ) || '' ).toString(),
-				tag: ( data.get( 'story_tag' ) || '' ).toString(),
+				sort: ( data.get( 'story_sort' ) || '' ).toString(),
 				search: ( data.get( 'story_search' ) || '' ).toString().trim(),
 			} );
 

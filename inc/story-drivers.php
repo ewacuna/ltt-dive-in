@@ -172,19 +172,34 @@ function ltt_dive_in_query_story_driver_stories( $args ) {
 /**
  * Sanitize Hero + Page Grid filters from a request.
  *
- * @param array $raw Unslashed raw values: category, tag, search, page.
- * @return array{category:int,tag:int,search:string,page:int}
+ * @param array $raw Unslashed raw values: category, sort, search, page.
+ * @return array{category:int,sort:string,search:string,page:int}
  */
 function ltt_dive_in_sanitize_story_driver_grid_filters( $raw ) {
 	$category = absint( $raw['category'] ?? 0 );
-	$tag      = absint( $raw['tag'] ?? 0 );
+	$sort     = is_scalar( $raw['sort'] ?? '' ) ? (string) ( $raw['sort'] ?? '' ) : '';
 	$search   = is_scalar( $raw['search'] ?? '' ) ? sanitize_text_field( (string) ( $raw['search'] ?? '' ) ) : '';
 
 	return array(
 		'category' => $category && term_exists( $category, 'category' ) ? $category : 0,
-		'tag'      => $tag && term_exists( $tag, 'post_tag' ) ? $tag : 0,
+		'sort'     => array_key_exists( $sort, ltt_dive_in_get_story_driver_sort_options() ) ? $sort : 'latest',
 		'search'   => mb_substr( $search, 0, 80 ),
 		'page'     => max( 1, min( 20, absint( $raw['page'] ?? 1 ) ) ),
+	);
+}
+
+/**
+ * Get the date sort options for the Hero + Page Grid.
+ *
+ * The first option is the default: the client asked for the most recent
+ * stories at the top.
+ *
+ * @return array<string,string> Labels keyed by sort value.
+ */
+function ltt_dive_in_get_story_driver_sort_options() {
+	return array(
+		'latest' => __( 'Latest', 'ltt-dive-in' ),
+		'oldest' => __( 'Oldest', 'ltt-dive-in' ),
 	);
 }
 
@@ -198,13 +213,17 @@ function ltt_dive_in_sanitize_story_driver_grid_filters( $raw ) {
  * @return array{stories:array[],total:int,has_more:bool}
  */
 function ltt_dive_in_query_story_driver_grid( $filters, $exclude, $offset, $per_page ) {
+	$order      = isset( $filters['sort'] ) && 'oldest' === $filters['sort'] ? 'ASC' : 'DESC';
 	$query_args = array(
 		'post_type'           => 'post',
 		'post_status'         => 'publish',
 		'posts_per_page'      => max( 1, min( 60, absint( $per_page ) ) ),
 		'offset'              => absint( $offset ),
-		'orderby'             => 'date',
-		'order'               => 'DESC',
+		// The ID tiebreaker keeps Load More offsets stable for posts published at the same second.
+		'orderby'             => array(
+			'date' => $order,
+			'ID'   => $order,
+		),
 		'ignore_sticky_posts' => true,
 		'fields'              => 'ids',
 		'meta_query'          => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
@@ -218,10 +237,6 @@ function ltt_dive_in_query_story_driver_grid( $filters, $exclude, $offset, $per_
 
 	if ( ! empty( $filters['category'] ) ) {
 		$query_args['cat'] = (int) $filters['category'];
-	}
-
-	if ( ! empty( $filters['tag'] ) ) {
-		$query_args['tag_id'] = (int) $filters['tag'];
 	}
 
 	if ( ! empty( $filters['search'] ) ) {
@@ -246,7 +261,7 @@ function ltt_dive_in_query_story_driver_grid( $filters, $exclude, $offset, $per_
 /**
  * Get term options for a Hero + Page Grid dropdown.
  *
- * @param string $taxonomy Taxonomy name: category or post_tag.
+ * @param string $taxonomy Taxonomy name.
  * @return array<int,string> Term names keyed by term ID.
  */
 function ltt_dive_in_get_story_driver_filter_options( $taxonomy ) {
@@ -300,7 +315,7 @@ function ltt_dive_in_get_story_driver_rest_stories( $request ) {
 	$filters  = ltt_dive_in_sanitize_story_driver_grid_filters(
 		array(
 			'category' => $request->get_param( 'category' ),
-			'tag'      => $request->get_param( 'tag' ),
+			'sort'     => $request->get_param( 'sort' ),
 			'search'   => $request->get_param( 'search' ),
 		)
 	);
@@ -338,7 +353,7 @@ function ltt_dive_in_register_story_driver_routes() {
 				'offset'   => array( 'default' => 0, 'sanitize_callback' => 'absint' ),
 				'per_page' => array( 'default' => 9, 'sanitize_callback' => 'absint' ),
 				'category' => array( 'default' => 0, 'sanitize_callback' => 'absint' ),
-				'tag'      => array( 'default' => 0, 'sanitize_callback' => 'absint' ),
+				'sort'     => array( 'default' => 'latest', 'sanitize_callback' => 'sanitize_key' ),
 				'search'   => array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ),
 				'exclude'  => array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ),
 			),
