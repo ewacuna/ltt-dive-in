@@ -507,7 +507,7 @@
           "name": "label",
           "type": "text",
           "required": 1,
-          "maxlength": 120,
+          "maxlength": 250,
           "parent_repeater": "field_ltt_dive_in_content_module_stats"
         }
       ],
