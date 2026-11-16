@@ -1067,6 +1067,10 @@
 	visibility: visible;
 }
 
+.live-cam__viewer.is-offline .live-cam__prism {
+	display: none;
+}
+
 .ski-cams {
 	padding: 4rem 5rem;
 	background: #ffffff;

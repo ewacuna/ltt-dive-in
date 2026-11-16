@@ -47,18 +47,25 @@
 		const isRendered = function () {
 			return !! embed.querySelector( '.luma-preview img, .luma-preview canvas, .luma-preview [style*="background-image"]' );
 		};
-		let timer = 0;
-		const observer = new MutationObserver( function () {
-			if ( isRendered() ) {
-				observer.disconnect();
-				window.clearTimeout( timer );
-				viewer.classList.add( 'is-ready' );
-			}
-		} );
 
-		observer.observe( embed, { childList: true, subtree: true, attributes: true } );
-		timer = window.setTimeout( function () {
+		// While the provider reports the camera offline, its controls open a broken page; keep the theme image and link instead.
+		const isOffline = function () {
+			const offline = embed.querySelector( '.archr-camera-offline' );
+
+			return !! offline && 'none' !== window.getComputedStyle( offline ).display;
+		};
+		const update = function () {
+			const offline = isOffline();
+
+			viewer.classList.toggle( 'is-offline', offline );
+			viewer.classList.toggle( 'is-ready', ! offline && isRendered() );
+		};
+		const observer = new MutationObserver( update );
+
+		observer.observe( embed, { childList: true, subtree: true, attributes: true, attributeFilter: [ 'class', 'style' ] } );
+		window.setTimeout( function () {
 			observer.disconnect();
+			update();
 		}, READY_TIMEOUT );
 	};
 
