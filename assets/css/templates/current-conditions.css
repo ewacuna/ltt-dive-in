@@ -1045,6 +1045,28 @@
 	opacity: 1;
 }
 
+.live-cam__viewer {
+	display: grid;
+	width: 100%;
+}
+
+.live-cam__viewer > * {
+	grid-area: 1 / 1;
+}
+
+.live-cam__prism {
+	visibility: hidden;
+	text-align: initial;
+}
+
+.live-cam__viewer.is-ready .live-cam__media {
+	display: none;
+}
+
+.live-cam__viewer.is-ready .live-cam__prism {
+	visibility: visible;
+}
+
 .ski-cams {
 	padding: 4rem 5rem;
 	background: #ffffff;

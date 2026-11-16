@@ -114,6 +114,20 @@ function ltt_dive_in_enqueue_assets() {
 				)
 			);
 
+			// Loads the Prism Cam provider files only when a viewer is on the page, including after seamless navigation.
+			$prism_cams_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/prism-cams.js';
+
+			wp_enqueue_script(
+				'ltt-dive-in-prism-cams',
+				LTT_DIVE_IN_URI . '/assets/js/components/prism-cams.js',
+				array(),
+				file_exists( $prism_cams_script_path ) ? (string) filemtime( $prism_cams_script_path ) : LTT_DIVE_IN_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
+
 			$current_weather_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/current-weather.js';
 
 			wp_enqueue_script(

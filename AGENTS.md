@@ -418,6 +418,7 @@ Third-party browser libraries are pinned, self-hosted copies with their licenses
 | Swiper | `14.2.0` | `assets/js/vendor/swiper-bundle.min.js`, `assets/css/vendor/swiper-bundle.min.css` | `ltt-dive-in-swiper` | Only on pages with a carousel block |
 | PhotoSwipe | `5.4.4` | `assets/vendor/photoswipe/` | `ltt-dive-in-photoswipe` | Only on pages with a lightbox |
 
+- Exception: the Prism Cam live-camera viewer is a hosted provider embed and cannot be self-hosted. `assets/js/components/prism-cams.js` loads its files from `js.prismcam.com` only when a live-cameras tab row uses the Prism viewer; the URLs and partner client ID live in `inc/live-cams.php`. Do not add other provider scripts this way without the same review.
 - Use Alpine for small, markup-owned interaction states such as the header search and the shared `lttSelect`. Keep content and links in the server-rendered HTML, provide a useful pre-initialization state, and do not move substantial business logic into `x-data` expressions.
 - An Alpine component script must register before Alpine starts: add its handle to the `ltt-dive-in-alpine` dependencies in `inc/enqueue.php`.
 - Use vanilla JavaScript in `assets/js/main.js` or `assets/js/components/` for behavior that does not fit Alpine. `main.js` owns the accessible mobile-navigation shell, nested primary-menu disclosures, and footer DOM ordering.

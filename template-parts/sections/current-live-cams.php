@@ -54,6 +54,15 @@ if ( ! $cams ) {
 					<p class="live-cam__text"><?php echo esc_html( $cam['text'] ); ?></p>
 				<?php endif; ?>
 
+				<?php
+				$prism_client = $cam['prism_cam'] ? ltt_dive_in_get_prism_client_id() : '';
+
+				if ( $prism_client ) :
+					$prism_assets = ltt_dive_in_get_prism_assets();
+					?>
+					<div class="live-cam__viewer" data-prism-viewer data-prism-script="<?php echo esc_url( $prism_assets['script'] ); ?>" data-prism-style="<?php echo esc_url( $prism_assets['style'] ); ?>">
+				<?php endif; ?>
+
 				<a class="live-cam__media" href="<?php echo esc_url( $cam['url'] ); ?>"<?php echo $cam['new_tab'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
 					<?php if ( $cam['latest'] ) : ?>
 						<img class="live-cam__image" src="<?php echo esc_url( $cam['latest']['src'] ); ?>" width="<?php echo esc_attr( $cam['latest']['width'] ); ?>" height="<?php echo esc_attr( $cam['latest']['height'] ); ?>" alt="<?php echo esc_attr( (string) get_post_meta( $cam['image'], '_wp_attachment_image_alt', true ) ); ?>"<?php echo $is_band ? ' loading="lazy"' : ''; ?> decoding="async" />
@@ -81,6 +90,13 @@ if ( ! $cams ) {
 						<?php endif; ?>
 					</span>
 				</a>
+
+				<?php if ( $prism_client ) : ?>
+						<div class="live-cam__prism" data-prism-embed>
+							<div class="luma-<?php echo esc_attr( $prism_client ); ?>" cam="<?php echo esc_attr( $cam['prism_cam'] ); ?>" data-mode="embed"></div>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 		</section>
 	<?php endforeach; ?>

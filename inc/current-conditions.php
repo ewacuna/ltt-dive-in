@@ -446,6 +446,40 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 							'wrapper'           => array( 'width' => '50' ),
 						),
 						array(
+							'key'           => 'field_ltt_dive_in_live_cam_viewer',
+							'label'         => __( 'Viewer', 'ltt-dive-in' ),
+							'name'          => 'viewer',
+							'type'          => 'button_group',
+							'instructions'  => __( 'Prism Cam shows the provider’s live viewer. The camera image and live feed link are shown while it loads or if it fails.', 'ltt-dive-in' ),
+							'choices'       => array(
+								'image' => __( 'Image', 'ltt-dive-in' ),
+								'prism' => __( 'Prism Cam', 'ltt-dive-in' ),
+							),
+							'default_value' => 'image',
+							'return_format' => 'value',
+							'wrapper'       => array( 'width' => '50' ),
+						),
+						array(
+							'key'               => 'field_ltt_dive_in_live_cam_prism_cam',
+							'label'             => __( 'Prism camera ID', 'ltt-dive-in' ),
+							'name'              => 'prism_cam',
+							'type'              => 'number',
+							'instructions'      => __( 'The cam number from the Prism embed code.', 'ltt-dive-in' ),
+							'required'          => 1,
+							'min'               => 1,
+							'step'              => 1,
+							'wrapper'           => array( 'width' => '50' ),
+							'conditional_logic' => array(
+								array(
+									array(
+										'field'    => 'field_ltt_dive_in_live_cam_viewer',
+										'operator' => '==',
+										'value'    => 'prism',
+									),
+								),
+							),
+						),
+						array(
 							'key'           => 'field_ltt_dive_in_live_cam_image',
 							'label'         => __( 'Camera image', 'ltt-dive-in' ),
 							'name'          => 'image',
@@ -790,8 +824,9 @@ function ltt_dive_in_get_weather_locations( $post_id ) {
  * and a valid URL; incomplete rows are skipped.
  *
  * @param int $post_id Tab page ID.
- * @return array<int, array{heading: string, text: string, image: int, latest: array|null, background: int, label: string, url: string, new_tab: bool}>
+ * @return array<int, array{heading: string, text: string, image: int, latest: array|null, prism_cam: int, background: int, label: string, url: string, new_tab: bool}>
  *         `latest` is the current downloaded copy of the camera's latest-image URL, when there is one.
+ *         `prism_cam` is the Prism Cam ID when the camera uses the Prism viewer, otherwise 0.
  */
 function ltt_dive_in_get_live_cams( $post_id ) {
 	if ( ! function_exists( 'get_field' ) ) {
@@ -814,12 +849,14 @@ function ltt_dive_in_get_live_cams( $post_id ) {
 
 		$background = isset( $row['background'] ) ? absint( $row['background'] ) : 0;
 		$image_url  = function_exists( 'ltt_dive_in_sanitize_live_cam_image_url' ) ? ltt_dive_in_sanitize_live_cam_image_url( $row['image_url'] ?? '' ) : '';
+		$prism_cam  = 'prism' === ( $row['viewer'] ?? '' ) && isset( $row['prism_cam'] ) && is_numeric( $row['prism_cam'] ) ? absint( $row['prism_cam'] ) : 0;
 
 		$cams[] = array(
 			'heading'    => $heading,
 			'text'       => isset( $row['text'] ) && is_string( $row['text'] ) ? trim( $row['text'] ) : '',
 			'image'      => $image,
 			'latest'     => $image_url ? ltt_dive_in_get_live_cam_image( $image_url ) : null,
+			'prism_cam'  => $prism_cam,
 			'background' => $background && wp_attachment_is_image( $background ) ? $background : 0,
 			'label'      => $label,
 			'url'        => $url,

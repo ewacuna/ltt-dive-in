@@ -339,3 +339,26 @@ function ltt_dive_in_refresh_live_cams_after_save( $post_id ) {
 	}
 }
 add_action( 'acf/save_post', 'ltt_dive_in_refresh_live_cams_after_save', 20 );
+
+/**
+ * Prism Cam partner account that owns the embedded cameras.
+ *
+ * @return string Numeric client ID, or an empty string when none is set.
+ */
+function ltt_dive_in_get_prism_client_id() {
+	$client = (string) apply_filters( 'ltt_dive_in_prism_client_id', '1447701460' );
+
+	return ctype_digit( $client ) ? $client : '';
+}
+
+/**
+ * Prism Cam viewer files, loaded by assets/js/components/prism-cams.js only when a viewer is on the page.
+ *
+ * @return array{script: string, style: string}
+ */
+function ltt_dive_in_get_prism_assets() {
+	return array(
+		'script' => 'https://js.prismcam.com/luma.js',
+		'style'  => 'https://js.prismcam.com/luma.css',
+	);
+}
