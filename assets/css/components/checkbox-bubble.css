@@ -1,0 +1,92 @@
+/**
+ * Checkbox Bubble control.
+ */
+.ltt-checkbox-bubble {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 2.25rem;
+    color: #073959;
+    font-family: "Gotham HTF", Arial, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.45;
+    cursor: pointer;
+}
+
+.ltt-checkbox-bubble--dark {
+    color: #ffffff;
+}
+
+.ltt-checkbox-bubble__input {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.ltt-checkbox-bubble__box {
+    flex: 0 0 2.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid rgba(199, 209, 216, 0.5);
+    border-radius: 50%;
+    background: #ffffff center / 1.25rem no-repeat;
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+}
+
+.ltt-checkbox-bubble__input:checked + .ltt-checkbox-bubble__box {
+    background-image: url("../../images/icons/event-check.svg");
+}
+
+.ltt-checkbox-bubble__input:focus-visible + .ltt-checkbox-bubble__box {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+.ltt-checkbox-bubble:hover .ltt-checkbox-bubble__box {
+    border-color: #eeb040;
+}
+
+.ltt-checkbox-bubble__label {
+    overflow-wrap: anywhere;
+}
+
+.ltt-checkbox-bubble__count {
+    display: inline-flex;
+    min-width: 1.625rem;
+    min-height: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-left: -0.625rem;
+    padding: 0.125rem 0.3125rem;
+    border-radius: 0.3125rem;
+    background: #02162b;
+    color: #ffffff;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 767.98px) {
+    .ltt-checkbox-bubble {
+        gap: 0.875rem;
+        font-size: 1rem;
+    }
+}
+
+@media (forced-colors: active) {
+    .ltt-checkbox-bubble__box {
+        border-color: CanvasText;
+    }
+
+    .ltt-checkbox-bubble__input:checked + .ltt-checkbox-bubble__box {
+        background: Highlight;
+        forced-color-adjust: none;
+    }
+}

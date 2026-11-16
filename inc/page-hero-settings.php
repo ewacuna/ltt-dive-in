@@ -62,6 +62,11 @@ function ltt_dive_in_register_page_hero_settings() {
 						'operator' => '!=',
 						'value'    => 'templates/current-conditions.php',
 					),
+					array(
+						'param'    => 'page_template',
+						'operator' => '!=',
+						'value'    => 'templates/events.php',
+					),
 				),
 			),
 			'position'    => 'acf_after_title',

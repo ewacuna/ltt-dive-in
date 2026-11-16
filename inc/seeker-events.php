@@ -251,37 +251,68 @@ function ltt_dive_in_get_event_date_filters() {
 }
 
 /**
- * Query published Seeker events.
+ * Validate a `YYYY-MM-DD` date string.
+ *
+ * @param mixed $date Candidate value.
+ * @return string The date, or an empty string.
+ */
+function ltt_dive_in_sanitize_event_date( $date ) {
+	$date   = is_string( $date ) ? trim( $date ) : '';
+	$parsed = preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) ? DateTimeImmutable::createFromFormat( '!Y-m-d', $date, wp_timezone() ) : false;
+
+	return $parsed && $parsed->format( 'Y-m-d' ) === $date ? $date : '';
+}
+
+/**
+ * Normalize Seeker feed arguments into a bounded API query.
  *
  * Only these arguments are forwarded, which keeps cache keys bounded and
  * prevents visitor input from reaching other API parameters:
  *
- * - `limit` (1-100), `offset`
+ * - `limit` (0-100; 0 requests only the total), `offset`
  * - `search` free text
- * - `category_ids` int[]
+ * - `category_ids` int[] (an event matches any of them)
+ * - `region_ids` int[] (an event matches when its city is in any of them)
  * - `date` date filter key from ltt_dive_in_get_event_date_filters()
- * - `featured` bool
+ * - `date_from`, `date_to` `YYYY-MM-DD`; a valid `date_from` replaces `date`
+ * - `featured` bool, only featured events
+ * - `exclude_featured` bool, only events that are not featured
  * - `sort` `soonest` or `recent`
  *
  * @param array $args Query arguments.
- * @return array{events: array[], fetched: int, total: int}|WP_Error Fetched counts feed records, including any that were not displayable.
+ * @return array{query: array, from: string, to: string}
  */
-function ltt_dive_in_get_seeker_events( $args = array() ) {
-	$args  = wp_parse_args(
+function ltt_dive_in_get_seeker_event_query( $args ) {
+	$args = wp_parse_args(
 		$args,
 		array(
-			'limit'        => 9,
-			'offset'       => 0,
-			'search'       => '',
-			'category_ids' => array(),
-			'date'         => 'upcoming',
-			'featured'     => false,
-			'sort'         => 'soonest',
+			'limit'            => 9,
+			'offset'           => 0,
+			'search'           => '',
+			'category_ids'     => array(),
+			'region_ids'       => array(),
+			'date'             => 'upcoming',
+			'date_from'        => '',
+			'date_to'          => '',
+			'featured'         => false,
+			'exclude_featured' => false,
+			'sort'             => 'soonest',
 		)
 	);
-	$range = ltt_dive_in_get_event_date_range( array_key_exists( $args['date'], ltt_dive_in_get_event_date_filters() ) ? $args['date'] : 'upcoming' );
+	$from = ltt_dive_in_sanitize_event_date( $args['date_from'] );
+
+	if ( $from ) {
+		$to    = ltt_dive_in_sanitize_event_date( $args['date_to'] );
+		$range = array(
+			'from' => $from,
+			'to'   => $to && $to >= $from ? $to : '',
+		);
+	} else {
+		$range = ltt_dive_in_get_event_date_range( array_key_exists( $args['date'], ltt_dive_in_get_event_date_filters() ) ? $args['date'] : 'upcoming' );
+	}
+
 	$query = array(
-		'limit'          => max( 1, min( 100, absint( $args['limit'] ) ) ),
+		'limit'          => max( 0, min( 100, absint( $args['limit'] ) ) ),
 		'offset'         => absint( $args['offset'] ),
 		'states'         => 'published',
 		'eventstatus'    => 'scheduled,rescheduled,postponed',
@@ -289,8 +320,13 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 		'sortby'         => 'recent' === $args['sort'] ? 'datecreated' : 'startdatetime',
 		'sortdir'        => 'recent' === $args['sort'] ? 'desc' : 'asc',
 	);
-	$search       = trim( sanitize_text_field( (string) $args['search'] ) );
-	$category_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $args['category_ids'] ) ) ) );
+	$search = trim( sanitize_text_field( (string) $args['search'] ) );
+	$ids    = static function ( $values ) {
+		$values = array_values( array_unique( array_filter( array_map( 'absint', (array) $values ) ) ) );
+		sort( $values );
+
+		return implode( ',', $values );
+	};
 
 	if ( $range['to'] ) {
 		$query['datefilterto'] = $range['to'];
@@ -300,14 +336,65 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 		$query['q'] = function_exists( 'mb_substr' ) ? mb_substr( $search, 0, 80 ) : substr( $search, 0, 80 );
 	}
 
-	if ( $category_ids ) {
-		sort( $category_ids );
-		$query['categoryids'] = implode( ',', $category_ids );
+	if ( $ids( $args['category_ids'] ) ) {
+		$query['categoryids'] = $ids( $args['category_ids'] );
+	}
+
+	if ( $ids( $args['region_ids'] ) ) {
+		$query['regionids'] = $ids( $args['region_ids'] );
 	}
 
 	if ( $args['featured'] ) {
 		$query['featured'] = 'true';
+	} elseif ( $args['exclude_featured'] ) {
+		$query['featured'] = 'false';
 	}
+
+	return array(
+		'query' => $query,
+		'from'  => $range['from'],
+		'to'    => $range['to'],
+	);
+}
+
+/**
+ * Count published Seeker events without fetching them.
+ *
+ * Accepts the same arguments as ltt_dive_in_get_seeker_events(). Recurring
+ * series are counted once, as Seeker counts them.
+ *
+ * @param array $args Query arguments.
+ * @return int|WP_Error
+ */
+function ltt_dive_in_count_seeker_events( $args = array() ) {
+	$built = ltt_dive_in_get_seeker_event_query( array_merge( $args, array( 'limit' => 0, 'offset' => 0 ) ) );
+	$body  = ltt_dive_in_seeker_request( '/events/feeds', $built['query'] );
+
+	if ( is_wp_error( $body ) ) {
+		return $body;
+	}
+
+	return isset( $body['total'] ) ? absint( $body['total'] ) : 0;
+}
+
+/**
+ * Query published Seeker events.
+ *
+ * See ltt_dive_in_get_seeker_event_query() for the accepted arguments; `limit`
+ * is at least 1 here.
+ *
+ * @param array $args Query arguments.
+ * @return array{events: array[], fetched: int, total: int}|WP_Error Fetched counts feed records, including any that were not displayable.
+ */
+function ltt_dive_in_get_seeker_events( $args = array() ) {
+	$built = ltt_dive_in_get_seeker_event_query( $args );
+	$query = $built['query'];
+	$range = array(
+		'from' => $built['from'],
+		'to'   => $built['to'],
+	);
+
+	$query['limit'] = max( 1, $query['limit'] );
 
 	$body = ltt_dive_in_seeker_request( '/events/feeds', $query );
 
@@ -335,49 +422,179 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 }
 
 /**
+ * Find raw Seeker events by UUID among upcoming published events.
+ *
+ * The feed cannot be filtered by event ID (`searchfield=id` returns 422), so
+ * the cached upcoming feed is read in pages and matched locally.
+ *
+ * @param string[] $uuids Seeker event UUIDs.
+ * @return array<string, array> Raw events keyed by UUID.
+ */
+function ltt_dive_in_find_seeker_raw_events( $uuids ) {
+	$uuids = array_slice( array_values( array_unique( array_filter( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) $uuids ) ) ) ), 0, 12 );
+	$found = array();
+
+	for ( $offset = 0; $uuids && $offset < 500 && count( $found ) < count( $uuids ); $offset += 100 ) {
+		$built = ltt_dive_in_get_seeker_event_query(
+			array(
+				'limit'  => 100,
+				'offset' => $offset,
+			)
+		);
+		$body  = ltt_dive_in_seeker_request( '/events/feeds', $built['query'] );
+
+		if ( is_wp_error( $body ) ) {
+			break;
+		}
+
+		$items = ltt_dive_in_get_seeker_items( $body );
+
+		foreach ( $items as $item ) {
+			$uuid = ltt_dive_in_sanitize_seeker_uuid( $item['uuid'] ?? '' );
+
+			if ( $uuid && in_array( $uuid, $uuids, true ) ) {
+				$found[ $uuid ] = $item;
+			}
+		}
+
+		if ( count( $items ) < 100 || ( isset( $body['total'] ) && $offset + 100 >= (int) $body['total'] ) ) {
+			break;
+		}
+	}
+
+	return $found;
+}
+
+/**
  * Look up individual events by Seeker UUID, preserving the requested order.
  *
  * @param string[] $uuids Seeker event UUIDs.
  * @return array[] Normalized upcoming events.
  */
 function ltt_dive_in_get_seeker_events_by_id( $uuids ) {
-	$uuids = array_slice( array_values( array_unique( array_filter( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) $uuids ) ) ) ), 0, 12 );
-	$found = array();
-
-	// The feed cannot be filtered by event ID (`searchfield=id` returns 422), so
-	// read the cached upcoming feed in pages and match the UUIDs locally.
-	for ( $offset = 0; $uuids && $offset < 500 && count( $found ) < count( $uuids ); $offset += 100 ) {
-		$result = ltt_dive_in_get_seeker_events(
-			array(
-				'limit'  => 100,
-				'offset' => $offset,
-			)
-		);
-
-		if ( is_wp_error( $result ) ) {
-			break;
-		}
-
-		foreach ( $result['events'] as $event ) {
-			if ( in_array( $event['id'], $uuids, true ) ) {
-				$found[ $event['id'] ] = $event;
-			}
-		}
-
-		if ( $result['fetched'] < 100 || $offset + 100 >= $result['total'] ) {
-			break;
-		}
-	}
-
 	$events = array();
 
-	foreach ( $uuids as $uuid ) {
-		if ( isset( $found[ $uuid ] ) ) {
-			$events[] = $found[ $uuid ];
+	foreach ( ltt_dive_in_find_seeker_raw_events( $uuids ) as $raw ) {
+		$event = ltt_dive_in_normalize_seeker_event( $raw );
+
+		if ( $event ) {
+			$events[ $event['id'] ] = $event;
 		}
 	}
 
-	return $events;
+	$ordered = array();
+
+	foreach ( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) $uuids ) as $uuid ) {
+		if ( isset( $events[ $uuid ] ) ) {
+			$ordered[] = $events[ $uuid ];
+		}
+	}
+
+	return $ordered;
+}
+
+/**
+ * Return one upcoming event with the details shown on its own page.
+ *
+ * @param string $uuid Seeker event UUID.
+ * @return array{event: array, details: array}|null
+ */
+function ltt_dive_in_get_seeker_event_with_details( $uuid ) {
+	$uuid = ltt_dive_in_sanitize_seeker_uuid( $uuid );
+	$raw  = $uuid ? ( ltt_dive_in_find_seeker_raw_events( array( $uuid ) )[ $uuid ] ?? null ) : null;
+	$event = $raw ? ltt_dive_in_normalize_seeker_event( $raw ) : null;
+
+	if ( ! $event ) {
+		return null;
+	}
+
+	return array(
+		'event'   => $event,
+		'details' => ltt_dive_in_get_seeker_event_details( $raw, $event ),
+	);
+}
+
+/**
+ * Normalize the Seeker fields used only on an event's own page.
+ *
+ * @param array $raw   Raw Seeker event.
+ * @param array $event Normalized event.
+ * @return array
+ */
+function ltt_dive_in_get_seeker_event_details( $raw, $event ) {
+	$place     = isset( $raw['place'] ) && is_array( $raw['place'] ) ? $raw['place'] : array();
+	$location  = isset( $place['location'] ) && is_array( $place['location'] ) ? $place['location'] : array();
+	$organizer = isset( $raw['organizer'] ) && is_array( $raw['organizer'] ) ? $raw['organizer'] : array();
+	$url       = static function ( $value ) {
+		return is_string( $value ) ? esc_url_raw( $value, array( 'http', 'https' ) ) : '';
+	};
+	$tickets   = array();
+
+	foreach ( (array) ( $raw['tickets'] ?? array() ) as $ticket ) {
+		$ticket_url = is_array( $ticket ) ? $url( $ticket['url'] ?? '' ) : '';
+
+		if ( $ticket_url ) {
+			$tickets[] = array(
+				'name' => ltt_dive_in_seeker_plain_text( $ticket['name'] ?? '' ),
+				'url'  => $ticket_url,
+			);
+		}
+	}
+
+	$images = ltt_dive_in_get_seeker_images( $raw['images'] ?? array() );
+
+	if ( ! $images && $event['image'] ) {
+		$images = array( $event['image'] );
+	}
+
+	$latitude  = isset( $location['latitude'] ) && is_numeric( $location['latitude'] ) ? (float) $location['latitude'] : null;
+	$longitude = isset( $location['longitude'] ) && is_numeric( $location['longitude'] ) ? (float) $location['longitude'] : null;
+	$address   = implode(
+		', ',
+		array_filter(
+			array(
+				trim( $event['address']['street'] . ' ' . ltt_dive_in_seeker_plain_text( $location['address2'] ?? '' ) ),
+				$event['address']['city'],
+				trim( $event['address']['region'] . ' ' . $event['address']['postal'] ),
+			)
+		)
+	);
+	$destination = null !== $latitude && null !== $longitude ? $latitude . ',' . $longitude : implode( ', ', array_filter( array( $event['venue'], $address ) ) );
+	$timezone    = $event['start']->getTimezone();
+
+	return array(
+		'images'           => array_slice( $images, 0, 10 ),
+		'description_html' => wp_kses(
+			is_string( $raw['description'] ?? null ) ? $raw['description'] : '',
+			array(
+				'p'      => array(),
+				'br'     => array(),
+				'strong' => array(),
+				'b'      => array(),
+				'em'     => array(),
+				'i'      => array(),
+				'ul'     => array(),
+				'ol'     => array(),
+				'li'     => array(),
+				'a'      => array( 'href' => true ),
+			)
+		),
+		'tickets'          => $tickets,
+		'website'          => $event['url'],
+		'online_url'       => $url( $raw['onlineurl'] ?? '' ),
+		'age'              => ltt_dive_in_seeker_plain_text( $raw['agerequirement'] ?? '' ),
+		'organizer_url'    => $url( $organizer['url'] ?? '' ),
+		'venue_url'        => $url( $place['url'] ?? '' ),
+		'address'          => $address,
+		'directions_url'   => $destination ? add_query_arg(
+			array(
+				'api'         => 1,
+				'destination' => rawurlencode( $destination ),
+			),
+			'https://www.google.com/maps/dir/'
+		) : '',
+		'occurrences'      => ! empty( $raw['recurring'] ) || ! empty( $raw['occurrences'] ) ? ltt_dive_in_get_seeker_occurrences( $raw, $timezone, wp_date( 'Y-m-d' ), 60 ) : array(),
+	);
 }
 
 /**
@@ -422,6 +639,49 @@ function ltt_dive_in_get_seeker_categories() {
 	asort( $categories, SORT_NATURAL | SORT_FLAG_CASE );
 
 	return $categories;
+}
+
+/**
+ * Return Seeker regions as `id => name`.
+ *
+ * @return array<int, string>
+ */
+function ltt_dive_in_get_seeker_regions() {
+	$regions = array();
+
+	for ( $offset = 0; $offset < 200; $offset += 50 ) {
+		$body = ltt_dive_in_seeker_request(
+			'/v1/regions',
+			array(
+				'limit'  => 50,
+				'offset' => $offset,
+			),
+			12 * HOUR_IN_SECONDS
+		);
+
+		if ( is_wp_error( $body ) ) {
+			break;
+		}
+
+		$items = ltt_dive_in_get_seeker_items( $body );
+
+		foreach ( $items as $item ) {
+			$id   = isset( $item['id'] ) ? absint( $item['id'] ) : 0;
+			$name = ltt_dive_in_seeker_plain_text( $item['name'] ?? '' );
+
+			if ( $id && '' !== $name ) {
+				$regions[ $id ] = $name;
+			}
+		}
+
+		if ( count( $items ) < 50 || ( isset( $body['total'] ) && $offset + 50 >= (int) $body['total'] ) ) {
+			break;
+		}
+	}
+
+	asort( $regions, SORT_NATURAL | SORT_FLAG_CASE );
+
+	return $regions;
 }
 
 /**
@@ -563,27 +823,48 @@ function ltt_dive_in_seeker_rrule_matches( $day, $first, $rule ) {
 }
 
 /**
- * Pick the first occurrence of a recurring Seeker event on or after a date.
+ * List the dates of one Seeker schedule on or after a date.
  *
- * Seeker reports a recurring series by its first `startdate`, which may be in
- * the past, and describes the individual dates with an iCalendar `rrule` and
- * an `exceptions` list.
+ * A schedule is the event itself or one entry of its `occurrences` list. A
+ * schedule without a recurrence rule has a single date.
  *
- * @param array        $event    Raw Seeker event.
+ * @param array        $series   Seeker schedule: startdate, starttime, endtime, enddate, rrule, exceptions.
  * @param DateTimeZone $timezone Event timezone.
- * @param string       $from     Earliest occurrence date in `YYYY-MM-DD`.
- * @return array{start: DateTimeImmutable, end: DateTimeImmutable|null}|null
+ * @param string       $from     Earliest date in `YYYY-MM-DD`.
+ * @param int          $limit    Maximum number of dates.
+ * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null}>
  */
-function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
-	$rule  = ltt_dive_in_parse_seeker_rrule( $event['rrule'] ?? '' );
-	$first = ltt_dive_in_seeker_date( $event['startdate'] ?? '', '', $timezone );
+function ltt_dive_in_get_seeker_series_dates( $series, $timezone, $from, $limit ) {
+	$start    = ltt_dive_in_seeker_date( $series['startdate'] ?? '', $series['starttime'] ?? '', $timezone );
+	$end      = ltt_dive_in_seeker_date( $series['startdate'] ?? '', $series['endtime'] ?? '', $timezone );
+	$duration = $start && $end && ! empty( $series['endtime'] ) ? $end->getTimestamp() - $start->getTimestamp() : null;
+	$rule     = ltt_dive_in_parse_seeker_rrule( $series['rrule'] ?? '' );
+	$dates    = array();
 
-	if ( ! $first || ! in_array( $rule['FREQ'] ?? '', array( 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY' ), true ) ) {
-		return null;
+	if ( ! $start ) {
+		return $dates;
 	}
 
+	if ( null !== $duration && $duration <= 0 ) {
+		$duration += DAY_IN_SECONDS;
+	}
+
+	if ( ! in_array( $rule['FREQ'] ?? '', array( 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY' ), true ) ) {
+		$last = ltt_dive_in_seeker_date( $series['enddate'] ?? '', $series['endtime'] ?? '', $timezone );
+
+		if ( ( $last ? $last->format( 'Y-m-d' ) : $start->format( 'Y-m-d' ) ) >= $from ) {
+			$dates[] = array(
+				'start' => $start,
+				'end'   => $last && $last > $start ? $last : ( null !== $duration ? $start->modify( '+' . $duration . ' seconds' ) : null ),
+			);
+		}
+
+		return $dates;
+	}
+
+	$first = $start->setTime( 0, 0 );
 	$last  = $first->modify( '+10 years' );
-	$until = ltt_dive_in_seeker_date( $event['enddate'] ?? '', '', $timezone );
+	$until = ltt_dive_in_seeker_date( $series['enddate'] ?? '', '', $timezone );
 
 	if ( $until && $until < $last ) {
 		$last = $until;
@@ -602,7 +883,7 @@ function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
 
 	$excluded = array();
 
-	foreach ( (array) ( $event['exceptions'] ?? array() ) as $exception ) {
+	foreach ( (array) ( $series['exceptions'] ?? array() ) as $exception ) {
 		$value = is_array( $exception ) ? ( $exception['startdate'] ?? $exception['date'] ?? '' ) : $exception;
 
 		if ( is_string( $value ) && preg_match( '/^(\d{4})-?(\d{2})-?(\d{2})/', $value, $match ) ) {
@@ -610,17 +891,10 @@ function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
 		}
 	}
 
-	$count    = absint( $rule['COUNT'] ?? 0 );
-	$matched  = 0;
-	$start    = ltt_dive_in_seeker_date( $event['startdate'], $event['starttime'] ?? '', $timezone );
-	$end      = ltt_dive_in_seeker_date( $event['startdate'], $event['endtime'] ?? '', $timezone );
-	$duration = $start && $end && ! empty( $event['endtime'] ) ? $end->getTimestamp() - $start->getTimestamp() : null;
+	$count   = absint( $rule['COUNT'] ?? 0 );
+	$matched = 0;
 
-	if ( null !== $duration && $duration <= 0 ) {
-		$duration += DAY_IN_SECONDS;
-	}
-
-	for ( $day = $first; $day <= $last; $day = $day->modify( '+1 day' ) ) {
+	for ( $day = $first; $day <= $last && count( $dates ) < $limit; $day = $day->modify( '+1 day' ) ) {
 		if ( ! ltt_dive_in_seeker_rrule_matches( $day, $first, $rule ) ) {
 			continue;
 		}
@@ -637,49 +911,82 @@ function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
 			continue;
 		}
 
-		$occurrence = ltt_dive_in_seeker_date( $date, $event['starttime'] ?? '', $timezone );
-
-		return array(
+		$occurrence = ltt_dive_in_seeker_date( $date, $series['starttime'] ?? '', $timezone );
+		$dates[]    = array(
 			'start' => $occurrence,
 			'end'   => null !== $duration ? $occurrence->modify( '+' . $duration . ' seconds' ) : null,
 		);
 	}
 
-	return null;
+	return $dates;
 }
 
 /**
- * Build responsive image data from a Seeker image collection.
+ * List the upcoming dates of a Seeker event, soonest first.
  *
- * @param mixed $images Seeker paginated image envelope.
- * @return array{src: string, srcset: string, width: int, height: int}|array
+ * Seeker reports a recurring series by its first `startdate`, which may be in
+ * the past, and describes the individual dates with an iCalendar `rrule` and
+ * an `exceptions` list. Additional schedules, each with its own rule and
+ * exceptions, are listed in `occurrences`.
+ *
+ * @param array        $event    Raw Seeker event.
+ * @param DateTimeZone $timezone Event timezone.
+ * @param string       $from     Earliest date in `YYYY-MM-DD`.
+ * @param int          $limit    Maximum number of dates.
+ * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null}>
  */
-function ltt_dive_in_get_seeker_image( $images ) {
-	$items = is_array( $images ) ? ltt_dive_in_get_seeker_items( $images ) : array();
+function ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, $limit = 50 ) {
+	$schedules = array_values( array_filter( (array) ( $event['occurrences'] ?? array() ), 'is_array' ) );
+	$schedules = $schedules ? $schedules : array( $event );
+	$dates     = array();
 
-	if ( ! $items ) {
-		return array();
+	foreach ( $schedules as $schedule ) {
+		foreach ( ltt_dive_in_get_seeker_series_dates( $schedule, $timezone, $from, $limit ) as $date ) {
+			$dates[ $date['start']->format( 'Y-m-d H:i' ) ] = $date;
+		}
 	}
 
-	usort(
-		$items,
-		static function ( $a, $b ) {
-			return (int) ! empty( $b['featured'] ) - (int) ! empty( $a['featured'] );
-		}
-	);
+	ksort( $dates );
 
-	$image       = $items[0];
-	$renditions  = isset( $image['images'] ) && is_array( $image['images'] ) ? $image['images'] : array();
-	$widths      = array(
+	return array_slice( array_values( $dates ), 0, max( 1, $limit ) );
+}
+
+/**
+ * Pick the first occurrence of a recurring Seeker event on or after a date.
+ *
+ * @param array        $event    Raw Seeker event.
+ * @param DateTimeZone $timezone Event timezone.
+ * @param string       $from     Earliest occurrence date in `YYYY-MM-DD`.
+ * @return array{start: DateTimeImmutable, end: DateTimeImmutable|null}|null
+ */
+function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
+	if ( ! in_array( ltt_dive_in_parse_seeker_rrule( $event['rrule'] ?? '' )['FREQ'] ?? '', array( 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY' ), true ) && empty( $event['occurrences'] ) ) {
+		return null;
+	}
+
+	$dates = ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, 1 );
+
+	return $dates ? $dates[0] : null;
+}
+
+/**
+ * Build responsive image data from one Seeker image.
+ *
+ * @param array $image Seeker image record.
+ * @return array{src: string, srcset: string, width: int, height: int, caption: string}|array
+ */
+function ltt_dive_in_get_seeker_image_data( $image ) {
+	$renditions = isset( $image['images'] ) && is_array( $image['images'] ) ? $image['images'] : array();
+	$widths     = array(
 		'small'    => 600,
 		'medium'   => 1024,
 		'large'    => 1400,
 		'original' => absint( $image['width'] ?? 0 ),
 	);
-	$ratio       = ! empty( $image['width'] ) && ! empty( $image['height'] ) ? (float) $image['height'] / (float) $image['width'] : 0.75;
-	$srcset      = array();
-	$src         = '';
-	$src_width   = 0;
+	$ratio      = ! empty( $image['width'] ) && ! empty( $image['height'] ) ? (float) $image['height'] / (float) $image['width'] : 0.75;
+	$srcset     = array();
+	$src        = '';
+	$src_width  = 0;
 
 	foreach ( $widths as $name => $width ) {
 		$rendition = $renditions[ $name ] ?? null;
@@ -707,11 +1014,43 @@ function ltt_dive_in_get_seeker_image( $images ) {
 	ksort( $srcset );
 
 	return array(
-		'src'    => $src,
-		'srcset' => implode( ', ', $srcset ),
-		'width'  => $src_width,
-		'height' => (int) round( $src_width * $ratio ),
+		'src'     => $src,
+		'srcset'  => implode( ', ', $srcset ),
+		'width'   => $src_width,
+		'height'  => (int) round( $src_width * $ratio ),
+		'caption' => ltt_dive_in_seeker_plain_text( $image['caption'] ?? '' ),
 	);
+}
+
+/**
+ * Build responsive image data for every image in a Seeker collection.
+ *
+ * @param mixed $images Seeker paginated image envelope.
+ * @return array[] Featured image first.
+ */
+function ltt_dive_in_get_seeker_images( $images ) {
+	$items = is_array( $images ) ? ltt_dive_in_get_seeker_items( $images ) : array();
+
+	usort(
+		$items,
+		static function ( $a, $b ) {
+			return (int) ! empty( $b['featured'] ) - (int) ! empty( $a['featured'] );
+		}
+	);
+
+	return array_values( array_filter( array_map( 'ltt_dive_in_get_seeker_image_data', $items ) ) );
+}
+
+/**
+ * Build responsive image data from a Seeker image collection.
+ *
+ * @param mixed $images Seeker paginated image envelope.
+ * @return array{src: string, srcset: string, width: int, height: int}|array The featured or first image.
+ */
+function ltt_dive_in_get_seeker_image( $images ) {
+	$images = ltt_dive_in_get_seeker_images( $images );
+
+	return $images ? $images[0] : array();
 }
 
 /**
@@ -816,6 +1155,8 @@ function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
 		'organizer'   => ltt_dive_in_seeker_plain_text( $organizer['name'] ?? '' ),
 		'free'        => ! empty( $raw['free'] ),
 		'price'       => ltt_dive_in_seeker_plain_text( $raw['pricerange'] ?? '' ),
+		'featured'    => ! empty( $raw['featured'] ),
+		'recurring'   => ! empty( $raw['recurring'] ),
 		'image'       => $image,
 	);
 }

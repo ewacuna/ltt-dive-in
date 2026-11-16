@@ -58,7 +58,7 @@ $meta_icons = array(
 						),
 						array(
 							'label' => $config['secondary_label'],
-							'url'   => $event['url'],
+							'url'   => ltt_dive_in_get_event_permalink( $event ),
 							/* translators: %s: event name. */
 							'name'  => sprintf( __( 'about %s', 'ltt-dive-in' ), $event['title'] ),
 						),

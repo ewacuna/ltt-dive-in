@@ -23,6 +23,7 @@ $label_id           = $id . '-label';
 $current_id         = $id . '-current';
 $menu_id            = $id . '-options';
 $icon_file          = 'dark' === $surface ? 'assets/images/icons/select-toggle-dark.svg' : 'assets/images/icons/select-toggle.svg';
+$leading_icon       = isset( $args['icon'] ) && is_string( $args['icon'] ) ? $args['icon'] : '';
 
 if ( ! $options ) {
 	return;
@@ -41,7 +42,10 @@ if ( $placeholder ) {
 }
 ?>
 <label id="<?php echo esc_attr( $label_id ); ?>" class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
-<div class="ltt-select ltt-select--<?php echo esc_attr( $surface ); ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" x-data="lttSelect" x-on:click.outside="close" x-on:keydown.escape.window="close">
+<div class="ltt-select ltt-select--<?php echo esc_attr( $surface ); ?><?php echo $leading_icon ? ' ltt-select--has-icon' : ''; ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" x-data="lttSelect" x-on:click.outside="close" x-on:keydown.escape.window="close">
+	<?php if ( $leading_icon ) : ?>
+		<span class="ltt-select__icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( $leading_icon ) ); ?>" alt="" /></span>
+	<?php endif; ?>
 	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $name ? ' name="' . esc_attr( $name ) . '"' : ''; ?><?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
 		<?php foreach ( $options as $option ) : ?>
 			<?php $option_value = isset( $option['value'] ) && is_scalar( $option['value'] ) ? (string) $option['value'] : ''; ?>

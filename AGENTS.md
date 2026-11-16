@@ -374,7 +374,7 @@ Do not place homepage sections, post grids, archive layouts, template-specific h
 
 ##### Shared controls
 
-- Keep each Figma control family in its own focused stylesheet under `assets/css/components/`. Current control files are `category-selection.css`, `form-submit-button.css`, `read-more-cta.css`, `slider-navigation.css`, `carousel-indicators.css`, `accordion-navigation.css`, `search-icon.css`, `dropdown-menu.css`, `expand-cta.css`, `search-bar.css`, `jump-link-bar.css`, `text-input.css`, `calendar-dropdown.css`, and `calendar.css`.
+- Keep each Figma control family in its own focused stylesheet under `assets/css/components/`. Current control files are `category-selection.css`, `form-submit-button.css`, `read-more-cta.css`, `slider-navigation.css`, `carousel-indicators.css`, `accordion-navigation.css`, `search-icon.css`, `dropdown-menu.css`, `expand-cta.css`, `search-bar.css`, `jump-link-bar.css`, `text-input.css`, `calendar-dropdown.css`, `calendar.css`, `checkbox-bubble.css`, and `load-more.css`.
 - Prefix theme-owned control classes with `ltt-` and use the component name directly, such as `ltt-slider-navigation` or `ltt-calendar`; do not add a redundant `control` segment.
 - These stylesheets define approved variants and states only. Do not enqueue or apply a control stylesheet until the matching semantic markup, required icon assets, interaction behavior, and accessibility states are implemented.
 
@@ -390,7 +390,7 @@ Register and enqueue styles from `inc/enqueue.php` through WordPress APIs. Every
 - Use `is_search()` for `search.css`.
 - Use `is_404()` for `404.css`.
 - Use the fallback stylesheet only for requests that resolve to `index.php` and are not covered by a more specific condition.
-- Use `is_page_template( 'templates/full-width.php' )` and `is_page_template( 'templates/blank-canvas.php' )` for selectable page-template styles.
+- Use `is_page_template( 'templates/full-width.php' )` and `is_page_template( 'templates/blank-canvas.php' )` for selectable page-template styles. `templates/events.php` loads `events.css` and `assets/js/templates/events.js` through `ltt_dive_in_enqueue_events_page_assets()`; its event detail view (`ltt_dive_in_is_event_detail()`) loads `events-detail.css` and `assets/js/templates/events-detail.js` instead, through `ltt_dive_in_enqueue_event_detail_assets()`.
 
 Conditional checks can overlap. Order them from most specific to most general, and use explicit branching when a page must receive exactly one template stylesheet. A selectable page template may intentionally receive both the common `page.css` and its narrower template stylesheet.
 

@@ -124,20 +124,35 @@ function ltt_dive_in_get_event_driver_hero_events( $config ) {
 /**
  * Return the events for the Events Carousel variant.
  *
+ * An optional `exclude` config value omits one event, such as the event whose
+ * page shows the carousel.
+ *
  * @param array $config Normalized block settings.
  * @return array[]|WP_Error
  */
 function ltt_dive_in_get_event_driver_carousel_events( $config ) {
-	$result = ltt_dive_in_get_seeker_events(
+	$exclude = isset( $config['exclude'] ) ? (string) $config['exclude'] : '';
+	$result  = ltt_dive_in_get_seeker_events(
 		array(
-			'limit'        => $config['carousel_count'],
+			'limit'        => $config['carousel_count'] + ( $exclude ? 1 : 0 ),
 			'sort'         => $config['carousel_sort'],
 			'featured'     => $config['carousel_featured'],
 			'category_ids' => $config['carousel_categories'],
 		)
 	);
 
-	return is_wp_error( $result ) ? $result : $result['events'];
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+
+	$events = array_filter(
+		$result['events'],
+		static function ( $event ) use ( $exclude ) {
+			return $event['id'] !== $exclude;
+		}
+	);
+
+	return array_slice( array_values( $events ), 0, $config['carousel_count'] );
 }
 
 /**
@@ -400,8 +415,8 @@ function ltt_dive_in_get_event_ical( $event ) {
 		$lines[] = 'LOCATION:' . ltt_dive_in_escape_ical_text( $location );
 	}
 
-	if ( $event['url'] ) {
-		$lines[] = 'URL:' . $event['url'];
+	if ( ltt_dive_in_get_event_permalink( $event ) ) {
+		$lines[] = 'URL:' . ltt_dive_in_get_event_permalink( $event );
 	}
 
 	$lines[] = 'BEGIN:VALARM';
@@ -545,8 +560,8 @@ function ltt_dive_in_get_event_schema( $events ) {
 			$item['image'] = array( $event['image']['src'] );
 		}
 
-		if ( $event['url'] ) {
-			$item['url'] = $event['url'];
+		if ( ltt_dive_in_get_event_permalink( $event ) ) {
+			$item['url'] = ltt_dive_in_get_event_permalink( $event );
 		}
 
 		if ( $event['venue'] ) {

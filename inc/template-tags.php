@@ -338,6 +338,55 @@ function ltt_dive_in_format_event_date( $event ) {
 }
 
 /**
+ * Return an event's dates and times as separate labels.
+ *
+ * An event that ends less than a day after it starts, such as a late show
+ * ending after midnight, keeps a single date.
+ *
+ * @param array $event Normalized Seeker event.
+ * @return array{dates: string, time: string}
+ */
+function ltt_dive_in_get_event_schedule_labels( $event ) {
+	if ( empty( $event['start'] ) || ! $event['start'] instanceof DateTimeImmutable ) {
+		return array(
+			'dates' => '',
+			'time'  => '',
+		);
+	}
+
+	$start    = $event['start'];
+	$end      = isset( $event['end'] ) && $event['end'] instanceof DateTimeImmutable ? $event['end'] : null;
+	$timezone = $start->getTimezone();
+	$format   = static function ( $format, $date ) use ( $timezone ) {
+		return wp_date( $format, $date->getTimestamp(), $timezone );
+	};
+	$all_day  = ! empty( $event['all_day'] );
+	$multiday = $end && $end->format( 'Y-m-d' ) !== $start->format( 'Y-m-d' ) && ( $all_day || $end->getTimestamp() - $start->getTimestamp() >= DAY_IN_SECONDS );
+
+	if ( $multiday ) {
+		$start_format = $end->format( 'Y' ) === $start->format( 'Y' ) ? __( 'F j', 'ltt-dive-in' ) : __( 'F j, Y', 'ltt-dive-in' );
+		/* translators: 1: start date, 2: end date. */
+		$dates = sprintf( __( '%1$s – %2$s', 'ltt-dive-in' ), $format( $start_format, $start ), $format( __( 'F j, Y', 'ltt-dive-in' ), $end ) );
+	} else {
+		$dates = $format( __( 'F j, Y', 'ltt-dive-in' ), $start );
+	}
+
+	if ( $all_day ) {
+		$time = __( 'All day', 'ltt-dive-in' );
+	} elseif ( $end && $end > $start ) {
+		/* translators: 1: start time, 2: end time. */
+		$time = sprintf( __( '%1$s to %2$s', 'ltt-dive-in' ), $format( __( 'g:i A', 'ltt-dive-in' ), $start ), $format( __( 'g:i A', 'ltt-dive-in' ), $end ) );
+	} else {
+		$time = $format( __( 'g:i A', 'ltt-dive-in' ), $start );
+	}
+
+	return array(
+		'dates' => $dates,
+		'time'  => $time,
+	);
+}
+
+/**
  * Return the machine-readable start value for an event's `time` element.
  *
  * @param array $event Normalized Seeker event.

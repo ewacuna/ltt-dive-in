@@ -253,6 +253,10 @@ function ltt_dive_in_enqueue_assets() {
 				file_exists( $current_conditions_style_path ) ? (string) filemtime( $current_conditions_style_path ) : LTT_DIVE_IN_VERSION
 			);
 		}
+
+		if ( ltt_dive_in_is_events_page() ) {
+			ltt_dive_in_enqueue_events_page_assets();
+		}
 	}
 
 	if ( ! $is_503_view && is_singular( array( 'post', 'listings' ) ) ) {
@@ -363,6 +367,105 @@ function ltt_dive_in_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_enqueue_assets' );
 
 /**
+ * Enqueue the Events page template assets.
+ *
+ * templates/events.php → templates/events.css, with the event card, text
+ * input, checkbox bubble, load more, expand CTA, select, search bar, and tag
+ * components.
+ */
+function ltt_dive_in_enqueue_events_page_assets() {
+	$version = static function ( $relative ) {
+		$path = LTT_DIVE_IN_DIR . $relative;
+
+		return file_exists( $path ) ? (string) filemtime( $path ) : LTT_DIVE_IN_VERSION;
+	};
+
+	if ( ltt_dive_in_is_event_detail() ) {
+		ltt_dive_in_enqueue_event_detail_assets( $version );
+		return;
+	}
+
+	foreach ( array( 'text-input', 'checkbox-bubble', 'load-more', 'expand-cta' ) as $component ) {
+		wp_register_style( 'ltt-dive-in-' . $component, LTT_DIVE_IN_URI . '/assets/css/components/' . $component . '.css', array( 'ltt-dive-in-style' ), $version( '/assets/css/components/' . $component . '.css' ) );
+	}
+
+	wp_enqueue_style(
+		'ltt-dive-in-events',
+		LTT_DIVE_IN_URI . '/assets/css/templates/events.css',
+		array( 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-tags', 'ltt-dive-in-event-card', 'ltt-dive-in-text-input', 'ltt-dive-in-checkbox-bubble', 'ltt-dive-in-load-more', 'ltt-dive-in-expand-cta' ),
+		$version( '/assets/css/templates/events.css' )
+	);
+
+	wp_enqueue_script(
+		'ltt-dive-in-events',
+		LTT_DIVE_IN_URI . '/assets/js/templates/events.js',
+		array(),
+		$version( '/assets/js/templates/events.js' ),
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => true,
+		)
+	);
+
+	wp_localize_script(
+		'ltt-dive-in-events',
+		'ltt_dive_in_events',
+		array(
+			'loading'   => __( 'Loading events…', 'ltt-dive-in' ),
+			/* translators: 1: number of events shown, 2: total matching events. */
+			'showing'   => __( 'Showing %1$d of %2$d events.', 'ltt-dive-in' ),
+			/* translators: %d: number of events added. */
+			'loaded'    => __( '%d more events loaded.', 'ltt-dive-in' ),
+			'noResults' => __( 'No events match your filters.', 'ltt-dive-in' ),
+			'error'     => __( 'Events could not be loaded. Please try again.', 'ltt-dive-in' ),
+		)
+	);
+}
+
+/**
+ * Enqueue the event detail view of the Events page template.
+ *
+ * templates/events.php (detail view) → templates/events-detail.css and
+ * events-detail.js, with the event card, Event Driver carousel, slider
+ * navigation, carousel indicator, and Swiper assets.
+ *
+ * @param callable $version Returns a file version from a theme-relative path.
+ */
+function ltt_dive_in_enqueue_event_detail_assets( $version ) {
+	wp_enqueue_style(
+		'ltt-dive-in-events-detail',
+		LTT_DIVE_IN_URI . '/assets/css/templates/events-detail.css',
+		array( 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-event-card', 'ltt-dive-in-event-driver', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators', 'ltt-dive-in-swiper' ),
+		$version( '/assets/css/templates/events-detail.css' )
+	);
+
+	wp_enqueue_script( 'ltt-dive-in-event-driver' );
+	wp_enqueue_script(
+		'ltt-dive-in-events-detail',
+		LTT_DIVE_IN_URI . '/assets/js/templates/events-detail.js',
+		array( 'ltt-dive-in-swiper' ),
+		$version( '/assets/js/templates/events-detail.js' ),
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => true,
+		)
+	);
+
+	wp_localize_script(
+		'ltt-dive-in-events-detail',
+		'ltt_dive_in_event_detail',
+		array(
+			'carousel'   => __( 'carousel', 'ltt-dive-in' ),
+			'slide'      => __( 'slide', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}} and {{slidesLength}}; keep both placeholders. */
+			'slideLabel' => __( '{{index}} of {{slidesLength}}', 'ltt-dive-in' ),
+			/* translators: Swiper replaces {{index}}; keep the placeholder. */
+			'goToPhoto'  => __( 'Go to photo {{index}}', 'ltt-dive-in' ),
+		)
+	);
+}
+
+/**
  * Preload fonts used above the fold.
  *
  * Medium and Bold are intentionally left on demand. Big Caslon is limited to templates
@@ -384,6 +487,7 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		|| is_404()
 		|| ltt_dive_in_is_503_view()
 		|| ( ltt_dive_in_has_page_hero() && 'standard' === ltt_dive_in_get_page_header_hero_variant() )
+		|| ltt_dive_in_is_events_page()
 		|| is_singular( array( 'post', 'listings' ) )
 	) {
 		$preload_resources[] = array(
@@ -404,7 +508,7 @@ add_filter( 'wp_preload_resources', 'ltt_dive_in_preload_fonts' );
  * @return bool
  */
 function ltt_dive_in_has_page_hero() {
-	return is_page() && ! is_front_page() && ! is_page_template( 'templates/blank-canvas.php' );
+	return is_page() && ! is_front_page() && ! is_page_template( array( 'templates/blank-canvas.php', 'templates/events.php' ) );
 }
 
 /**
