@@ -446,11 +446,15 @@ if ( $heading ) {
 					<?php foreach ( $stats as $stat ) : ?>
 						<?php
 					$number = $get_text( $stat['number'] ?? '' );
+					$unit   = $get_text( $stat['unit'] ?? '' );
 					$label  = $get_text( $stat['label'] ?? '' );
 					?>
 						<?php if ( $number && $label ) : ?>
 							<li class="content-module__stat">
 								<p class="content-module__stat-number"><?php echo esc_html( $number ); ?></p>
+								<?php if ( '' !== $unit ) : ?>
+									<p class="content-module__stat-unit"><?php echo esc_html( $unit ); ?></p>
+								<?php endif; ?>
 								<p class="content-module__stat-label"><?php echo esc_html( $label ); ?></p>
 							</li>
 						<?php endif; ?>

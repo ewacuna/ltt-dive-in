@@ -499,8 +499,18 @@
           "label": "Number or value",
           "name": "number",
           "type": "text",
+          "instructions": "Enter the main value, such as 39.75. Put its unit or context in the field below.",
           "required": 1,
           "maxlength": 30,
+          "parent_repeater": "field_ltt_dive_in_content_module_stats"
+        },
+        {
+          "key": "field_ltt_dive_in_content_module_stat_unit",
+          "label": "Unit / context",
+          "name": "unit",
+          "type": "text",
+          "instructions": "Optional. Add the unit or context, such as trillion gallons, feet deep, or months open. It appears between the main value and description.",
+          "required": 0,
           "parent_repeater": "field_ltt_dive_in_content_module_stats"
         },
         {
@@ -744,5 +754,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1794843861
+  "modified": 1794854335
 }
