@@ -247,7 +247,12 @@ if ( $heading ) {
 				<h2 id="<?php echo esc_attr( $id . '-heading' ); ?>" class="content-module__heading"><?php echo esc_html( $heading ); ?></h2>
 			</div>
 			<div class="content-module__side-detail">
-				<?php $render_copy( get_field( 'ltt_dive_in_content_module_side_body', false, false ) ); ?>
+				<?php
+				$side_body = $get_text( get_field( 'ltt_dive_in_content_module_side_body', false, false ) );
+				if ( $side_body ) :
+					?>
+					<div class="content-module__copy"><?php echo wp_kses_post( wpautop( $side_body ) ); ?></div>
+				<?php endif; ?>
 				<?php
 				$ctas = get_field( 'ltt_dive_in_content_module_side_ctas' );
 				$ctas = is_array( $ctas ) ? array_slice( $ctas, 0, 3 ) : array();
