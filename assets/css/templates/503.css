@@ -6,6 +6,91 @@
     );
 }
 
+.ltt-error-page--503 .ltt-error-page__camera--preview {
+    position: relative;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-media {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-media:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 4px;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    width: 4rem;
+    height: 4.625rem;
+    place-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease-out;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-play img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-media:is(:hover, :focus-visible) .ltt-error-page__camera-play {
+    opacity: 1;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-prism {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    visibility: hidden;
+    text-align: initial;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera--viewer.is-ready .ltt-error-page__camera-prism {
+    position: relative;
+    grid-area: 1 / 1;
+    visibility: visible;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera--viewer.is-ready .ltt-error-page__camera-media,
+.ltt-error-page--503 .ltt-error-page__camera--viewer.is-ready .ltt-error-page__camera-placeholder,
+.ltt-error-page--503 .ltt-error-page__camera--viewer.is-offline .ltt-error-page__camera-prism {
+    display: none;
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    padding: 1.5rem;
+    place-items: center;
+    border: 1px solid rgba(199, 209, 216, 0.5);
+    background: rgba(2, 22, 43, 0.85);
+}
+
+.ltt-error-page--503 .ltt-error-page__camera-placeholder p {
+    margin: 0;
+    color: #f9f9f9;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
 @media (max-width: 1199.98px) {
     .ltt-error-page--503 {
         background-image: url("../../images/error-pages/503-background-tablet.webp");
@@ -28,14 +113,45 @@
     .ltt-error-page--503 .ltt-error-page__content {
         padding-top: 3rem;
     }
+
+    .ltt-error-page--503 .ltt-error-page__camera-play {
+        opacity: 1;
+    }
 }
 
 @media (max-width: 575.98px) {
+    .ltt-error-page--503 .ltt-error-page__camera-play {
+        width: 3rem;
+        height: 3.46875rem;
+    }
+
     .ltt-error-page--503 {
         background-image: url("../../images/error-pages/503-background-mobile.webp");
         background-image: image-set(
             url("../../images/error-pages/503-background-mobile.webp") 1x,
             url("../../images/error-pages/503-background-mobile-2x.webp") 2x
         );
+    }
+}
+
+@media (hover: none) {
+    .ltt-error-page--503 .ltt-error-page__camera-play {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ltt-error-page--503 .ltt-error-page__camera-play {
+        transition: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .ltt-error-page--503 .ltt-error-page__camera-placeholder {
+        border-color: CanvasText;
+    }
+
+    .ltt-error-page--503 .ltt-error-page__camera-media:focus-visible {
+        outline-color: Highlight;
     }
 }

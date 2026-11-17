@@ -165,6 +165,18 @@ function ltt_dive_in_enqueue_assets() {
 	);
 
 	if ( is_404() || $is_503_view ) {
+		if ( $is_503_view && ltt_dive_in_get_maintenance_prism_camera() ) {
+			$maintenance_prism_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/prism-cams.js';
+
+			wp_enqueue_script(
+				'ltt-dive-in-prism-cams',
+				LTT_DIVE_IN_URI . '/assets/js/components/prism-cams.js',
+				array(),
+				file_exists( $maintenance_prism_script_path ) ? (string) filemtime( $maintenance_prism_script_path ) : LTT_DIVE_IN_VERSION,
+				array( 'strategy' => 'defer', 'in_footer' => true )
+			);
+		}
+
 		$error_background_config = ltt_dive_in_get_error_background_config( $is_503_view ? '503' : '404' );
 		$has_background_carousel = count( $error_background_config['images'] ) > 1;
 		$error_component_path = LTT_DIVE_IN_DIR . '/assets/css/components/error-page.css';

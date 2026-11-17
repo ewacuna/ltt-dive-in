@@ -19,20 +19,16 @@ function ltt_dive_in_is_503_view() {
 }
 
 /**
- * Get a configured, approved external camera URL.
+ * Get the configured, approved public camera URL.
  *
- * The embed stays unavailable until a site integration supplies an exact
+ * The URL stays unavailable until a site integration supplies an exact
  * allowed host and an HTTPS URL. Site administrators must verify that the
  * approved host belongs to the external camera provider.
  *
- * @param string $kind Either embed or public.
  * @return string
  */
-function ltt_dive_in_get_maintenance_camera_url( $kind = 'embed' ) {
-	$filter = 'public' === $kind
-		? 'ltt_dive_in_maintenance_camera_public_url'
-		: 'ltt_dive_in_maintenance_camera_embed_url';
-	$url    = trim( (string) apply_filters( $filter, '' ) );
+function ltt_dive_in_get_maintenance_camera_url() {
+	$url    = trim( (string) apply_filters( 'ltt_dive_in_maintenance_camera_public_url', '' ) );
 	$hosts  = (array) apply_filters( 'ltt_dive_in_maintenance_camera_allowed_hosts', array() );
 	$host   = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
 	$scheme = strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) );
@@ -46,6 +42,55 @@ function ltt_dive_in_get_maintenance_camera_url( $kind = 'embed' ) {
 	}
 
 	return esc_url_raw( $url );
+}
+
+/**
+ * Get the optional maintenance camera cover image.
+ *
+ * @return int Valid image attachment ID, or 0 when no usable cover is set.
+ */
+function ltt_dive_in_get_maintenance_camera_image_id() {
+	$id = filter_var(
+		apply_filters( 'ltt_dive_in_maintenance_camera_image', get_option( 'options_ltt_dive_in_error_503_camera_image', 0 ) ),
+		FILTER_VALIDATE_INT,
+		array( 'options' => array( 'min_range' => 1 ) )
+	);
+	$attachment = false !== $id ? get_post( $id ) : null;
+
+	if (
+		! $attachment || 'attachment' !== $attachment->post_type || 'inherit' !== $attachment->post_status ||
+		! in_array( get_post_mime_type( $id ), array( 'image/jpeg', 'image/png', 'image/webp' ), true )
+	) {
+		return 0;
+	}
+
+	return (int) $id;
+}
+
+/**
+ * Get the optional Prism camera configured by the maintenance plugin.
+ *
+ * Older plugin versions and incomplete settings retain the image presentation.
+ *
+ * @return array{cam: int, client: string}|array Empty when Prism is unavailable.
+ */
+function ltt_dive_in_get_maintenance_prism_camera() {
+	if ( 'prism' !== apply_filters( 'ltt_dive_in_maintenance_camera_viewer', 'image' ) ) {
+		return array();
+	}
+
+	$id = filter_var(
+		apply_filters( 'ltt_dive_in_maintenance_prism_cam', 0 ),
+		FILTER_VALIDATE_INT,
+		array( 'options' => array( 'min_range' => 1 ) )
+	);
+	$client = ltt_dive_in_get_prism_client_id();
+
+	if ( false === $id || '' === $client ) {
+		return array();
+	}
+
+	return array( 'cam' => (int) $id, 'client' => $client );
 }
 
 /**
