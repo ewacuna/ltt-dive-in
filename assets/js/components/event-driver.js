@@ -95,18 +95,37 @@
 		const previous = root.querySelector( '[data-event-driver-previous]' );
 		const next = root.querySelector( '[data-event-driver-next]' );
 		const pagination = root.querySelector( '[data-event-driver-pagination]' );
+		const expandsOnInteraction = root.hasAttribute( 'data-event-driver-carousel' );
 
 		if ( ! window.Swiper || ! viewport || ! controls || ! previous || ! next || ! pagination ) {
 			return null;
 		}
 
 		const toggleControls = function ( instance ) {
+			// Widening can make every card fit. Keep focus visible if its controls disappear.
+			if ( expandsOnInteraction && instance.isLocked && controls.contains( document.activeElement ) ) {
+				const link = instance.slides[ instance.activeIndex ].querySelector( 'a[href]' );
+
+				if ( link ) {
+					link.focus( { preventScroll: true } );
+				}
+			}
+
 			controls.hidden = instance.isLocked;
+		};
+
+		const engageCarousel = function ( instance ) {
+			if ( ! expandsOnInteraction || root.classList.contains( 'event-driver--carousel-engaged' ) ) {
+				return;
+			}
+
+			root.classList.add( 'event-driver--carousel-engaged' );
+			instance.update();
 		};
 
 		controls.hidden = false;
 
-		return new window.Swiper( viewport, {
+		const instance = new window.Swiper( viewport, {
 			slidesPerView: 'auto',
 			spaceBetween: 24,
 			watchSlidesProgress: true,
@@ -132,6 +151,12 @@
 				},
 				resize: setSlidesInert,
 				update: setSlidesInert,
+				sliderFirstMove: engageCarousel,
+				setTranslate: function ( instance ) {
+					if ( expandsOnInteraction ) {
+						setSlidesInert( instance );
+					}
+				},
 				slideChangeTransitionStart: setSlidesInert,
 				lock: toggleControls,
 				unlock: toggleControls,
@@ -139,6 +164,47 @@
 				paginationRender: updatePaginationState,
 			},
 		} );
+
+		if ( expandsOnInteraction ) {
+			root.addEventListener( 'click', function ( event ) {
+				if ( root.classList.contains( 'event-driver--carousel-engaged' ) ) {
+					return;
+				}
+
+				const button = event.target.closest( 'button' );
+				const bulletIndex = Array.from( instance.pagination.bullets ).indexOf( button );
+
+				if ( button !== previous && button !== next && -1 === bulletIndex ) {
+					return;
+				}
+
+				const restoreBulletFocus = -1 !== bulletIndex && document.activeElement === button;
+
+				// Updating the width can replace pagination buttons. Handle this first action
+				// here so Swiper uses the new dimensions and does not navigate twice.
+				event.preventDefault();
+				event.stopPropagation();
+				engageCarousel( instance );
+
+				if ( button === previous ) {
+					instance.slidePrev();
+				} else if ( button === next ) {
+					instance.slideNext();
+				} else {
+					instance.slideTo( bulletIndex );
+				}
+
+				if ( restoreBulletFocus && ! controls.hidden ) {
+					const bullet = instance.pagination.bullets[ Math.min( bulletIndex, instance.pagination.bullets.length - 1 ) ];
+
+					if ( bullet ) {
+						bullet.focus( { preventScroll: true } );
+					}
+				}
+			}, true );
+		}
+
+		return instance;
 	};
 
 	const initHero = function ( section ) {

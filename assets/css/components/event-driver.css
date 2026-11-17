@@ -201,8 +201,9 @@
 }
 
 .event-driver--carousel {
+    --ltt-event-driver-carousel-gutter: 4rem;
     overflow: hidden;
-    padding: 3.125rem 4rem;
+    padding: 3.125rem var(--ltt-event-driver-carousel-gutter);
 }
 
 .event-driver__header {
@@ -352,7 +353,25 @@
 }
 
 .event-driver--carousel .event-driver__viewport {
-    margin-right: calc(-1 * max(4rem, (100vw - 80rem) / 2));
+    margin-right: calc(-1 * max(var(--ltt-event-driver-carousel-gutter), (100vw - 80rem) / 2));
+}
+
+/* After interaction, widen Swiper itself while keeping the header and controls aligned. */
+.event-driver--carousel.event-driver--carousel-engaged {
+    padding-inline: 0;
+}
+
+.event-driver--carousel-engaged > .event-driver__container {
+    width: 100%;
+}
+
+.event-driver--carousel-engaged :is(.event-driver__header, .event-driver__carousel-footer) {
+    width: min(80rem, calc(100% - 2 * var(--ltt-event-driver-carousel-gutter)));
+    margin-inline: auto;
+}
+
+.event-driver--carousel.event-driver--carousel-engaged .event-driver__viewport {
+    margin-right: 0;
 }
 
 .event-driver--carousel .event-driver__item {
@@ -435,8 +454,8 @@
         padding-inline: 3rem;
     }
 
-    .event-driver--carousel .event-driver__viewport {
-        margin-right: -3rem;
+    .event-driver--carousel {
+        --ltt-event-driver-carousel-gutter: 3rem;
     }
 }
 
@@ -457,8 +476,8 @@
         padding-inline: 2rem;
     }
 
-    .event-driver--carousel .event-driver__viewport {
-        margin-right: -2rem;
+    .event-driver--carousel {
+        --ltt-event-driver-carousel-gutter: 2rem;
     }
 
     .event-driver__header {
@@ -541,7 +560,8 @@
     }
 
     .event-driver--carousel {
-        padding: 3.125rem 1.25rem;
+        --ltt-event-driver-carousel-gutter: 1.25rem;
+        padding: 3.125rem var(--ltt-event-driver-carousel-gutter);
     }
 
     .event-driver__heading {
@@ -623,10 +643,6 @@
 
     .event-driver--carousel .event-driver__track {
         gap: 1.5rem;
-    }
-
-    .event-driver--carousel .event-driver__viewport {
-        margin-right: -1.25rem;
     }
 
     .event-driver__carousel-footer {
