@@ -1,41 +1,3 @@
-.current-conditions-hero {
-	display: flex;
-	justify-content: center;
-	padding: 2.25rem 4rem;
-	background: #073959;
-	color: #ffffff;
-	text-align: center;
-}
-
-.current-conditions-hero__content {
-	display: flex;
-	width: min(100%, 73.125rem);
-	flex-direction: column;
-	gap: 1.5rem;
-}
-
-.current-conditions-hero__title {
-	margin: 0;
-	color: #ffffff;
-	font-family: "Big Caslon", "Iowan Old Style", Baskerville, "Times New Roman", serif;
-	font-size: 4rem;
-	font-synthesis: none;
-	font-weight: 500;
-	line-height: 1.2;
-	overflow-wrap: break-word;
-	text-transform: uppercase;
-}
-
-.current-conditions-hero__text {
-	margin: 0;
-	color: #f9f9f9;
-	font-size: 1.125rem;
-	font-synthesis: none;
-	font-weight: 500;
-	line-height: 1.45;
-	text-wrap: pretty;
-}
-
 .current-conditions-feature {
 	position: relative;
 	isolation: isolate;
@@ -1676,25 +1638,6 @@
 
 	.road-card__header {
 		gap: 0.625rem;
-	}
-
-	.current-conditions-hero {
-		padding: 2.25rem 1.5rem;
-	}
-
-	.current-conditions-hero__title {
-		font-size: 2.25rem;
-		letter-spacing: 0.02em;
-	}
-
-	.current-conditions-hero__text {
-		width: min(100%, 18.75rem);
-		margin-inline: auto;
-		font-size: 0.75rem;
-	}
-
-	.current-conditions-hero__text br {
-		display: none;
 	}
 
 	.current-conditions-intro {

@@ -183,8 +183,8 @@ function ltt_dive_in_get_page_header_background() {
 
 	$background = get_field( 'ltt_dive_in_page_header_background', get_queried_object_id() );
 
-	// The Events template has no hero image for the header to overlay.
-	if ( 'overlay' === $background && is_page_template( 'templates/events.php' ) ) {
+	// The Events and Event Submission templates have no hero image to overlay.
+	if ( 'overlay' === $background && is_page_template( array( 'templates/events.php', 'templates/event-submission.php' ) ) ) {
 		return 'solid';
 	}
 

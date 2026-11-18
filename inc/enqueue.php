@@ -261,13 +261,17 @@ function ltt_dive_in_enqueue_assets() {
 			wp_enqueue_style(
 				'ltt-dive-in-current-conditions',
 				LTT_DIVE_IN_URI . '/assets/css/templates/current-conditions.css',
-				array( 'ltt-dive-in-style', 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-category-selection' ),
+				array( 'ltt-dive-in-style', 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-category-selection', ltt_dive_in_register_current_conditions_hero_style() ),
 				file_exists( $current_conditions_style_path ) ? (string) filemtime( $current_conditions_style_path ) : LTT_DIVE_IN_VERSION
 			);
 		}
 
 		if ( ltt_dive_in_is_events_page() ) {
 			ltt_dive_in_enqueue_events_page_assets();
+		}
+
+		if ( ltt_dive_in_is_event_submission_page() ) {
+			ltt_dive_in_enqueue_event_submission_assets();
 		}
 	}
 
@@ -379,6 +383,26 @@ function ltt_dive_in_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'ltt_dive_in_enqueue_assets' );
 
 /**
+ * Register the Current Conditions hero style shared by page templates.
+ *
+ * @return string Style handle.
+ */
+function ltt_dive_in_register_current_conditions_hero_style() {
+	$path = LTT_DIVE_IN_DIR . '/assets/css/components/current-conditions-hero.css';
+
+	if ( ! wp_style_is( 'ltt-dive-in-current-conditions-hero', 'registered' ) ) {
+		wp_register_style(
+			'ltt-dive-in-current-conditions-hero',
+			LTT_DIVE_IN_URI . '/assets/css/components/current-conditions-hero.css',
+			array( 'ltt-dive-in-style' ),
+			file_exists( $path ) ? (string) filemtime( $path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
+	return 'ltt-dive-in-current-conditions-hero';
+}
+
+/**
  * Enqueue the Events page template assets.
  *
  * templates/events.php → templates/events.css, with the event card, text
@@ -397,14 +421,14 @@ function ltt_dive_in_enqueue_events_page_assets() {
 		return;
 	}
 
-	foreach ( array( 'text-input', 'checkbox-bubble', 'load-more', 'expand-cta' ) as $component ) {
+	foreach ( array( 'text-input', 'checkbox-bubble', 'load-more', 'expand-cta', 'events-intro' ) as $component ) {
 		wp_register_style( 'ltt-dive-in-' . $component, LTT_DIVE_IN_URI . '/assets/css/components/' . $component . '.css', array( 'ltt-dive-in-style' ), $version( '/assets/css/components/' . $component . '.css' ) );
 	}
 
 	wp_enqueue_style(
 		'ltt-dive-in-events',
 		LTT_DIVE_IN_URI . '/assets/css/templates/events.css',
-		array( 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-tags', 'ltt-dive-in-event-card', 'ltt-dive-in-text-input', 'ltt-dive-in-checkbox-bubble', 'ltt-dive-in-load-more', 'ltt-dive-in-expand-cta' ),
+		array( 'ltt-dive-in-page', 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-tags', 'ltt-dive-in-event-card', 'ltt-dive-in-text-input', 'ltt-dive-in-checkbox-bubble', 'ltt-dive-in-load-more', 'ltt-dive-in-expand-cta', 'ltt-dive-in-events-intro' ),
 		$version( '/assets/css/templates/events.css' )
 	);
 
@@ -500,6 +524,7 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		|| ltt_dive_in_is_503_view()
 		|| ( ltt_dive_in_has_page_hero() && 'standard' === ltt_dive_in_get_page_header_hero_variant() )
 		|| ltt_dive_in_is_events_page()
+		|| ltt_dive_in_is_event_submission_page()
 		|| is_singular( array( 'post', 'listings' ) )
 	) {
 		$preload_resources[] = array(
@@ -520,7 +545,7 @@ add_filter( 'wp_preload_resources', 'ltt_dive_in_preload_fonts' );
  * @return bool
  */
 function ltt_dive_in_has_page_hero() {
-	return is_page() && ! is_front_page() && ! is_page_template( array( 'templates/blank-canvas.php', 'templates/events.php' ) );
+	return is_page() && ! is_front_page() && ! is_page_template( array( 'templates/blank-canvas.php', 'templates/events.php', 'templates/event-submission.php' ) );
 }
 
 /**

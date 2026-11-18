@@ -1,0 +1,260 @@
+/**
+ * Seeker submission form.
+ *
+ * Passed to Seeker's widget as `customCss` and injected into its shadow root,
+ * so the theme stylesheets do not reach the form. Values follow the theme's
+ * light-surface forms (Content Module): navy text, #525062 field borders,
+ * 5px field radius, Peak Gold focus, and a white submit button with a 2px
+ * navy border that fills with Peak Gold on hover or focus.
+ */
+
+/* Widget design tokens. `.cw-root` raises specificity over Seeker's defaults. */
+.cw-root .cw-variables-root {
+    --ff-main: "Gotham HTF", Arial, sans-serif;
+    --ff-secondary: "Gotham HTF", Arial, sans-serif;
+    --primary: #073959;
+    --primary-rgb-code: 7, 57, 89;
+    --primary-hover: #87a8b8;
+    --primary-active: #073959;
+    --primary-text-inside: #ffffff;
+    --primary-focus-ring: rgba(238, 176, 64, 0.6);
+    --danger: #b42318;
+    --danger-rgb-code: 180, 35, 24;
+    --surface-secondary: #ffffff;
+    --color-text: #073959;
+    --color-text-secondary: #525062;
+    --color-divider: #c7d1d8;
+    --color-stroke: #525062;
+    --color-stroke-hover: #073959;
+    --color-stroke-active: #eeb040;
+    --border-radius: 0.3125rem;
+    --border-radius-controls: 0.3125rem;
+    --border-radius-cards: 0;
+    --border-radius-popover: 0.3125rem;
+    --border-radius-popup: 0;
+    font-weight: 500;
+}
+
+/* The page owns the surrounding layout and spacing. */
+.cw-new-page-form {
+    min-height: 0;
+}
+
+.cw-new-page-form__body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Seeker's header bar shows steps, errors, and a logo. It is sticky and has a
+   bottom border, which sits on the first section title when the bar is empty.
+   Keep it in the flow, drop the border, and hide its empty top row. */
+.cw-new-page-form__head {
+    position: static;
+    border-bottom: 0;
+    background-color: transparent;
+}
+
+.cw-new-page-form__head-top:not(:has(img, button, a, svg)) {
+    display: none;
+}
+
+.cw-new-page-form__head-top,
+.cw-new-page-form__head-tabs {
+    padding-inline: 0;
+}
+
+.cw-new-page-form__head-tabs,
+.cw-new-page-form__head-error {
+    margin-bottom: 1.5rem;
+}
+
+/* Seeker draws a divider between its header row and the step tabs; the
+   header row is hidden, so the divider would float above the tabs. */
+.cw-new-page-form__head-top + .cw-new-page-form__head-tabs {
+    border-top: 0;
+}
+
+/* Secondary actions such as “Add occurrence”: the theme's secondary outline
+   button colors, square like the form's other buttons. */
+.cw-btn.cw-btn--color-semitransparent {
+    --semitransparent-inverted-btn-Color: #525062;
+    --semitransparent-inverted-btn-Bg: #ffffff;
+    --semitransparent-inverted-btn-Bg--hover: #85a2b2;
+    --semitransparent-inverted-btn-Bg--active: #85a2b2;
+    --semitransparent-inverted-btn-BorderColor: #6f6d7c;
+    --semitransparent-inverted-btn-ShadowColor--focus: transparent;
+    --btnBorderRadius: 0;
+}
+
+.cw-btn.cw-btn--color-semitransparent:not(.cw-btn--disabled):not(.cw-btn--loading):is(:hover, :active) {
+    --btnColor: #ffffff;
+    --btnBorderColor: #85a2b2;
+}
+
+/* Single day / Multi-day choices share the fields' corner radius. */
+.cw-repeat-form__duration-card {
+    border-radius: 0.3125rem;
+}
+
+/* Error banner: inner spacing on both sides, across the form width. */
+.cw-new-page-form__head-error-inner {
+    max-width: none;
+    padding-inline: 1rem;
+}
+
+/* Step tabs: Seeker renders the current step as a primary button and the
+   others as round ghost buttons with a grey hover. Give every tab the
+   current step's square, 2px navy-bordered shape, and use that border as
+   the hover state so all tabs look and respond alike. */
+.cw-new-page-form__head-tabs .cw-btn.cw-btn--round {
+    --btnBorderRadius: 0;
+    --btnBorderWidth: 2px;
+    --primary-btn-Bg--hover: #ffffff;
+    --primary-btn-Bg--active: #ffffff;
+    --ghost-secondary-btn-Color: #073959;
+    --ghost-secondary-btn-Bg: transparent;
+    --ghost-secondary-btn-Bg--hover: #ffffff;
+    --ghost-secondary-btn-Bg--active: #ffffff;
+    --ghost-secondary-btn-BorderColor: transparent;
+}
+
+.cw-new-page-form__head-tabs .cw-btn.cw-btn--color-ghost-secondary:not(.cw-btn--disabled):not(.cw-btn--loading):hover {
+    --btnBorderColor: #073959;
+}
+
+/* The page sets the form width, so the form container has no side padding of
+   its own. Seeker's --padding-container-x stays as is: the preview, the
+   confirmation, and popups use it for their inner spacing. */
+.cw-new-page-form__container {
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: 0;
+}
+
+/* Preview bar (“This is a preview… click Submit”): Seeker colors it with its
+   danger red. Use the theme's dark navy so it reads as a notice, not an error,
+   and stays distinct from the event's navy intro below it. */
+.cw-page-details__preview-toolbar {
+    background-color: #02162b;
+    color: #ffffff;
+}
+
+/* White-outlined buttons on dark surfaces (Back, Submit, Add to calendar):
+   square like the form's other buttons. */
+.cw-btn.cw-btn--color-transparent-inverted {
+    --btnBorderRadius: 0;
+}
+
+.cw-ui-form-section__title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+.cw-ui-form-field__label {
+    color: #073959;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+/* Fields. */
+.cw-ui-input,
+.cw-ui-textarea {
+    color: #073959;
+    font-weight: 500;
+}
+
+.cw-ui-input::placeholder,
+.cw-ui-textarea::placeholder {
+    color: #525062;
+    opacity: 1;
+}
+
+/* One Peak Gold ring: the border plus a 2px shadow flush with it. The
+   transparent outline keeps a visible ring in forced-colors mode. */
+.cw-ui-input:focus,
+.cw-ui-textarea:focus {
+    border-color: #eeb040 !important;
+    box-shadow: 0 0 0 2px #eeb040 !important;
+    outline: 2px solid transparent;
+    outline-offset: 0;
+}
+
+/* Buttons: primary actions match the theme's form submit button. */
+.cw-btn {
+    --primary-btn-Color: #073959;
+    --primary-btn-Bg: #ffffff;
+    --primary-btn-Bg--hover: #eeb040;
+    --primary-btn-Bg--active: #eeb040;
+    --primary-btn-BorderColor: #073959;
+    --primary-btn-ShadowColor--focus: transparent;
+}
+
+.cw-btn.cw-btn--color-primary {
+    --btnBorderWidth: 2px;
+    --btnBorderRadius: 0;
+    --btnFW: 500;
+}
+
+.cw-btn:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible:not(.cw-btn),
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+    outline: 3px solid #eeb040;
+    outline-offset: 2px;
+}
+
+/* Dates step: Seeker's `1fr` grids grow to their content's minimum width, so
+   the "When is the event?" card overflowed the form on narrow screens. */
+.cw-repeat-form {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.cw-repeat-form__section {
+    min-width: 0;
+}
+
+.cw-repeat-form__row {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.cw-repeat-form__duration-card {
+    min-width: 0;
+}
+
+/* On narrow screens the card frame only takes width from the fields, so the
+   schedule sits directly in the form, aligned with the section title. */
+@container cw-app (max-width: 767px) {
+    .cw-repeat-form__section {
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .cw-repeat-form + .cw-repeat-form {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #c7d1d8;
+    }
+}
+
+/* Stack Single day / Multi-day so their descriptions do not wrap word by word. */
+@container cw-app (max-width: 480px) {
+    .cw-repeat-form__duration {
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+    }
+}

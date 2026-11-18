@@ -53,6 +53,7 @@ require_once LTT_DIVE_IN_DIR . '/inc/event-driver.php';
 require_once LTT_DIVE_IN_DIR . '/inc/events-page-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/events-page.php';
 require_once LTT_DIVE_IN_DIR . '/inc/events-detail.php';
+require_once LTT_DIVE_IN_DIR . '/inc/event-submission.php';
 require_once LTT_DIVE_IN_DIR . '/inc/end-page-cluster-settings.php';
 require_once LTT_DIVE_IN_DIR . '/inc/ai-summary.php';
 require_once LTT_DIVE_IN_DIR . '/inc/ai-summary-settings.php';

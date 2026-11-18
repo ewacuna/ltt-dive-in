@@ -1,0 +1,38 @@
+/**
+ * Event Submission page template.
+ */
+.event-submission-page {
+    padding-top: 0;
+}
+
+/* Centered below the centered Current Conditions hero. */
+.event-submission {
+    width: min(calc(100% - 6rem), 56rem);
+    margin: 3rem auto 5rem;
+}
+
+.event-submission__loading,
+.event-submission__notice {
+    margin: 0;
+    color: #073959;
+    font-size: 1.125rem;
+    line-height: 1.45;
+}
+
+.event-submission-page .page-main__content > .event-submission__notice {
+    width: min(calc(100% - 6rem), 56rem);
+    margin: 3rem auto 5rem;
+}
+
+@media (max-width: 1199.98px) {
+    .event-submission {
+        width: min(calc(100% - 4rem), 56rem);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .event-submission {
+        width: calc(100% - 2.5rem);
+        margin: 2rem auto 3rem;
+    }
+}
