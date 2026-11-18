@@ -110,36 +110,42 @@ foreach ( $regions as $region_id => $region_name ) {
 		<?php if ( $categories ) : ?>
 			<fieldset class="events-filters__group events-filters__group--categories">
 				<legend class="events-filters__heading"><?php esc_html_e( 'Categories', 'ltt-dive-in' ); ?></legend>
-				<ul class="events-filters__categories">
-					<?php $index = 0; ?>
-					<?php foreach ( $categories as $category_id => $category ) : ?>
-						<li class="events-filters__category"<?php echo $index >= $visible_max ? ' data-events-category-extra' : ''; ?>>
-							<label class="ltt-checkbox-bubble ltt-checkbox-bubble--dark">
-								<input class="ltt-checkbox-bubble__input" type="checkbox" name="event_category[]" value="<?php echo esc_attr( (string) $category_id ); ?>" <?php checked( in_array( $category_id, $filters['categories'], true ) ); ?> data-events-filter="category" />
-								<span class="ltt-checkbox-bubble__box" aria-hidden="true"></span>
-								<span class="ltt-checkbox-bubble__label"><?php echo esc_html( $category['name'] ); ?></span>
-								<?php if ( null !== $category['count'] ) : ?>
-									<span class="ltt-checkbox-bubble__count">
-										<span aria-hidden="true"><?php echo esc_html( number_format_i18n( $category['count'] ) ); ?></span>
-										<span class="screen-reader-text">
-											<?php
-											/* translators: %s: number of upcoming events. */
-											echo esc_html( sprintf( _n( '(%s upcoming event)', '(%s upcoming events)', $category['count'], 'ltt-dive-in' ), number_format_i18n( $category['count'] ) ) );
-											?>
+				<button class="events-filters__dates-toggle events-filters__categories-toggle" type="button" aria-expanded="false" aria-controls="events-categories" data-events-categories-dropdown data-label-empty="<?php esc_attr_e( 'Select Categories', 'ltt-dive-in' ); ?>" data-label-selected="<?php /* translators: %d: number of selected categories. */ esc_attr_e( '%d Selected', 'ltt-dive-in' ); ?>" hidden>
+					<span class="events-filters__dates-label" data-events-categories-summary><?php esc_html_e( 'Select Categories', 'ltt-dive-in' ); ?></span>
+					<span class="events-filters__dates-arrow" aria-hidden="true"></span>
+				</button>
+				<div id="events-categories" class="events-filters__categories-panel" data-events-categories-panel>
+					<ul class="events-filters__categories">
+						<?php $index = 0; ?>
+						<?php foreach ( $categories as $category_id => $category ) : ?>
+							<li class="events-filters__category"<?php echo $index >= $visible_max ? ' data-events-category-extra' : ''; ?>>
+								<label class="ltt-checkbox-bubble ltt-checkbox-bubble--dark">
+									<input class="ltt-checkbox-bubble__input" type="checkbox" name="event_category[]" value="<?php echo esc_attr( (string) $category_id ); ?>" <?php checked( in_array( $category_id, $filters['categories'], true ) ); ?> data-events-filter="category" />
+									<span class="ltt-checkbox-bubble__box" aria-hidden="true"></span>
+									<span class="ltt-checkbox-bubble__label"><?php echo esc_html( $category['name'] ); ?></span>
+									<?php if ( null !== $category['count'] ) : ?>
+										<span class="ltt-checkbox-bubble__count">
+											<span aria-hidden="true"><?php echo esc_html( number_format_i18n( $category['count'] ) ); ?></span>
+											<span class="screen-reader-text">
+												<?php
+												/* translators: %s: number of upcoming events. */
+												echo esc_html( sprintf( _n( '(%s upcoming event)', '(%s upcoming events)', $category['count'], 'ltt-dive-in' ), number_format_i18n( $category['count'] ) ) );
+												?>
+											</span>
 										</span>
-									</span>
-								<?php endif; ?>
-							</label>
-						</li>
-						<?php ++$index; ?>
-					<?php endforeach; ?>
-				</ul>
-				<?php if ( count( $categories ) > $visible_max ) : ?>
-					<button class="events-filters__more" type="button" aria-expanded="false" data-events-categories-toggle data-label-more="<?php esc_attr_e( 'Show More', 'ltt-dive-in' ); ?>" data-label-less="<?php esc_attr_e( 'Show Less', 'ltt-dive-in' ); ?>" hidden>
-						<span data-events-categories-label><?php esc_html_e( 'Show More', 'ltt-dive-in' ); ?></span>
-						<span class="events-filters__more-icon" aria-hidden="true"></span>
-					</button>
-				<?php endif; ?>
+									<?php endif; ?>
+								</label>
+							</li>
+							<?php ++$index; ?>
+						<?php endforeach; ?>
+					</ul>
+					<?php if ( count( $categories ) > $visible_max ) : ?>
+						<button class="events-filters__more" type="button" aria-expanded="false" data-events-categories-toggle data-label-more="<?php esc_attr_e( 'Show More', 'ltt-dive-in' ); ?>" data-label-less="<?php esc_attr_e( 'Show Less', 'ltt-dive-in' ); ?>" hidden>
+							<span data-events-categories-label><?php esc_html_e( 'Show More', 'ltt-dive-in' ); ?></span>
+							<span class="events-filters__more-icon" aria-hidden="true"></span>
+						</button>
+					<?php endif; ?>
+				</div>
 			</fieldset>
 		<?php endif; ?>
 

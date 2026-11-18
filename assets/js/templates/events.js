@@ -53,6 +53,8 @@
 		const toInput = form.querySelector( '[name="event_to"]' );
 		const categoriesToggle = root.querySelector( '[data-events-categories-toggle]' );
 		const categoriesList = root.querySelector( '.events-filters__categories' );
+		const categoriesDropdown = root.querySelector( '[data-events-categories-dropdown]' );
+		const categoriesPanel = root.querySelector( '[data-events-categories-panel]' );
 		const clearLink = root.querySelector( '[data-events-clear]' );
 		const searchInput = form.querySelector( '[name="event_search"]' );
 		const backdrop = document.createElement( 'div' );
@@ -199,6 +201,57 @@
 			setExpanded( !! categoriesList.querySelector( '[data-events-category-extra] input:checked' ) );
 			categoriesToggle.addEventListener( 'click', function () {
 				setExpanded( 'true' !== categoriesToggle.getAttribute( 'aria-expanded' ) );
+			} );
+		}
+
+		// Below 768px the categories open as a multiselect menu.
+		function syncCategoriesSummary() {
+			if ( ! categoriesDropdown ) {
+				return;
+			}
+
+			const count = form.querySelectorAll( '[data-events-filter="category"]:checked' ).length;
+			const summary = categoriesDropdown.querySelector( '[data-events-categories-summary]' );
+
+			summary.textContent = count ? categoriesDropdown.dataset.labelSelected.replace( '%d', count ) : categoriesDropdown.dataset.labelEmpty;
+		}
+
+		if ( categoriesDropdown && categoriesPanel ) {
+			const categoriesField = categoriesDropdown.closest( 'fieldset' );
+			const setDropdown = function ( expanded ) {
+				categoriesDropdown.setAttribute( 'aria-expanded', expanded ? 'true' : 'false' );
+				categoriesPanel.classList.toggle( 'is-open', expanded );
+			};
+
+			categoriesDropdown.hidden = false;
+			syncCategoriesSummary();
+			categoriesDropdown.addEventListener( 'click', function () {
+				setDropdown( 'true' !== categoriesDropdown.getAttribute( 'aria-expanded' ) );
+			} );
+
+			// Escape closes the menu before the bottom sheet.
+			categoriesField.addEventListener( 'keydown', function ( event ) {
+				if ( 'Escape' === event.key && categoriesPanel.classList.contains( 'is-open' ) ) {
+					event.preventDefault();
+					setDropdown( false );
+					categoriesDropdown.focus();
+				}
+			} );
+
+			categoriesField.addEventListener( 'focusout', function ( event ) {
+				if ( event.relatedTarget && ! categoriesField.contains( event.relatedTarget ) ) {
+					setDropdown( false );
+				}
+			} );
+
+			document.addEventListener( 'click', function ( event ) {
+				if ( ! categoriesField.contains( event.target ) ) {
+					setDropdown( false );
+				}
+			} );
+
+			mobileQuery.addEventListener( 'change', function () {
+				setDropdown( false );
 			} );
 		}
 
@@ -486,6 +539,7 @@
 			}
 
 			syncClear();
+			syncCategoriesSummary();
 
 			// The bottom sheet applies its choices with its Apply button.
 			if ( ! mobileQuery.matches ) {
@@ -536,6 +590,7 @@
 				}
 
 				syncClear();
+				syncCategoriesSummary();
 
 				// The link hides itself, so keep focus in the panel.
 				const firstFilter = form.querySelector( '[data-events-filter="period"]' ) || searchInput;
