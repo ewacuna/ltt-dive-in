@@ -5,7 +5,6 @@
     padding-top: 0;
 }
 
-/* “See More” Page Drivers before the footer (Figma: 60px below the cards). */
 .events-page .page-main__content .page-drivers:last-child {
     padding-bottom: 3.75rem;
 }
@@ -355,12 +354,23 @@ html.has-events-sheet {
     display: flex;
     min-height: 4.1875rem;
     align-items: center;
-    gap: 1.5rem;
+    gap: calc(3rem + 2px);
 }
 
 .events-toolbar > :not(:last-child) {
-    padding-right: 1.5rem;
-    border-right: 2px solid #d9d9d9;
+    position: relative;
+}
+
+.events-toolbar > :not(:last-child)::after {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 1.5rem);
+    width: 2px;
+    height: 2.625rem;
+    background: #d9d9d9;
+    content: "";
+    pointer-events: none;
+    transform: translateY(-50%);
 }
 
 .events-toolbar__filters,
@@ -378,10 +388,8 @@ html.has-events-sheet {
 
 .events-toolbar__filters {
     flex: 0 0 auto;
-    padding-block: 0;
-    padding-left: 0;
-    border-block: 0;
-    border-left: 0;
+    padding: 0;
+    border: 0;
     background: transparent;
     cursor: pointer;
 }
@@ -716,7 +724,7 @@ html.has-events-sheet {
 @media (max-width: 1199.98px) {
     .events-toolbar {
         flex-wrap: wrap;
-        gap: 0.75rem 1.5rem;
+        gap: 0.75rem calc(3rem + 2px);
         padding-block: 0.75rem;
     }
 
@@ -724,9 +732,8 @@ html.has-events-sheet {
         flex-basis: 100%;
     }
 
-    .events-toolbar > :nth-last-child(2) {
-        padding-right: 0;
-        border-right: 0;
+    .events-toolbar > :nth-last-child(2)::after {
+        display: none;
     }
 }
 
@@ -769,10 +776,6 @@ html.has-events-sheet {
         padding: 0.75rem 1.25rem;
     }
 
-    .events-toolbar > :not(:last-child) {
-        padding-right: 0.75rem;
-    }
-
 
     .events-toolbar__group {
         display: none;
@@ -796,27 +799,13 @@ html.has-events-sheet {
         display: none;
     }
 
-    /* Filter toggle, a 2px divider, then the search, 24px apart. The divider
-       is drawn outside the button so it stays clear of the open state's fill. */
+    /* Filter toggle, the shared 2px divider, then the search, 24px apart. */
     .events-browser.is-enhanced .events-toolbar {
         gap: calc(3rem + 2px);
     }
 
     .events-toolbar > .events-toolbar__filters {
-        position: relative;
         padding: 0;
-        border-right: 0;
-    }
-
-    .events-toolbar > .events-toolbar__filters::after {
-        position: absolute;
-        top: 50%;
-        left: calc(100% + 1.5rem);
-        width: 2px;
-        height: 2.625rem;
-        background: #d9d9d9;
-        content: "";
-        transform: translateY(-50%);
     }
 
     .events-toolbar__filters[aria-expanded="true"] {

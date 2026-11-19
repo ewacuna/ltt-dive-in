@@ -315,7 +315,6 @@ if ( 'hero_grid' === $layout ) :
 
 				<div class="story-drivers__filter">
 					<?php
-					// Figma labels this dropdown "Upcoming"; the client asked to sort stories by date, most recent first.
 					get_template_part(
 						'template-parts/components/select',
 						null,

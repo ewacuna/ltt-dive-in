@@ -5,7 +5,6 @@
     padding-top: 0;
 }
 
-/* “See More” Page Drivers before the footer (Figma: 60px below the cards). */
 .events-page .page-main__content .page-drivers:last-child {
     padding-bottom: 3.75rem;
 }
