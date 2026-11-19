@@ -123,18 +123,7 @@ if ( $details['website'] ) {
 				<?php if ( $address ) : ?>
 					<p class="event-detail__address">
 						<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-address-navy.svg' ) ); ?>" alt="" width="24" height="35" />
-						<span>
-							<?php if ( $event['venue'] && $details['address'] ) : ?>
-								<span class="event-detail__venue"><?php echo esc_html( $event['venue'] ); ?></span>
-							<?php endif; ?>
-							<?php echo esc_html( $address ); ?>
-							<?php if ( $details['directions_url'] ) : ?>
-								<a class="event-detail__directions" href="<?php echo esc_url( $details['directions_url'] ); ?>" target="_blank" rel="noopener noreferrer">
-									<?php esc_html_e( 'Get Directions', 'ltt-dive-in' ); ?>
-									<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'ltt-dive-in' ); ?></span>
-								</a>
-							<?php endif; ?>
-						</span>
+						<span><?php echo esc_html( $address ); ?></span>
 					</p>
 				<?php endif; ?>
 

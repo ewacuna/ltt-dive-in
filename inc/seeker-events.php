@@ -547,9 +547,7 @@ function ltt_dive_in_get_seeker_event_details( $raw, $event ) {
 		$images = array( $event['image'] );
 	}
 
-	$latitude  = isset( $location['latitude'] ) && is_numeric( $location['latitude'] ) ? (float) $location['latitude'] : null;
-	$longitude = isset( $location['longitude'] ) && is_numeric( $location['longitude'] ) ? (float) $location['longitude'] : null;
-	$address   = implode(
+	$address  = implode(
 		', ',
 		array_filter(
 			array(
@@ -559,8 +557,7 @@ function ltt_dive_in_get_seeker_event_details( $raw, $event ) {
 			)
 		)
 	);
-	$destination = null !== $latitude && null !== $longitude ? $latitude . ',' . $longitude : implode( ', ', array_filter( array( $event['venue'], $address ) ) );
-	$timezone    = $event['start']->getTimezone();
+	$timezone = $event['start']->getTimezone();
 
 	return array(
 		'images'           => array_slice( $images, 0, 10 ),
@@ -586,13 +583,6 @@ function ltt_dive_in_get_seeker_event_details( $raw, $event ) {
 		'organizer_url'    => $url( $organizer['url'] ?? '' ),
 		'venue_url'        => $url( $place['url'] ?? '' ),
 		'address'          => $address,
-		'directions_url'   => $destination ? add_query_arg(
-			array(
-				'api'         => 1,
-				'destination' => rawurlencode( $destination ),
-			),
-			'https://www.google.com/maps/dir/'
-		) : '',
 		'occurrences'      => ! empty( $raw['recurring'] ) || ! empty( $raw['occurrences'] ) ? ltt_dive_in_get_seeker_occurrences( $raw, $timezone, wp_date( 'Y-m-d' ), 60 ) : array(),
 	);
 }

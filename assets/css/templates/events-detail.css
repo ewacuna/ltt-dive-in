@@ -200,8 +200,8 @@
 
 .event-detail__address {
     display: flex;
-    align-items: flex-start;
-    gap: 0.625rem;
+    align-items: center;
+    gap: 0.75rem;
     margin: 0.75rem 0 0;
     font-size: 1rem;
     font-weight: 700;
@@ -213,24 +213,13 @@
     flex: 0 0 auto;
     width: 0.75rem;
     height: auto;
-    margin-top: 0.125rem;
 }
 
-.event-detail__venue {
-    display: block;
-}
-
-.event-detail__directions,
 .event-detail__organizer a,
 .event-detail__description a {
     color: #073959;
     text-decoration: underline;
     text-underline-offset: 0.15em;
-}
-
-.event-detail__directions {
-    margin-left: 0.5rem;
-    font-weight: 500;
 }
 
 .event-detail__calendar {
@@ -254,7 +243,7 @@
 .event-detail__calendar img {
     display: block;
     width: auto;
-    height: 1.25rem;
+    height: 1.5rem;
 }
 
 .event-detail__organizer {
@@ -331,7 +320,7 @@
     height: 1.125rem;
 }
 
-.event-detail :is(.event-detail__back, .event-detail__directions, .event-detail__calendar, .event-detail__organizer a, .event-detail__description a, .event-detail__more):focus-visible {
+.event-detail :is(.event-detail__back, .event-detail__calendar, .event-detail__organizer a, .event-detail__description a, .event-detail__more):focus-visible {
     outline: 3px solid #eeb040;
     outline-offset: 3px;
 }
@@ -486,19 +475,19 @@
         font-size: 0.875rem;
     }
 
-    .event-detail__address,
-    .event-detail__calendar {
-        font-size: 0.875rem;
-    }
-
     .event-detail__organizer {
         margin-top: 1.5rem;
         font-size: 1.125rem;
     }
 
+    /* Lighter, smaller body copy on mobile (client review, 2026-11-19). */
     .event-detail__description,
     .event-detail__more {
-        font-size: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .event-detail__description {
+        font-weight: 400;
     }
 
     .event-detail__actions {
