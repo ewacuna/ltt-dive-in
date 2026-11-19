@@ -261,7 +261,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'instructions'      => __( 'Optional introduction of up to three sentences.', 'ltt-dive-in' ),
 					'rows'              => 3,
 					'new_lines'         => '',
-					'maxlength'         => 350,
+					'maxlength'         => 400,
 					'conditional_logic' => $variant_is( array( 'listed', 'carousel' ) ),
 				),
 				array(
