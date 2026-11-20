@@ -7,7 +7,7 @@
       "label": "Variant",
       "name": "ltt_dive_in_video_module_variant",
       "type": "select",
-      "instructions": "Choose the approved layout. The preview updates after the block is saved or refreshed.",
+      "instructions": "Choose how to display the videos. Save or refresh the block to update the preview.",
       "required": 1,
       "choices": {
         "editorial": "1x1 Editorial",
@@ -34,7 +34,7 @@
       "label": "Section heading",
       "name": "ltt_dive_in_video_module_heading",
       "type": "text",
-      "instructions": "Used by the Episodic layout. Individual video titles are entered below.",
+      "instructions": "Enter a heading for the series. Add individual video titles below.",
       "required": 1,
       "maxlength": 90,
       "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_variant","operator":"==","value":"episodic"}]]
@@ -55,7 +55,7 @@
       "label": "Videos",
       "name": "ltt_dive_in_video_module_items",
       "type": "repeater",
-      "instructions": "Use one video for Editorial and both Full Bleed variants. Carousel needs 2–8 videos. Episodic supports 2–12; the first is featured.",
+      "instructions": "Add one video for Editorial or Full Bleed, 2 to 8 for Carousel, or 2 to 12 for Episodic. Episodic features the first video.",
       "required": 1,
       "min": 1,
       "max": 12,
@@ -85,7 +85,7 @@
           "label": "Cloudflare Stream video ID",
           "name": "cloudflare_id",
           "type": "text",
-          "instructions": "Enter the Stream video UID only, not an iframe or script.",
+          "instructions": "Paste the video UID from Cloudflare Stream.",
           "required": 1,
           "conditional_logic": [[{"field":"field_ltt_dive_in_video_module_item_source","operator":"==","value":"cloudflare"}]],
           "parent_repeater": "field_ltt_dive_in_video_module_items"
@@ -104,7 +104,7 @@
           "label": "MP4 file",
           "name": "mp4",
           "type": "file",
-          "instructions": "Use an optimized MP4. The player is not loaded until a visitor presses Play.",
+          "instructions": "Choose an MP4 optimized for web playback.",
           "required": 1,
           "return_format": "id",
           "library": "all",
@@ -117,7 +117,7 @@
           "label": "Poster image",
           "name": "poster",
           "type": "image",
-          "instructions": "Required. Choose a meaningful still frame; the image is decorative because the Play control is labelled with the video title.",
+          "instructions": "Choose a still frame that represents the video.",
           "required": 1,
           "return_format": "id",
           "preview_size": "medium",
@@ -139,7 +139,7 @@
           "label": "Duration",
           "name": "duration",
           "type": "text",
-          "instructions": "Optional accessible duration such as “5 min watch”.",
+          "instructions": "Optional. Include the time unit so the duration is clear.",
           "maxlength": 30,
           "parent_repeater": "field_ltt_dive_in_video_module_items"
         },
@@ -157,7 +157,7 @@
           "label": "Body copy",
           "name": "body",
           "type": "textarea",
-          "instructions": "Optional. Full Bleed intentionally ignores copy.",
+          "instructions": "Optional. This description appears in layouts other than Full Bleed.",
           "rows": 4,
           "maxlength": 600,
           "new_lines": "wpautop",
@@ -168,7 +168,7 @@
           "label": "Call to action",
           "name": "cta",
           "type": "link",
-          "instructions": "Optional. Provide both a meaningful label and destination.",
+          "instructions": "Optional. Enter a descriptive label and choose a destination.",
           "return_format": "array",
           "parent_repeater": "field_ltt_dive_in_video_module_items"
         }
@@ -182,5 +182,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1790053200
+  "modified": 1795183890
 }

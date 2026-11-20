@@ -25,7 +25,7 @@
             "label": "Section category tag",
             "name": "ltt_dive_in_feature_image_driver_stacked_tag",
             "type": "text",
-            "instructions": "Optional short label for the Stacked presentation.",
+            "instructions": "Optional short label above the heading.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -43,7 +43,7 @@
             "label": "Section heading",
             "name": "ltt_dive_in_feature_image_driver_stacked_heading",
             "type": "text",
-            "instructions": "Required heading displayed above the stacked rows.",
+            "instructions": "Enter a heading for the section.",
             "required": 1,
             "conditional_logic": [
                 [
@@ -61,7 +61,7 @@
             "label": "Section introduction",
             "name": "ltt_dive_in_feature_image_driver_stacked_intro",
             "type": "textarea",
-            "instructions": "Optional introductory copy displayed beneath the section heading.",
+            "instructions": "Add a short introduction below the heading.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -81,7 +81,7 @@
             "label": "Section primary call to action",
             "name": "ltt_dive_in_feature_image_driver_stacked_primary_link",
             "type": "link",
-            "instructions": "Optional primary action shown beside the section introduction.",
+            "instructions": "Optional. Enter a descriptive label and choose a destination.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -99,7 +99,7 @@
             "label": "Section secondary call to action",
             "name": "ltt_dive_in_feature_image_driver_stacked_secondary_link",
             "type": "link",
-            "instructions": "Optional secondary action shown beside the section introduction.",
+            "instructions": "Optional. Enter a descriptive label and choose a destination.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -195,7 +195,7 @@
                     "label": "Show body copy",
                     "name": "show_body",
                     "type": "true_false",
-                    "instructions": "Turn off to render this item without supporting copy.",
+                    "instructions": "Turn off to hide the description.",
                     "required": 0,
                     "conditional_logic": 0,
                     "default_value": 1,
@@ -249,5 +249,5 @@
     "instruction_placement": "label",
     "active": true,
     "show_in_rest": 0,
-    "modified": 1792086301
+    "modified": 1795183890
 }

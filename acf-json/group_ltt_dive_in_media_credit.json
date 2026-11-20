@@ -8,7 +8,7 @@
             "name": "ltt_dive_in_photo_credit",
             "aria-label": "",
             "type": "text",
-            "instructions": "Optional. The photographer’s name, shown after “Photography:” where the theme displays photo captions.",
+            "instructions": "Optional. Enter the photographer’s name for the image caption.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -42,5 +42,5 @@
     "active": true,
     "description": "Photographer credit for images, shown with the image caption.",
     "show_in_rest": 0,
-    "modified": 1794245000
+    "modified": 1795183890
 }

@@ -8,7 +8,7 @@
             "name": "ltt_dive_in_story_module_variant",
             "aria-label": "",
             "type": "select",
-            "instructions": "Choose the blog section to add. Its fields appear below.",
+            "instructions": "Choose the type of section to add.",
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
@@ -66,7 +66,7 @@
                     "name": "number",
                     "aria-label": "",
                     "type": "number",
-                    "instructions": "Position in the list, shown large beside the title.",
+                    "instructions": "Enter the item’s position in the list.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -152,7 +152,7 @@
                     "name": "images",
                     "aria-label": "",
                     "type": "gallery",
-                    "instructions": "One to four images. The layout adapts to the number of images. Add alt text to each image in the Media Library.",
+                    "instructions": "Choose one to four images and add alt text in the Media Library.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -180,7 +180,7 @@
                     "name": "image_position",
                     "aria-label": "",
                     "type": "button_group",
-                    "instructions": "Side of the images on desktop. Alternate items for a staggered list. On mobile the images always follow the text.",
+                    "instructions": "Choose where the images appear on desktop. On mobile, they follow the text.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -230,7 +230,7 @@
                     "name": "eyebrow",
                     "aria-label": "",
                     "type": "text",
-                    "instructions": "Optional. A short label shown above the title.",
+                    "instructions": "Optional short label shown above the title.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -272,7 +272,7 @@
                     "name": "content",
                     "aria-label": "",
                     "type": "wysiwyg",
-                    "instructions": "Bulleted lists show the mountain icon. Use descriptive link text.",
+                    "instructions": "Use descriptive link text.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -336,7 +336,7 @@
                     "name": "image_position",
                     "aria-label": "",
                     "type": "button_group",
-                    "instructions": "Side of the image on desktop. On mobile the image always follows the text.",
+                    "instructions": "Choose where the image appears on desktop. On mobile, it follows the text.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -386,7 +386,7 @@
                     "name": "label",
                     "aria-label": "",
                     "type": "text",
-                    "instructions": "Shown in capitals above the title. Leave empty for “Responsible Travel Tip”.",
+                    "instructions": "Leave blank to use “Responsible Travel Tip”.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -496,7 +496,7 @@
                     "name": "content",
                     "aria-label": "",
                     "type": "wysiwyg",
-                    "instructions": "Shown centered between two lines. Use descriptive link text.",
+                    "instructions": "Use descriptive link text.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -560,7 +560,7 @@
                     "name": "caption",
                     "aria-label": "",
                     "type": "text",
-                    "instructions": "Describes the table for screen readers. It is not shown on the page.",
+                    "instructions": "Enter a short description of the table for screen reader users.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -602,7 +602,7 @@
                     "name": "columns",
                     "aria-label": "",
                     "type": "repeater",
-                    "instructions": "One to seven columns. On small screens the table scrolls sideways.",
+                    "instructions": "Add one to seven columns.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -796,7 +796,7 @@
                     "name": "number",
                     "aria-label": "",
                     "type": "number",
-                    "instructions": "Shown large beside the title.",
+                    "instructions": "Enter the number to show beside the title.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -971,7 +971,7 @@
                     "name": "image",
                     "aria-label": "",
                     "type": "image",
-                    "instructions": "Optional. Shown beside the text on desktop and below it on mobile. Add alt text to the image in the Media Library.",
+                    "instructions": "Optional. Add alt text to the image in the Media Library.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1065,7 +1065,7 @@
                     "name": "links",
                     "aria-label": "",
                     "type": "repeater",
-                    "instructions": "One to four links, shown as buttons. Use descriptive labels.",
+                    "instructions": "Add one to four links with descriptive labels.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1200,7 +1200,7 @@
                     "name": "number",
                     "aria-label": "",
                     "type": "number",
-                    "instructions": "Shown large beside the title.",
+                    "instructions": "Enter the number to show beside the title.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1270,7 +1270,7 @@
                     "name": "time",
                     "aria-label": "",
                     "type": "select",
-                    "instructions": "Optional. Shown in capitals above the first stop.",
+                    "instructions": "Optional. Add a time or time range for the first stop.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1321,7 +1321,7 @@
                             "name": "title",
                             "aria-label": "",
                             "type": "wysiwyg",
-                            "instructions": "Select text and use the link button to link part of the title. Use descriptive link text.",
+                            "instructions": "Use the link button to link part of the title.",
                             "required": 1,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -1366,7 +1366,7 @@
                     "name": "image",
                     "aria-label": "",
                     "type": "image",
-                    "instructions": "Optional. Shown beside the text on desktop and below it on mobile. Add alt text to the image in the Media Library.",
+                    "instructions": "Optional. Add alt text to the image in the Media Library.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1481,7 +1481,7 @@
                     "name": "items",
                     "aria-label": "",
                     "type": "repeater",
-                    "instructions": "One to six items, shown numbered in order.",
+                    "instructions": "Add one to six items in display order.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1527,7 +1527,7 @@
                     "name": "images",
                     "aria-label": "",
                     "type": "gallery",
-                    "instructions": "Optional. One to six images, shown beside the text on desktop and below it on mobile. Two or more images become a carousel. Add alt text to each image in the Media Library.",
+                    "instructions": "Add up to six images. Multiple images appear in a carousel. Add alt text in the Media Library.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1645,7 +1645,7 @@
                     "name": "items",
                     "aria-label": "",
                     "type": "repeater",
-                    "instructions": "One to six items, shown with the mountain icon.",
+                    "instructions": "Add one to six items.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1691,7 +1691,7 @@
                     "name": "images",
                     "aria-label": "",
                     "type": "gallery",
-                    "instructions": "Optional. One to six images, shown beside the text on desktop and below it on mobile. Two or more images become a carousel. Add alt text to each image in the Media Library.",
+                    "instructions": "Add up to six images. Multiple images appear in a carousel. Add alt text in the Media Library.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1788,7 +1788,7 @@
                     "name": "images",
                     "aria-label": "",
                     "type": "gallery",
-                    "instructions": "Optional. One to six images, shown beside the text on desktop and below it on mobile. Two or more images become a carousel. Add alt text to each image in the Media Library.",
+                    "instructions": "Add up to six images. Multiple images appear in a carousel. Add alt text in the Media Library.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1843,7 +1843,7 @@
                     "name": "images",
                     "aria-label": "",
                     "type": "gallery",
-                    "instructions": "Exactly two images, shown side by side. Add alt text to each image in the Media Library.",
+                    "instructions": "Choose two images and add alt text in the Media Library.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -1885,7 +1885,7 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Blog post sections. Each variant keeps its fields in its own group.",
+    "description": "Content and layout options for blog post sections.",
     "show_in_rest": 0,
-    "modified": 1794433595
+    "modified": 1795183890
 }

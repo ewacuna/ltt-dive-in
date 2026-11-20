@@ -7,7 +7,7 @@
             "label": "Accordion variant",
             "name": "ltt_dive_in_home_faq_variant",
             "type": "select",
-            "instructions": "Choose the approved layout for this FAQ section. No layout is selected automatically.",
+            "instructions": "Choose how to display the questions.",
             "required": 1,
             "choices": {
                 "global": "Global Accordion",
@@ -27,7 +27,7 @@
             "label": "Heading",
             "name": "ltt_dive_in_home_faq_heading",
             "type": "text",
-            "instructions": "Required level-two heading displayed above the FAQ list.",
+            "instructions": "Enter a heading for the FAQ section.",
             "required": 1,
             "default_value": "",
             "maxlength": 90
@@ -37,7 +37,7 @@
             "label": "Introduction",
             "name": "ltt_dive_in_home_faq_description",
             "type": "textarea",
-            "instructions": "A concise introduction to the questions. Keep it to one or two short sentences.",
+            "instructions": "Introduce the questions in one or two short sentences.",
             "required": 0,
             "default_value": "",
             "maxlength": 240,
@@ -49,7 +49,7 @@
             "label": "Section call to action",
             "name": "ltt_dive_in_home_faq_cta",
             "type": "link",
-            "instructions": "Optional. Hidden unless both a meaningful label and destination are provided.",
+            "instructions": "Optional. Enter a descriptive label and choose a destination.",
             "required": 0,
             "return_format": "array"
         },
@@ -58,7 +58,7 @@
             "label": "Frequently asked questions",
             "name": "ltt_dive_in_home_faq_items",
             "type": "repeater",
-            "instructions": "Add one or more questions for the Global or Side by Side variant. Each answer opens in place; only one answer is shown at a time.",
+            "instructions": "Add one or more questions in the order they should appear.",
             "required": 1,
             "conditional_logic": [
                 [
@@ -96,7 +96,7 @@
                     "label": "Answer",
                     "name": "answer",
                     "type": "wysiwyg",
-                    "instructions": "Provide a concise answer. Use meaningful link text rather than phrases such as ‘click here’.",
+                    "instructions": "Keep the answer concise and use descriptive link text.",
                     "required": 1,
                     "tabs": "all",
                     "toolbar": "basic",
@@ -138,7 +138,7 @@
             "label": "FAQ topics",
             "name": "ltt_dive_in_home_faq_toggle_topics",
             "type": "repeater",
-            "instructions": "Add two to four short topic labels. Each topic controls its own question list.",
+            "instructions": "Group the questions into two to four topics.",
             "required": 1,
             "conditional_logic": [
                 [
@@ -160,7 +160,7 @@
                     "label": "Topic label",
                     "name": "label",
                     "type": "text",
-                    "instructions": "Keep the label concise so all topics remain usable on small screens.",
+                    "instructions": "Use a short topic label.",
                     "required": 1,
                     "maxlength": 40
                 },
@@ -191,7 +191,7 @@
                             "label": "Answer",
                             "name": "answer",
                             "type": "wysiwyg",
-                            "instructions": "Provide a concise answer. Use meaningful link text rather than phrases such as ‘click here’.",
+                            "instructions": "Keep the answer concise and use descriptive link text.",
                             "required": 1,
                             "tabs": "all",
                             "toolbar": "basic",
@@ -227,6 +227,7 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "active": true,
-    "description": "Editable content and approved layout variants for the reusable Interactive Accordions block.",
-    "show_in_rest": 0
+    "description": "Questions, answers, and layout options for the FAQ block.",
+    "show_in_rest": 0,
+    "modified": 1795183890
 }

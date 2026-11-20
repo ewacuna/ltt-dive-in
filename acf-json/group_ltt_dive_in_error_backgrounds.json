@@ -16,7 +16,7 @@
       "label": "Background images",
       "name": "ltt_dive_in_error_404_background_images",
       "type": "gallery",
-      "instructions": "Choose up to 10 images. Drag them into the order you want. Leave empty to use the default background. Check that text stays readable over each image.",
+      "instructions": "Choose and order up to 10 images that keep the text readable. Leave blank to use the default background.",
       "required": 0,
       "min": 0,
       "max": 10,
@@ -51,7 +51,7 @@
       "label": "Background images",
       "name": "ltt_dive_in_error_503_background_images",
       "type": "gallery",
-      "instructions": "Choose up to 10 images. Drag them into the order you want. Leave empty to use the default background. Check that text stays readable over each image.",
+      "instructions": "Choose and order up to 10 images that keep the text readable. Leave blank to use the default background.",
       "required": 0,
       "min": 0,
       "max": 10,
@@ -80,5 +80,5 @@
   "instruction_placement": "label",
   "active": true,
   "show_in_rest": 0,
-  "modified": 1794933755
+  "modified": 1795183890
 }

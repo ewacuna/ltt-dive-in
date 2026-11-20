@@ -111,7 +111,7 @@ function ltt_dive_in_register_listing_card_fields() {
 					'label'             => __( 'Primary custom link', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_listing_card_primary_link',
 					'type'              => 'link',
-					'instructions'      => __( 'Set the button label and destination. An incomplete link is not shown.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Enter a descriptive label and choose a destination.', 'ltt-dive-in' ),
 					'required'          => 0,
 					'return_format'     => 'array',
 					'conditional_logic' => array(
@@ -129,7 +129,7 @@ function ltt_dive_in_register_listing_card_fields() {
 					'label'         => __( 'Second button', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_listing_card_secondary_link',
 					'type'          => 'link',
-					'instructions'  => __( 'Optional. Add a label and destination, such as “Visit Website”. Cards show no more than two buttons.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Optional second button. Enter a descriptive label and choose a destination.', 'ltt-dive-in' ),
 					'required'      => 0,
 					'return_format' => 'array',
 				),

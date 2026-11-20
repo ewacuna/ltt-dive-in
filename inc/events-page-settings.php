@@ -21,7 +21,7 @@ function ltt_dive_in_register_events_page_settings() {
 		array(
 			'key'         => 'group_ltt_dive_in_events_page',
 			'title'       => __( 'LTT Dive In — Events Page', 'ltt-dive-in' ),
-			'description' => __( 'The page title, excerpt, and content are edited in WordPress. Events are read from Seeker.', 'ltt-dive-in' ),
+			'description' => __( 'Configure how events from Seeker appear on this page.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(
 					'key'          => 'field_ltt_dive_in_events_page_tag',
@@ -36,7 +36,7 @@ function ltt_dive_in_register_events_page_settings() {
 					'label'         => __( 'Submit link', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_events_page_submit_link',
 					'type'          => 'link',
-					'instructions'  => __( 'Optional. Shown below the filters. Hidden until both a label and destination are provided.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Optional. Enter a descriptive label and choose a destination for the button below the filters.', 'ltt-dive-in' ),
 					'return_format' => 'array',
 				),
 			),

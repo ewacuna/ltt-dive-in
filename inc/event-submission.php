@@ -39,14 +39,14 @@ function ltt_dive_in_register_event_submission_settings() {
 		array(
 			'key'         => 'group_ltt_dive_in_event_submission',
 			'title'       => __( 'LTT Dive In — Event Submission', 'ltt-dive-in' ),
-			'description' => __( 'The page title, excerpt, and content are edited in WordPress. The form fields are managed in Seeker.', 'ltt-dive-in' ),
+			'description' => __( 'Connect the submission form and manage its fields in Seeker.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(
 					'key'          => 'field_ltt_dive_in_event_submission_calendar_id',
 					'label'        => __( 'Calendar ID', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_event_submission_calendar_id',
 					'type'         => 'text',
-					'instructions' => __( 'The calendarId value from the Seeker embed code.', 'ltt-dive-in' ),
+					'instructions' => __( 'Copy the calendarId from the Seeker embed code.', 'ltt-dive-in' ),
 					'placeholder'  => '00000000-0000-0000-0000-000000000000',
 				),
 				array(
@@ -54,7 +54,7 @@ function ltt_dive_in_register_event_submission_settings() {
 					'label'        => __( 'Form ID', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_event_submission_form_id',
 					'type'         => 'text',
-					'instructions' => __( 'The formId value from the Seeker embed code.', 'ltt-dive-in' ),
+					'instructions' => __( 'Copy the formId from the Seeker embed code.', 'ltt-dive-in' ),
 					'placeholder'  => '00000000-0000-0000-0000-000000000000',
 				),
 			),

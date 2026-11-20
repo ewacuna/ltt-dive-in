@@ -52,7 +52,7 @@ function ltt_dive_in_register_map_settings() {
 					'label'        => __( 'Mapbox public access token', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_mapbox_access_token',
 					'type'         => 'text',
-					'instructions' => __( 'A public token (starts with “pk.”) from the laketahoetravel Mapbox account; the map style uses that account’s private tilesets. The token is visible in page source, so restrict it to this site’s URLs in Mapbox. Never use a secret “sk.” token.', 'ltt-dive-in' ),
+					'instructions' => __( 'Use a public Mapbox token starting with “pk.” with access to the map style and its tilesets. Restrict it to this site’s URLs in Mapbox.', 'ltt-dive-in' ),
 					'placeholder'  => 'pk.',
 				),
 				array(
@@ -60,7 +60,7 @@ function ltt_dive_in_register_map_settings() {
 					'label'         => __( 'Mapbox style URL', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_mapbox_style_url',
 					'type'          => 'text',
-					'instructions'  => __( 'The published Mapbox Studio style. Changes published in Studio appear on the site without code changes.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Enter the URL of a published Mapbox Studio style.', 'ltt-dive-in' ),
 					'required'      => 1,
 					'default_value' => LTT_DIVE_IN_MAPBOX_DEFAULT_STYLE,
 					'placeholder'   => LTT_DIVE_IN_MAPBOX_DEFAULT_STYLE,

@@ -7,7 +7,7 @@
             "label": "Variant",
             "name": "ltt_dive_in_static_image_cluster_variant",
             "type": "select",
-            "instructions": "Choose the approved editorial image composition.",
+            "instructions": "Choose how to arrange the images.",
             "required": 1,
             "choices": {
                 "hero_caption": "Hero With Caption",
@@ -89,7 +89,7 @@
                     }
                 ]
             ],
-            "instructions": "Add introductory copy with paragraphs, emphasis, lists, or meaningful links. Also used as the caption for Hero With Caption.",
+            "instructions": "Write a short introduction or a caption for the Hero With Caption layout.",
             "tabs": "all",
             "toolbar": "basic",
             "media_upload": 0,
@@ -154,7 +154,7 @@
             "label": "Images",
             "name": "ltt_dive_in_static_image_cluster_images",
             "type": "gallery",
-            "instructions": "Each image displayed by the selected variant needs Alternative Text in its Media Library details.",
+            "instructions": "Add alt text for each image in the Media Library.",
             "required": 1,
             "min": 1,
             "max": 0,
@@ -244,5 +244,5 @@
     "instruction_placement": "label",
     "active": true,
     "show_in_rest": 0,
-    "modified": 1794361386
+    "modified": 1795183890
 }

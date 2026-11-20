@@ -63,14 +63,14 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'        => __( 'Seeker API key', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_seeker_api_key',
 					'type'         => 'password',
-					'instructions' => __( 'Create a key in your Seeker dashboard under API Keys. The key is used only by the server and is never included in page markup or JavaScript. A saved key is not displayed again; enter a new key to replace it.', 'ltt-dive-in' ),
+					'instructions' => __( 'Enter a server-side key from Seeker’s API Keys settings. Saved keys are hidden. Enter a new key to replace the current one.', 'ltt-dive-in' ),
 				),
 				array(
 					'key'          => 'field_ltt_dive_in_seeker_remove_api_key',
 					'label'        => __( 'Remove saved key', 'ltt-dive-in' ),
 					'name'         => 'ltt_dive_in_seeker_remove_api_key',
 					'type'         => 'true_false',
-					'instructions' => __( 'Delete the saved key when these settings are saved. Event blocks stop rendering until a new key is added.', 'ltt-dive-in' ),
+					'instructions' => __( 'Remove the saved key. Event blocks need a valid key to display.', 'ltt-dive-in' ),
 					'ui'           => 1,
 				),
 			),
@@ -130,7 +130,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'         => __( 'Variant', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_event_driver_variant',
 					'type'          => 'select',
-					'instructions'  => __( 'Events come from the Seeker calendar and are not edited here.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Manage event details in the Seeker calendar.', 'ltt-dive-in' ),
 					'required'      => 1,
 					'choices'       => array(
 						'hero'     => __( 'Hero Featured Events', 'ltt-dive-in' ),
@@ -163,7 +163,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'             => __( 'Number of slides', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_hero_count',
 					'type'              => 'number',
-					'instructions'      => __( 'Between 3 and 6 upcoming featured events, soonest first.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Show 3 to 6 upcoming featured events in date order.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'default_value'     => $limits['hero']['default'],
 					'min'               => $limits['hero']['min'],
@@ -189,7 +189,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'             => __( 'Events', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_hero_events',
 					'type'              => 'select',
-					'instructions'      => __( 'Search upcoming Seeker events by name and choose 3 to 6, in display order. Events that have ended are skipped automatically.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Search by name and select 3 to 6 upcoming events in display order.', 'ltt-dive-in' ),
 					'required'          => 1,
 					'choices'           => array(),
 					'multiple'          => 1,
@@ -217,7 +217,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'             => __( 'Tickets button label', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_primary_label',
 					'type'              => 'text',
-					'instructions'      => __( 'Links to the event’s ticket page. Hidden for events without a ticket link.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Show the ticket button when a ticket link is available.', 'ltt-dive-in' ),
 					'default_value'     => __( 'Get Tickets', 'ltt-dive-in' ),
 					'maxlength'         => 24,
 					'conditional_logic' => $variant_is( 'hero' ),
@@ -227,7 +227,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'             => __( 'Details button label', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_secondary_label',
 					'type'              => 'text',
-					'instructions'      => __( 'Links to the event page. Hidden for events without an event link.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Show the event button when an event link is available.', 'ltt-dive-in' ),
 					'default_value'     => __( 'Learn More', 'ltt-dive-in' ),
 					'maxlength'         => 24,
 					'conditional_logic' => $variant_is( 'hero' ),
@@ -269,7 +269,7 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'             => __( 'Primary link', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_primary_link',
 					'type'              => 'link',
-					'instructions'      => __( 'Optional. Requires a meaningful label and destination.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Optional. Enter a descriptive label and choose a destination.', 'ltt-dive-in' ),
 					'return_format'     => 'array',
 					'conditional_logic' => $variant_is( array( 'listed', 'carousel' ) ),
 				),
@@ -278,20 +278,20 @@ function ltt_dive_in_register_event_driver_settings() {
 					'label'             => __( 'Secondary link', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_secondary_link',
 					'type'              => 'link',
-					'instructions'      => __( 'Optional. Requires a meaningful label and destination.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Optional. Enter a descriptive label and choose a destination.', 'ltt-dive-in' ),
 					'return_format'     => 'array',
 					'conditional_logic' => $variant_is( array( 'listed', 'carousel' ) ),
 				),
 
 				/* Listed Events. */
-				$count_field( 'initial_count', __( 'Initial events', 'ltt-dive-in' ), __( 'Number of events shown before Load More. Multiples of 3 fill complete desktop rows.', 'ltt-dive-in' ), $limits['listed'], 'listed' ),
+				$count_field( 'initial_count', __( 'Initial events', 'ltt-dive-in' ), __( 'Set how many events appear before Load More.', 'ltt-dive-in' ), $limits['listed'], 'listed' ),
 				$count_field( 'load_more_count', __( 'Load More step', 'ltt-dive-in' ), __( 'Number of events added each time a visitor presses Load More.', 'ltt-dive-in' ), $limits['load_more'], 'listed' ),
 				array(
 					'key'               => 'field_ltt_dive_in_event_driver_filter_categories',
 					'label'             => __( 'Category filter options', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_event_driver_filter_categories',
 					'type'              => 'select',
-					'instructions'      => __( 'Seeker categories offered in the Categories dropdown. Leave empty to offer every category, or turn the dropdown off below.', 'ltt-dive-in' ),
+					'instructions'      => __( 'Choose which categories visitors can filter by. Leave blank to offer all categories.', 'ltt-dive-in' ),
 					'choices'           => array(),
 					'multiple'          => 1,
 					'ui'                => 1,
@@ -537,7 +537,7 @@ function ltt_dive_in_load_event_driver_category_choices( $field ) {
 		$field['choices'] = ltt_dive_in_get_seeker_categories();
 
 		if ( ! $field['choices'] ) {
-			$field['instructions'] .= ' ' . __( 'Categories appear here once a working Seeker API key is saved in Settings → Events.', 'ltt-dive-in' );
+			$field['instructions'] .= ' ' . __( 'Save a valid key in Settings → Events to load categories.', 'ltt-dive-in' );
 		}
 	}
 

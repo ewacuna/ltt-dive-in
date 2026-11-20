@@ -21,14 +21,14 @@ function ltt_dive_in_register_page_hero_settings() {
 		array(
 			'key'         => 'group_ltt_dive_in_page_hero',
 			'title'       => __( 'LTT Dive In — Page Hero', 'ltt-dive-in' ),
-			'description' => __( 'Add up to two optional buttons for the Standard or Immersive Hero. Buttons are hidden until both a label and destination are provided.', 'ltt-dive-in' ),
+			'description' => __( 'Add up to two buttons to the page hero.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(
 					'key'           => 'field_ltt_dive_in_page_hero_primary_link',
 					'label'         => __( 'Primary link', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_hero_primary_link',
 					'type'          => 'link',
-					'instructions'  => __( 'Optional. The button is hidden until both a label and destination are provided.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Optional. Enter a descriptive label and choose a destination.', 'ltt-dive-in' ),
 					'return_format' => 'array',
 				),
 				array(
@@ -36,7 +36,7 @@ function ltt_dive_in_register_page_hero_settings() {
 					'label'         => __( 'Secondary link', 'ltt-dive-in' ),
 					'name'          => 'ltt_dive_in_page_hero_secondary_link',
 					'type'          => 'link',
-					'instructions'  => __( 'Optional. The button is hidden until both a label and destination are provided.', 'ltt-dive-in' ),
+					'instructions'  => __( 'Optional. Enter a descriptive label and choose a destination.', 'ltt-dive-in' ),
 					'return_format' => 'array',
 				),
 			),

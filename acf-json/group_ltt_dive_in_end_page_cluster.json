@@ -7,7 +7,7 @@
             "label": "Variant",
             "name": "ltt_dive_in_end_page_cluster_variant",
             "type": "select",
-            "instructions": "Copy/CTA Driver shows two or three text callouts. Page Driver shows three image cards. Content Trail shows a carousel of stories, events, and places.",
+            "instructions": "Choose a layout for text callouts, page cards, or a carousel of related content.",
             "choices": {
                 "copy_cta": "Copy/CTA Driver",
                 "page_driver": "Page Driver",
@@ -51,7 +51,7 @@
             "label": "Background",
             "name": "ltt_dive_in_end_page_cluster_page_driver_background",
             "type": "select",
-            "instructions": "White uses navy text. Navy uses light text and the dark category tag.",
+            "instructions": "Choose a background for the cards.",
             "choices": {
                 "white": "White",
                 "navy": "Navy"
@@ -75,7 +75,7 @@
             "label": "Callouts",
             "name": "ltt_dive_in_end_page_cluster_callouts",
             "type": "repeater",
-            "instructions": "Add two or three callouts. They display side by side on desktop.",
+            "instructions": "Add two or three callouts.",
             "required": 1,
             "min": 2,
             "max": 3,
@@ -263,7 +263,7 @@
                     "preview_size": "medium",
                     "library": "all",
                     "mime_types": "jpg,jpeg,png,webp",
-                    "instructions": "Decorative: the card title describes the destination.",
+                    "instructions": "Choose a decorative image to accompany the card title.",
                     "parent_repeater": "field_ltt_dive_in_end_page_cluster_cards"
                 },
                 {
@@ -301,7 +301,7 @@
             "label": "Trail items",
             "name": "ltt_dive_in_end_page_cluster_trail_items",
             "type": "repeater",
-            "instructions": "Choose 2 to 12 items in display order. Each uses the site's existing card for its type. Stories and places without a featured image, and events that have ended, are skipped.",
+            "instructions": "Choose and order 2 to 12 items. Select upcoming events and use stories and places with featured images.",
             "required": 1,
             "min": 2,
             "max": 12,
@@ -428,5 +428,6 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "show_in_rest": 0
+    "show_in_rest": 0,
+    "modified": 1795183890
 }
