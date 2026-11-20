@@ -332,6 +332,9 @@
 
 			request( 0 ).then( function ( response ) {
 				grid.innerHTML = response.html || '';
+				const filters = new FormData( form );
+				const wholeMonth = empty.dataset.monthEmpty && ! filters.get( 'event_category' ) && ! filters.get( 'event_date' ) && ! ( filters.get( 'event_search' ) || '' ).toString().trim();
+				empty.textContent = wholeMonth ? empty.dataset.monthEmpty : strings.noResults || '';
 				empty.hidden = response.count > 0;
 				setHasMore( response.hasMore, response.nextOffset );
 
@@ -341,7 +344,7 @@
 				}
 
 				syncCarousel();
-				announce( response.count ? format( strings.showing, [ response.count, Math.max( response.total, response.count ) ] ) : strings.noResults || '' );
+				announce( response.count ? format( strings.showing, [ response.count, Math.max( response.total, response.count ) ] ) : empty.textContent );
 			} ).catch( function ( error ) {
 				if ( error && 'AbortError' === error.name ) {
 					return;

@@ -119,6 +119,16 @@ function ltt_dive_in_register_event_driver_settings() {
 			'conditional_logic' => $variant_is( $variants ),
 		);
 	};
+	$month_rules = $variant_is( array( 'listed', 'carousel' ) );
+	foreach ( $month_rules as &$rules ) {
+		$rules[] = array( 'field' => 'field_ltt_dive_in_event_driver_limit_month', 'operator' => '==', 'value' => '1' );
+	}
+	unset( $rules );
+	$months = array();
+	for ( $month = 1; $month <= 12; ++$month ) {
+		$months[ $month ] = wp_date( 'F', ( new DateTimeImmutable( sprintf( '2000-%02d-01', $month ), wp_timezone() ) )->getTimestamp() );
+	}
+	$year = (int) wp_date( 'Y' );
 
 	acf_add_local_field_group(
 		array(
@@ -141,6 +151,44 @@ function ltt_dive_in_register_event_driver_settings() {
 					'allow_null'    => 0,
 					'ui'            => 1,
 					'return_format' => 'value',
+				),
+
+				array(
+					'key'               => 'field_ltt_dive_in_event_driver_limit_month',
+					'label'             => __( 'Limit to a month', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_event_driver_limit_month',
+					'type'              => 'true_false',
+					'instructions'      => __( 'Leave either field blank to show upcoming events.', 'ltt-dive-in' ),
+					'default_value'     => 0,
+					'ui'                => 1,
+					'conditional_logic' => $variant_is( array( 'listed', 'carousel' ) ),
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_event_driver_month',
+					'label'             => __( 'Month', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_event_driver_month',
+					'type'              => 'select',
+					'choices'           => $months,
+					'placeholder'       => __( 'Choose a month', 'ltt-dive-in' ),
+					'allow_null'        => 1,
+					'required'          => 0,
+					'return_format'     => 'value',
+					'wrapper'           => array( 'width' => '50' ),
+					'conditional_logic' => $month_rules,
+				),
+				array(
+					'key'               => 'field_ltt_dive_in_event_driver_year',
+					'label'             => __( 'Year', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_event_driver_year',
+					'type'              => 'select',
+					'choices'           => array_combine( range( $year - 1, $year + 1 ), range( $year - 1, $year + 1 ) ),
+					'default_value'     => $year,
+					'placeholder'       => __( 'Choose a year', 'ltt-dive-in' ),
+					'allow_null'        => 1,
+					'required'          => 0,
+					'return_format'     => 'value',
+					'wrapper'           => array( 'width' => '50' ),
+					'conditional_logic' => $month_rules,
 				),
 
 				/* Hero Featured Events. */
@@ -667,3 +715,44 @@ function ltt_dive_in_validate_event_driver_hero_events( $valid, $value ) {
 	return $valid;
 }
 add_filter( 'acf/validate_value/key=field_ltt_dive_in_event_driver_hero_events', 'ltt_dive_in_validate_event_driver_hero_events', 10, 2 );
+
+/**
+ * Keep an explicitly saved year available when the editor's year window moves.
+ *
+ * @param array $field Year field.
+ * @return array
+ */
+function ltt_dive_in_prepare_event_driver_year( $field ) {
+	$value = $field['value'] ?? '';
+	if ( is_scalar( $value ) && preg_match( '/^[1-9][0-9]{3}$/', (string) $value ) ) {
+		$field['choices'][ (int) $value ] = (int) $value;
+		ksort( $field['choices'] );
+	}
+
+	return $field;
+}
+add_filter( 'acf/prepare_field/key=field_ltt_dive_in_event_driver_year', 'ltt_dive_in_prepare_event_driver_year' );
+
+/**
+ * Give month and year validation a short, actionable message.
+ *
+ * @param bool|string $valid Validation result.
+ * @param mixed       $value Submitted value.
+ * @param array       $field Field definition.
+ * @return bool|string
+ */
+function ltt_dive_in_validate_event_driver_month_field( $valid, $value, $field ) {
+	if ( null === $value || false === $value || '' === $value ) {
+		return $valid;
+	}
+	$is_year = 'field_ltt_dive_in_event_driver_year' === $field['key'];
+	$pattern = $is_year ? '/^[1-9][0-9]{3}$/' : '/^(?:[1-9]|1[0-2])$/';
+
+	if ( ! is_scalar( $value ) || ! preg_match( $pattern, (string) $value ) ) {
+		return $is_year ? __( 'Choose a year.', 'ltt-dive-in' ) : __( 'Choose a month.', 'ltt-dive-in' );
+	}
+
+	return $valid;
+}
+add_filter( 'acf/validate_value/key=field_ltt_dive_in_event_driver_month', 'ltt_dive_in_validate_event_driver_month_field', 10, 3 );
+add_filter( 'acf/validate_value/key=field_ltt_dive_in_event_driver_year', 'ltt_dive_in_validate_event_driver_month_field', 10, 3 );

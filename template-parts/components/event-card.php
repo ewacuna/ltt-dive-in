@@ -156,7 +156,7 @@ $render_flags = static function ( $modifier ) use ( $flags ) {
 		<?php $render_flags( 'content' ); ?>
 
 		<div class="ltt-event-card__actions">
-			<?php if ( 'card' !== $style ) : ?>
+			<?php if ( 'card' !== $style && ! ltt_dive_in_event_has_ended( $event ) ) : ?>
 				<a class="ltt-event-card__reminder" href="<?php echo esc_url( ltt_dive_in_get_event_reminder_url( $event ) ); ?>" download>
 					<?php echo esc_html( $reminder_label ); ?>
 					<span class="screen-reader-text">

@@ -35,6 +35,12 @@ if ( ! $config['variant'] ) {
 	return;
 }
 
+$month_range = ltt_dive_in_get_event_driver_date_range( $config );
+if ( is_wp_error( $month_range ) ) {
+	$preview_message( $month_range->get_error_message() );
+	return;
+}
+
 if ( '' === ltt_dive_in_get_seeker_api_key() ) {
 	$preview_message( __( 'Add a Seeker API key in Settings → Events to display events.', 'ltt-dive-in' ) );
 	return;

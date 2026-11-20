@@ -16,7 +16,8 @@ $preview_message = $args['preview_message'];
 $events          = ltt_dive_in_get_event_driver_carousel_events( $config );
 
 if ( is_wp_error( $events ) || ! $events ) {
-	$preview_message( is_wp_error( $events ) ? __( 'Events could not be loaded from Seeker. Check Settings → Events.', 'ltt-dive-in' ) : __( 'There are no upcoming events that match these settings.', 'ltt-dive-in' ) );
+	$empty_message = ! empty( $config['limit_month'] ) ? ltt_dive_in_get_event_driver_month_empty_message( $config ) : __( 'There are no upcoming events that match these settings.', 'ltt-dive-in' );
+	$preview_message( is_wp_error( $events ) ? __( 'Events could not be loaded from Seeker. Check Settings → Events.', 'ltt-dive-in' ) : $empty_message );
 	return;
 }
 

@@ -29,11 +29,12 @@ $filters         = ltt_dive_in_get_event_driver_listed_filters(
 		'page'     => $_GET['event_page'] ?? 1, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	) : array()
 );
-$has_filters     = $filters['category'] || 'upcoming' !== $filters['date'] || '' !== $filters['search'];
+$default_date    = ! empty( $config['limit_month'] ) ? 'all' : 'upcoming';
+$has_filters     = $filters['category'] || $default_date !== $filters['date'] || '' !== $filters['search'];
 $limit           = min( 100, $config['initial_count'] + ( $filters['page'] - 1 ) * $config['load_more_count'] );
 $result          = ltt_dive_in_query_event_driver_listed_events( $config, $filters, 0, $limit );
 
-if ( is_wp_error( $result ) || ( ! $result['events'] && ! $has_filters ) ) {
+if ( is_wp_error( $result ) || ( ! $result['events'] && ! $has_filters && empty( $config['limit_month'] ) ) ) {
 	$preview_message( is_wp_error( $result ) ? __( 'Events could not be loaded from Seeker. Check Settings → Events.', 'ltt-dive-in' ) : __( 'There are no upcoming events to list.', 'ltt-dive-in' ) );
 	return;
 }
@@ -62,11 +63,12 @@ foreach ( $categories as $category_id => $category_name ) {
 	);
 }
 
-$date_options = array();
+$date_options  = array();
+$empty_message = ! $has_filters && ! empty( $config['limit_month'] ) ? ltt_dive_in_get_event_driver_month_empty_message( $config ) : __( 'No events match your filters.', 'ltt-dive-in' );
 
-foreach ( ltt_dive_in_get_event_date_filters() as $value => $label ) {
+foreach ( ltt_dive_in_get_event_driver_date_filters( $config ) as $value => $label ) {
 	$date_options[] = array(
-		'value' => 'upcoming' === $value ? '' : $value,
+		'value' => $default_date === $value ? '' : $value,
 		'label' => $label,
 	);
 }
@@ -123,7 +125,7 @@ $show_filters  = $show_category || $config['show_date'] || $config['show_search'
 								'name'              => 'event_date',
 								'label'             => __( 'Event dates', 'ltt-dive-in' ),
 								'options'           => $date_options,
-								'selected_value'    => 'upcoming' === $filters['date'] ? '' : $filters['date'],
+								'selected_value'    => $default_date === $filters['date'] ? '' : $filters['date'],
 								'surface'           => 'light',
 								'aria_controls'     => $results_id,
 								'native_attributes' => array( 'data-event-driver-filter' => 'date' ),
@@ -160,7 +162,7 @@ $show_filters  = $show_category || $config['show_date'] || $config['show_search'
 				</div>
 			</div>
 
-			<p class="event-driver__empty" data-event-driver-empty<?php echo $events ? ' hidden' : ''; ?>><?php esc_html_e( 'No events match your filters. Try another category, date range, or search term.', 'ltt-dive-in' ); ?></p>
+			<p class="event-driver__empty" data-event-driver-empty data-month-empty="<?php echo esc_attr( ! empty( $config['limit_month'] ) ? ltt_dive_in_get_event_driver_month_empty_message( $config ) : '' ); ?>"<?php echo $events ? ' hidden' : ''; ?>><?php echo esc_html( $empty_message ); ?></p>
 
 			<div class="event-driver__carousel-footer" data-event-driver-controls hidden>
 				<div class="event-driver__pagination ltt-carousel-indicators" data-event-driver-pagination></div>

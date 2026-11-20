@@ -2,7 +2,7 @@
 /**
  * Event detail view of the Events page template.
  *
- * Each upcoming Seeker event has a URL below the Events page, such as
+ * Each Seeker event has a URL below the Events page, such as
  * `/events/music-on-the-beach-<uuid>/`. Events are not stored in WordPress:
  * the view reads the event from Seeker when it is requested.
  *
@@ -100,10 +100,13 @@ function ltt_dive_in_get_event_permalink( $event ) {
 	$base = get_permalink( array_key_first( $pages ) );
 
 	if ( ! get_option( 'permalink_structure' ) ) {
-		return add_query_arg( 'ltt_event', $slug, $base );
+		$url = add_query_arg( 'ltt_event', $slug, $base );
+	} else {
+		$url = user_trailingslashit( trailingslashit( $base ) . $slug );
 	}
 
-	return user_trailingslashit( trailingslashit( $base ) . $slug );
+	$date = ltt_dive_in_sanitize_event_date( $event['date_context'] ?? '' );
+	return $date ? add_query_arg( 'event_date', $date, $url ) : $url;
 }
 
 /**
@@ -122,7 +125,9 @@ function ltt_dive_in_get_current_event() {
 	$slug    = (string) get_query_var( 'ltt_event' );
 
 	if ( '' !== $slug && is_page() && ltt_dive_in_is_events_page() && preg_match( '/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', $slug, $match ) ) {
-		$current = ltt_dive_in_get_seeker_event_with_details( $match[1] );
+		// Read-only date context must identify a real occurrence of this event.
+		$date = isset( $_GET['event_date'] ) ? wp_unslash( $_GET['event_date'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current = ltt_dive_in_get_seeker_event_with_details( $match[1], $date );
 	}
 
 	return $current;
@@ -138,7 +143,8 @@ function ltt_dive_in_is_event_detail() {
 }
 
 /**
- * Send unknown or past events to a 404 and outdated slugs to the current URL.
+ * Send unknown events to a 404 and outdated slugs to the current URL.
+ * Historical occurrences require a valid event_date context.
  */
 function ltt_dive_in_event_detail_redirect() {
 	if ( '' === (string) get_query_var( 'ltt_event' ) || ! is_page() ) {

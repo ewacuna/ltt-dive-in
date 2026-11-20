@@ -33,9 +33,10 @@ $facts    = array_filter(
 		__( 'Format:', 'ltt-dive-in' )    => 'online' === $event['mode'] ? __( 'Online', 'ltt-dive-in' ) : ( 'hybrid' === $event['mode'] ? __( 'In person and online', 'ltt-dive-in' ) : '' ),
 	)
 );
-$actions  = array();
+$actions   = array();
+$has_ended = ltt_dive_in_event_has_ended( $event );
 
-foreach ( $details['tickets'] as $ticket ) {
+foreach ( $has_ended ? array() : $details['tickets'] as $ticket ) {
 	$actions[] = array(
 		'label'   => 1 === count( $details['tickets'] ) || '' === $ticket['name'] || 'ticket' === strtolower( $ticket['name'] ) ? __( 'Get Tickets', 'ltt-dive-in' ) : $ticket['name'],
 		'url'     => $ticket['url'],
@@ -44,7 +45,7 @@ foreach ( $details['tickets'] as $ticket ) {
 	);
 }
 
-if ( $details['online_url'] ) {
+if ( ! $has_ended && $details['online_url'] ) {
 	$actions[] = array(
 		'label' => __( 'Join Online', 'ltt-dive-in' ),
 		'url'   => $details['online_url'],
@@ -127,10 +128,12 @@ if ( $details['website'] ) {
 					</p>
 				<?php endif; ?>
 
-				<a class="event-detail__calendar" href="<?php echo esc_url( ltt_dive_in_get_event_reminder_url( $event ) ); ?>" download>
-					<?php esc_html_e( 'Add to Calendar', 'ltt-dive-in' ); ?>
-					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar-navy.svg' ) ); ?>" alt="" width="30" height="24" />
-				</a>
+				<?php if ( ! $has_ended ) : ?>
+					<a class="event-detail__calendar" href="<?php echo esc_url( ltt_dive_in_get_event_reminder_url( $event ) ); ?>" download>
+						<?php esc_html_e( 'Add to Calendar', 'ltt-dive-in' ); ?>
+						<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar-navy.svg' ) ); ?>" alt="" width="30" height="24" />
+					</a>
+				<?php endif; ?>
 
 				<?php if ( $event['organizer'] ) : ?>
 					<p class="event-detail__organizer">

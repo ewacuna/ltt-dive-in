@@ -53,9 +53,18 @@ function ltt_dive_in_get_event_driver_config( $get ) {
 	$ids      = static function ( $name ) use ( $get ) {
 		return array_values( array_unique( array_filter( array_map( 'absint', (array) call_user_func( $get, $name ) ) ) ) );
 	};
+	$scalar   = static function ( $name ) use ( $get ) {
+		$value = call_user_func( $get, $name );
+		return is_scalar( $value ) ? (string) $value : '';
+	};
+	$month    = $scalar( 'ltt_dive_in_event_driver_month' );
+	$year     = $scalar( 'ltt_dive_in_event_driver_year' );
 
 	return array(
 		'variant'          => in_array( $variant, array( 'hero', 'listed', 'carousel' ), true ) ? $variant : '',
+		'limit_month'      => in_array( $variant, array( 'listed', 'carousel' ), true ) && $flag( 'ltt_dive_in_event_driver_limit_month', false ) && '' !== $month && '' !== $year,
+		'month'            => $month,
+		'year'             => $year,
 		'hero_source'      => 'manual' === call_user_func( $get, 'ltt_dive_in_event_driver_hero_source' ) ? 'manual' : 'featured',
 		'hero_count'       => $count( 'ltt_dive_in_event_driver_hero_count', $limits['hero'] ),
 		'hero_events'      => array_values( array_filter( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) call_user_func( $get, 'ltt_dive_in_event_driver_hero_events' ) ) ) ),
@@ -76,6 +85,95 @@ function ltt_dive_in_get_event_driver_config( $get ) {
 		'carousel_featured' => $flag( 'ltt_dive_in_event_driver_carousel_featured', false ),
 		'carousel_categories' => $ids( 'ltt_dive_in_event_driver_carousel_categories' ),
 	);
+}
+
+/**
+ * Resolve the saved month and intersect it with a visitor's date preset.
+ *
+ * @param array  $config Normalized block settings.
+ * @param string $preset Date preset, or all for the whole month.
+ * @return array|WP_Error Empty array means the block is unrestricted.
+ */
+function ltt_dive_in_get_event_driver_date_range( $config, $preset = 'all' ) {
+	if ( empty( $config['limit_month'] ) ) {
+		return array();
+	}
+
+	if ( ! preg_match( '/^(?:[1-9]|1[0-2])$/', (string) $config['month'] ) ) {
+		return new WP_Error( 'ltt_dive_in_event_driver_month', __( 'Choose a month.', 'ltt-dive-in' ) );
+	}
+	if ( ! preg_match( '/^[1-9][0-9]{3}$/', (string) $config['year'] ) ) {
+		return new WP_Error( 'ltt_dive_in_event_driver_year', __( 'Choose a year.', 'ltt-dive-in' ) );
+	}
+
+	$first = new DateTimeImmutable( sprintf( '%04d-%02d-01', (int) $config['year'], (int) $config['month'] ), wp_timezone() );
+	$range = array( 'from' => $first->format( 'Y-m-d' ), 'to' => $first->format( 'Y-m-t' ) );
+
+	if ( 'all' !== $preset ) {
+		$filter        = ltt_dive_in_get_event_date_range( $preset );
+		$range['from'] = max( $range['from'], $filter['from'] );
+		$range['to']   = $filter['to'] ? min( $range['to'], $filter['to'] ) : $range['to'];
+	}
+
+	return $range;
+}
+
+/**
+ * Return date choices appropriate to this block's scope.
+ *
+ * @param array $config Block settings.
+ * @return array<string, string>
+ */
+function ltt_dive_in_get_event_driver_date_filters( $config ) {
+	return ( ! empty( $config['limit_month'] ) ? array( 'all' => __( 'All dates', 'ltt-dive-in' ) ) : array() ) + ltt_dive_in_get_event_date_filters();
+}
+
+/**
+ * Query events while enforcing the saved month on the server.
+ *
+ * @param array $config Block settings.
+ * @param array $query Seeker query arguments.
+ * @return array|WP_Error
+ */
+function ltt_dive_in_query_event_driver_events( $config, $query ) {
+	$range = ltt_dive_in_get_event_driver_date_range( $config, $query['date'] ?? 'all' );
+	if ( is_wp_error( $range ) ) {
+		return $range;
+	}
+	if ( $range ) {
+		if ( $range['from'] > $range['to'] ) {
+			return array( 'events' => array(), 'fetched' => 0, 'total' => 0 );
+		}
+		$query['date_from'] = $range['from'];
+		$query['date_to']   = $range['to'];
+	}
+
+	$result = ltt_dive_in_get_seeker_events( $query );
+	if ( $range && ! is_wp_error( $result ) ) {
+		foreach ( $result['events'] as &$event ) {
+			$event['date_context'] = $event['start']->format( 'Y-m-d' );
+		}
+		unset( $event );
+	}
+
+	return $result;
+}
+
+/**
+ * Describe an empty configured month without exposing implementation details.
+ *
+ * @param array $config Block settings with a valid month.
+ * @return string
+ */
+function ltt_dive_in_get_event_driver_month_empty_message( $config ) {
+	$range = ltt_dive_in_get_event_driver_date_range( $config );
+	if ( ! $range || is_wp_error( $range ) ) {
+		return __( 'No events match your filters.', 'ltt-dive-in' );
+	}
+	$first = new DateTimeImmutable( $range['from'], wp_timezone() );
+
+	/* translators: %s: month and year, for example February 2026. */
+	return sprintf( __( 'No events found for %s.', 'ltt-dive-in' ), wp_date( 'F Y', $first->getTimestamp() ) );
 }
 
 /**
@@ -132,7 +230,8 @@ function ltt_dive_in_get_event_driver_hero_events( $config ) {
  */
 function ltt_dive_in_get_event_driver_carousel_events( $config ) {
 	$exclude = isset( $config['exclude'] ) ? (string) $config['exclude'] : '';
-	$result  = ltt_dive_in_get_seeker_events(
+	$result  = ltt_dive_in_query_event_driver_events(
+		$config,
 		array(
 			'limit'        => $config['carousel_count'] + ( $exclude ? 1 : 0 ),
 			'sort'         => $config['carousel_sort'],
@@ -173,7 +272,7 @@ function ltt_dive_in_get_event_driver_listed_filters( $config, $params ) {
 
 	return array(
 		'category' => $category,
-		'date'     => array_key_exists( $date, ltt_dive_in_get_event_date_filters() ) ? $date : 'upcoming',
+		'date'     => array_key_exists( $date, ltt_dive_in_get_event_driver_date_filters( $config ) ) ? $date : ( ! empty( $config['limit_month'] ) ? 'all' : 'upcoming' ),
 		'search'   => function_exists( 'mb_substr' ) ? mb_substr( $search, 0, 80 ) : substr( $search, 0, 80 ),
 		'page'     => max( 1, min( 20, absint( $params['page'] ?? 1 ) ) ),
 	);
@@ -189,7 +288,8 @@ function ltt_dive_in_get_event_driver_listed_filters( $config, $params ) {
  * @return array{events: array[], fetched: int, total: int, has_more: bool}|WP_Error
  */
 function ltt_dive_in_query_event_driver_listed_events( $config, $filters, $offset, $limit ) {
-	$result = ltt_dive_in_get_seeker_events(
+	$result = ltt_dive_in_query_event_driver_events(
+		$config,
 		array(
 			'limit'        => $limit,
 			'offset'       => $offset,
@@ -381,6 +481,7 @@ function ltt_dive_in_fold_ical_line( $line ) {
  */
 function ltt_dive_in_get_event_ical( $event ) {
 	$utc      = new DateTimeZone( 'UTC' );
+	$date     = ltt_dive_in_sanitize_event_date( $event['date_context'] ?? '' );
 	$location = implode( ', ', array_filter( array( $event['venue'], $event['address']['street'], $event['address']['city'], $event['address']['region'] ) ) );
 	$lines    = array(
 		'BEGIN:VCALENDAR',
@@ -389,7 +490,7 @@ function ltt_dive_in_get_event_ical( $event ) {
 		'CALSCALE:GREGORIAN',
 		'METHOD:PUBLISH',
 		'BEGIN:VEVENT',
-		'UID:' . $event['id'] . '@seeker.io',
+		'UID:' . $event['id'] . ( $date ? '-' . $date : '' ) . '@seeker.io',
 		'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ),
 	);
 
@@ -437,7 +538,12 @@ function ltt_dive_in_get_event_ical( $event ) {
  * @return string
  */
 function ltt_dive_in_get_event_reminder_url( $event ) {
-	return add_query_arg( 'event', rawurlencode( $event['id'] ), rest_url( 'ltt-dive-in/v1/event-calendar' ) );
+	$args = array( 'event' => $event['id'] );
+	$date = ltt_dive_in_sanitize_event_date( $event['date_context'] ?? '' );
+	if ( $date ) {
+		$args['event_date'] = $date;
+	}
+	return add_query_arg( $args, rest_url( 'ltt-dive-in/v1/event-calendar' ) );
 }
 
 /**
@@ -447,7 +553,13 @@ function ltt_dive_in_get_event_reminder_url( $event ) {
  * @return WP_REST_Response|WP_Error
  */
 function ltt_dive_in_get_event_driver_calendar( WP_REST_Request $request ) {
-	$events = ltt_dive_in_get_seeker_events_by_id( array( $request->get_param( 'event' ) ) );
+	$date = $request->get_param( 'event_date' );
+	if ( null !== $date && '' !== $date ) {
+		$current = ltt_dive_in_get_seeker_event_with_details( $request->get_param( 'event' ), $date );
+		$events  = $current ? array( $current['event'] ) : array();
+	} else {
+		$events = ltt_dive_in_get_seeker_events_by_id( array( $request->get_param( 'event' ) ) );
+	}
 
 	if ( ! $events ) {
 		return new WP_Error( 'ltt_dive_in_event_not_found', __( 'Event not found.', 'ltt-dive-in' ), array( 'status' => 404 ) );
@@ -511,7 +623,13 @@ function ltt_dive_in_register_event_driver_routes() {
 			'callback'            => 'ltt_dive_in_get_event_driver_calendar',
 			'permission_callback' => '__return_true',
 			'args'                => array(
-				'event' => array( 'required' => true, 'sanitize_callback' => 'ltt_dive_in_sanitize_seeker_uuid' ),
+				'event'      => array( 'required' => true, 'sanitize_callback' => 'ltt_dive_in_sanitize_seeker_uuid' ),
+				'event_date' => array(
+					'type'              => 'string',
+					'validate_callback' => static function ( $value ) {
+						return '' === $value || '' !== ltt_dive_in_sanitize_event_date( $value );
+					},
+				),
 			),
 		)
 	);

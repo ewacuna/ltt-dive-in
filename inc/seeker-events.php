@@ -203,7 +203,7 @@ function ltt_dive_in_get_seeker_items( $body ) {
  * @return array{from:string, to:string}
  */
 function ltt_dive_in_get_event_date_range( $preset ) {
-	$today = new DateTimeImmutable( 'today', wp_timezone() );
+	$today = current_datetime()->setTime( 0, 0 );
 	$from  = $today;
 	$to    = null;
 
@@ -402,15 +402,18 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 		return $body;
 	}
 
-	$items  = ltt_dive_in_get_seeker_items( $body );
-	$events = array();
+	$items   = ltt_dive_in_get_seeker_items( $body );
+	$events  = array();
+	$bounded = ! empty( $args['date_from'] ) && ltt_dive_in_sanitize_event_date( $args['date_from'] );
+	$seen    = array();
 
 	foreach ( $items as $item ) {
-		$event = ltt_dive_in_normalize_seeker_event( $item, $range['from'] );
+		$event = ltt_dive_in_normalize_seeker_event( $item, $range['from'], $bounded );
 
 		// A recurring series can span the range without an occurrence inside it.
-		if ( $event && ( '' === $range['to'] || $event['start']->format( 'Y-m-d' ) <= $range['to'] ) ) {
+		if ( $event && ! isset( $seen[ $event['id'] ] ) && ( '' === $range['to'] || $event['start']->format( 'Y-m-d' ) <= $range['to'] ) && ( ! $bounded || ( $event['end'] ?? $event['start'] )->format( 'Y-m-d' ) >= $range['from'] ) ) {
 			$events[] = $event;
+			$seen[ $event['id'] ] = true;
 		}
 	}
 
@@ -422,23 +425,34 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 }
 
 /**
- * Find raw Seeker events by UUID among upcoming published events.
+ * Find raw Seeker events by UUID in the upcoming feed or on a specific date.
  *
  * The feed cannot be filtered by event ID (`searchfield=id` returns 422), so
  * the cached upcoming feed is read in pages and matched locally.
  *
  * @param string[] $uuids Seeker event UUIDs.
+ * @param string   $event_date Optional occurrence date; searches that day.
  * @return array<string, array> Raw events keyed by UUID.
  */
-function ltt_dive_in_find_seeker_raw_events( $uuids ) {
+function ltt_dive_in_find_seeker_raw_events( $uuids, $event_date = '' ) {
 	$uuids = array_slice( array_values( array_unique( array_filter( array_map( 'ltt_dive_in_sanitize_seeker_uuid', (array) $uuids ) ) ) ), 0, 12 );
 	$found = array();
+	$dates = array();
+	if ( '' !== $event_date ) {
+		if ( ! ltt_dive_in_sanitize_event_date( $event_date ) ) {
+			return $found;
+		}
+		$dates = array( 'date_from' => $event_date, 'date_to' => $event_date );
+	}
 
 	for ( $offset = 0; $uuids && $offset < 500 && count( $found ) < count( $uuids ); $offset += 100 ) {
 		$built = ltt_dive_in_get_seeker_event_query(
-			array(
-				'limit'  => 100,
-				'offset' => $offset,
+			array_merge(
+				$dates,
+				array(
+					'limit'  => 100,
+					'offset' => $offset,
+				)
 			)
 		);
 		$body  = ltt_dive_in_seeker_request( '/events/feeds', $built['query'] );
@@ -494,24 +508,53 @@ function ltt_dive_in_get_seeker_events_by_id( $uuids ) {
 }
 
 /**
- * Return one upcoming event with the details shown on its own page.
+ * Return an event with details, optionally at an exact occurrence date.
  *
- * @param string $uuid Seeker event UUID.
+ * @param string $uuid       Seeker event UUID.
+ * @param string $event_date Optional occurrence date in YYYY-MM-DD format.
  * @return array{event: array, details: array}|null
  */
-function ltt_dive_in_get_seeker_event_with_details( $uuid ) {
-	$uuid = ltt_dive_in_sanitize_seeker_uuid( $uuid );
-	$raw  = $uuid ? ( ltt_dive_in_find_seeker_raw_events( array( $uuid ) )[ $uuid ] ?? null ) : null;
-	$event = $raw ? ltt_dive_in_normalize_seeker_event( $raw ) : null;
-
-	if ( ! $event ) {
+function ltt_dive_in_get_seeker_event_with_details( $uuid, $event_date = '' ) {
+	if ( '' !== $event_date && ! ltt_dive_in_sanitize_event_date( $event_date ) ) {
 		return null;
+	}
+	$uuid = ltt_dive_in_sanitize_seeker_uuid( $uuid );
+	$raw  = $uuid ? ( ltt_dive_in_find_seeker_raw_events( array( $uuid ), $event_date )[ $uuid ] ?? null ) : null;
+	$event = $raw ? ltt_dive_in_normalize_seeker_event( $raw, $event_date ) : null;
+
+	if ( ! $event || ( $event_date && $event['start']->format( 'Y-m-d' ) !== $event_date ) ) {
+		return null;
+	}
+	if ( $event_date && ( ! empty( $raw['recurring'] ) || ! empty( $raw['occurrences'] ) ) ) {
+		$dates = ltt_dive_in_get_seeker_occurrences( $raw, $event['start']->getTimezone(), $event_date, 1 );
+		if ( ! $dates || $dates[0]['start']->format( 'Y-m-d' ) !== $event_date ) {
+			return null;
+		}
+	}
+	if ( $event_date ) {
+		$event['date_context'] = $event_date;
 	}
 
 	return array(
 		'event'   => $event,
 		'details' => ltt_dive_in_get_seeker_event_details( $raw, $event ),
 	);
+}
+
+/**
+ * Whether the displayed occurrence has ended in the event's timezone.
+ *
+ * Events without an end time remain actionable through their final day.
+ *
+ * @param array $event Normalized event.
+ * @return bool
+ */
+function ltt_dive_in_event_has_ended( $event ) {
+	$last = $event['end'] ?? $event['start'];
+	if ( ! empty( $event['all_day'] ) || empty( $event['end'] ) || ( isset( $event['has_end_time'] ) && ! $event['has_end_time'] ) ) {
+		$last = $last->setTime( 23, 59, 59 );
+	}
+	return $last < current_datetime();
 }
 
 /**
@@ -822,7 +865,7 @@ function ltt_dive_in_seeker_rrule_matches( $day, $first, $rule ) {
  * @param DateTimeZone $timezone Event timezone.
  * @param string       $from     Earliest date in `YYYY-MM-DD`.
  * @param int          $limit    Maximum number of dates.
- * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null}>
+ * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null, has_end_time: bool}>
  */
 function ltt_dive_in_get_seeker_series_dates( $series, $timezone, $from, $limit ) {
 	$start    = ltt_dive_in_seeker_date( $series['startdate'] ?? '', $series['starttime'] ?? '', $timezone );
@@ -844,8 +887,9 @@ function ltt_dive_in_get_seeker_series_dates( $series, $timezone, $from, $limit 
 
 		if ( ( $last ? $last->format( 'Y-m-d' ) : $start->format( 'Y-m-d' ) ) >= $from ) {
 			$dates[] = array(
-				'start' => $start,
-				'end'   => $last && $last > $start ? $last : ( null !== $duration ? $start->modify( '+' . $duration . ' seconds' ) : null ),
+				'start'        => $start,
+				'end'          => $last && $last > $start ? $last : ( null !== $duration ? $start->modify( '+' . $duration . ' seconds' ) : null ),
+				'has_end_time' => ! empty( $series['endtime'] ),
 			);
 		}
 
@@ -903,8 +947,9 @@ function ltt_dive_in_get_seeker_series_dates( $series, $timezone, $from, $limit 
 
 		$occurrence = ltt_dive_in_seeker_date( $date, $series['starttime'] ?? '', $timezone );
 		$dates[]    = array(
-			'start' => $occurrence,
-			'end'   => null !== $duration ? $occurrence->modify( '+' . $duration . ' seconds' ) : null,
+			'start'        => $occurrence,
+			'end'          => null !== $duration ? $occurrence->modify( '+' . $duration . ' seconds' ) : null,
+			'has_end_time' => ! empty( $series['endtime'] ),
 		);
 	}
 
@@ -923,7 +968,7 @@ function ltt_dive_in_get_seeker_series_dates( $series, $timezone, $from, $limit 
  * @param DateTimeZone $timezone Event timezone.
  * @param string       $from     Earliest date in `YYYY-MM-DD`.
  * @param int          $limit    Maximum number of dates.
- * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null}>
+ * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null, has_end_time: bool}>
  */
 function ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, $limit = 50 ) {
 	$schedules = array_values( array_filter( (array) ( $event['occurrences'] ?? array() ), 'is_array' ) );
@@ -947,7 +992,7 @@ function ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, $limit = 
  * @param array        $event    Raw Seeker event.
  * @param DateTimeZone $timezone Event timezone.
  * @param string       $from     Earliest occurrence date in `YYYY-MM-DD`.
- * @return array{start: DateTimeImmutable, end: DateTimeImmutable|null}|null
+ * @return array{start: DateTimeImmutable, end: DateTimeImmutable|null, has_end_time: bool}|null
  */
 function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
 	if ( ! in_array( ltt_dive_in_parse_seeker_rrule( $event['rrule'] ?? '' )['FREQ'] ?? '', array( 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY' ), true ) && empty( $event['occurrences'] ) ) {
@@ -957,6 +1002,34 @@ function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
 	$dates = ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, 1 );
 
 	return $dates ? $dates[0] : null;
+}
+
+/**
+ * Pick the first occurrence that overlaps or follows the start of a range.
+ *
+ * Recurring schedules have a time-of-day duration of at most 24 hours;
+ * also inspect the preceding day to include overnight occurrences.
+ *
+ * @param array        $event Raw event.
+ * @param DateTimeZone $timezone Event timezone.
+ * @param string       $from First date of the range.
+ * @return array|null
+ */
+function ltt_dive_in_get_seeker_range_occurrence( $event, $timezone, $from ) {
+	$schedules = array_values( array_filter( (array) ( $event['occurrences'] ?? array() ), 'is_array' ) );
+	$schedules = $schedules ? $schedules : array( $event );
+	$lookback  = ( new DateTimeImmutable( $from, $timezone ) )->modify( '-1 day' )->format( 'Y-m-d' );
+	$matches   = array();
+	foreach ( $schedules as $schedule ) {
+		foreach ( ltt_dive_in_get_seeker_series_dates( $schedule, $timezone, $lookback, 2 ) as $date ) {
+			if ( ( $date['end'] ?? $date['start'] )->format( 'Y-m-d' ) >= $from ) {
+				$matches[ $date['start']->format( 'Y-m-d H:i' ) ] = $date;
+				break;
+			}
+		}
+	}
+	ksort( $matches );
+	return $matches ? reset( $matches ) : null;
 }
 
 /**
@@ -1048,9 +1121,10 @@ function ltt_dive_in_get_seeker_image( $images ) {
  *
  * @param array  $raw  Raw Seeker event.
  * @param string $from Earliest date in `YYYY-MM-DD` for a recurring occurrence; defaults to today.
+ * @param bool   $include_overlap Include occurrences continuing into the range.
  * @return array|null Null when the event cannot be displayed.
  */
-function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
+function ltt_dive_in_normalize_seeker_event( $raw, $from = '', $include_overlap = false ) {
 	if ( ! is_array( $raw ) ) {
 		return null;
 	}
@@ -1062,7 +1136,7 @@ function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
 	$id    = ltt_dive_in_sanitize_seeker_uuid( $raw['uuid'] ?? '' );
 	$title = ltt_dive_in_seeker_plain_text( $raw['name'] ?? '' );
 
-	if ( ! $id || '' === $title || ( isset( $raw['state'] ) && 'published' !== $raw['state'] ) ) {
+	if ( ! $id || '' === $title || ( isset( $raw['state'] ) && 'published' !== $raw['state'] ) || 'cancelled' === ( $raw['eventstatus'] ?? '' ) ) {
 		return null;
 	}
 
@@ -1072,16 +1146,18 @@ function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
 		$timezone = wp_timezone();
 	}
 
-	$start = ltt_dive_in_seeker_date( $raw['startdate'] ?? '', $raw['starttime'] ?? '', $timezone );
-	$end   = ltt_dive_in_seeker_date( $raw['enddate'] ?? '', $raw['endtime'] ?? '', $timezone );
+	$start        = ltt_dive_in_seeker_date( $raw['startdate'] ?? '', $raw['starttime'] ?? '', $timezone );
+	$end          = ltt_dive_in_seeker_date( $raw['enddate'] ?? '', $raw['endtime'] ?? '', $timezone );
+	$has_end_time = ! empty( $raw['endtime'] );
 
-	if ( ! empty( $raw['recurring'] ) ) {
-		$next = ltt_dive_in_get_seeker_next_occurrence( $raw, $timezone, $from );
+	if ( ! empty( $raw['recurring'] ) || ! empty( $raw['occurrences'] ) ) {
+		$next = $include_overlap ? ltt_dive_in_get_seeker_range_occurrence( $raw, $timezone, $from ) : ltt_dive_in_get_seeker_next_occurrence( $raw, $timezone, $from );
 
 		if ( $next ) {
-			$start = $next['start'];
-			$end   = $next['end'];
-		} elseif ( $start && $start->format( 'Y-m-d' ) < $from ) {
+			$start        = $next['start'];
+			$end          = $next['end'];
+			$has_end_time = $next['has_end_time'];
+		} elseif ( $include_overlap || ( $start && $start->format( 'Y-m-d' ) < $from ) ) {
 			return null;
 		}
 	}
@@ -1130,6 +1206,7 @@ function ltt_dive_in_normalize_seeker_event( $raw, $from = '' ) {
 		'ticket_url'  => $ticket_url,
 		'start'       => $start,
 		'end'         => $end && $end >= $start ? $end : null,
+		'has_end_time' => $has_end_time,
 		'all_day'     => ! empty( $raw['allday'] ),
 		'status'      => sanitize_key( $raw['eventstatus'] ?? 'scheduled' ),
 		'mode'        => in_array( $raw['eventtype'] ?? '', array( 'online', 'hybrid' ), true ) ? (string) $raw['eventtype'] : 'physical',
