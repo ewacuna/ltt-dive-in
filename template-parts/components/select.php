@@ -2,6 +2,9 @@
 /**
  * Reusable enhanced select control.
  *
+ * Set multiple and selected_values to opt into the shared checkbox menu.
+ * The name argument stays unsuffixed; multiple mode adds [] for form submission.
+ *
  * @package LTT_Dive_In
  */
 
@@ -14,6 +17,8 @@ $label              = isset( $args['label'] ) && is_string( $args['label'] ) ? $
 $options            = isset( $args['options'] ) && is_array( $args['options'] ) ? $args['options'] : array();
 $placeholder        = isset( $args['placeholder'] ) && is_string( $args['placeholder'] ) ? $args['placeholder'] : '';
 $selected_value     = isset( $args['selected_value'] ) && is_scalar( $args['selected_value'] ) ? (string) $args['selected_value'] : '';
+$multiple           = ! empty( $args['multiple'] );
+$selected_values    = array_map( 'strval', array_filter( (array) ( $args['selected_values'] ?? array() ), 'is_scalar' ) );
 $surface            = isset( $args['surface'] ) && 'dark' === $args['surface'] ? 'dark' : 'light';
 $class_name         = isset( $args['class_name'] ) ? sanitize_html_class( $args['class_name'] ) : '';
 $native_attributes  = isset( $args['native_attributes'] ) && is_array( $args['native_attributes'] ) ? $args['native_attributes'] : array();
@@ -42,19 +47,20 @@ if ( $placeholder ) {
 }
 ?>
 <label id="<?php echo esc_attr( $label_id ); ?>" class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
-<div class="ltt-select ltt-select--<?php echo esc_attr( $surface ); ?><?php echo $leading_icon ? ' ltt-select--has-icon' : ''; ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" x-data="lttSelect" x-on:click.outside="close" x-on:keydown.escape.window="close">
+<div class="ltt-select ltt-select--<?php echo esc_attr( $surface ); ?><?php echo $leading_icon ? ' ltt-select--has-icon' : ''; ?><?php echo $class_name ? ' ' . esc_attr( $class_name ) : ''; ?>" <?php if ( $multiple ) : ?>data-ltt-select-multiple data-select-id="<?php echo esc_attr( $id ); ?>" data-select-count="<?php esc_attr_e( '%d Selected', 'ltt-dive-in' ); ?>"<?php else : ?>x-data="lttSelect" x-on:click.outside="close" x-on:keydown.escape.window="close"<?php endif; ?>>
 	<?php if ( $leading_icon ) : ?>
 		<span class="ltt-select__icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( $leading_icon ) ); ?>" alt="" /></span>
 	<?php endif; ?>
-	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $name ? ' name="' . esc_attr( $name ) . '"' : ''; ?><?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
+	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $multiple ? ' multiple' : ''; ?><?php echo $name ? ' name="' . esc_attr( $name . ( $multiple ? '[]' : '' ) ) . '"' : ''; ?><?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
 		<?php foreach ( $options as $option ) : ?>
 			<?php $option_value = isset( $option['value'] ) && is_scalar( $option['value'] ) ? (string) $option['value'] : ''; ?>
 			<?php $option_label = isset( $option['label'] ) && is_string( $option['label'] ) ? $option['label'] : ''; ?>
 			<?php if ( ! $option_label ) { continue; } ?>
-			<option value="<?php echo esc_attr( $option_value ); ?>"<?php selected( $selected_value, $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
+			<option value="<?php echo esc_attr( $option_value ); ?>"<?php selected( $multiple ? in_array( $option_value, $selected_values, true ) : $selected_value === $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
 		<?php endforeach; ?>
 	</select>
 	<span class="ltt-select__native-icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( $icon_file ) ); ?>" alt="" /></span>
+	<?php if ( ! $multiple ) : ?>
 	<button x-ref="trigger" x-cloak class="ltt-select__trigger" type="button" x-bind:aria-expanded="open" aria-controls="<?php echo esc_attr( $menu_id ); ?>" aria-labelledby="<?php echo esc_attr( $label_id ); ?> <?php echo esc_attr( $current_id ); ?>" x-on:click="toggle" x-on:keydown.escape.prevent="close">
 		<span id="<?php echo esc_attr( $current_id ); ?>" x-text="selectedLabel"></span>
 		<span class="ltt-select__trigger-icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( $icon_file ) ); ?>" alt="" /></span>
@@ -67,4 +73,5 @@ if ( $placeholder ) {
 			<button class="ltt-select__option" type="button" data-ltt-select-value="<?php echo esc_attr( $option_value ); ?>" x-bind:aria-pressed="isSelected($el.dataset.lttSelectValue)" x-on:click="choose"<?php echo ! empty( $option['placeholder'] ) ? ' x-show="! isSelected($el.dataset.lttSelectValue)"' : ''; ?>><?php echo esc_html( $option_label ); ?></button>
 		<?php endforeach; ?>
 	</div>
+	<?php endif; ?>
 </div>

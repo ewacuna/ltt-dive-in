@@ -191,6 +191,78 @@
     color: #073959;
 }
 
+/* Opt-in multiple choices retain the select's existing surface and geometry. */
+.ltt-select--multiple .ltt-select__menu[hidden] {
+    display: none;
+}
+
+.ltt-select--multiple .ltt-select__menu {
+    max-height: min(60vh, 17rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.ltt-select__choice {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    cursor: pointer;
+}
+
+.ltt-select__choice:is(:hover, :has(:checked)) {
+    background: #c7d1d8;
+}
+
+.ltt-select__choice > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.ltt-select__checkbox {
+    appearance: none;
+    flex: 0 0 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    border: 1.3px solid #073959;
+    border-radius: 0.25rem;
+    background: #fff center / 0.875rem no-repeat;
+    cursor: pointer;
+}
+
+.ltt-select__checkbox:checked {
+    background-image: url("../../images/icons/event-check.svg");
+}
+
+.ltt-select__checkbox:focus-visible {
+    outline: 3px solid #073959;
+    outline-offset: 2px;
+}
+
+.ltt-select__choice:has(:disabled) {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.ltt-select:not(.is-enhanced) select[multiple] {
+    height: auto;
+    min-height: 6rem;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    white-space: normal;
+}
+
+.ltt-select:has(select[multiple]):not(.is-enhanced) > .ltt-select__native-icon {
+    display: none;
+}
+
+@media (forced-colors: active) {
+    .ltt-select__checkbox {
+        appearance: auto;
+    }
+}
+
 .ltt-select--dark .ltt-select__native {
     border-color: #c7d1d8;
 }

@@ -442,6 +442,7 @@ Implementation rules:
 - Card buttons navigate to their configured destinations. The Load More control appends the next batch after the initial grid.
 - Taxonomy dropdown filtering, WP Default keyword search, and Load More pagination use FacetWP.
 - The FacetWP dropdowns use the shared light select appearance and open-menu states from Monthly Page Driver; FacetWP remains the source of filter options and selected values.
+- The shared select component opts into multiple mode with `multiple` and `selected_values`; it keeps a native multiple select, emits standard `change` events and provides the common checkbox menu/summary. Existing single-select consumers retain their current behavior.
 - The shared light dropdown's Figma hover state (`1:44701`) changes the navy arrow compartment to Peak Gold (`#EEB040`) and the tint-300 arrow to navy (`#073959`). The theme keeps that appearance while the menu is expanded and applies it to keyboard focus and press as well.
 
 ### Events
