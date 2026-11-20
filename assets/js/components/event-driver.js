@@ -259,9 +259,24 @@
 		let searchTimer = 0;
 		let lastSearch = search ? search.value.trim() : '';
 
-		if ( ! form || ! grid || ! strings.endpoint || ! window.fetch ) {
+		if ( ! form || ! grid || ! empty || ! strings.endpoint || ! window.fetch ) {
 			return;
 		}
+
+		const syncEmptyState = function () {
+			const count = grid.querySelectorAll( '[data-event-card]' ).length;
+
+			empty.hidden = count > 0;
+
+			if ( ! count ) {
+				const filters = new FormData( form );
+				const wholeMonth = empty.dataset.monthEmpty && ! filters.get( 'event_category' ) && ! filters.get( 'event_date' ) && ! ( filters.get( 'event_search' ) || '' ).toString().trim();
+
+				empty.textContent = wholeMonth ? empty.dataset.monthEmpty : strings.noResults || '';
+			}
+
+			return count;
+		};
 
 		const syncCarousel = function () {
 			const shouldRun = !! ( mobileQuery && mobileQuery.matches && grid.children.length );
@@ -332,10 +347,7 @@
 
 			request( 0 ).then( function ( response ) {
 				grid.innerHTML = response.html || '';
-				const filters = new FormData( form );
-				const wholeMonth = empty.dataset.monthEmpty && ! filters.get( 'event_category' ) && ! filters.get( 'event_date' ) && ! ( filters.get( 'event_search' ) || '' ).toString().trim();
-				empty.textContent = wholeMonth ? empty.dataset.monthEmpty : strings.noResults || '';
-				empty.hidden = response.count > 0;
+				const eventCount = syncEmptyState();
 				setHasMore( response.hasMore, response.nextOffset );
 
 				if ( carousel ) {
@@ -344,7 +356,7 @@
 				}
 
 				syncCarousel();
-				announce( response.count ? format( strings.showing, [ response.count, Math.max( response.total, response.count ) ] ) : empty.textContent );
+				announce( eventCount ? format( strings.showing, [ eventCount, Math.max( response.total, eventCount ) ] ) : empty.textContent );
 			} ).catch( function ( error ) {
 				if ( error && 'AbortError' === error.name ) {
 					return;
@@ -365,6 +377,7 @@
 				const firstIndex = grid.children.length;
 
 				grid.insertAdjacentHTML( 'beforeend', response.html || '' );
+				const eventCount = syncEmptyState();
 				setHasMore( response.hasMore, response.nextOffset );
 				syncCarousel();
 
@@ -381,7 +394,7 @@
 					}
 				}
 
-				announce( format( strings.loaded, [ response.count ] ) );
+				announce( eventCount ? format( strings.loaded, [ response.count ] ) : empty.textContent );
 			} ).catch( function ( error ) {
 				loadMore.disabled = false;
 
@@ -447,6 +460,7 @@
 			}
 		}
 
+		syncEmptyState();
 		syncCarousel();
 	};
 

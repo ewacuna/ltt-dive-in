@@ -294,6 +294,10 @@
     text-align: center;
 }
 
+.event-driver__empty[hidden] {
+    display: none;
+}
+
 .event-driver__load-more {
     display: flex;
     width: 9.25rem;
