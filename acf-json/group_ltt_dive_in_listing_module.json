@@ -69,6 +69,19 @@
       "return_format": "value"
     },
     {
+      "key": "field_ltt_dive_in_listing_module_facet_three",
+      "label": "Third dropdown filter",
+      "name": "ltt_dive_in_listing_module_facet_three",
+      "type": "select",
+      "instructions": "Optional. Choose a FacetWP Dropdown for a third, different taxonomy used by this content type.",
+      "required": 0,
+      "choices": {},
+      "allow_null": 1,
+      "multiple": 0,
+      "ui": 1,
+      "return_format": "value"
+    },
+    {
       "key": "field_ltt_dive_in_listing_module_search_facet",
       "label": "Search facet",
       "name": "ltt_dive_in_listing_module_search_facet",
@@ -134,5 +147,5 @@
   "label_placement": "top",
   "instruction_placement": "label",
   "show_in_rest": 0,
-  "modified": 1795183890
+  "modified": 1795199003
 }

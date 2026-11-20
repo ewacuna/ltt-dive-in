@@ -141,6 +141,32 @@
     background: rgba(197, 197, 203, 0.85);
 }
 
+/* Over-image CTAs can return to their editorial outline priority on mobile. */
+@media (max-width: 767.98px) {
+    .ltt-button--glass[data-ltt-button-mobile-variant] {
+        --ltt-button-background: transparent;
+        --ltt-button-pressed-background: #f9f9f9;
+        backdrop-filter: none;
+    }
+
+    .ltt-button--glass[data-ltt-button-mobile-variant="primary-outline"] {
+        --ltt-button-border-color: #61c2b7;
+        --ltt-button-color: #073959;
+        --ltt-button-hover-background: #073959;
+        --ltt-button-hover-border-color: #073959;
+        --ltt-button-hover-color: #ffffff;
+    }
+
+    .ltt-button--glass[data-ltt-button-mobile-variant="secondary-outline"] {
+        --ltt-button-border-color: #6f6d7c;
+        --ltt-button-color: #525062;
+        --ltt-button-hover-background: #85a2b2;
+        --ltt-button-hover-border-color: #85a2b2;
+        --ltt-button-hover-color: #ffffff;
+        --ltt-button-pressed-border-color: #6f6d7c;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .ltt-button {
         transition: none;

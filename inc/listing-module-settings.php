@@ -272,6 +272,7 @@ function ltt_dive_in_listing_module_facet_choices( $field ) {
 }
 add_filter( 'acf/load_field/key=field_ltt_dive_in_listing_module_facet_one', 'ltt_dive_in_listing_module_facet_choices' );
 add_filter( 'acf/load_field/key=field_ltt_dive_in_listing_module_facet_two', 'ltt_dive_in_listing_module_facet_choices' );
+add_filter( 'acf/load_field/key=field_ltt_dive_in_listing_module_facet_three', 'ltt_dive_in_listing_module_facet_choices' );
 
 /**
  * Return a Search facet that uses WordPress' default search engine.

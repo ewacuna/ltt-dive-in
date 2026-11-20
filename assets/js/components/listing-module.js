@@ -376,6 +376,26 @@
             }
         }
 
+        function syncFilterOrder() {
+            const filters = section.querySelector('.ltt-listing-module__filters');
+            const search = filters ? filters.querySelector('.ltt-listing-module__search-wrap') : null;
+
+            if (!search || (mobile.matches ? filters.firstElementChild === search : filters.lastElementChild === search)) {
+                return;
+            }
+
+            // Match the reading and keyboard order to the responsive placement without duplicating controls.
+            const focused = search.contains(document.activeElement) ? document.activeElement : null;
+            if (mobile.matches) {
+                filters.prepend(search);
+            } else {
+                filters.appendChild(search);
+            }
+            if (focused) {
+                focused.focus({ preventScroll: true });
+            }
+        }
+
         function syncFacetSelects(preserveExisting) {
             facetControls.forEach(function (control) {
                 const select = control.querySelector('select.facetwp-dropdown');
@@ -491,6 +511,8 @@
             });
         }
 
+        syncFilterOrder();
+        mobile.addEventListener('change', syncFilterOrder);
         syncFacetSelects();
         syncSearchControls();
         syncResetControls();

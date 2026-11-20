@@ -15,6 +15,7 @@ $image_id   = isset( $args['image_id'] ) ? absint( $args['image_id'] ) : 0;
 $url        = isset( $args['url'] ) && is_string( $args['url'] ) ? esc_url_raw( $args['url'] ) : '';
 $buttons    = isset( $args['buttons'] ) && is_array( $args['buttons'] ) ? $args['buttons'] : array();
 $is_preview = ! empty( $args['is_preview'] );
+$featured   = ! empty( $args['featured'] );
 $frame      = isset( $args['frame'] ) && in_array( $args['frame'], array( 'blue', 'gold', 'green' ), true ) ? $args['frame'] : 'blue';
 
 $buttons = array_slice(
@@ -34,7 +35,7 @@ if ( '' === $title ) {
 	return;
 }
 ?>
-<article class="ltt-listing-module__card ltt-listing-module__card--frame-<?php echo esc_attr( $frame ); ?><?php echo $buttons ? '' : ' ltt-listing-module__card--without-buttons'; ?>">
+<article class="ltt-listing-module__card ltt-listing-module__card--frame-<?php echo esc_attr( $frame ); ?><?php echo $featured ? ' ltt-listing-module__card--featured' : ''; ?>">
 	<?php if ( ! $is_preview && '' !== $url ) : ?>
 		<a class="ltt-listing-module__card-link" href="<?php echo esc_url( $url ); ?>" aria-label="<?php
 			/* translators: %s: listing title. */
@@ -46,10 +47,10 @@ if ( '' === $title ) {
 		<?php if ( $image_id ) : ?>
 			<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'class' => 'ltt-listing-module__image', 'sizes' => '(max-width: 767.98px) 100vw, (max-width: 1199.98px) 50vw, 33vw' ) ); ?>
 		<?php endif; ?>
-		<div class="ltt-listing-module__card-copy">
-			<h3 class="ltt-listing-module__card-title"><?php echo esc_html( $title ); ?></h3>
-			<?php if ( '' !== $copy ) : ?><p class="ltt-listing-module__card-description"><?php echo esc_html( $copy ); ?></p><?php endif; ?>
-		</div>
+	</div>
+	<div class="ltt-listing-module__card-copy">
+		<h3 class="ltt-listing-module__card-title"><?php echo esc_html( $title ); ?></h3>
+		<?php if ( '' !== $copy ) : ?><p class="ltt-listing-module__card-description"><?php echo esc_html( $copy ); ?></p><?php endif; ?>
 	</div>
 	<?php if ( $buttons ) : ?>
 		<div class="ltt-listing-module__card-actions">
@@ -58,6 +59,10 @@ if ( '' === $title ) {
 				$modifier = isset( $button['variant'] ) && in_array( $button['variant'], array( 'primary-outline', 'secondary-outline' ), true )
 					? $button['variant']
 					: ( 0 === $button_index ? 'primary-outline' : 'secondary-outline' );
+				$mobile_modifier = $modifier;
+				if ( $featured ) {
+					$modifier = 'glass';
+				}
 				$accessible_name = sprintf(
 					/* translators: 1: button label, 2: listing title. */
 					__( '%1$s for %2$s', 'ltt-dive-in' ),
@@ -69,9 +74,9 @@ if ( '' === $title ) {
 				}
 				?>
 				<?php if ( $is_preview ) : ?>
-					<span class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button"><?php echo esc_html( $button['title'] ); ?></span>
+					<span class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button"<?php if ( $featured ) : ?> data-ltt-button-mobile-variant="<?php echo esc_attr( $mobile_modifier ); ?>"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?></span>
 				<?php else : ?>
-					<a class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button" href="<?php echo esc_url( $button['url'] ); ?>" aria-label="<?php echo esc_attr( $accessible_name ); ?>"<?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?></a>
+					<a class="ltt-button ltt-button--<?php echo esc_attr( $modifier ); ?> ltt-listing-module__card-button"<?php if ( $featured ) : ?> data-ltt-button-mobile-variant="<?php echo esc_attr( $mobile_modifier ); ?>"<?php endif; ?> href="<?php echo esc_url( $button['url'] ); ?>" aria-label="<?php echo esc_attr( $accessible_name ); ?>"<?php if ( '_blank' === ( $button['target'] ?? '' ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html( $button['title'] ); ?></a>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>

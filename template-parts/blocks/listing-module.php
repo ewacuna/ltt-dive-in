@@ -33,15 +33,18 @@ if ( ! $heading || ! $post_type || ! $post_type->public || in_array( $source, ar
 
 $facet_one   = get_field( 'ltt_dive_in_listing_module_facet_one' );
 $facet_two   = get_field( 'ltt_dive_in_listing_module_facet_two' );
+$facet_three = get_field( 'ltt_dive_in_listing_module_facet_three' );
 $facet_names = array(
 	is_string( $facet_one ) ? sanitize_key( $facet_one ) : '',
 	is_string( $facet_two ) ? sanitize_key( $facet_two ) : '',
+	is_string( $facet_three ) ? sanitize_key( $facet_three ) : '',
 );
 $facets      = array();
 $facet_sources = array();
 $duplicate_filter = false;
+$third_facet_name = '';
 
-foreach ( $facet_names as $facet_name ) {
+foreach ( $facet_names as $facet_slot => $facet_name ) {
 	$facet = ltt_dive_in_listing_module_get_dropdown_facet( $facet_name, $source );
 	if ( ! $facet ) {
 		continue;
@@ -54,6 +57,9 @@ foreach ( $facet_names as $facet_name ) {
 
 	$facets[ $facet['name'] ] = $facet;
 	$facet_sources[]         = $facet['source'];
+	if ( 2 === $facet_slot ) {
+		$third_facet_name = $facet['name'];
+	}
 }
 
 $search_value = get_field( 'ltt_dive_in_listing_module_search_facet' );
@@ -93,7 +99,7 @@ if ( $use_facets ) {
 
 $query = new WP_Query( $query_args );
 
-// Frame colors follow each post's place in the unfiltered order, so a card keeps its color when filters move it.
+// Frame colors and featured treatment follow the unfiltered order, even when filters move a card.
 $frame_variants  = array( 'blue', 'gold', 'green' );
 $frame_positions = array_flip(
 	get_posts(
@@ -129,13 +135,16 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 			<div class="ltt-listing-module__filter-preview" aria-hidden="true">
 				<span class="ltt-select ltt-select--light ltt-listing-module__select-preview"><span class="ltt-select__native"><?php echo esc_html( isset( $facet_names[0], $facets[ $facet_names[0] ] ) ? $facets[ $facet_names[0] ]['label'] : __( 'Filter one', 'ltt-dive-in' ) ); ?></span><span class="ltt-select__native-icon"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/select-toggle.svg' ) ); ?>" alt="" /></span></span>
 				<span class="ltt-select ltt-select--light ltt-listing-module__select-preview"><span class="ltt-select__native"><?php echo esc_html( isset( $facet_names[1], $facets[ $facet_names[1] ] ) ? $facets[ $facet_names[1] ]['label'] : __( 'Filter two', 'ltt-dive-in' ) ); ?></span><span class="ltt-select__native-icon"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/select-toggle.svg' ) ); ?>" alt="" /></span></span>
+				<?php if ( $third_facet_name ) : ?>
+					<span class="ltt-select ltt-select--light ltt-listing-module__select-preview ltt-listing-module__select-preview--third"><span class="ltt-select__native"><?php echo esc_html( $facets[ $third_facet_name ]['label'] ); ?></span><span class="ltt-select__native-icon"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/select-toggle.svg' ) ); ?>" alt="" /></span></span>
+				<?php endif; ?>
 				<span class="ltt-search-bar ltt-search-bar--filter ltt-listing-module__search-preview"><span class="ltt-search-bar__submit"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-search.svg' ) ); ?>" alt="" /></span><span class="ltt-search-bar__input"><?php esc_html_e( 'Search...', 'ltt-dive-in' ); ?></span></span>
 			</div>
 		<?php elseif ( $use_facets && ( ! empty( $facets ) || $search_facet ) ) : ?>
 			<div class="ltt-listing-module__filters">
 				<?php foreach ( $facets as $facet_index => $facet ) : ?>
 					<?php $select_id = $id . '-facet-' . sanitize_html_class( $facet_index ); ?>
-					<div class="ltt-listing-module__filter">
+					<div class="ltt-listing-module__filter<?php echo $facet_index === $third_facet_name ? ' ltt-listing-module__filter--third' : ''; ?>">
 						<label id="<?php echo esc_attr( $select_id ); ?>-label" class="screen-reader-text ltt-listing-module__filter-label" for="<?php echo esc_attr( $select_id ); ?>"><?php echo esc_html( $facet['label'] ); ?></label>
 						<div class="ltt-select ltt-select--light ltt-listing-module__filter-control" data-listing-select-id="<?php echo esc_attr( $select_id ); ?>" data-listing-results-id="<?php echo esc_attr( $id ); ?>-cards">
 							<?php echo facetwp_display( 'facet', $facet['name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- FacetWP renders its own facet container. ?>
@@ -166,7 +175,8 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 				<?php endif; ?>
 				<?php while ( $query->have_posts() ) : $query->the_post(); ?>
 					<?php
-					$listing_post = get_post();
+					$listing_post     = get_post();
+					$listing_position = ( $frame_positions[ $listing_post->ID ] ?? $listing_post->ID ) % 3;
 					get_template_part(
 						'template-parts/components/listing-card',
 						null,
@@ -177,7 +187,8 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 							'copy'       => wp_trim_words( wp_strip_all_tags( get_the_excerpt( $listing_post ) ), 24, '…' ),
 							'buttons'    => ltt_dive_in_listing_card_buttons( $listing_post ),
 							'is_preview' => $is_preview,
-							'frame'      => $frame_variants[ ( $frame_positions[ $listing_post->ID ] ?? $listing_post->ID ) % 3 ],
+							'frame'      => $frame_variants[ $listing_position ],
+							'featured'   => 1 === $listing_position,
 						)
 					);
 					?>
@@ -214,7 +225,7 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 				$editor_warnings[] = __( 'FacetWP is not active, so front-end filters, search, and Load More will not be available.', 'ltt-dive-in' );
 			} else {
 				if ( 2 > count( $facets ) ) {
-					$editor_warnings[] = __( 'Choose two valid Dropdown facets whose taxonomies are attached to the selected content type.', 'ltt-dive-in' );
+					$editor_warnings[] = __( 'Choose two valid Dropdown facets whose taxonomies are attached to the selected content type. A third filter is optional.', 'ltt-dive-in' );
 				}
 				if ( ! $search_facet ) {
 					$editor_warnings[] = __( 'Choose a Search facet that uses WP Default with Auto refresh and Order by relevance enabled.', 'ltt-dive-in' );
@@ -223,7 +234,10 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 					$editor_warnings[] = __( 'Choose a Pager facet set to Load More to enable pagination.', 'ltt-dive-in' );
 				}
 				if ( $duplicate_filter ) {
-					$editor_warnings[] = __( 'The same taxonomy filter is selected more than once. Choose two different filters.', 'ltt-dive-in' );
+					$editor_warnings[] = __( 'The same taxonomy filter is selected more than once. Choose a different taxonomy for each filter.', 'ltt-dive-in' );
+				}
+				if ( $facet_names[2] && ! ltt_dive_in_listing_module_get_dropdown_facet( $facet_names[2], $source ) ) {
+					$editor_warnings[] = __( 'Choose a valid third Dropdown facet whose taxonomy is attached to the selected content type, or leave it empty.', 'ltt-dive-in' );
 				}
 			}
 			?>
