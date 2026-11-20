@@ -19,6 +19,7 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'ltt-dive-in' ); ?></a>
+<?php get_template_part( 'template-parts/components/site-alert', null, array( 'alert' => ltt_dive_in_get_site_alert() ) ); ?>
 
 <div id="page" class="site">
 	<?php
