@@ -15,7 +15,7 @@ $is_preview      = ! empty( $args['is_preview'] );
 $preview_message = $args['preview_message'];
 $events          = ltt_dive_in_get_event_driver_carousel_events( $config );
 
-if ( is_wp_error( $events ) || ! $events ) {
+if ( is_wp_error( $events ) || ( ! $events && empty( $config['limit_month'] ) ) ) {
 	$empty_message = ! empty( $config['limit_month'] ) ? ltt_dive_in_get_event_driver_month_empty_message( $config ) : __( 'There are no upcoming events that match these settings.', 'ltt-dive-in' );
 	$preview_message( is_wp_error( $events ) ? __( 'Events could not be loaded from Seeker. Check Settings → Events.', 'ltt-dive-in' ) : $empty_message );
 	return;
@@ -27,7 +27,7 @@ if ( $is_preview ) {
 	$classes[] = 'event-driver--preview';
 }
 ?>
-<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>" aria-labelledby="<?php echo esc_attr( $section_id . '-title' ); ?>"<?php echo $is_preview ? '' : ' data-event-driver-carousel'; ?>>
+<section id="<?php echo esc_attr( $section_id ); ?>" class="<?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>" aria-labelledby="<?php echo esc_attr( $section_id . '-title' ); ?>"<?php echo $is_preview || ! $events ? '' : ' data-event-driver-carousel'; ?>>
 	<div class="event-driver__container">
 		<?php
 		get_template_part(
@@ -40,33 +40,39 @@ if ( $is_preview ) {
 			)
 		);
 		?>
-		<div class="event-driver__carousel">
-			<div class="event-driver__viewport swiper" data-event-driver-viewport>
-				<div class="event-driver__track swiper-wrapper">
-					<?php foreach ( $events as $event ) : ?>
-						<?php
-						get_template_part(
-							'template-parts/components/event-card',
-							null,
-							array(
-								'event'   => $event,
-								'style'   => 'card',
-								'wrapper' => 'event-driver__item swiper-slide',
-								'sizes'   => '(max-width: 767.98px) 305px, 405px',
-							)
-						);
-						?>
-					<?php endforeach; ?>
+		<?php if ( ! $events ) : ?>
+			<p class="event-driver__empty"><?php echo esc_html( ltt_dive_in_get_event_driver_month_empty_message( $config ) ); ?></p>
+		<?php else : ?>
+			<div class="event-driver__carousel">
+				<div class="event-driver__viewport swiper" data-event-driver-viewport>
+					<div class="event-driver__track swiper-wrapper">
+						<?php foreach ( $events as $event ) : ?>
+							<?php
+							get_template_part(
+								'template-parts/components/event-card',
+								null,
+								array(
+									'event'   => $event,
+									'style'   => 'card',
+									'wrapper' => 'event-driver__item swiper-slide',
+									'sizes'   => '(max-width: 767.98px) 305px, 405px',
+								)
+							);
+							?>
+						<?php endforeach; ?>
+					</div>
+				</div>
+				<div class="event-driver__carousel-footer" data-event-driver-controls hidden>
+					<div class="event-driver__pagination ltt-carousel-indicators" data-event-driver-pagination></div>
+					<div class="event-driver__carousel-controls">
+						<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-event-driver-previous aria-label="<?php esc_attr_e( 'Previous events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
+						<button class="ltt-slider-navigation ltt-slider-navigation--next" type="button" data-event-driver-next aria-label="<?php esc_attr_e( 'Next events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
+					</div>
 				</div>
 			</div>
-			<div class="event-driver__carousel-footer" data-event-driver-controls hidden>
-				<div class="event-driver__pagination ltt-carousel-indicators" data-event-driver-pagination></div>
-				<div class="event-driver__carousel-controls">
-					<button class="ltt-slider-navigation ltt-slider-navigation--white ltt-slider-navigation--previous" type="button" data-event-driver-previous aria-label="<?php esc_attr_e( 'Previous events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--previous" aria-hidden="true"></span></button>
-					<button class="ltt-slider-navigation ltt-slider-navigation--next" type="button" data-event-driver-next aria-label="<?php esc_attr_e( 'Next events', 'ltt-dive-in' ); ?>"><span class="ltt-slider-navigation__icon ltt-slider-navigation__icon--next" aria-hidden="true"></span></button>
-				</div>
-			</div>
-		</div>
+		<?php endif; ?>
 	</div>
-	<?php ltt_dive_in_print_event_schema( $events ); ?>
+	<?php if ( $events ) : ?>
+		<?php ltt_dive_in_print_event_schema( $events ); ?>
+	<?php endif; ?>
 </section>

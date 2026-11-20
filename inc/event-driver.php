@@ -144,8 +144,9 @@ function ltt_dive_in_query_event_driver_events( $config, $query ) {
 		if ( $range['from'] > $range['to'] ) {
 			return array( 'events' => array(), 'fetched' => 0, 'total' => 0 );
 		}
-		$query['date_from'] = $range['from'];
-		$query['date_to']   = $range['to'];
+		$query['date_from']           = $range['from'];
+		$query['date_to']             = $range['to'];
+		$query['starts_within_range'] = true;
 	}
 
 	$result = ltt_dive_in_get_seeker_events( $query );

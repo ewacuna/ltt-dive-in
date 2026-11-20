@@ -381,7 +381,8 @@ function ltt_dive_in_count_seeker_events( $args = array() ) {
  * Query published Seeker events.
  *
  * See ltt_dive_in_get_seeker_event_query() for the accepted arguments; `limit`
- * is at least 1 here.
+ * is at least 1 here. The optional internal `starts_within_range` flag limits
+ * event and occurrence start dates locally; it is never forwarded to Seeker.
  *
  * @param array $args Query arguments.
  * @return array{events: array[], fetched: int, total: int}|WP_Error Fetched counts feed records, including any that were not displayable.
@@ -402,19 +403,25 @@ function ltt_dive_in_get_seeker_events( $args = array() ) {
 		return $body;
 	}
 
-	$items   = ltt_dive_in_get_seeker_items( $body );
-	$events  = array();
-	$bounded = ! empty( $args['date_from'] ) && ltt_dive_in_sanitize_event_date( $args['date_from'] );
-	$seen    = array();
+	$items      = ltt_dive_in_get_seeker_items( $body );
+	$events     = array();
+	$bounded    = ! empty( $args['date_from'] ) && ltt_dive_in_sanitize_event_date( $args['date_from'] );
+	$start_only = ! empty( $args['starts_within_range'] );
+	$seen       = array();
 
 	foreach ( $items as $item ) {
-		$event = ltt_dive_in_normalize_seeker_event( $item, $range['from'], $bounded );
+		$event = ltt_dive_in_normalize_seeker_event( $item, $range['from'], $bounded && ! $start_only, $start_only );
+		if ( ! $event || isset( $seen[ $event['id'] ] ) ) {
+			continue;
+		}
 
 		// A recurring series can span the range without an occurrence inside it.
-		if ( $event && ! isset( $seen[ $event['id'] ] ) && ( '' === $range['to'] || $event['start']->format( 'Y-m-d' ) <= $range['to'] ) && ( ! $bounded || ( $event['end'] ?? $event['start'] )->format( 'Y-m-d' ) >= $range['from'] ) ) {
-			$events[] = $event;
-			$seen[ $event['id'] ] = true;
+		$start_date = $event['start']->format( 'Y-m-d' );
+		if ( ( $range['to'] && $start_date > $range['to'] ) || ( $start_only && $start_date < $range['from'] ) || ( $bounded && ( $event['end'] ?? $event['start'] )->format( 'Y-m-d' ) < $range['from'] ) ) {
+			continue;
 		}
+		$events[] = $event;
+		$seen[ $event['id'] ] = true;
 	}
 
 	return array(
@@ -520,13 +527,13 @@ function ltt_dive_in_get_seeker_event_with_details( $uuid, $event_date = '' ) {
 	}
 	$uuid = ltt_dive_in_sanitize_seeker_uuid( $uuid );
 	$raw  = $uuid ? ( ltt_dive_in_find_seeker_raw_events( array( $uuid ), $event_date )[ $uuid ] ?? null ) : null;
-	$event = $raw ? ltt_dive_in_normalize_seeker_event( $raw, $event_date ) : null;
+	$event = $raw ? ltt_dive_in_normalize_seeker_event( $raw, $event_date, false, '' !== $event_date ) : null;
 
 	if ( ! $event || ( $event_date && $event['start']->format( 'Y-m-d' ) !== $event_date ) ) {
 		return null;
 	}
 	if ( $event_date && ( ! empty( $raw['recurring'] ) || ! empty( $raw['occurrences'] ) ) ) {
-		$dates = ltt_dive_in_get_seeker_occurrences( $raw, $event['start']->getTimezone(), $event_date, 1 );
+		$dates = ltt_dive_in_get_seeker_occurrences( $raw, $event['start']->getTimezone(), $event_date, 1, true );
 		if ( ! $dates || $dates[0]['start']->format( 'Y-m-d' ) !== $event_date ) {
 			return null;
 		}
@@ -962,21 +969,26 @@ function ltt_dive_in_get_seeker_series_dates( $series, $timezone, $from, $limit 
  * Seeker reports a recurring series by its first `startdate`, which may be in
  * the past, and describes the individual dates with an iCalendar `rrule` and
  * an `exceptions` list. Additional schedules, each with its own rule and
- * exceptions, are listed in `occurrences`.
+ * exceptions, are listed in `occurrences`. With $start_only, occurrences with
+ * earlier start dates are skipped even when their end date overlaps $from.
  *
  * @param array        $event    Raw Seeker event.
  * @param DateTimeZone $timezone Event timezone.
  * @param string       $from     Earliest date in `YYYY-MM-DD`.
  * @param int          $limit    Maximum number of dates.
+ * @param bool         $start_only Require the occurrence to start on or after $from.
  * @return array<int, array{start: DateTimeImmutable, end: DateTimeImmutable|null, has_end_time: bool}>
  */
-function ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, $limit = 50 ) {
+function ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, $limit = 50, $start_only = false ) {
 	$schedules = array_values( array_filter( (array) ( $event['occurrences'] ?? array() ), 'is_array' ) );
 	$schedules = $schedules ? $schedules : array( $event );
 	$dates     = array();
 
 	foreach ( $schedules as $schedule ) {
 		foreach ( ltt_dive_in_get_seeker_series_dates( $schedule, $timezone, $from, $limit ) as $date ) {
+			if ( $start_only && $date['start']->format( 'Y-m-d' ) < $from ) {
+				continue;
+			}
 			$dates[ $date['start']->format( 'Y-m-d H:i' ) ] = $date;
 		}
 	}
@@ -992,14 +1004,15 @@ function ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, $limit = 
  * @param array        $event    Raw Seeker event.
  * @param DateTimeZone $timezone Event timezone.
  * @param string       $from     Earliest occurrence date in `YYYY-MM-DD`.
+ * @param bool         $start_only Require the occurrence to start on or after $from.
  * @return array{start: DateTimeImmutable, end: DateTimeImmutable|null, has_end_time: bool}|null
  */
-function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from ) {
+function ltt_dive_in_get_seeker_next_occurrence( $event, $timezone, $from, $start_only = false ) {
 	if ( ! in_array( ltt_dive_in_parse_seeker_rrule( $event['rrule'] ?? '' )['FREQ'] ?? '', array( 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY' ), true ) && empty( $event['occurrences'] ) ) {
 		return null;
 	}
 
-	$dates = ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, 1 );
+	$dates = ltt_dive_in_get_seeker_occurrences( $event, $timezone, $from, 1, $start_only );
 
 	return $dates ? $dates[0] : null;
 }
@@ -1122,9 +1135,10 @@ function ltt_dive_in_get_seeker_image( $images ) {
  * @param array  $raw  Raw Seeker event.
  * @param string $from Earliest date in `YYYY-MM-DD` for a recurring occurrence; defaults to today.
  * @param bool   $include_overlap Include occurrences continuing into the range.
+ * @param bool   $start_only Require recurring occurrences to start on or after $from.
  * @return array|null Null when the event cannot be displayed.
  */
-function ltt_dive_in_normalize_seeker_event( $raw, $from = '', $include_overlap = false ) {
+function ltt_dive_in_normalize_seeker_event( $raw, $from = '', $include_overlap = false, $start_only = false ) {
 	if ( ! is_array( $raw ) ) {
 		return null;
 	}
@@ -1151,13 +1165,13 @@ function ltt_dive_in_normalize_seeker_event( $raw, $from = '', $include_overlap 
 	$has_end_time = ! empty( $raw['endtime'] );
 
 	if ( ! empty( $raw['recurring'] ) || ! empty( $raw['occurrences'] ) ) {
-		$next = $include_overlap ? ltt_dive_in_get_seeker_range_occurrence( $raw, $timezone, $from ) : ltt_dive_in_get_seeker_next_occurrence( $raw, $timezone, $from );
+		$next = $include_overlap ? ltt_dive_in_get_seeker_range_occurrence( $raw, $timezone, $from ) : ltt_dive_in_get_seeker_next_occurrence( $raw, $timezone, $from, $start_only );
 
 		if ( $next ) {
 			$start        = $next['start'];
 			$end          = $next['end'];
 			$has_end_time = $next['has_end_time'];
-		} elseif ( $include_overlap || ( $start && $start->format( 'Y-m-d' ) < $from ) ) {
+		} elseif ( $include_overlap || $start_only || ( $start && $start->format( 'Y-m-d' ) < $from ) ) {
 			return null;
 		}
 	}
