@@ -155,6 +155,36 @@ function ltt_dive_in_listing_module_search_orderby( $orderby, $query ) {
 add_filter( 'posts_orderby', 'ltt_dive_in_listing_module_search_orderby', 20, 2 );
 
 /**
+ * Keep selected choices available when other filters remove their results.
+ *
+ * @param array $args FacetWP facet render arguments.
+ * @return array
+ */
+function ltt_dive_in_listing_module_dropdown_render_args( $args ) {
+	$context = ltt_dive_in_listing_module_facetwp_context();
+	$name    = $args['facet']['name'] ?? '';
+	if ( ! $context || 'dropdown' !== ( $args['facet']['type'] ?? '' ) || ! in_array( $name, (array) ( $context['ltt_dive_in_listing_module_dropdown_facets'] ?? array() ), true ) ) {
+		return $args;
+	}
+
+	$selected = array_map( 'strval', array_filter( (array) ( $args['selected_values'] ?? array() ), 'is_scalar' ) );
+	$missing  = array_values( array_diff( $selected, array_column( $args['values'], 'facet_value' ) ) );
+	if ( ! $missing ) {
+		return $args;
+	}
+
+	// Use FacetWP's indexed values and labels, including hierarchical metadata.
+	global $wpdb;
+	$placeholders = implode( ', ', array_fill( 0, count( $missing ), '%s' ) );
+	$sql = "SELECT DISTINCT facet_value, facet_display_value, term_id, parent_id, depth, 0 AS counter FROM {$wpdb->prefix}facetwp_index WHERE facet_name = %s AND facet_value IN ($placeholders)";
+	$rows = $wpdb->get_results( $wpdb->prepare( $sql, array_merge( array( $name ), $missing ) ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Only placeholders and the WordPress table prefix are interpolated above.
+	$args['values'] = array_merge( $args['values'], (array) $rows );
+
+	return $args;
+}
+add_filter( 'facetwp_facet_render_args', 'ltt_dive_in_listing_module_dropdown_render_args', 20 );
+
+/**
  * Add an associated label and semantic controls to native FacetWP output.
  *
  * @param string $html Facet HTML.
@@ -174,6 +204,19 @@ function ltt_dive_in_listing_module_facet_html( $html, $args ) {
 	$facet_name = sanitize_key( (string) $args['facet']['name'] );
 	$block_id   = isset( $context['ltt_dive_in_listing_module_id'] ) ? sanitize_html_class( $context['ltt_dive_in_listing_module_id'] ) : 'listing-module';
 	$cards_id   = $block_id . '-cards';
+
+	if ( 'dropdown' === ( $args['facet']['type'] ?? '' ) && in_array( $facet_name, (array) ( $context['ltt_dive_in_listing_module_dropdown_facets'] ?? array() ), true ) ) {
+		$processor = new WP_HTML_Tag_Processor( $html );
+		while ( $processor->next_tag() ) {
+			if ( 'SELECT' === $processor->get_tag() && $processor->has_class( 'facetwp-dropdown' ) ) {
+				$processor->set_attribute( 'multiple', true );
+			} elseif ( 'OPTION' === $processor->get_tag() && null !== $processor->get_attribute( 'selected' ) ) {
+				// A checked zero-result choice must remain available for clearing.
+				$processor->remove_attribute( 'disabled' );
+			}
+		}
+		return $processor->get_updated_html();
+	}
 
 	if ( 'search' === ( $args['facet']['type'] ?? '' ) && $facet_name === sanitize_key( (string) ( $context['ltt_dive_in_listing_module_search_facet'] ?? '' ) ) ) {
 		$input_id = $block_id . '-search-input';

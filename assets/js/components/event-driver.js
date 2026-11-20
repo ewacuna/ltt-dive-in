@@ -256,6 +256,7 @@
 		let offset = loadMore ? parseInt( loadMore.dataset.offset, 10 ) || 0 : 0;
 		let carousel = null;
 		let controller = null;
+		let requestSequence = 0;
 		let searchTimer = 0;
 		let lastSearch = search ? search.value.trim() : '';
 
@@ -270,7 +271,7 @@
 
 			if ( ! count ) {
 				const filters = new FormData( form );
-				const wholeMonth = empty.dataset.monthEmpty && ! filters.get( 'event_category' ) && ! filters.get( 'event_date' ) && ! ( filters.get( 'event_search' ) || '' ).toString().trim();
+				const wholeMonth = empty.dataset.monthEmpty && ! filters.getAll( 'event_category[]' ).length && ! filters.get( 'event_date' ) && ! ( filters.get( 'event_search' ) || '' ).toString().trim();
 
 				empty.textContent = wholeMonth ? empty.dataset.monthEmpty : strings.noResults || '';
 			}
@@ -307,7 +308,10 @@
 			} );
 			const data = new FormData( form );
 
-			params.set( 'category', data.get( 'event_category' ) || '' );
+			data.getAll( 'event_category[]' ).filter( Boolean ).forEach( function ( category ) {
+				params.append( 'category[]', category );
+			} );
+			const sequence = ++requestSequence;
 			params.set( 'date', data.get( 'event_date' ) || '' );
 			params.set( 'search', ( data.get( 'event_search' ) || '' ).toString().trim() );
 
@@ -327,6 +331,13 @@
 				}
 
 				return response.json();
+			} ).then( function ( response ) {
+				if ( sequence !== requestSequence ) {
+					const error = new Error( 'Superseded request' );
+					error.name = 'AbortError';
+					throw error;
+				}
+				return response;
 			} );
 		};
 
@@ -345,7 +356,11 @@
 			grid.setAttribute( 'aria-busy', 'true' );
 			announce( strings.loading || '' );
 
-			request( 0 ).then( function ( response ) {
+			if ( loadMore ) { loadMore.disabled = true; }
+			const pending = request( 0 );
+			const sequence = requestSequence;
+
+			pending.then( function ( response ) {
 				grid.innerHTML = response.html || '';
 				const eventCount = syncEmptyState();
 				setHasMore( response.hasMore, response.nextOffset );
@@ -362,8 +377,11 @@
 					return;
 				}
 
+				if ( sequence !== requestSequence ) { return; }
+				if ( loadMore ) { loadMore.hidden = true; }
 				announce( strings.error || '' );
 			} ).finally( function () {
+				if ( sequence !== requestSequence ) { return; }
 				grid.classList.remove( 'is-loading' );
 				grid.removeAttribute( 'aria-busy' );
 			} );
@@ -373,7 +391,9 @@
 			loadMore.disabled = true;
 			announce( strings.loading || '' );
 
-			request( offset ).then( function ( response ) {
+			const pending = request( offset );
+			const sequence = requestSequence;
+			pending.then( function ( response ) {
 				const firstIndex = grid.children.length;
 
 				grid.insertAdjacentHTML( 'beforeend', response.html || '' );
@@ -396,6 +416,7 @@
 
 				announce( eventCount ? format( strings.loaded, [ response.count ] ) : empty.textContent );
 			} ).catch( function ( error ) {
+				if ( sequence !== requestSequence ) { return; }
 				loadMore.disabled = false;
 
 				if ( error && 'AbortError' === error.name ) {

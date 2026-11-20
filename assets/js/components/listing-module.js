@@ -288,6 +288,33 @@
             }
 
             facetwpAjaxHookInstalled = true;
+            window.FWP.hooks.addAction('facetwp/refresh/dropdown', function (facet, name) {
+                if (!(facet.nodes || []).some(function (element) { return section.contains(element); })) {
+                    return;
+                }
+                const control = Array.from(facetControls).find(function (item) {
+                    const element = item.querySelector('.facetwp-facet');
+                    return element && element.dataset.name === name;
+                });
+                const select = control && control.querySelector('select[multiple]');
+                if (select) {
+                    window.FWP.facets[name] = Array.from(select.selectedOptions).map(function (option) {
+                        return option.value;
+                    }).filter(Boolean);
+                }
+            }, 20);
+            window.FWP.hooks.addFilter('facetwp/selections/dropdown', function (output, params) {
+                const elements = params.el.nodes || [];
+                const facet = elements.find(function (element) {
+                    return section.contains(element) && !element.classList.contains('facetwp-ignore');
+                });
+                const select = facet && facet.querySelector('select[multiple]');
+                return select ? Array.from(select.selectedOptions).filter(function (option) {
+                    return option.value;
+                }).map(function (option) {
+                    return { value: option.value, label: facetOptionLabel(option) };
+                }) : output;
+            }, 20);
             window.FWP.hooks.addFilter('facetwp/ajax_settings', function (settings) {
                 const request = activeRequest;
 
@@ -331,9 +358,9 @@
                         return;
                     }
 
-                    // Background pagination must preserve the focus as it is now,
-                    // not restore whichever filter was focused when loading began.
-                    if (request.mobileLoad) {
+                    // Preserve the current focus; the visitor may have moved
+                    // to another control while this response was in flight.
+                    if (!section.querySelector('.facetwp-reset:focus')) {
                         rememberFacetFocus();
                     }
 
@@ -360,22 +387,6 @@
             });
         }
 
-        function closeFacet(control, restoreFocus) {
-            const trigger = control.querySelector('.ltt-select__trigger');
-            const menu = control.querySelector('.ltt-select__menu');
-
-            if (!trigger || !menu) {
-                return;
-            }
-
-            menu.hidden = true;
-            trigger.setAttribute('aria-expanded', 'false');
-
-            if (restoreFocus) {
-                trigger.focus({ preventScroll: true });
-            }
-        }
-
         function syncFilterOrder() {
             const filters = section.querySelector('.ltt-listing-module__filters');
             const search = filters ? filters.querySelector('.ltt-listing-module__search-wrap') : null;
@@ -396,162 +407,39 @@
             }
         }
 
-        function syncFacetSelects(preserveExisting) {
+        function syncFacetSelects() {
             facetControls.forEach(function (control) {
                 const select = control.querySelector('select.facetwp-dropdown');
-
-                if (!select || (preserveExisting === true && control.lttActiveSelect === select)) {
+                if (!select || !window.lttSelectMultiple) {
                     return;
                 }
-
-                const selectId = control.dataset.listingSelectId;
-                const labelId = selectId + '-label';
-                const currentId = selectId + '-current';
-                const menuId = selectId + '-options';
-                let trigger = control.querySelector('.ltt-select__trigger');
-                let menu = control.querySelector('.ltt-select__menu');
-
-                select.id = selectId;
+                select.multiple = true;
                 select.setAttribute('aria-controls', control.dataset.listingResultsId);
-                select.setAttribute('aria-labelledby', labelId);
                 select.removeAttribute('aria-label');
-
-                if (!trigger) {
-                    trigger = document.createElement('button');
-                    trigger.type = 'button';
-                    trigger.className = 'ltt-select__trigger';
-                    trigger.setAttribute('aria-controls', menuId);
-                    trigger.setAttribute('aria-labelledby', labelId + ' ' + currentId);
-                    trigger.setAttribute('aria-expanded', 'false');
-
-                    const current = document.createElement('span');
-                    current.id = currentId;
-                    current.className = 'ltt-listing-module__filter-value';
-                    trigger.appendChild(current);
-
-                    const icon = document.createElement('span');
-                    icon.className = 'ltt-select__trigger-icon';
-                    icon.setAttribute('aria-hidden', 'true');
-                    const nativeIcon = control.querySelector('.ltt-select__native-icon img');
-
-                    if (nativeIcon) {
-                        icon.appendChild(nativeIcon.cloneNode(true));
-                    }
-
-                    trigger.appendChild(icon);
-                    control.appendChild(trigger);
-                    trigger.addEventListener('click', function () {
-                        const willOpen = menu.hidden;
-
-                        facetControls.forEach(function (other) {
-                            closeFacet(other, false);
-                        });
-                        menu.hidden = !willOpen;
-                        trigger.setAttribute('aria-expanded', String(willOpen));
-                    });
-                }
-
-                if (!menu) {
-                    menu = document.createElement('div');
-                    menu.id = menuId;
-                    menu.className = 'ltt-select__menu';
-                    menu.setAttribute('role', 'group');
-                    menu.setAttribute('aria-labelledby', labelId);
-                    menu.hidden = true;
-                    control.appendChild(menu);
-                    menu.addEventListener('click', function (event) {
-                        const option = event.target.closest('button[data-listing-value]');
-
-                        if (!option || option.disabled) {
-                            return;
-                        }
-
-                        const activeSelect = control.querySelector('select.facetwp-dropdown');
-
-                        if (!activeSelect) {
-                            return;
-                        }
-
-                        activeSelect.value = option.dataset.listingValue;
-                        closeFacet(control, true);
-                        activeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-                    });
-                }
-
-                const selected = select.options[select.selectedIndex] || select.options[0];
-                const selectedLabel = selected ? facetOptionLabel(selected) : '';
-                trigger.querySelector('#' + currentId).textContent = selectedLabel;
-                trigger.title = selectedLabel;
-                trigger.disabled = !Array.from(select.options).some(function (option) {
-                    return '' !== option.value && !option.disabled;
+                window.lttSelectMultiple(control, {
+                    id: control.dataset.listingSelectId,
+                    label: facetOptionLabel
                 });
-
-                const buttons = Array.from(select.options).filter(function (option) {
-                    return '' !== option.value || '' !== select.value;
-                }).map(function (option) {
-                    const button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = 'ltt-select__option';
-                    button.dataset.listingValue = option.value;
-                    button.textContent = facetOptionLabel(option);
-                    button.disabled = option.disabled;
-                    button.setAttribute('aria-pressed', String(option.value === select.value));
-                    return button;
-                });
-
-                menu.replaceChildren(...buttons);
-                select.setAttribute('aria-hidden', 'true');
-                select.tabIndex = -1;
-                control.classList.add('is-enhanced');
-
-                if (control.lttActiveSelect !== select) {
-                    control.lttActiveSelect = select;
-                    select.addEventListener('change', syncFacetSelects);
-                }
             });
         }
 
+        installFacetwpAjaxHook();
         syncFilterOrder();
         mobile.addEventListener('change', syncFilterOrder);
         syncFacetSelects();
         syncSearchControls();
         syncResetControls();
 
-        if (facetControls.length) {
-            document.addEventListener('pointerdown', function (event) {
-                facetControls.forEach(function (control) {
-                    if (!control.contains(event.target)) {
-                        closeFacet(control, false);
-                    }
-                });
-            });
+        section.querySelectorAll('.ltt-listing-module__filter-label').forEach(function (label) {
+            label.addEventListener('click', function (event) {
+                const control = label.closest('.ltt-listing-module__filter').querySelector('.ltt-listing-module__filter-control');
 
-            document.addEventListener('keydown', function (event) {
-                if ('Escape' !== event.key) {
-                    return;
+                if (control.classList.contains('is-enhanced')) {
+                    event.preventDefault();
+                    control.querySelector('.ltt-select__trigger').focus();
                 }
-
-                facetControls.forEach(function (control) {
-                    const menu = control.querySelector('.ltt-select__menu');
-
-                    if (menu && !menu.hidden) {
-                        closeFacet(control, true);
-                        event.preventDefault();
-                    }
-                });
             });
-
-            section.querySelectorAll('.ltt-listing-module__filter-label').forEach(function (label) {
-                label.addEventListener('click', function (event) {
-                    const control = label.closest('.ltt-listing-module__filter').querySelector('.ltt-listing-module__filter-control');
-
-                    if (control.classList.contains('is-enhanced')) {
-                        event.preventDefault();
-                        control.querySelector('.ltt-select__trigger').focus();
-                    }
-                });
-            });
-        }
+        });
 
         document.addEventListener('facetwp-refresh', function () {
             if (!window.FWP) {
@@ -604,12 +492,6 @@
                 }
             }
 
-            if (!activeRequest.mobileLoad) {
-                facetControls.forEach(function (control) {
-                    closeFacet(control, false);
-                });
-            }
-
             clearErrorStatus();
             grid.setAttribute('aria-busy', 'true');
             section.classList.toggle('ltt-listing-module--loading-more', activeRequest.mobileLoad);
@@ -647,7 +529,7 @@
                     const search = facet.querySelector('.facetwp-search');
 
                     if (dropdown) {
-                        dropdown.value = '';
+                        Array.from(dropdown.options).forEach(function (option) { option.selected = false; });
                     }
                     if (search) {
                         search.value = '';
@@ -712,9 +594,20 @@
         }, true);
 
         section.addEventListener('change', function (event) {
-            if (event.target.matches && event.target.matches('select.facetwp-dropdown')) {
+            if (event.target.matches && event.target.matches('select.facetwp-dropdown[multiple]')) {
+                // The plugin's delegated Dropdown change handler assumes a scalar.
+                // Keep the standard change event local and use its refresh lifecycle.
+                event.stopImmediatePropagation();
                 clearSearchDelay();
                 pendingAdvance = null;
+                syncFacetSelects();
+                if (window.FWP) {
+                    window.FWP.is_load_more = false;
+                    window.FWP.soft_refresh = false;
+                    window.FWP.load_more_paged = 1;
+                    window.FWP.paged = 1;
+                    window.FWP.autoload();
+                }
             }
         }, true);
 
@@ -763,14 +656,14 @@
             // FacetWP replaces the native selects after each refresh. Rebuild
             // their shared select presentation after its new markup is ready.
             queueMicrotask(function () {
-                syncFacetSelects(wasMobileLoad);
+                syncFacetSelects();
                 syncSearchControls();
                 syncResetControls();
 
                 if (restoreFocusControl) {
                     const trigger = restoreFocusControl.querySelector('.ltt-select__trigger');
 
-                    if (trigger && (!wasMobileLoad || !restoreFocusControl.contains(document.activeElement))) {
+                    if (trigger && !restoreFocusControl.contains(document.activeElement)) {
                         trigger.focus({ preventScroll: true });
                     }
                     restoreFocusControl = null;

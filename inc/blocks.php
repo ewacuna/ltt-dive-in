@@ -382,7 +382,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_script(
 		'ltt-dive-in-event-driver',
 		LTT_DIVE_IN_URI . '/assets/js/components/event-driver.js',
-		array( 'ltt-dive-in-swiper' ),
+		array( 'ltt-dive-in-swiper', 'ltt-dive-in-select' ),
 		file_exists( $event_driver_script_path ) ? (string) filemtime( $event_driver_script_path ) : LTT_DIVE_IN_VERSION,
 		array( 'strategy' => 'defer', 'in_footer' => true )
 	);
@@ -505,7 +505,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_script(
 		'ltt-dive-in-listing-module',
 		LTT_DIVE_IN_URI . '/assets/js/components/listing-module.js',
-		array(),
+		array( 'ltt-dive-in-select' ),
 		file_exists( $listing_module_script_path ) ? (string) filemtime( $listing_module_script_path ) : LTT_DIVE_IN_VERSION,
 		array( 'strategy' => 'defer', 'in_footer' => true )
 	);

@@ -95,6 +95,7 @@ if ( $use_facets ) {
 	$query_args['ltt_dive_in_listing_module_search_facet']        = $search_facet ? $search_name : '';
 	$query_args['ltt_dive_in_listing_module_pager_facet']         = $pager_facet ? $pager_name : '';
 	$query_args['ltt_dive_in_listing_module_id']                  = $id;
+	$query_args['ltt_dive_in_listing_module_dropdown_facets']     = array_keys( $facets );
 }
 
 $query = new WP_Query( $query_args );
@@ -146,7 +147,7 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 					<?php $select_id = $id . '-facet-' . sanitize_html_class( $facet_index ); ?>
 					<div class="ltt-listing-module__filter<?php echo $facet_index === $third_facet_name ? ' ltt-listing-module__filter--third' : ''; ?>">
 						<label id="<?php echo esc_attr( $select_id ); ?>-label" class="screen-reader-text ltt-listing-module__filter-label" for="<?php echo esc_attr( $select_id ); ?>"><?php echo esc_html( $facet['label'] ); ?></label>
-						<div class="ltt-select ltt-select--light ltt-listing-module__filter-control" data-listing-select-id="<?php echo esc_attr( $select_id ); ?>" data-listing-results-id="<?php echo esc_attr( $id ); ?>-cards">
+						<div class="ltt-select ltt-select--light ltt-listing-module__filter-control" data-select-count="<?php esc_attr_e( '%d Selected', 'ltt-dive-in' ); ?>" data-listing-select-id="<?php echo esc_attr( $select_id ); ?>" data-listing-results-id="<?php echo esc_attr( $id ); ?>-cards">
 							<?php echo facetwp_display( 'facet', $facet['name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- FacetWP renders its own facet container. ?>
 							<span class="ltt-select__native-icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/select-toggle.svg' ) ); ?>" alt="" /></span>
 						</div>

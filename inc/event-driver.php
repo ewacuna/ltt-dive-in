@@ -256,19 +256,35 @@ function ltt_dive_in_get_event_driver_carousel_events( $config ) {
 }
 
 /**
+ * Normalize legacy scalar and multiple visitor category values.
+ *
+ * @param mixed $value Raw category ID or IDs.
+ * @return int[]
+ */
+function ltt_dive_in_sanitize_event_driver_categories( $value ) {
+	$ids = array();
+	foreach ( (array) $value as $id ) {
+		if ( ( is_int( $id ) || ( is_string( $id ) && ctype_digit( $id ) ) ) && 0 < (int) $id ) {
+			$ids[] = (int) $id;
+		}
+	}
+	return array_values( array_unique( $ids ) );
+}
+
+/**
  * Sanitize visitor filter input for the Listed Events variant.
  *
  * @param array $config Normalized block settings.
  * @param array $params Raw filter values: category, date, search, page.
- * @return array{category: int, date: string, search: string, page: int}
+ * @return array{category: int[], date: string, search: string, page: int}
  */
 function ltt_dive_in_get_event_driver_listed_filters( $config, $params ) {
-	$category = $config['show_category'] ? absint( $params['category'] ?? 0 ) : 0;
+	$category = $config['show_category'] ? ltt_dive_in_sanitize_event_driver_categories( $params['category'] ?? array() ) : array();
 	$date     = $config['show_date'] ? sanitize_key( (string) ( $params['date'] ?? '' ) ) : '';
 	$search   = $config['show_search'] ? trim( sanitize_text_field( wp_unslash( (string) ( $params['search'] ?? '' ) ) ) ) : '';
 
-	if ( $category && $config['filter_categories'] && ! in_array( $category, $config['filter_categories'], true ) ) {
-		$category = 0;
+	if ( $config['filter_categories'] ) {
+		$category = array_values( array_intersect( $category, $config['filter_categories'] ) );
 	}
 
 	return array(
@@ -295,7 +311,7 @@ function ltt_dive_in_query_event_driver_listed_events( $config, $filters, $offse
 			'limit'        => $limit,
 			'offset'       => $offset,
 			'search'       => $filters['search'],
-			'category_ids' => $filters['category'] ? array( $filters['category'] ) : array(),
+			'category_ids' => $filters['category'],
 			'date'         => $filters['date'],
 		)
 	);
@@ -609,7 +625,7 @@ function ltt_dive_in_register_event_driver_routes() {
 				'post'     => array( 'required' => true, 'sanitize_callback' => 'absint' ),
 				'block'    => array( 'required' => true, 'sanitize_callback' => 'sanitize_key' ),
 				'offset'   => array( 'default' => 0, 'sanitize_callback' => 'absint' ),
-				'category' => array( 'default' => 0, 'sanitize_callback' => 'absint' ),
+				'category' => array( 'default' => array(), 'sanitize_callback' => 'ltt_dive_in_sanitize_event_driver_categories' ),
 				'date'     => array( 'default' => '', 'sanitize_callback' => 'sanitize_key' ),
 				'search'   => array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ),
 			),
