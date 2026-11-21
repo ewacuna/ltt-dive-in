@@ -117,7 +117,8 @@
     min-width: 0;
 }
 
-.ltt-listing-module__filter-value {
+.ltt-listing-module__filter-value,
+.ltt-listing-module__filter-control .ltt-select__value {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;

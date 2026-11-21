@@ -43,6 +43,7 @@
 		trigger.setAttribute( 'aria-controls', menuId );
 		trigger.setAttribute( 'aria-labelledby', labelId + ' ' + currentId );
 		current.id = currentId;
+		current.className = 'ltt-select__value';
 		icon.className = 'ltt-select__trigger-icon';
 		icon.setAttribute( 'aria-hidden', 'true' );
 		const nativeIcon = control.querySelector( '.ltt-select__native-icon img' );
