@@ -65,6 +65,16 @@ function ltt_dive_in_register_block_assets() {
 		);
 	}
 
+	if ( ! wp_style_is( 'ltt-dive-in-checkbox-bubble', 'registered' ) ) {
+		$checkbox_style_path = LTT_DIVE_IN_DIR . '/assets/css/components/checkbox-bubble.css';
+		wp_register_style(
+			'ltt-dive-in-checkbox-bubble',
+			LTT_DIVE_IN_URI . '/assets/css/components/checkbox-bubble.css',
+			$foundation_dependencies,
+			file_exists( $checkbox_style_path ) ? (string) filemtime( $checkbox_style_path ) : LTT_DIVE_IN_VERSION
+		);
+	}
+
 	if ( ! wp_style_is( 'ltt-dive-in-category-selection', 'registered' ) ) {
 		wp_register_style(
 			'ltt-dive-in-category-selection',
@@ -376,7 +386,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style(
 		'ltt-dive-in-event-driver',
 		LTT_DIVE_IN_URI . '/assets/css/components/event-driver.css',
-		array( 'ltt-dive-in-swiper', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators', 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-event-card' ),
+		array( 'ltt-dive-in-swiper', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-carousel-indicators', 'ltt-dive-in-buttons', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-event-card', 'ltt-dive-in-checkbox-bubble' ),
 		file_exists( $event_driver_style_path ) ? (string) filemtime( $event_driver_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script(
@@ -499,7 +509,7 @@ function ltt_dive_in_register_blocks() {
 	wp_register_style(
 		'ltt-dive-in-listing-module',
 		LTT_DIVE_IN_URI . '/assets/css/components/listing-module.css',
-		array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-slider-navigation' ),
+		array( 'ltt-dive-in-buttons', 'ltt-dive-in-tags', 'ltt-dive-in-select', 'ltt-dive-in-search-bar', 'ltt-dive-in-slider-navigation', 'ltt-dive-in-checkbox-bubble' ),
 		file_exists( $listing_module_style_path ) ? (string) filemtime( $listing_module_style_path ) : LTT_DIVE_IN_VERSION
 	);
 	wp_register_script(

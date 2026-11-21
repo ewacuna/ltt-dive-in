@@ -4,6 +4,7 @@
  *
  * Set multiple and selected_values to opt into the shared checkbox menu.
  * The name argument stays unsuffixed; multiple mode adds [] for form submission.
+ * Multiple options may include count (int|null) and count_label (accessible text).
  *
  * @package LTT_Dive_In
  */
@@ -51,12 +52,17 @@ if ( $placeholder ) {
 	<?php if ( $leading_icon ) : ?>
 		<span class="ltt-select__icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( $leading_icon ) ); ?>" alt="" /></span>
 	<?php endif; ?>
-	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $multiple ? ' multiple' : ''; ?><?php echo $name ? ' name="' . esc_attr( $name . ( $multiple ? '[]' : '' ) ) . '"' : ''; ?><?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
+	<select x-ref="nativeSelect" id="<?php echo esc_attr( $id ); ?>" class="ltt-select__native"<?php echo $multiple ? ' multiple="multiple"' : ''; ?><?php echo $name ? ' name="' . esc_attr( $name . ( $multiple ? '[]' : '' ) ) . '"' : ''; ?><?php echo $aria_controls ? ' aria-controls="' . esc_attr( $aria_controls ) . '"' : ''; ?><?php foreach ( $native_attributes as $attribute => $value ) : ?><?php if ( preg_match( '/^(?:aria|data)-[a-z0-9-]+$/', (string) $attribute ) ) : ?><?php echo true === $value ? ' ' . esc_attr( $attribute ) : ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $value ) . '"'; ?><?php endif; ?><?php endforeach; ?>>
 		<?php foreach ( $options as $option ) : ?>
 			<?php $option_value = isset( $option['value'] ) && is_scalar( $option['value'] ) ? (string) $option['value'] : ''; ?>
 			<?php $option_label = isset( $option['label'] ) && is_string( $option['label'] ) ? $option['label'] : ''; ?>
 			<?php if ( ! $option_label ) { continue; } ?>
-			<option value="<?php echo esc_attr( $option_value ); ?>"<?php selected( $multiple ? in_array( $option_value, $selected_values, true ) : $selected_value === $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
+			<?php
+			$option_count       = $multiple && isset( $option['count'] ) && is_int( $option['count'] ) && 0 <= $option['count'] ? $option['count'] : null;
+			$option_count_text  = null !== $option_count ? number_format_i18n( $option_count ) : '';
+			$option_count_label = isset( $option['count_label'] ) && is_string( $option['count_label'] ) ? $option['count_label'] : $option_count_text;
+			?>
+			<option value="<?php echo esc_attr( $option_value ); ?>"<?php selected( $multiple ? in_array( $option_value, $selected_values, true ) : $selected_value === $option_value ); ?><?php if ( null !== $option_count ) : ?> data-ltt-select-option-label="<?php echo esc_attr( $option_label ); ?>" data-ltt-select-option-count="<?php echo esc_attr( $option_count_text ); ?>" data-ltt-select-option-count-label="<?php echo esc_attr( $option_count_label ); ?>"<?php endif; ?>><?php echo esc_html( $option_label . ( null !== $option_count ? ' (' . $option_count_text . ')' : '' ) ); ?></option>
 		<?php endforeach; ?>
 	</select>
 	<span class="ltt-select__native-icon" aria-hidden="true"><img src="<?php echo esc_url( get_theme_file_uri( $icon_file ) ); ?>" alt="" /></span>

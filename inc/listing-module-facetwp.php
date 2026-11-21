@@ -206,13 +206,35 @@ function ltt_dive_in_listing_module_facet_html( $html, $args ) {
 	$cards_id   = $block_id . '-cards';
 
 	if ( 'dropdown' === ( $args['facet']['type'] ?? '' ) && in_array( $facet_name, (array) ( $context['ltt_dive_in_listing_module_dropdown_facets'] ?? array() ), true ) ) {
+		$counts = array();
+		foreach ( (array) ( $args['values'] ?? array() ) as $row ) {
+			if ( isset( $row['facet_value'], $row['counter'] ) && is_numeric( $row['counter'] ) ) {
+				$counts[ (string) $row['facet_value'] ] = max( 0, (int) $row['counter'] );
+			}
+		}
+
 		$processor = new WP_HTML_Tag_Processor( $html );
 		while ( $processor->next_tag() ) {
 			if ( 'SELECT' === $processor->get_tag() && $processor->has_class( 'facetwp-dropdown' ) ) {
 				$processor->set_attribute( 'multiple', true );
-			} elseif ( 'OPTION' === $processor->get_tag() && null !== $processor->get_attribute( 'selected' ) ) {
-				// A checked zero-result choice must remain available for clearing.
-				$processor->remove_attribute( 'disabled' );
+			} elseif ( 'OPTION' === $processor->get_tag() ) {
+				if ( null !== $processor->get_attribute( 'selected' ) ) {
+					// A checked zero-result choice must remain available for clearing.
+					$processor->remove_attribute( 'disabled' );
+				}
+				$value = (string) $processor->get_attribute( 'value' );
+				if ( '' !== $value && isset( $counts[ $value ] ) ) {
+					$count = $counts[ $value ];
+					$processor->set_attribute( 'data-ltt-select-option-count', number_format_i18n( $count ) );
+					$processor->set_attribute(
+						'data-ltt-select-option-count-label',
+						sprintf(
+							/* translators: %s: formatted number of listings matching a facet choice. */
+							_n( '(%s listing)', '(%s listings)', $count, 'ltt-dive-in' ),
+							number_format_i18n( $count )
+						)
+					);
+				}
 			}
 		}
 		return $processor->get_updated_html();

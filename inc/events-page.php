@@ -233,34 +233,7 @@ function ltt_dive_in_query_events_page( $filters, $offset, $limit ) {
  * @return array<int, array{name: string, count: int|null}>
  */
 function ltt_dive_in_get_events_page_categories() {
-	$categories = ltt_dive_in_get_seeker_categories();
-	$cache_key  = 'ltt_dive_in_events_category_counts_' . ltt_dive_in_get_seeker_cache_generation() . '_' . wp_date( 'Ymd' );
-	$counts     = get_transient( $cache_key );
-
-	if ( ! is_array( $counts ) ) {
-		$counts = array();
-
-		foreach ( array_keys( $categories ) as $category_id ) {
-			$count = ltt_dive_in_count_seeker_events( array( 'category_ids' => array( $category_id ) ) );
-
-			$counts[ $category_id ] = is_wp_error( $count ) ? null : $count;
-		}
-
-		if ( ! in_array( null, $counts, true ) ) {
-			set_transient( $cache_key, $counts, 15 * MINUTE_IN_SECONDS );
-		}
-	}
-
-	$options = array();
-
-	foreach ( $categories as $category_id => $name ) {
-		$options[ $category_id ] = array(
-			'name'  => $name,
-			'count' => $counts[ $category_id ] ?? null,
-		);
-	}
-
-	return $options;
+	return ltt_dive_in_get_seeker_categories_with_counts();
 }
 
 /**

@@ -40,7 +40,7 @@ if ( is_wp_error( $result ) || ( ! $result['events'] && ! $has_filters && empty(
 }
 
 $events     = $result['events'];
-$categories = $config['show_category'] ? ltt_dive_in_get_event_driver_category_options( $config ) : array();
+$categories = $config['show_category'] ? ltt_dive_in_get_event_driver_categories_with_counts( $config ) : array();
 $form_id    = $section_id . '-filters';
 $results_id = $section_id . '-results';
 $classes    = array( 'event-driver', 'event-driver--listed', $args['class_name'] );
@@ -56,10 +56,16 @@ $category_options = array(
 	),
 );
 
-foreach ( $categories as $category_id => $category_name ) {
+foreach ( $categories as $category_id => $category ) {
 	$category_options[] = array(
-		'value' => (string) $category_id,
-		'label' => $category_name,
+		'value'       => (string) $category_id,
+		'label'       => $category['name'],
+		'count'       => $category['count'],
+		'count_label' => null === $category['count'] ? '' : sprintf(
+			/* translators: %s: formatted number of upcoming events in a category. */
+			_n( '(%s upcoming event)', '(%s upcoming events)', $category['count'], 'ltt-dive-in' ),
+			number_format_i18n( $category['count'] )
+		),
 	);
 }
 

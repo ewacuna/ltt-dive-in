@@ -215,9 +215,14 @@
     background: #c7d1d8;
 }
 
-.ltt-select__choice > span {
+.ltt-select__choice-label {
     min-width: 0;
     overflow-wrap: anywhere;
+}
+
+.ltt-select__choice > .ltt-select__choice-count {
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .ltt-select__checkbox {

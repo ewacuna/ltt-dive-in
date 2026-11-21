@@ -342,6 +342,22 @@ function ltt_dive_in_get_event_driver_category_options( $config ) {
 }
 
 /**
+ * Return allowed Listed Events categories with shared upcoming totals.
+ *
+ * @param array $config Normalized block settings.
+ * @return array<int, array{name: string, count: int|null}>
+ */
+function ltt_dive_in_get_event_driver_categories_with_counts( $config ) {
+	$categories = ltt_dive_in_get_seeker_categories_with_counts();
+
+	if ( $config['filter_categories'] ) {
+		$categories = array_intersect_key( $categories, array_flip( $config['filter_categories'] ) );
+	}
+
+	return $categories;
+}
+
+/**
  * Identify a saved block from its ACF data.
  *
  * @param array $data Saved ACF block data.

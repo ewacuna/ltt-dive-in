@@ -17,15 +17,24 @@
 			return control.lttMultiple;
 		}
 
+		// ACF renders previews through React, which can drop empty boolean attributes.
+		// Only enhance when the native control exists, then enforce multiple mode.
+		const initialSelect = control.querySelector( 'select' );
+		if ( ! initialSelect ) {
+			return null;
+		}
+		initialSelect.multiple = true;
+		const selectDocument = control.ownerDocument;
+		const selectWindow = selectDocument.defaultView || window;
 		const config = settings || {};
 		const id = config.id || control.dataset.selectId;
 		const labelId = id + '-label';
 		const currentId = id + '-current';
 		const menuId = id + '-options';
-		const trigger = document.createElement( 'button' );
-		const current = document.createElement( 'span' );
-		const icon = document.createElement( 'span' );
-		const menu = document.createElement( 'div' );
+		const trigger = selectDocument.createElement( 'button' );
+		const current = selectDocument.createElement( 'span' );
+		const icon = selectDocument.createElement( 'span' );
+		const menu = selectDocument.createElement( 'div' );
 		let nativeSelect = null;
 
 		trigger.type = 'button';
@@ -49,7 +58,7 @@
 		control.append( trigger, menu );
 		control.classList.add( 'ltt-select--multiple' );
 
-		const label = config.label || function ( option ) { return option.text; };
+		const label = config.label || function ( option ) { return option.dataset.lttSelectOptionLabel || option.text; };
 		const close = function ( restoreFocus ) {
 			const wasOpen = ! menu.hidden;
 			menu.hidden = true;
@@ -59,10 +68,11 @@
 			}
 		};
 		const sync = function () {
-			const select = control.querySelector( 'select[multiple]' );
+			const select = control.querySelector( 'select' );
 			if ( ! select ) {
 				return;
 			}
+			select.multiple = true;
 			select.id = id;
 			select.setAttribute( 'aria-labelledby', labelId );
 			select.setAttribute( 'aria-hidden', 'true' );
@@ -76,24 +86,43 @@
 			const placeholder = Array.from( select.options ).find( function ( option ) { return option.value === ''; } );
 			current.textContent = selected.length ? ( control.dataset.selectCount || '%d Selected' ).replace( '%d', selected.length ) : ( placeholder ? label( placeholder ) : '' );
 			trigger.disabled = ! options.some( function ( option ) { return ! option.disabled || option.selected; } );
-			const focused = menu.contains( document.activeElement ) ? document.activeElement : null;
+			const focused = menu.contains( selectDocument.activeElement ) ? selectDocument.activeElement : null;
 			const scrollTop = menu.scrollTop;
 			const rows = new Map( Array.from( menu.children ).map( function ( row ) { return [ row.querySelector( 'input' ).value, row ]; } ) );
 			const children = options.map( function ( option ) {
 				let row = rows.get( option.value );
 				if ( ! row ) {
-					row = document.createElement( 'label' );
+					row = selectDocument.createElement( 'label' );
 					row.className = 'ltt-select__option ltt-select__choice';
-					const input = document.createElement( 'input' );
+					const input = selectDocument.createElement( 'input' );
 					input.type = 'checkbox';
 					input.className = 'ltt-select__checkbox';
 					input.value = option.value;
-					row.append( input, document.createElement( 'span' ) );
+					const choiceLabel = selectDocument.createElement( 'span' );
+					choiceLabel.className = 'ltt-select__choice-label';
+					row.append( input, choiceLabel );
 				}
 				const input = row.querySelector( 'input' );
 				input.checked = option.selected;
 				input.disabled = option.disabled && ! option.selected;
-				row.querySelector( 'span' ).textContent = label( option );
+				row.querySelector( '.ltt-select__choice-label' ).textContent = label( option );
+				let count = row.querySelector( '.ltt-select__choice-count' );
+				if ( option.hasAttribute( 'data-ltt-select-option-count' ) ) {
+					if ( ! count ) {
+						count = selectDocument.createElement( 'span' );
+						count.className = 'ltt-checkbox-bubble__count ltt-select__choice-count';
+						const number = selectDocument.createElement( 'span' );
+						number.setAttribute( 'aria-hidden', 'true' );
+						const description = selectDocument.createElement( 'span' );
+						description.className = 'screen-reader-text';
+						count.append( number, description );
+						row.appendChild( count );
+					}
+					count.firstElementChild.textContent = option.dataset.lttSelectOptionCount;
+					count.lastElementChild.textContent = option.dataset.lttSelectOptionCountLabel || option.dataset.lttSelectOptionCount;
+				} else if ( count ) {
+					count.remove();
+				}
 				return row;
 			} );
 			// Reuse the checkbox nodes so updates can retain keyboard focus.
@@ -111,7 +140,7 @@
 
 		trigger.addEventListener( 'click', function () {
 			const willOpen = menu.hidden;
-			document.dispatchEvent( new CustomEvent( 'ltt-select-open', { detail: control } ) );
+			selectDocument.dispatchEvent( new selectWindow.CustomEvent( 'ltt-select-open', { detail: control } ) );
 			menu.hidden = ! willOpen;
 			trigger.setAttribute( 'aria-expanded', String( willOpen ) );
 		} );
@@ -127,7 +156,7 @@
 				}
 			} );
 			sync();
-			nativeSelect.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+			nativeSelect.dispatchEvent( new selectWindow.Event( 'change', { bubbles: true } ) );
 		} );
 		control.addEventListener( 'keydown', function ( event ) {
 			if ( event.key === 'Escape' && ! menu.hidden ) {
@@ -135,13 +164,13 @@
 				close( true );
 			}
 		} );
-		document.addEventListener( 'ltt-select-open', function ( event ) {
+		selectDocument.addEventListener( 'ltt-select-open', function ( event ) {
 			if ( event.detail !== control ) { close( false ); }
 		} );
-		document.addEventListener( 'pointerdown', function ( event ) {
+		selectDocument.addEventListener( 'pointerdown', function ( event ) {
 			if ( ! control.contains( event.target ) ) { close( false ); }
 		} );
-		document.addEventListener( 'focusin', function ( event ) {
+		selectDocument.addEventListener( 'focusin', function ( event ) {
 			if ( ! control.contains( event.target ) ) { close( false ); }
 		} );
 		control.addEventListener( 'focusout', function ( event ) {
