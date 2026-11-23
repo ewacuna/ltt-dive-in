@@ -46,6 +46,8 @@ The standalone shell PHP version may differ from the PHP runtime selected in Loc
 - `front-page.php`, `home.php`, `single.php`, `page.php`, `archive.php`, `search.php`, `404.php`, and `index.php`: WordPress template hierarchy entry points.
 - `template-parts/`: reusable markup for content, pages, and sections.
 - `templates/`: page templates selectable in the WordPress editor.
+- `blocks/`: theme ACF blocks, one folder per block with its `block.json`, editor guide (`guide.php`), and guide sample content (`guide-samples.php`).
+- `inc/block-guide.php`, `inc/block-guide-samples.php`, `inc/block-guide-preview.php`: the wp-admin **Block Guide** screen, its sample data helpers, and its live previews and practice drafts; see "Block Guide" below.
 - `assets/css/main.css`: global foundations and styles genuinely shared across the site.
 - `assets/css/templates/`: template-specific styles, added as templates are implemented.
 - `assets/css/components/`: reusable component styles shared by more than one template, added as needed.
@@ -146,6 +148,23 @@ The paid version of Gravity Forms is an approved project dependency and is insta
 - Do not place passwords, payment-card data, health information, or other high-risk data in ordinary notifications or logs. Payments must use an approved Gravity Forms payment add-on and hosted/tokenized provider flow.
 - Configure production email through an approved transactional mail or SMTP service. Use a domain-authorized From address, keep the visitor address as Reply-To where appropriate, and test SPF, DKIM, DMARC, delivery failures, confirmations, and administrative notifications.
 - Configure spam protection, rate limiting, duplicate-submission behavior, and meaningful failure states. CAPTCHA, marketing, CRM, webhook, and analytics integrations require privacy and accessibility review before activation.
+
+## Block Guide
+
+The wp-admin **Block Guide** (`inc/block-guide.php`, styles in `assets/css/admin/block-guide.css`) is the client's manual for the theme blocks. Administrators and editors can see it (`edit_others_posts`). It lists every registered block in the `ltt-blocks` category automatically. The content for each block lives in `blocks/{block}/guide.php`, which returns an array with `summary`, `where`, `steps`, `fields`, `variants`, `tips`, and `troubleshooting`.
+
+**Keep it in sync.** Every change that affects what an editor sees or does in a block must update that block's `guide.php` in the same change. This applies to people and agents alike. That includes:
+
+- adding, removing, or renaming a block, variant, or layout;
+- adding, removing, or renaming a field, or changing whether it is required, its limits (character counts, minimum and maximum items), its choices, or its default;
+- changing validation or editor-preview messages quoted in `troubleshooting`;
+- changing visible behavior an editor relies on, such as where card content comes from, when a block hides itself, or which settings screen it depends on.
+
+**Live previews and practice drafts.** `blocks/{block}/guide-samples.php` returns sample content per variant key (or `default` for blocks without variants), keyed by ACF field name. The guide renders each sample through the real block in an iframe (`?ltt_block_preview={block}&variant={key}`, logged-in Block Guide users only, not indexed) with Desktop (1440px) and Mobile (375px) views. `assets/js/block-guide-preview.js` loads only in previews and cancels link navigation (except `#` anchors and lightbox triggers) and every form submission, so sample buttons never leave the preview and sample forms never create entries; interactive components keep working. "Try this block" creates a draft containing that sample. Use the helpers in `inc/block-guide-samples.php` for photos, icons, links, forms, and related posts; never hard-code attachment IDs, post IDs, or URLs, because they differ between environments. Samples must satisfy the block's validation (required fields, item counts) so the preview renders. When a block changes, update its `guide-samples.php` together with its `guide.php`.
+
+A new block is not done until it has a `guide.php`. Before writing, confirm every claim against the field definitions and the render template; do not document behavior that is not implemented.
+
+Write guide copy in English, for a non-technical editor, in a plain and direct human voice. Do not use em dashes or en dashes, filler, or marketing phrases. Do not add a "When to use it" section; the client asked to remove it. Text passes through `wp_kses_post()`, so limited HTML such as `<strong>` and `<code>` is allowed.
 
 ## PHP and WordPress conventions
 
@@ -481,4 +500,4 @@ For user-facing changes, also perform a manual WordPress check when the local si
 
 ## Definition of done
 
-A change is complete when it is narrowly scoped, follows WordPress security and escaping rules, remains accessible and responsive, passes applicable validation, and its manual verification needs or limitations are clearly reported.
+A change is complete when it is narrowly scoped, follows WordPress security and escaping rules, remains accessible and responsive, passes applicable validation, keeps the affected block's `guide.php` and `guide-samples.php` up to date, and its manual verification needs or limitations are clearly reported.

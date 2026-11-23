@@ -1,0 +1,361 @@
+/* Block Guide admin screen */
+
+.ltt-block-guide {
+	max-width: 1100px;
+}
+
+.ltt-block-guide__lead {
+	max-width: 70ch;
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+.ltt-block-guide__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 16px;
+	margin: 24px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ltt-block-guide__card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 20px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.ltt-block-guide__card:focus-within,
+.ltt-block-guide__card:hover {
+	border-color: #2271b1;
+}
+
+.ltt-block-guide__card-icon {
+	width: 28px;
+	height: 28px;
+	margin-bottom: 12px;
+	color: #2271b1;
+	font-size: 28px;
+}
+
+.ltt-block-guide__card-title {
+	margin: 0 0 8px;
+	font-size: 16px;
+}
+
+.ltt-block-guide__card-title a {
+	text-decoration: none;
+}
+
+/* Makes the whole card clickable while keeping one link in the tab order. */
+.ltt-block-guide__card-title a::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
+.ltt-block-guide__card-title a:focus {
+	box-shadow: none;
+	outline: none;
+}
+
+.ltt-block-guide__card:focus-within {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2271b1;
+}
+
+.ltt-block-guide__card-description {
+	flex: 1;
+	margin: 0 0 16px;
+	color: #50575e;
+}
+
+.ltt-block-guide__badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ltt-block-guide__status.is-preview {
+	display: inline-flex;
+	gap: 4px;
+	align-items: center;
+	background: #f0f6fc;
+	color: #135e96;
+}
+
+.ltt-block-guide__status .dashicons {
+	width: 14px;
+	height: 14px;
+	font-size: 14px;
+}
+
+.ltt-block-guide__status {
+	align-self: flex-start;
+	margin: 0;
+	padding: 2px 8px;
+	border-radius: 2px;
+	background: #f0f0f1;
+	color: #50575e;
+	font-size: 12px;
+}
+
+.ltt-block-guide__status.is-ready {
+	background: #edfaef;
+	color: #00631e;
+}
+
+.ltt-block-guide__back {
+	margin: 16px 0 8px;
+}
+
+.ltt-block-guide__back a {
+	text-decoration: none;
+}
+
+.ltt-block-guide__header {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
+}
+
+.ltt-block-guide__header-icon {
+	flex: none;
+	width: 40px;
+	height: 40px;
+	margin-top: 12px;
+	color: #2271b1;
+	font-size: 40px;
+}
+
+.ltt-block-guide__where {
+	padding: 12px 16px;
+	border-left: 4px solid #2271b1;
+	background: #fff;
+}
+
+.ltt-block-guide__section {
+	margin-top: 40px;
+}
+
+.ltt-block-guide__section > h2 {
+	margin-bottom: 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #c3c4c7;
+	font-size: 20px;
+}
+
+.ltt-block-guide__section h3 {
+	font-size: 15px;
+}
+
+.ltt-block-guide__columns {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 24px;
+}
+
+.ltt-block-guide__list {
+	max-width: 75ch;
+	margin-left: 20px;
+	list-style: disc;
+}
+
+.ltt-block-guide__steps {
+	list-style: decimal;
+}
+
+.ltt-block-guide__list li {
+	margin-bottom: 8px;
+	line-height: 1.6;
+}
+
+.ltt-block-guide__toc ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 8px;
+}
+
+.ltt-block-guide__toc a {
+	display: inline-block;
+	padding: 6px 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 999px;
+	background: #fff;
+	text-decoration: none;
+}
+
+.ltt-block-guide__variant {
+	margin-top: 24px;
+	padding: 20px 24px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	scroll-margin-top: 48px;
+}
+
+.ltt-block-guide__variant > h3 {
+	margin-top: 0;
+	font-size: 17px;
+}
+
+.ltt-block-guide__variant p {
+	max-width: 75ch;
+	line-height: 1.6;
+}
+
+.ltt-block-guide__fields {
+	margin: 16px 0;
+}
+
+.ltt-block-guide__fields th[scope="row"] {
+	width: 30%;
+	font-weight: 600;
+}
+
+.ltt-block-guide__fields td {
+	line-height: 1.6;
+}
+
+.ltt-block-guide__requirement {
+	display: block;
+	margin-top: 2px;
+	color: #50575e;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.ltt-block-guide__notes {
+	margin-top: 12px;
+}
+
+.ltt-block-guide__faq dt {
+	margin-top: 16px;
+	font-weight: 600;
+}
+
+.ltt-block-guide__faq dd {
+	max-width: 75ch;
+	margin: 4px 0 0;
+	line-height: 1.6;
+}
+
+.ltt-block-guide__practice {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+	margin: 16px 0 0;
+	padding: 12px 16px;
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #dba617;
+	background: #fff;
+}
+
+.ltt-block-guide__practice p {
+	margin: 0;
+}
+
+.ltt-block-guide__preview {
+	margin: 20px 0;
+}
+
+.ltt-block-guide__preview-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+
+.ltt-block-guide__devices,
+.ltt-block-guide__preview-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+
+.ltt-block-guide__devices[hidden] {
+	display: none;
+}
+
+.ltt-block-guide__preview-actions form {
+	margin: 0;
+}
+
+.ltt-block-guide__devices .button[aria-pressed="true"] {
+	border-color: #2271b1;
+	background: #2271b1;
+	color: #fff;
+}
+
+.ltt-block-guide__stage {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #f0f0f1;
+}
+
+.ltt-block-guide__frame {
+	display: block;
+	width: 100%;
+	height: 600px;
+	border: 0;
+	background: #fff;
+}
+
+.is-enhanced .ltt-block-guide__frame {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform-origin: 0 0;
+}
+
+.ltt-block-guide__preview-note {
+	margin: 8px 0 0;
+	color: #50575e;
+	font-size: 12px;
+}
+
+@media (max-width: 767.98px) {
+	.ltt-block-guide__fields th[scope="row"] {
+		width: auto;
+	}
+
+	.ltt-block-guide__fields,
+	.ltt-block-guide__fields tbody,
+	.ltt-block-guide__fields tr,
+	.ltt-block-guide__fields th,
+	.ltt-block-guide__fields td {
+		display: block;
+	}
+
+	.ltt-block-guide__fields thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+	}
+
+	.ltt-block-guide__header-icon {
+		display: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.ltt-block-guide__card:focus-within {
+		outline: 2px solid CanvasText;
+	}
+}
