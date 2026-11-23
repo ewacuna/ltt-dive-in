@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'A heading followed by a set of photo cards that you write by hand: your own image, title, text, and link for each card. It has two layouts: the Hub Driver, with text over the photos, and the Features List Grid, with text under the photos.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

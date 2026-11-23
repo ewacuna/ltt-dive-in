@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'Puts video on the page. Each video shows a still image (the poster) with a play button, and only loads when someone presses play, so the page stays fast. Videos can come from Cloudflare Stream, YouTube, Vimeo, or an MP4 in the Media Library. There are five layouts, from a single video to a series with episodes.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

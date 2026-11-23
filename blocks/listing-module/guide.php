@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'A grid of cards with dropdown filters, a search box, and a Load More button. The cards build themselves from your posts, using each post\'s title, featured image, and excerpt. You set up the block once, and every new post shows up in it automatically.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts. It is usually the main content of a listing page.', 'ltt-dive-in' ),
 	'steps'           => array(

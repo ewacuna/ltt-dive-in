@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'Shows what people say about Lake Tahoe or about you. With one quote it is a single testimonial. With two or more it becomes a carousel that visitors move through with arrows and dots.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

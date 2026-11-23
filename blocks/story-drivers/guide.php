@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'Shows blog posts as cards. It can pick the latest posts for you (and keep updating as you publish) or show the exact posts you choose. There are six layouts, from one big featured story to a full blog grid with filters.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

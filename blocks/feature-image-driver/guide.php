@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'A big photo with a title, a bit of text, and a button laid over it. You choose the photo and write everything yourself, so it can promote anything. It comes in four layouts: one large image, a slider of two or three, a shorter single image, and a row of cards that expand.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $background_colors = __( 'White, Deep Navy, Peak Gold, Burgundy, Red, Forest Green, Green, Blue, or Crystal Clear Cyan. The text and button colors switch on their own so they stay readable on the color you pick.', 'ltt-dive-in' );
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'        => __( 'The all-purpose block for text-led sections. One block, nine layouts: plain copy, copy next to a heading, bullet lists, icons with short blurbs, stats, a comparison table, testimonials, and two sign-up forms. If a section is mostly words, it probably belongs here.', 'ltt-dive-in' ),
 	'where'          => __( 'Pages and blog posts. You can use it as many times as you like on one page, with a different layout each time.', 'ltt-dive-in' ),
 	'steps'          => array(

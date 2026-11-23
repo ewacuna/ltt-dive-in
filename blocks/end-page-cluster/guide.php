@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'The last section of a page. Its job is to give visitors somewhere to go next instead of leaving the site. It has three layouts: text callouts with buttons, three photo cards, or a sliding row of related stories, events, and places.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts. Place it at the very end of the content.', 'ltt-dive-in' ),
 	'steps'           => array(

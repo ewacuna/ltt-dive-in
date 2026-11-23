@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'A grid of photo cards that link to other pages on the site. You only pick the pages: each card fills itself in with the page\'s featured image, title, and short description. You can add filter buttons so visitors can narrow the cards down, for example by activity or by area.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts. It is the main building block of hub pages.', 'ltt-dive-in' ),
 	'steps'           => array(

@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'Photo galleries. You pick images from the Media Library and choose one of nine arrangements, from a single big photo to a large grid. With three or more images, visitors can click any photo to see it full screen and flip through the rest.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

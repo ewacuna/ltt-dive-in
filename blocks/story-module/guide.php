@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'The building blocks for blog articles: numbered list items, travel tips, itineraries, guides, Q&As, comparison tables, and more. Each Story Module is one piece of an article. You stack several of them, mixed with normal paragraphs and headings, to build the post.', 'ltt-dive-in' ),
 	'where'           => __( 'Blog posts only. It does not appear in the inserter on pages.', 'ltt-dive-in' ),
 	'steps'           => array(

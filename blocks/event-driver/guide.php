@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'Shows upcoming events from the Seeker event calendar. You never type event details here: names, dates, photos, venues, and ticket links all come from Seeker and update on their own. This block only decides which events to show and how. It has three layouts: a big rotating feature, a filterable list, and a carousel.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

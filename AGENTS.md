@@ -151,7 +151,7 @@ The paid version of Gravity Forms is an approved project dependency and is insta
 
 ## Block Guide
 
-The wp-admin **Block Guide** (`inc/block-guide.php`, styles in `assets/css/admin/block-guide.css`) is the client's manual for the theme blocks. Administrators and editors can see it (`edit_others_posts`). It lists every registered block in the `ltt-blocks` category automatically. The content for each block lives in `blocks/{block}/guide.php`, which returns an array with `summary`, `where`, `steps`, `fields`, `variants`, `tips`, and `troubleshooting`.
+The wp-admin **Block Guide** (`inc/block-guide.php`, styles in `assets/css/admin/block-guide.css`) is the client's manual for the theme blocks. Administrators and editors can see it (`edit_others_posts`). It lists every registered block in the `ltt-blocks` category automatically. The content for each block lives in `blocks/{block}/guide.php`, which returns an array with `updated`, `summary`, `where`, `steps`, `fields`, `variants`, `tips`, and `troubleshooting`. `updated` is the date the guide content last changed, as `YYYY-MM-DD`; the screen shows it as "Last updated". Set it to the current date whenever you change that block's `guide.php` or `guide-samples.php` in a way editors would notice. Do not rely on file modification times, because a deployment resets them.
 
 **Keep it in sync.** Every change that affects what an editor sees or does in a block must update that block's `guide.php` in the same change. This applies to people and agents alike. That includes:
 

@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'An interactive map of Lake Tahoe. You add two kinds of points: destinations, which visitors click to see a photo, description, and link, and attractions, which are small icons that mark things like trails, beaches, or lighthouses. There is an optional snow effect too.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

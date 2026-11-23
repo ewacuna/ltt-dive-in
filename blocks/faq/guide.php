@@ -27,6 +27,7 @@ $question_fields = array(
 );
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'        => __( 'A list of questions that open and close when clicked, so visitors can scan the questions and only read the answers they care about. It has three layouts: a single list, a list next to the heading, or questions split into topics with tabs.', 'ltt-dive-in' ),
 	'where'          => __( 'Pages and blog posts. You can add it more than once on the same page.', 'ltt-dive-in' ),
 	'steps'          => array(

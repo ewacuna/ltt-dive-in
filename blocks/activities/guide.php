@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'A section with a heading and intro on top and four photo cards underneath. Each card points to a page or a blog post you pick, and it fills itself in with that page\'s photo and title, so you never type the card content twice.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(

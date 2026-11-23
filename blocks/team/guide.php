@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
+	'updated'         => '2026-11-23',
 	'summary'         => __( 'Introduces the people behind the organization. Each person gets a photo, name, role, short bio, and links to their social profiles. There is also an optional contact area next to the heading.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts. Usually an About or Contact page.', 'ltt-dive-in' ),
 	'steps'           => array(

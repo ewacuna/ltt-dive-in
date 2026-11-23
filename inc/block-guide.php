@@ -69,6 +69,23 @@ function ltt_dive_in_enqueue_block_guide_assets( $hook_suffix ) {
 add_action( 'admin_enqueue_scripts', 'ltt_dive_in_enqueue_block_guide_assets' );
 
 /**
+ * Format a guide's "updated" date (Y-m-d) with the site's date format.
+ *
+ * @param array $guide Guide content.
+ * @return string Formatted date, or an empty string when missing or invalid.
+ */
+function ltt_dive_in_block_guide_updated( $guide ) {
+	$value = isset( $guide['updated'] ) && is_string( $guide['updated'] ) ? $guide['updated'] : '';
+	$date  = $value ? DateTimeImmutable::createFromFormat( '!Y-m-d', $value, wp_timezone() ) : false;
+
+	if ( ! $date || $date->format( 'Y-m-d' ) !== $value ) {
+		return '';
+	}
+
+	return (string) wp_date( get_option( 'date_format' ), $date->getTimestamp() );
+}
+
+/**
  * Render a live preview of a block sample with its toolbar.
  *
  * @param string $slug    Block folder slug.
@@ -309,6 +326,15 @@ function ltt_dive_in_render_block_guide_index( $entries ) {
 						</li>
 					<?php endif; ?>
 				</ul>
+				<?php $updated = ltt_dive_in_block_guide_updated( $entry['guide'] ); ?>
+				<?php if ( $updated ) : ?>
+					<p class="ltt-block-guide__card-updated">
+						<?php
+						/* translators: %s: date. */
+						echo esc_html( sprintf( __( 'Updated %s', 'ltt-dive-in' ), $updated ) );
+						?>
+					</p>
+				<?php endif; ?>
 			</li>
 		<?php endforeach; ?>
 	</ul>
@@ -401,6 +427,15 @@ function ltt_dive_in_render_block_guide_detail( $entry ) {
 				<p class="ltt-block-guide__lead"><?php echo wp_kses_post( $guide['summary'] ); ?></p>
 			<?php elseif ( $block_type->description ) : ?>
 				<p class="ltt-block-guide__lead"><?php echo esc_html( $block_type->description ); ?></p>
+			<?php endif; ?>
+			<?php $updated = ltt_dive_in_block_guide_updated( $guide ); ?>
+			<?php if ( $updated ) : ?>
+				<p class="ltt-block-guide__updated">
+					<?php
+					/* translators: %s: date. */
+					echo esc_html( sprintf( __( 'Last updated: %s', 'ltt-dive-in' ), $updated ) );
+					?>
+				</p>
 			<?php endif; ?>
 		</div>
 	</header>
