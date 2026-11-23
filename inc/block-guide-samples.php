@@ -314,13 +314,14 @@ function ltt_dive_in_block_guide_form() {
  * @return int[]
  */
 function ltt_dive_in_block_guide_posts( $post_type, $count ) {
-	return array_map(
+	$count      = absint( $count );
+	$candidates = array_map(
 		'intval',
 		get_posts(
 			array(
 				'post_type'      => $post_type,
 				'post_status'    => 'publish',
-				'posts_per_page' => absint( $count ),
+				'posts_per_page' => max( 40, $count * 4 ),
 				'fields'         => 'ids',
 				'no_found_rows'  => true,
 				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
@@ -332,4 +333,33 @@ function ltt_dive_in_block_guide_posts( $post_type, $count ) {
 			)
 		)
 	);
+
+	// Prefer items whose visible card text is real copy, so previews do not
+	// show placeholder text; fall back to the rest when there are not enough.
+	$real        = array();
+	$placeholder = array();
+
+	foreach ( $candidates as $id ) {
+		$text = 'page' === get_post_type( $id ) && function_exists( 'ltt_dive_in_get_page_card_description' )
+			? ltt_dive_in_get_page_card_description( $id ) . ' ' . get_the_excerpt( $id )
+			: get_the_excerpt( $id );
+
+		if ( ltt_dive_in_block_guide_is_placeholder( get_the_title( $id ) . ' ' . $text ) ) {
+			$placeholder[] = $id;
+		} else {
+			$real[] = $id;
+		}
+	}
+
+	return array_slice( array_merge( $real, $placeholder ), 0, $count );
+}
+
+/**
+ * Whether text looks like placeholder copy.
+ *
+ * @param string $text Text to check.
+ * @return bool
+ */
+function ltt_dive_in_block_guide_is_placeholder( $text ) {
+	return (bool) preg_match( '/\blorem ipsum\b|\bdolor sit amet\b/i', (string) $text );
 }
