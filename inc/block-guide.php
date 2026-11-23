@@ -19,28 +19,68 @@ function ltt_dive_in_block_guide_capability() {
 }
 
 /**
- * Register the Block Guide admin page.
+ * Admin page hook suffixes of the Site Guide screens.
+ *
+ * @param string|null $hook_suffix Hook suffix to record.
+ * @return string[]
+ */
+function ltt_dive_in_site_guide_hooks( $hook_suffix = null ) {
+	static $hooks = array();
+
+	if ( is_string( $hook_suffix ) && $hook_suffix ) {
+		$hooks[] = $hook_suffix;
+	}
+
+	return $hooks;
+}
+
+/**
+ * Register the Site Guide menu: Blocks and Settings.
+ *
+ * Blocks keeps the original page slug so existing links keep working.
  */
 function ltt_dive_in_register_block_guide_page() {
-	add_menu_page(
-		__( 'Block Guide', 'ltt-dive-in' ),
-		__( 'Block Guide', 'ltt-dive-in' ),
-		ltt_dive_in_block_guide_capability(),
-		'ltt-dive-in-block-guide',
-		'ltt_dive_in_render_block_guide_page',
-		'dashicons-book-alt',
-		21
+	ltt_dive_in_site_guide_hooks(
+		add_menu_page(
+			__( 'Site Guide', 'ltt-dive-in' ),
+			__( 'Site Guide', 'ltt-dive-in' ),
+			ltt_dive_in_block_guide_capability(),
+			'ltt-dive-in-block-guide',
+			'ltt_dive_in_render_block_guide_page',
+			'dashicons-book-alt',
+			21
+		)
+	);
+	ltt_dive_in_site_guide_hooks(
+		add_submenu_page(
+			'ltt-dive-in-block-guide',
+			__( 'Blocks', 'ltt-dive-in' ),
+			__( 'Blocks', 'ltt-dive-in' ),
+			ltt_dive_in_block_guide_capability(),
+			'ltt-dive-in-block-guide',
+			'ltt_dive_in_render_block_guide_page'
+		)
+	);
+	ltt_dive_in_site_guide_hooks(
+		add_submenu_page(
+			'ltt-dive-in-block-guide',
+			__( 'Settings', 'ltt-dive-in' ),
+			__( 'Settings', 'ltt-dive-in' ),
+			ltt_dive_in_block_guide_capability(),
+			'ltt-dive-in-settings-guide',
+			'ltt_dive_in_render_settings_guide_page'
+		)
 	);
 }
 add_action( 'admin_menu', 'ltt_dive_in_register_block_guide_page' );
 
 /**
- * Enqueue the Block Guide stylesheet on its own screen only.
+ * Enqueue the Site Guide assets on its own screens only.
  *
  * @param string $hook_suffix Current admin page hook.
  */
 function ltt_dive_in_enqueue_block_guide_assets( $hook_suffix ) {
-	if ( 'toplevel_page_ltt-dive-in-block-guide' !== $hook_suffix ) {
+	if ( ! in_array( $hook_suffix, ltt_dive_in_site_guide_hooks(), true ) ) {
 		return;
 	}
 
@@ -249,7 +289,7 @@ function ltt_dive_in_render_block_guide_page() {
  */
 function ltt_dive_in_render_block_guide_index( $entries ) {
 	?>
-	<h1><?php esc_html_e( 'Block Guide', 'ltt-dive-in' ); ?></h1>
+	<h1><?php esc_html_e( 'Blocks', 'ltt-dive-in' ); ?></h1>
 	<p class="ltt-block-guide__lead">
 		<?php esc_html_e( 'These are the custom blocks built for this site. You can find all of them in the block inserter under "LTT Blocks". Open any block below to see what it is for, which layouts it has, and what each field does.', 'ltt-dive-in' ); ?>
 	</p>

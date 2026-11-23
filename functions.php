@@ -70,3 +70,5 @@ require_once LTT_DIVE_IN_DIR . '/inc/block-inserter.php';
 require_once LTT_DIVE_IN_DIR . '/inc/block-guide.php';
 require_once LTT_DIVE_IN_DIR . '/inc/block-guide-samples.php';
 require_once LTT_DIVE_IN_DIR . '/inc/block-guide-preview.php';
+require_once LTT_DIVE_IN_DIR . '/inc/site-guide-settings.php';
+require_once LTT_DIVE_IN_DIR . '/inc/site-guide-page-options.php';

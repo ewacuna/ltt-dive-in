@@ -47,7 +47,9 @@ The standalone shell PHP version may differ from the PHP runtime selected in Loc
 - `template-parts/`: reusable markup for content, pages, and sections.
 - `templates/`: page templates selectable in the WordPress editor.
 - `blocks/`: theme ACF blocks, one folder per block with its `block.json`, editor guide (`guide.php`), and guide sample content (`guide-samples.php`).
-- `inc/block-guide.php`, `inc/block-guide-samples.php`, `inc/block-guide-preview.php`: the wp-admin **Block Guide** screen, its sample data helpers, and its live previews and practice drafts; see "Block Guide" below.
+- `inc/block-guide.php`, `inc/block-guide-samples.php`, `inc/block-guide-preview.php`: the wp-admin **Block Guide** screen, its sample data helpers, and its live previews and practice drafts; see "Site Guide" below.
+- `inc/site-guide-settings.php` and `guides/settings/`: the Site Guide's Settings section, one guide file per theme settings screen.
+- `inc/site-guide-page-options.php` and `guides/page-options/`: the Site Guide's Page options section, one guide file per editor box, page template, or Media Library field the theme adds.
 - `assets/css/main.css`: global foundations and styles genuinely shared across the site.
 - `assets/css/templates/`: template-specific styles, added as templates are implemented.
 - `assets/css/components/`: reusable component styles shared by more than one template, added as needed.
@@ -149,9 +151,13 @@ The paid version of Gravity Forms is an approved project dependency and is insta
 - Configure production email through an approved transactional mail or SMTP service. Use a domain-authorized From address, keep the visitor address as Reply-To where appropriate, and test SPF, DKIM, DMARC, delivery failures, confirmations, and administrative notifications.
 - Configure spam protection, rate limiting, duplicate-submission behavior, and meaningful failure states. CAPTCHA, marketing, CRM, webhook, and analytics integrations require privacy and accessibility review before activation.
 
-## Block Guide
+## Site Guide
 
-The wp-admin **Block Guide** (`inc/block-guide.php`, styles in `assets/css/admin/block-guide.css`) is the client's manual for the theme blocks. Administrators and editors can see it (`edit_others_posts`). It lists every registered block in the `ltt-blocks` category automatically. The content for each block lives in `blocks/{block}/guide.php`, which returns an array with `updated`, `summary`, `where`, `steps`, `fields`, `variants`, `tips`, and `troubleshooting`. `updated` is the date the guide content last changed, as `YYYY-MM-DD`; the screen shows it as "Last updated". Set it to the current date whenever you change that block's `guide.php` or `guide-samples.php` in a way editors would notice. Do not rely on file modification times, because a deployment resets them.
+The wp-admin **Site Guide** menu has three sections: **Blocks** (`?page=ltt-dive-in-block-guide`), **Settings** (`?page=ltt-dive-in-settings-guide`), and **Page options** (`?page=ltt-dive-in-page-options-guide`). All are visible to administrators and editors.
+
+### Blocks
+
+The **Blocks** section (`inc/block-guide.php`, styles in `assets/css/admin/block-guide.css`) is the client's manual for the theme blocks. Administrators and editors can see it (`edit_others_posts`). It lists every registered block in the `ltt-blocks` category automatically. The content for each block lives in `blocks/{block}/guide.php`, which returns an array with `updated`, `summary`, `where`, `steps`, `fields`, `variants`, `tips`, and `troubleshooting`. `updated` is the date the guide content last changed, as `YYYY-MM-DD`; the screen shows it as "Last updated". Set it to the current date whenever you change that block's `guide.php` or `guide-samples.php` in a way editors would notice. Do not rely on file modification times, because a deployment resets them.
 
 **Keep it in sync.** Every change that affects what an editor sees or does in a block must update that block's `guide.php` in the same change. This applies to people and agents alike. That includes:
 
@@ -165,6 +171,19 @@ The wp-admin **Block Guide** (`inc/block-guide.php`, styles in `assets/css/admin
 **Editor link.** `assets/js/admin/block-guide-editor.js` adds a "Block Guide" panel to the block settings sidebar for every theme block that has a guide, visible only to Block Guide users. It links to the guide in a new tab and, for blocks with layouts, to the layout in use. The layout field is detected from the ACF select whose choices match the guide's variant keys, so keep guide variant keys identical to the ACF choice values.
 
 A new block is not done until it has a `guide.php`. Before writing, confirm every claim against the field definitions and the render template; do not document behavior that is not implemented.
+
+### Settings
+
+Each theme settings screen (ACF options pages under Settings, Appearance, and Posts) has a guide in `guides/settings/{slug}.php` that returns `updated`, `title`, `group` (`appearance`, `settings`, or `posts`), `icon` (a Dashicons name), `menu` (the admin path, such as "Settings → Map"), `screen` (`parent`, `slug`, `capability` of the options page), `short`, `summary`, `shows`, `fields`, `status`, `tips`, and `troubleshooting`.
+
+- `status` is a list of checks, each a `label` and a `check` callback returning `state` (`ok`, `warning`, or `off`) and `text`. Checks run only for users who can edit that screen and must report only whether something is set, never a saved value, key, or token.
+- Users who cannot edit a screen see the guide read-only: no status and no "Open settings" button.
+- A screen owned by a plugin adds an `available` callback so its guide only appears where that plugin runs (for example Site Maintenance).
+- **Keep it in sync.** Adding, removing, or changing a settings screen or one of its fields must update its guide file and `updated` date in the same change. A new settings screen is not done until it has a guide.
+
+### Page options
+
+Each ACF field group the theme adds to the page or post editor, a page template, or the Media Library has a guide in `guides/page-options/{slug}.php` that returns `updated`, `title`, `group` (`pages`, `templates`, `posts`, or `media`), `order`, `icon`, `where` (where the box appears in the editor), `applies` (which pages, posts, or files have it), `short`, `summary`, and any of `shows`, `steps`, `fields`, `fields_intro`, `parts` (named sub-sections with their own fields, for boxes whose fields change with a choice), `tips`, and `troubleshooting`. Adding, removing, or changing such a field group, its location rules, or one of its fields must update its guide and `updated` date in the same change.
 
 Write guide copy in English, for a non-technical editor, in a plain and direct human voice. Do not use em dashes or en dashes, filler, or marketing phrases. Do not add a "When to use it" section; the client asked to remove it. Text passes through `wp_kses_post()`, so limited HTML such as `<strong>` and `<code>` is allowed.
 

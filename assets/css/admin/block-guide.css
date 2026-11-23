@@ -371,3 +371,69 @@
 		outline: 2px solid CanvasText;
 	}
 }
+
+/* Settings section */
+
+.ltt-block-guide__card-menu {
+	margin: -4px 0 8px;
+	color: #50575e;
+	font-size: 12px;
+}
+
+.ltt-block-guide__status.is-warning {
+	background: #fcf9e8;
+	color: #8a6116;
+}
+
+.ltt-block-guide__screen {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.ltt-block-guide__screen p {
+	margin: 0;
+}
+
+.ltt-block-guide__checks {
+	margin: 12px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ltt-block-guide__checks li {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+	margin: 0 0 8px;
+	padding: 10px 12px;
+	border: 1px solid #c3c4c7;
+	border-left-width: 4px;
+	background: #fff;
+}
+
+.ltt-block-guide__checks li.is-ok {
+	border-left-color: #00a32a;
+}
+
+.ltt-block-guide__checks li.is-warning {
+	border-left-color: #dba617;
+}
+
+.ltt-block-guide__checks li.is-off {
+	border-left-color: #8c8f94;
+}
+
+.ltt-block-guide__checks .dashicons {
+	flex: none;
+}
+
+.ltt-block-guide__checks .is-ok .dashicons {
+	color: #00a32a;
+}
+
+.ltt-block-guide__checks .is-warning .dashicons {
+	color: #8a6116;
+}
