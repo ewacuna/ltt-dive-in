@@ -180,7 +180,12 @@ function ltt_dive_in_render_block_guide_preview( $slug, $variant, $label ) {
 				data-preview-frame
 			></iframe>
 		</div>
-		<p class="ltt-block-guide__preview-note"><?php esc_html_e( 'This is the real block with sample text and photos from the Media Library. "Try this block" creates a new draft with this sample and opens it in the editor, so you can change anything without affecting the live site.', 'ltt-dive-in' ); ?></p>
+		<p class="ltt-block-guide__preview-note"><?php esc_html_e( 'This is the real block with sample text and photos from the Media Library. "Try this block" creates a new draft with this sample and opens it in the editor, so you can change anything without affecting the live site.', 'ltt-dive-in' ); ?>
+			<?php
+			/* translators: %d: number of days. */
+			echo esc_html( sprintf( __( 'Practice drafts move to the trash on their own %d days after your last edit.', 'ltt-dive-in' ), ltt_dive_in_block_guide_practice_lifetime_days() ) );
+			?>
+		</p>
 	</div>
 	<?php
 }
@@ -316,6 +321,9 @@ function ltt_dive_in_render_block_guide_index( $entries ) {
 				<?php
 				/* translators: %d: number of drafts. */
 				echo esc_html( sprintf( _n( 'You have %d practice draft from "Try this block".', 'You have %d practice drafts from "Try this block".', $practice_count, 'ltt-dive-in' ), $practice_count ) );
+				echo ' ';
+				/* translators: %d: number of days. */
+				echo esc_html( sprintf( __( 'They move to the trash on their own %d days after the last edit.', 'ltt-dive-in' ), ltt_dive_in_block_guide_practice_lifetime_days() ) );
 				?>
 			</p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">

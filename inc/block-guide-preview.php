@@ -257,3 +257,60 @@ function ltt_dive_in_block_guide_trash_practice_drafts() {
 	exit;
 }
 add_action( 'admin_post_ltt_dive_in_block_guide_trash_practice', 'ltt_dive_in_block_guide_trash_practice_drafts' );
+
+/**
+ * Days after their last edit that practice drafts move to the trash.
+ *
+ * @return int
+ */
+function ltt_dive_in_block_guide_practice_lifetime_days() {
+	return max( 1, (int) apply_filters( 'ltt_dive_in_block_guide_practice_lifetime_days', 7 ) );
+}
+
+/**
+ * Schedule the daily cleanup of old practice drafts.
+ */
+function ltt_dive_in_block_guide_schedule_practice_cleanup() {
+	if ( ! wp_next_scheduled( 'ltt_dive_in_block_guide_trash_old_practice' ) ) {
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'ltt_dive_in_block_guide_trash_old_practice' );
+	}
+}
+add_action( 'init', 'ltt_dive_in_block_guide_schedule_practice_cleanup' );
+
+/**
+ * Move practice drafts that were not edited recently to the trash.
+ *
+ * Only unpublished drafts created by "Try this block" are touched. They go to
+ * the trash, where WordPress keeps them for 30 days before deleting them.
+ */
+function ltt_dive_in_block_guide_trash_old_practice() {
+	$old = get_posts(
+		array(
+			'post_type'      => array( 'page', 'post' ),
+			'post_status'    => array( 'draft', 'auto-draft', 'pending' ),
+			'posts_per_page' => 100,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'meta_key'       => LTT_DIVE_IN_BLOCK_GUIDE_PRACTICE_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'date_query'     => array(
+				array(
+					'column' => 'post_modified_gmt',
+					'before' => ltt_dive_in_block_guide_practice_lifetime_days() . ' days ago',
+				),
+			),
+		)
+	);
+
+	foreach ( $old as $post_id ) {
+		wp_trash_post( $post_id );
+	}
+}
+add_action( 'ltt_dive_in_block_guide_trash_old_practice', 'ltt_dive_in_block_guide_trash_old_practice' );
+
+/**
+ * Stop the cleanup when the theme is switched off.
+ */
+function ltt_dive_in_block_guide_unschedule_practice_cleanup() {
+	wp_clear_scheduled_hook( 'ltt_dive_in_block_guide_trash_old_practice' );
+}
+add_action( 'switch_theme', 'ltt_dive_in_block_guide_unschedule_practice_cleanup' );

@@ -54,91 +54,9 @@ function ltt_dive_in_block_guide_samples( $slug ) {
 	$samples = $slug && file_exists( $file ) ? include $file : array();
 	$samples = is_array( $samples ) ? $samples : array();
 
-	// A sample may ask to reuse a block already published on this site, for
-	// blocks whose settings depend on the environment. Without one, the
-	// layout simply has no preview.
-	foreach ( $samples as $variant => $sample ) {
-		if ( ! is_array( $sample ) || ! array_key_exists( '__existing', $sample ) ) {
-			continue;
-		}
-
-		$block_type = ltt_dive_in_block_guide_block_type( $slug );
-		$data       = $block_type ? ltt_dive_in_block_guide_existing_data( $block_type->name, (array) $sample['__existing'] ) : null;
-
-		if ( $data ) {
-			$samples[ $variant ] = array( '__data' => $data );
-		} else {
-			unset( $samples[ $variant ] );
-		}
-	}
-
 	$cache[ $slug ] = $samples;
 
 	return $cache[ $slug ];
-}
-
-/**
- * Find the saved data of a block already published on the site.
- *
- * @param string $block_name Registered block name.
- * @param array  $match      Field name => value pairs the block data must have.
- * @return array|null Block data as stored by ACF, or null when none is found.
- */
-function ltt_dive_in_block_guide_existing_data( $block_name, $match = array() ) {
-	global $wpdb;
-
-	static $content = array();
-
-	if ( ! isset( $content[ $block_name ] ) ) {
-		$content[ $block_name ] = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-			$wpdb->prepare(
-				"SELECT post_content FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN ('page','post') AND post_content LIKE %s ORDER BY post_modified DESC LIMIT 20",
-				'%' . $wpdb->esc_like( '<!-- wp:' . $block_name . ' ' ) . '%'
-			)
-		);
-	}
-
-	$find = static function ( $blocks ) use ( &$find, $block_name, $match ) {
-		foreach ( $blocks as $block ) {
-			if ( $block_name === ( $block['blockName'] ?? '' ) && ! empty( $block['attrs']['data'] ) && is_array( $block['attrs']['data'] ) ) {
-				$data    = $block['attrs']['data'];
-				$matches = true;
-
-				foreach ( $match as $field => $value ) {
-					$saved = $data[ $field ] ?? ( $data[ 'field_' . $field ] ?? null );
-
-					if ( (string) $saved !== (string) $value ) {
-						$matches = false;
-						break;
-					}
-				}
-
-				if ( $matches ) {
-					return $data;
-				}
-			}
-
-			if ( ! empty( $block['innerBlocks'] ) ) {
-				$found = $find( $block['innerBlocks'] );
-
-				if ( $found ) {
-					return $found;
-				}
-			}
-		}
-
-		return null;
-	};
-
-	foreach ( $content[ $block_name ] as $post_content ) {
-		$found = $find( parse_blocks( $post_content ) );
-
-		if ( $found ) {
-			return $found;
-		}
-	}
-
-	return null;
 }
 
 /**
@@ -205,20 +123,6 @@ function ltt_dive_in_block_guide_sample_block( $slug, $variant = 'default' ) {
 
 	if ( ! $block_type || ! isset( $samples[ $variant ] ) || ! function_exists( 'acf_get_block_fields' ) || ! function_exists( 'acf_setup_meta' ) ) {
 		return null;
-	}
-
-	if ( isset( $samples[ $variant ]['__data'] ) ) {
-		return array(
-			'blockName'    => $block_type->name,
-			'attrs'        => array(
-				'name' => $block_type->name,
-				'data' => $samples[ $variant ]['__data'],
-				'mode' => 'preview',
-			),
-			'innerBlocks'  => array(),
-			'innerHTML'    => '',
-			'innerContent' => array(),
-		);
 	}
 
 	$fields = acf_get_block_fields( array( 'name' => $block_type->name ) );
@@ -346,6 +250,31 @@ function ltt_dive_in_block_guide_icon( $index = 0 ) {
 	}
 
 	return $ids ? $ids[ absint( $index ) % count( $ids ) ] : 0;
+}
+
+/**
+ * Get one MP4 from the Media Library for video samples.
+ *
+ * @return int Attachment ID, or 0 when the library has no MP4.
+ */
+function ltt_dive_in_block_guide_video() {
+	static $id = null;
+
+	if ( null === $id ) {
+		$ids = get_posts(
+			array(
+				'post_type'      => 'attachment',
+				'post_status'    => 'inherit',
+				'post_mime_type' => 'video/mp4',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			)
+		);
+		$id  = $ids ? (int) $ids[0] : 0;
+	}
+
+	return $id;
 }
 
 /**
