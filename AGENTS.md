@@ -48,6 +48,7 @@ The standalone shell PHP version may differ from the PHP runtime selected in Loc
 - `templates/`: page templates selectable in the WordPress editor.
 - `blocks/`: theme ACF blocks, one folder per block with its `block.json`, editor guide (`guide.php`), and guide sample content (`guide-samples.php`).
 - `inc/block-guide.php`, `inc/block-guide-samples.php`, `inc/block-guide-preview.php`: the wp-admin **Block Guide** screen, its sample data helpers, and its live previews and practice drafts; see "Site Guide" below.
+- `site-plugin/`: site behavior that must survive a theme switch, kept in this repository but installed outside the theme. `ltt-site-maintenance.php` is a regular plugin. `ltt-site-privacy.php` is a must-use plugin: copy it to `wp-content/mu-plugins/` in each environment and copy it again whenever it changes. It removes the author from oEmbed link previews and feeds, limits the REST users endpoints to users who can edit posts, redirects author archives and `?author=` requests to the home page, and keeps users out of the XML sitemap.
 - `inc/site-guide-settings.php` and `guides/settings/`: the Site Guide's Settings section, one guide file per theme settings screen.
 - `inc/site-guide-page-options.php` and `guides/page-options/`: the Site Guide's Page options section, one guide file per editor box, page template, or Media Library field the theme adds.
 - `assets/css/main.css`: global foundations and styles genuinely shared across the site.
