@@ -542,3 +542,89 @@ function ltt_dive_in_render_block_guide_detail( $entry ) {
 	<?php endif; ?>
 	<?php
 }
+
+/**
+ * Find the ACF field that selects a block's layout.
+ *
+ * Matches the select or button group whose choices include the guide's
+ * variant keys, so no field name has to be listed by hand.
+ *
+ * @param string $block_name    Registered block name.
+ * @param array  $variant_keys  Variant keys documented in the guide.
+ * @return array{name:string,key:string}|null
+ */
+function ltt_dive_in_block_guide_variant_field( $block_name, $variant_keys ) {
+	if ( ! $variant_keys || ! function_exists( 'acf_get_block_fields' ) ) {
+		return null;
+	}
+
+	foreach ( acf_get_block_fields( array( 'name' => $block_name ) ) as $field ) {
+		if ( ! in_array( $field['type'] ?? '', array( 'select', 'button_group', 'radio' ), true ) || empty( $field['choices'] ) ) {
+			continue;
+		}
+
+		if ( array_intersect( $variant_keys, array_map( 'strval', array_keys( $field['choices'] ) ) ) ) {
+			return array(
+				'name' => (string) $field['name'],
+				'key'  => (string) $field['key'],
+			);
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Add a "Block Guide" panel to the editor sidebar for theme blocks.
+ */
+function ltt_dive_in_enqueue_block_guide_editor_link() {
+	if ( ! current_user_can( ltt_dive_in_block_guide_capability() ) ) {
+		return;
+	}
+
+	$blocks = array();
+
+	foreach ( ltt_dive_in_get_block_guide_entries() as $slug => $entry ) {
+		if ( empty( $entry['guide']['summary'] ) ) {
+			continue;
+		}
+
+		$variants = array();
+
+		foreach ( (array) ( $entry['guide']['variants'] ?? array() ) as $key => $variant ) {
+			$variants[ (string) $key ] = array(
+				'name'    => (string) ( $variant['name'] ?? $key ),
+				'anchor'  => 'ltt-variant-' . sanitize_html_class( (string) $key ),
+				'preview' => ltt_dive_in_block_guide_has_sample( $slug, (string) $key ),
+			);
+		}
+
+		$blocks[ $entry['type']->name ] = array(
+			'url'      => ltt_dive_in_block_guide_url( $slug ),
+			'preview'  => ltt_dive_in_block_guide_has_sample( $slug ),
+			'variants' => $variants,
+			'field'    => ltt_dive_in_block_guide_variant_field( $entry['type']->name, array_keys( $variants ) ),
+		);
+	}
+
+	if ( ! $blocks ) {
+		return;
+	}
+
+	$script_path = LTT_DIVE_IN_DIR . '/assets/js/admin/block-guide-editor.js';
+
+	wp_enqueue_script(
+		'ltt-dive-in-block-guide-editor',
+		LTT_DIVE_IN_URI . '/assets/js/admin/block-guide-editor.js',
+		array( 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n' ),
+		file_exists( $script_path ) ? (string) filemtime( $script_path ) : LTT_DIVE_IN_VERSION,
+		true
+	);
+	wp_set_script_translations( 'ltt-dive-in-block-guide-editor', 'ltt-dive-in' );
+	wp_add_inline_script(
+		'ltt-dive-in-block-guide-editor',
+		'window.ltt_dive_in_block_guide_editor = ' . wp_json_encode( array( 'blocks' => $blocks ) ) . ';',
+		'before'
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'ltt_dive_in_enqueue_block_guide_editor_link' );
