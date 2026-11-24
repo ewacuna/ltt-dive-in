@@ -187,15 +187,21 @@
     flex: 0 1 19.25rem;
 }
 
+@property --ltt-listing-search-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 77.71deg;
+}
+
 .ltt-listing-module__filter-preview .ltt-listing-module__search-preview,
 .ltt-listing-module__search.ltt-search-bar--filter {
-    --listing-search-border-opacity: 0.35;
+    --listing-search-border-opacity: 0.6;
     border-width: 1.3px;
     border-color: transparent;
     background:
         linear-gradient(#f2f2f2, #f2f2f2) padding-box,
         linear-gradient(
-            77.71deg,
+            var(--ltt-listing-search-angle, 77.71deg),
             rgba(97, 194, 183, var(--listing-search-border-opacity)) -26.25%,
             rgba(79, 161, 84, var(--listing-search-border-opacity)) 23.91%,
             rgba(238, 176, 64, var(--listing-search-border-opacity)) 82.29%,
@@ -203,23 +209,52 @@
         ) border-box;
 }
 
+.ltt-listing-module__search {
+    position: relative;
+}
+
 .ltt-listing-module__search:focus-within {
-    --listing-search-border-opacity: 0.85;
-    /* Move only the border layer; the field's solid fill stays unchanged. */
-    background-size: 100% 100%, 100% 100%;
-    animation: ltt-listing-search-border 20s linear infinite;
+    --listing-search-border-opacity: 1;
+}
+
+@supports (mask-composite: exclude) or (-webkit-mask-composite: xor) {
+    /* A masked conic gradient keeps the entire palette around the perimeter. */
+    .ltt-listing-module__search::before {
+        position: absolute;
+        inset: -1.3px;
+        padding: 1.3px;
+        border-radius: inherit;
+        background: conic-gradient(
+            from var(--ltt-listing-search-angle, 77.71deg),
+            #61c2b7,
+            #4fa154,
+            #eeb040,
+            #9e3f3d,
+            #61c2b7
+        );
+        -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+        mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 300ms ease-out;
+        content: "";
+    }
+
+    .ltt-listing-module__search:focus-within::before {
+        opacity: 0.55;
+        animation: ltt-listing-search-border 6s linear infinite;
+    }
 }
 
 @keyframes ltt-listing-search-border {
-    0%,
-    100% {
-        background-size: 100% 100%, 100% 100%;
-        background-position: 0 0, 0% 0;
+    from {
+        --ltt-listing-search-angle: 77.71deg;
     }
 
-    50% {
-        background-size: 100% 100%, 400% 100%;
-        background-position: 0 0, 100% 0;
+    to {
+        --ltt-listing-search-angle: 437.71deg;
     }
 }
 
@@ -1025,8 +1060,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .ltt-listing-module__search:focus-within {
-        background-size: 100% 100%;
+    .ltt-listing-module__search::before {
+        display: none;
+        transition: none;
+    }
+
+    .ltt-listing-module__search:focus-within::before {
         animation: none;
     }
 
@@ -1054,6 +1093,14 @@
 }
 
 @media (forced-colors: active) {
+    .ltt-listing-module__search::before {
+        display: none;
+    }
+
+    .ltt-listing-module__search:focus-within::before {
+        animation: none;
+    }
+
     .ltt-listing-module__load-preview-label {
         border-color: ButtonText;
     }
