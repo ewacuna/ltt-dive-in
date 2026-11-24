@@ -275,7 +275,7 @@ function ltt_dive_in_enqueue_assets() {
 		}
 	}
 
-	if ( ! $is_503_view && is_singular( array( 'post', 'listings' ) ) ) {
+	if ( ! $is_503_view && is_singular( array( 'post', 'listing' ) ) ) {
 		wp_enqueue_style(
 			'ltt-dive-in-single',
 			LTT_DIVE_IN_URI . '/assets/css/templates/single.css',
@@ -525,7 +525,7 @@ function ltt_dive_in_preload_fonts( $preload_resources ) {
 		|| ( ltt_dive_in_has_page_hero() && 'standard' === ltt_dive_in_get_page_header_hero_variant() )
 		|| ltt_dive_in_is_events_page()
 		|| ltt_dive_in_is_event_submission_page()
-		|| is_singular( array( 'post', 'listings' ) )
+		|| is_singular( array( 'post', 'listing' ) )
 	) {
 		$preload_resources[] = array(
 			'href'        => LTT_DIVE_IN_URI . '/assets/fonts/big-caslon/Big-Caslon-Medium.woff2',
