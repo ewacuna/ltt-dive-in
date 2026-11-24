@@ -34,6 +34,7 @@
         let facetwpAjaxHookInstalled = false;
         let searchDelayTimer = null;
         let skipNextSearchDelay = false;
+        let cardMotionFrame = null;
 
         function facetOptionLabel(option) {
             // FacetWP appends a live result count to each value option.
@@ -44,6 +45,32 @@
         if (!grid) {
             return;
         }
+
+        function prepareCardMotion() {
+            if (!window.CSS || !window.CSS.supports('-moz-appearance', 'none')) {
+                return;
+            }
+
+            window.cancelAnimationFrame(cardMotionFrame);
+            cardMotionFrame = window.requestAnimationFrame(function () {
+                const cards = grid.querySelectorAll('.ltt-listing-module__card:not(.ltt-listing-module__card--motion-ready)');
+
+                // Firefox initially resolves container units against the viewport
+                // (bug 1823255). Flush layout without transitions, then enable
+                // the normal hover and keyboard animations on the next frame.
+                grid.getBoundingClientRect();
+                cardMotionFrame = window.requestAnimationFrame(function () {
+                    cards.forEach(function (card) {
+                        if (card.isConnected && grid.contains(card)) {
+                            card.classList.add('ltt-listing-module__card--motion-ready');
+                        }
+                    });
+                    cardMotionFrame = null;
+                });
+            });
+        }
+
+        prepareCardMotion();
 
         function clearErrorStatus() {
             if (!status) {
@@ -641,6 +668,7 @@
 
         document.addEventListener('facetwp-loaded', function () {
             installFacetwpAjaxHook();
+            prepareCardMotion();
             const wasMobileLoad = Boolean(activeRequest && activeRequest.mobileLoad);
             // FacetWP can complete its initial refresh from preloaded HTML,
             // without ever running an AJAX callback.
