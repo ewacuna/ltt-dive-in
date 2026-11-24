@@ -717,8 +717,6 @@
 
                     if (button) {
                         button.focus({ preventScroll: true });
-                    } else if (status) {
-                        status.focus({ preventScroll: true });
                     }
                     restoreLoadMoreFocus = false;
                 }

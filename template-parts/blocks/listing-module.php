@@ -196,7 +196,7 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 				<?php wp_reset_postdata(); ?>
 			</div>
 			<?php if ( $use_facets ) : ?>
-				<div class="screen-reader-text" role="status" aria-live="polite" aria-atomic="true" tabindex="-1" data-listing-status></div>
+				<div class="screen-reader-text" role="status" aria-live="polite" aria-atomic="true" data-listing-status></div>
 			<?php endif; ?>
 			<?php if ( ! $is_preview ) : ?>
 				<div class="ltt-listing-module__arrows" hidden>

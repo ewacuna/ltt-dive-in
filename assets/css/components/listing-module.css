@@ -51,38 +51,36 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1rem;
   margin-top: 1rem;
   padding-bottom: 1.5rem;
 }
 
 .ltt-listing-module__filter {
-  --listing-filter-rest-width: 100%;
-  --listing-filter-expanded-width: calc(100% + 1.875rem);
-  width: 9.375rem;
+  width: 11.5625rem;
   max-width: 100%;
+  transition: width 200ms ease-out;
 }
 
 .ltt-listing-module__filter-control {
   position: relative;
-  left: 0;
   display: block;
-  width: var(--listing-filter-rest-width, 100%);
+  width: 100%;
   min-width: 0;
-  transition:
-    width 200ms ease-out,
-    left 200ms ease-out;
 }
 
-.ltt-listing-module__filter:focus-within .ltt-listing-module__filter-control {
-  left: -0.9375rem;
-  width: var(--listing-filter-expanded-width);
+.ltt-listing-module__filter .ltt-listing-module__filter-control,
+.ltt-listing-module__filter-preview .ltt-listing-module__select-preview {
+  min-width: 0;
+}
+
+.ltt-listing-module__filter:has(:focus-visible) {
+  width: 8.125rem;
 }
 
 @media (hover: hover) {
-  .ltt-listing-module__filter:hover .ltt-listing-module__filter-control {
-    left: -0.9375rem;
-    width: var(--listing-filter-expanded-width);
+  .ltt-listing-module__filter:hover {
+    width: 8.125rem;
   }
 }
 
@@ -146,6 +144,7 @@
 
 .ltt-listing-module__filter-control .ltt-select__trigger-icon {
   flex: 0 0 2.6rem;
+  margin-left: 0;
 }
 
 .ltt-listing-module__filter-control .ltt-select__menu {
@@ -168,7 +167,7 @@
 }
 
 .ltt-listing-module__select-preview {
-  width: 9.375rem;
+  width: 11.5625rem;
 }
 
 .ltt-listing-module__select-preview .ltt-select__native {
@@ -931,13 +930,15 @@
     gap: 1.25rem 0.75rem;
     margin-top: 2rem;
     padding-bottom: 1.5rem;
+    transition: none;
   }
 
-  .ltt-listing-module__filter {
-    --listing-filter-rest-width: 100%;
-    --listing-filter-expanded-width: 100%;
+  .ltt-listing-module__filter,
+  .ltt-listing-module__filter:focus-within,
+  .ltt-listing-module__filter:hover {
     width: 100%;
     min-width: 0;
+    transition: none;
   }
 
   .ltt-listing-module__filter .ltt-listing-module__filter-control,
@@ -1152,6 +1153,9 @@
         scroll-behavior: auto;
     }
 
+    .ltt-listing-module__filter-preview,
+    .ltt-listing-module__filters,
+    .ltt-listing-module__filter,
     .ltt-listing-module__filter-control,
     .ltt-listing-module__card .ltt-listing-module__media,
     .ltt-listing-module__card-copy,
