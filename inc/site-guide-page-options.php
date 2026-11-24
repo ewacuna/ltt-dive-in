@@ -128,6 +128,23 @@ function ltt_dive_in_render_site_guide_sections( $guide, $prefix, $labels = arra
 		</section>
 	<?php endif; ?>
 
+	<?php if ( ! empty( $guide['items_heading'] ) ) : ?>
+		<section class="ltt-block-guide__section" aria-labelledby="<?php echo esc_attr( $prefix ); ?>-items">
+			<h2 id="<?php echo esc_attr( $prefix ); ?>-items"><?php echo esc_html( $guide['items_heading'] ); ?></h2>
+			<?php if ( ! empty( $guide['items_intro'] ) ) : ?>
+				<p><?php echo wp_kses_post( $guide['items_intro'] ); ?></p>
+			<?php endif; ?>
+			<?php if ( ! empty( $guide['items'] ) ) : ?>
+				<dl class="ltt-block-guide__faq">
+					<?php foreach ( (array) $guide['items'] as $item_name => $item_text ) : ?>
+						<dt><?php echo esc_html( $item_name ); ?></dt>
+						<dd><?php echo wp_kses_post( $item_text ); ?></dd>
+					<?php endforeach; ?>
+				</dl>
+			<?php endif; ?>
+		</section>
+	<?php endif; ?>
+
 	<?php if ( ! empty( $guide['fields'] ) ) : ?>
 		<section class="ltt-block-guide__section" aria-labelledby="<?php echo esc_attr( $prefix ); ?>-fields">
 			<h2 id="<?php echo esc_attr( $prefix ); ?>-fields"><?php echo esc_html( $labels['fields'] ); ?></h2>
