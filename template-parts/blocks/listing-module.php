@@ -100,7 +100,7 @@ if ( $use_facets ) {
 
 $query = new WP_Query( $query_args );
 
-// Frame colors and featured treatment follow the unfiltered order, even when filters move a card.
+// Frame colors follow the unfiltered order, even when filters move a card.
 $frame_variants  = array( 'blue', 'gold', 'green' );
 $frame_positions = array_flip(
 	get_posts(
@@ -189,7 +189,6 @@ $reset_facets = array_unique( array_filter( $reset_facets ) );
 							'buttons'    => ltt_dive_in_listing_card_buttons( $listing_post ),
 							'is_preview' => $is_preview,
 							'frame'      => $frame_variants[ $listing_position ],
-							'featured'   => 1 === $listing_position,
 						)
 					);
 					?>

@@ -337,11 +337,6 @@
     isolation: isolate;
 }
 
-.ltt-listing-module__card--featured {
-    grid-template-rows: 1fr auto 1fr;
-    align-self: start;
-}
-
 .ltt-listing-module__card-link,
 .ltt-listing-module__media::before,
 .ltt-listing-module__media::after {
@@ -395,16 +390,6 @@
     --listing-frame-blend: hard-light;
 }
 
-.ltt-listing-module__card--featured .ltt-listing-module__media {
-    grid-row: 1 / 4;
-    aspect-ratio: 472 / 690;
-}
-
-.ltt-listing-module__card--featured .ltt-listing-module__card-copy {
-    grid-column: 1;
-    grid-row: 2;
-}
-
 .ltt-listing-module__media-sizer {
     display: none;
 }
@@ -423,7 +408,6 @@
 .ltt-listing-module__media::after {
     z-index: 1;
     background: radial-gradient(ellipse 80% 28% at center, rgba(0, 0, 0, 0.8), rgba(21, 20, 25, 0) 60.577%), rgba(0, 0, 0, 0.2);
-    transition: background-color 200ms ease-out;
     content: "";
 }
 
@@ -431,11 +415,6 @@
     display: none;
 }
 
-/*
- * The hover zoom grows the image box instead of using transform. A transform
- * animation gives the image its own compositing layer, and Safari then stops
- * painting the frame's mix-blend-mode over it.
- */
 .ltt-listing-module__image {
     position: absolute;
     top: 0;
@@ -446,18 +425,6 @@
     max-width: none;
     height: 100%;
     object-fit: cover;
-    transition: top 300ms ease-out, left 300ms ease-out, width 300ms ease-out, height 300ms ease-out;
-}
-
-.ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__image {
-    top: -2%;
-    left: -2%;
-    width: 104%;
-    height: 104%;
-}
-
-.ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__media::after {
-    background-color: rgba(2, 22, 43, 0.4);
 }
 
 .ltt-listing-module__card-copy {
@@ -495,6 +462,8 @@
 }
 
 .ltt-listing-module__card-actions {
+    position: relative;
+    z-index: 5;
     display: flex;
     grid-column: 1;
     grid-row: 2;
@@ -506,13 +475,53 @@
     margin: 1rem auto 0;
 }
 
-.ltt-listing-module__card--featured .ltt-listing-module__card-actions {
-    position: relative;
-    z-index: 5;
-    grid-column: 1;
-    grid-row: 3;
-    align-self: end;
-    margin-block: 0 2rem;
+/* Reserve both compositions without duplicating links or changing row height. */
+@supports (width: 1cqi) {
+    @media (hover: hover) and (pointer: fine) {
+        .ltt-listing-module__card {
+            container-type: inline-size;
+            grid-template-rows: max-content minmax(0, 1fr);
+        }
+
+        .ltt-listing-module__card::before,
+        .ltt-listing-module__card::after {
+            grid-column: 1;
+            pointer-events: none;
+            content: "";
+        }
+
+        .ltt-listing-module__card::before {
+            grid-row: 1;
+            aspect-ratio: 472 / 575;
+        }
+
+        .ltt-listing-module__card::after {
+            grid-row: 1 / 3;
+            aspect-ratio: 472 / 690;
+        }
+
+        .ltt-listing-module__card .ltt-listing-module__media {
+            position: absolute;
+            inset: 0 0 auto;
+            width: 100%;
+            height: calc(100cqi * 575 / 472);
+            aspect-ratio: auto;
+            transition: height 300ms ease-out;
+        }
+
+        .ltt-listing-module__card-copy,
+        .ltt-listing-module__card-actions {
+            transition: transform 300ms ease-out;
+        }
+
+        .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__media {
+            height: calc(100cqi * 690 / 472);
+        }
+
+        .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__card-actions {
+            transform: translateY(calc(100cqi * 115 / 472 - 3rem - 100%));
+        }
+    }
 }
 
 .ltt-listing-module__card-button {
@@ -729,6 +738,27 @@
 }
 
 @media (max-width: 767.98px) {
+    .ltt-listing-module__card::before,
+    .ltt-listing-module__card::after {
+        display: none;
+    }
+
+    .ltt-listing-module__card .ltt-listing-module__media {
+        position: relative;
+        inset: auto;
+        height: auto;
+        aspect-ratio: 335 / 473;
+    }
+
+    .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__media {
+        height: auto;
+    }
+
+    .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__card-copy,
+    .ltt-listing-module__card:is(:hover, :focus-within) .ltt-listing-module__card-actions {
+        transform: none;
+    }
+
     .ltt-listing-module {
         padding: 4rem 0 3.5rem;
     }
@@ -853,28 +883,12 @@
 
     .ltt-listing-module__card {
         flex: 0 0 100%;
+        grid-template-rows: auto auto;
         scroll-snap-align: start;
     }
 
-    .ltt-listing-module__card--featured {
-        grid-template-rows: auto auto;
-        align-self: auto;
-    }
-
-    .ltt-listing-module__media,
-    .ltt-listing-module__card--featured .ltt-listing-module__media {
+    .ltt-listing-module__media {
         aspect-ratio: 335 / 473;
-    }
-
-    .ltt-listing-module__card--featured .ltt-listing-module__media,
-    .ltt-listing-module__card--featured .ltt-listing-module__card-copy {
-        grid-row: 1;
-    }
-
-    .ltt-listing-module__card--featured .ltt-listing-module__card-actions {
-        grid-row: 2;
-        align-self: start;
-        margin-block: 1rem 0;
     }
 
     @supports not (aspect-ratio: 1 / 1) {
@@ -963,6 +977,9 @@
         scroll-behavior: auto;
     }
 
+    .ltt-listing-module__card .ltt-listing-module__media,
+    .ltt-listing-module__card-copy,
+    .ltt-listing-module__card-actions,
     .ltt-listing-module__image,
     .ltt-listing-module__media::after,
     .ltt-listing-module__load-preview-label,

@@ -95,6 +95,24 @@
     backdrop-filter: blur(0.25rem);
 }
 
+/* Listing opts into the existing glass palette only in its expanded state. */
+@supports (width: 1cqi) {
+    @media (hover: hover) and (pointer: fine) and (width >= 768px) {
+        .ltt-listing-module__card:is(:hover, :focus-within) [data-ltt-button-card-hover="glass"] {
+            --ltt-button-background: rgba(0, 0, 0, 0.05);
+            --ltt-button-border-color: rgba(255, 255, 255, 0.5);
+            --ltt-button-color: #ffffff;
+            --ltt-button-hover-background: rgba(255, 255, 255, 0.6);
+            --ltt-button-hover-border-color: transparent;
+            --ltt-button-hover-color: #073959;
+            --ltt-button-pressed-background: rgba(255, 255, 255, 0.6);
+            --ltt-button-pressed-border-color: transparent;
+            --ltt-button-pressed-color: #073959;
+            backdrop-filter: blur(0.25rem);
+        }
+    }
+}
+
 .ltt-button--dark-standard {
     --ltt-button-border-color: #ffffff;
     --ltt-button-color: #ffffff;
