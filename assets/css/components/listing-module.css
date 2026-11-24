@@ -51,20 +51,37 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1.25rem;
+    gap: 1.75rem;
     margin-top: 1rem;
     padding-bottom: 1.5rem;
 }
 
 .ltt-listing-module__filter {
-    width: 10rem;
+    --listing-filter-rest-width: 100%;
+    --listing-filter-expanded-width: calc(100% + 1.875rem);
+    width: 9.375rem;
     max-width: 100%;
 }
 
 .ltt-listing-module__filter-control {
+    position: relative;
+    left: 0;
     display: block;
-    width: 100%;
+    width: var(--listing-filter-rest-width, 100%);
     min-width: 0;
+    transition: width 200ms ease-out, left 200ms ease-out;
+}
+
+.ltt-listing-module__filter:focus-within .ltt-listing-module__filter-control {
+    left: -0.9375rem;
+    width: var(--listing-filter-expanded-width);
+}
+
+@media (hover: hover) {
+    .ltt-listing-module__filter:hover .ltt-listing-module__filter-control {
+        left: -0.9375rem;
+        width: var(--listing-filter-expanded-width);
+    }
 }
 
 .ltt-listing-module__filter-control .facetwp-facet {
@@ -121,7 +138,7 @@
 .ltt-listing-module__filter-control .ltt-select__value {
     min-width: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: clip;
     white-space: nowrap;
 }
 
@@ -149,7 +166,7 @@
 }
 
 .ltt-listing-module__select-preview {
-    width: 10rem;
+    width: 9.375rem;
 }
 
 .ltt-listing-module__select-preview .ltt-select__native {
@@ -158,6 +175,8 @@
     align-items: center;
     padding-right: 2.75rem;
     text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .ltt-listing-module__filter-preview .ltt-listing-module__search-preview,
@@ -170,17 +189,38 @@
 
 .ltt-listing-module__filter-preview .ltt-listing-module__search-preview,
 .ltt-listing-module__search.ltt-search-bar--filter {
+    --listing-search-border-opacity: 0.35;
     border-width: 1.3px;
     border-color: transparent;
     background:
         linear-gradient(#f2f2f2, #f2f2f2) padding-box,
         linear-gradient(
             77.71deg,
-            rgba(97, 194, 183, 0.2) -26.25%,
-            rgba(79, 161, 84, 0.2) 23.91%,
-            rgba(238, 176, 64, 0.2) 82.29%,
-            rgba(158, 63, 61, 0.2) 144.78%
+            rgba(97, 194, 183, var(--listing-search-border-opacity)) -26.25%,
+            rgba(79, 161, 84, var(--listing-search-border-opacity)) 23.91%,
+            rgba(238, 176, 64, var(--listing-search-border-opacity)) 82.29%,
+            rgba(158, 63, 61, var(--listing-search-border-opacity)) 144.78%
         ) border-box;
+}
+
+.ltt-listing-module__search:focus-within {
+    --listing-search-border-opacity: 0.85;
+    /* Move only the border layer; the field's solid fill stays unchanged. */
+    background-size: 100% 100%, 100% 100%;
+    animation: ltt-listing-search-border 20s linear infinite;
+}
+
+@keyframes ltt-listing-search-border {
+    0%,
+    100% {
+        background-size: 100% 100%, 100% 100%;
+        background-position: 0 0, 0% 0;
+    }
+
+    50% {
+        background-size: 100% 100%, 400% 100%;
+        background-position: 0 0, 100% 0;
+    }
 }
 
 .ltt-listing-module__search-wrap {
@@ -792,8 +832,24 @@
     }
 
     .ltt-listing-module__filter {
+        --listing-filter-rest-width: 100%;
+        --listing-filter-expanded-width: 100%;
         width: 100%;
         min-width: 0;
+    }
+
+    .ltt-listing-module__filter .ltt-listing-module__filter-control,
+    .ltt-listing-module__filter:focus-within .ltt-listing-module__filter-control,
+    .ltt-listing-module__filter:hover .ltt-listing-module__filter-control {
+        left: 0;
+        width: 100%;
+        min-width: 0;
+        transition: none;
+    }
+
+    .ltt-listing-module__filter-value,
+    .ltt-listing-module__filter-control .ltt-select__value {
+        text-overflow: ellipsis;
     }
 
     .ltt-listing-module__filters:has(.ltt-listing-module__filter--third),
@@ -969,6 +1025,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .ltt-listing-module__search:focus-within {
+        background-size: 100% 100%;
+        animation: none;
+    }
+
     .ltt-listing-module__arrow.is-loading .ltt-slider-navigation__icon {
         animation: none;
     }
@@ -977,6 +1038,7 @@
         scroll-behavior: auto;
     }
 
+    .ltt-listing-module__filter-control,
     .ltt-listing-module__card .ltt-listing-module__media,
     .ltt-listing-module__card-copy,
     .ltt-listing-module__card-actions,
@@ -1030,10 +1092,17 @@
         color: HighlightText;
     }
 
+    .ltt-listing-module__search.ltt-search-bar--filter,
     .ltt-listing-module__filter-preview .ltt-listing-module__search-preview,
     .ltt-listing-module__filters .ltt-listing-module__search-preview {
         border-color: ButtonText;
         background: ButtonFace;
+    }
+
+    .ltt-listing-module__search.ltt-search-bar--filter:focus-within {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+        animation: none;
     }
 
     .ltt-listing-module__filter-control .facetwp-dropdown {
