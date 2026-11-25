@@ -69,8 +69,8 @@
     border-bottom: 0;
     background: rgba(255, 255, 255, 0.75);
     color: #073959;
-    opacity: 0;
-    transition: opacity 300ms ease-out;
+    translate: 0 100%;
+    transition: translate 300ms ease-out;
 }
 
 .ltt-story-card__content {
@@ -196,7 +196,7 @@
 }
 
 .ltt-story-card:is(:hover, :focus-within, .is-expanded) .ltt-story-card__panel {
-    opacity: 1;
+    translate: none;
 }
 
 @media (max-width: 1199.98px) {
@@ -240,7 +240,7 @@
         margin: 0;
         border: 0;
         background: transparent;
-        opacity: 1;
+        translate: none;
     }
 
     .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__content {

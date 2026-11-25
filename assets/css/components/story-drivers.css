@@ -776,7 +776,7 @@
     }
 
     :is(.story-drivers__row, .story-drivers__grid, .story-drivers__carousel[data-visible-count]) .ltt-story-card .ltt-story-card__panel {
-        opacity: 1;
+        translate: none;
     }
 
     .story-drivers--four-up .story-drivers__row > .ltt-story-card:is(:hover, :focus-within, .is-expanded) {
