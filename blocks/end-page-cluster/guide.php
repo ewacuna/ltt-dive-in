@@ -98,7 +98,7 @@ return array(
 		),
 		'content_trail' => array(
 			'name'        => __( 'Content Trail', 'ltt-dive-in' ),
-			'description' => __( 'A heading and a sliding row of cards that mixes blog stories, events, and places. Visitors scroll through it with arrows, dots, or by swiping. Place cards show the page excerpt when someone hovers over them.', 'ltt-dive-in' ),
+			'description' => __( 'A heading and a sliding row of cards that mixes blog stories, events, and places. Visitors scroll through it with arrows, dots, or by swiping. Place cards show the page excerpt when someone hovers over them. On phones and tablets, story and place cards show their details from the start, so one tap opens the page.', 'ltt-dive-in' ),
 			'best_for'    => __( 'A "keep exploring" row that mixes different kinds of content.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(

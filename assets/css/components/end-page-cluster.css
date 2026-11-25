@@ -550,6 +550,28 @@
     }
 }
 
+/* Touch screens have no hover, so tiles show their details from the start and one tap opens the link. */
+@media (hover: none) {
+    .end-page-cluster__slide .ltt-story-card--tile .ltt-story-card__media::after,
+    .end-page-cluster__slide .ltt-story-card--tile .ltt-story-card__summary {
+        opacity: 0;
+    }
+
+    .end-page-cluster__slide .ltt-story-card--tile .ltt-story-card__panel {
+        translate: none;
+    }
+
+    .end-page-cluster__place::after {
+        clip-path: inset(0);
+    }
+
+    .end-page-cluster__place-copy {
+        grid-template-rows: 1fr;
+        margin-bottom: 1.5rem;
+        opacity: 1;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .end-page-cluster__place::after,
     .end-page-cluster__place-copy {
