@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'updated'         => '2026-11-23',
+	'updated'         => '2026-11-24',
 	'title'           => __( 'Current Conditions pages', 'ltt-dive-in' ),
 	'group'           => 'templates',
 	'order'           => 10,
@@ -65,7 +65,7 @@ return array(
 				array(
 					'label'       => __( 'Highways', 'ltt-dive-in' ),
 					'required'    => true,
-					'description' => __( '1 to 12 highways, in the order visitors see them. For each one: <strong>Route type</strong> and <strong>Route number</strong> (for example State Route 89), a <strong>Name</strong>, an optional <strong>Subtitle</strong> for the stretch covered, which states it runs through (<strong>Show under</strong>), optional custom route signs, and how to pick <strong>Cameras</strong>: Automatic (nearest camera), Choose, or None.', 'ltt-dive-in' ),
+					'description' => __( '1 to 12 highways, in the order visitors see them. For each one: <strong>Route type</strong> and <strong>Route number</strong> (for example State Route 89), a <strong>Name</strong>, an optional <strong>Subtitle</strong> for the stretch covered, which states it runs through (<strong>Show under</strong>), optional custom route signs, and how to pick <strong>Cameras</strong>: Automatic (nearest camera), Choose, or None. Camera photos refresh every minute. Visitors can click a camera photo: California cameras with a live video show a play icon and open the video, and the others, including every Nevada camera, open a larger photo.', 'ltt-dive-in' ),
 				),
 			),
 		),

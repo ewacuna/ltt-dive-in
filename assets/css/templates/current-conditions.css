@@ -842,6 +842,137 @@
 	object-fit: cover;
 }
 
+.road-card__camera-frame {
+	flex: none;
+}
+
+.road-card__camera-frame .road-card__camera {
+	display: block;
+}
+
+/* A camera with a live stream: the still opens the video dialog. */
+.road-card__camera-button {
+	position: relative;
+	display: block;
+	padding: 0;
+	border: 0;
+	border-radius: 1.5rem;
+	background: transparent;
+	cursor: pointer;
+}
+
+.road-card__camera-button--photo {
+	cursor: zoom-in;
+}
+
+.road-card__camera-button:focus-visible {
+	outline: 3px solid #eeb040;
+	outline-offset: 2px;
+}
+
+/* Video Module play icon, sized for the thumbnail (96:111 ratio kept) and always visible. */
+.road-card__camera-play {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 2rem;
+	height: 2.3125rem;
+	background: url("../../images/icons/video-play.svg") center / contain no-repeat;
+	pointer-events: none;
+	transform: translate(-50%, -50%);
+}
+
+.road-camera-dialog {
+	width: min(80rem, calc(100% - 2rem));
+	padding: 0;
+	border: 0;
+	background: #ffffff;
+	color: #073959;
+}
+
+.road-camera-dialog::backdrop {
+	background: rgba(2, 22, 43, 0.85);
+}
+
+.road-camera-dialog__inner {
+	padding: 1.5rem;
+}
+
+.road-camera-dialog__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.road-camera-dialog__title {
+	margin: 0;
+	font-size: 1.5rem;
+}
+
+.road-camera-dialog__close {
+	display: grid;
+	flex-shrink: 0;
+	width: 2.75rem;
+	height: 2.75rem;
+	margin-inline-end: -0.625rem;
+	place-items: center;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #073959;
+	cursor: pointer;
+}
+
+.road-camera-dialog__close-icon {
+	width: 1.5rem;
+	height: 1.5rem;
+	background-color: currentColor;
+	-webkit-mask: url("../../images/header/close-icon.svg") center / contain no-repeat;
+	mask: url("../../images/header/close-icon.svg") center / contain no-repeat;
+}
+
+.road-camera-dialog__close:focus-visible {
+	outline: 3px solid #073959;
+	outline-offset: 0;
+}
+
+.road-camera-dialog__player {
+	aspect-ratio: 16 / 9;
+	background: #151419;
+}
+
+.road-camera-dialog__video,
+.road-camera-dialog__still {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.road-camera-dialog__still {
+	object-fit: contain;
+}
+
+/* Provider stills are about 320 to 360px wide: keep the photo view at about twice that so it stays sharp. */
+.road-camera-dialog--photo {
+	width: min(45rem, calc(100% - 2rem));
+}
+
+.road-camera-dialog--photo .road-camera-dialog__player {
+	aspect-ratio: auto;
+}
+
+.road-camera-dialog--photo .road-camera-dialog__still {
+	height: auto;
+}
+
+.road-camera-dialog__note {
+	margin: 0.75rem 0 0;
+	font-size: 0.875rem;
+	line-height: 1.45;
+}
+
 .road-card__entry--checkpoints {
 	flex-direction: column;
 	padding-bottom: 0;

@@ -75,7 +75,10 @@ $status = isset( $labels[ $card['status'] ] ) ? $card['status'] : 'none';
 				</div>
 
 				<?php if ( ! empty( $entry['camera'] ) ) : ?>
-					<img class="road-card__camera" src="<?php echo esc_url( $entry['camera']['image'] ); ?>" alt="<?php echo esc_attr( $entry['camera']['alt'] ); ?>" width="144" height="114" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+					<?php $camera = $entry['camera']; ?>
+					<div class="road-card__camera-frame" data-road-camera data-road-camera-label="<?php echo esc_attr( $camera['label'] ?? '' ); ?>" data-road-camera-source="<?php echo esc_attr( $camera['source'] ?? '' ); ?>"<?php echo ! empty( $camera['stream'] ) ? ' data-road-camera-stream="' . esc_url( $camera['stream'] ) . '"' : ''; ?>>
+						<img class="road-card__camera" src="<?php echo esc_url( $camera['image'] ); ?>" alt="<?php echo esc_attr( $camera['alt'] ); ?>" width="144" height="114" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-road-camera-image />
+					</div>
 				<?php endif; ?>
 			</div>
 		<?php endforeach; ?>

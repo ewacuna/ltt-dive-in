@@ -23,8 +23,10 @@ if ( ! $highways || ! $area || ! isset( $states[ $active ] ) ) {
 }
 
 $permalink = get_permalink();
+$hls       = wp_scripts()->query( 'ltt-dive-in-hls' );
+$hls_url   = $hls ? add_query_arg( 'ver', $hls->ver, $hls->src ) : '';
 ?>
-<section id="road-conditions" class="road-conditions" aria-label="<?php esc_attr_e( 'Road conditions by highway', 'ltt-dive-in' ); ?>" data-road-conditions>
+<section id="road-conditions" class="road-conditions" aria-label="<?php esc_attr_e( 'Road conditions by highway', 'ltt-dive-in' ); ?>" data-road-conditions<?php echo $hls_url ? ' data-road-hls="' . esc_url( $hls_url ) . '"' : ''; ?>>
 	<div class="road-conditions__filters">
 		<p id="road-conditions-filter-label" class="road-conditions__filter-label"><?php esc_html_e( 'Filter by location:', 'ltt-dive-in' ); ?></p>
 
@@ -131,4 +133,19 @@ $permalink = get_permalink();
 			<?php endif; ?>
 		</div>
 	<?php endforeach; ?>
+
+	<dialog class="road-camera-dialog" aria-labelledby="road-camera-dialog-title" data-road-camera-dialog data-open-label="<?php /* translators: %s: camera location. */ echo esc_attr__( 'Watch live video: %s', 'ltt-dive-in' ); ?>" data-photo-label="<?php /* translators: %s: camera location. */ echo esc_attr__( 'View larger camera photo: %s', 'ltt-dive-in' ); ?>">
+		<div class="road-camera-dialog__inner">
+			<div class="road-camera-dialog__header">
+				<h2 id="road-camera-dialog-title" class="road-camera-dialog__title" data-road-camera-dialog-title></h2>
+				<button type="button" class="road-camera-dialog__close" data-road-camera-dialog-close><span class="road-camera-dialog__close-icon" aria-hidden="true"></span><span class="screen-reader-text"><?php esc_html_e( 'Close camera', 'ltt-dive-in' ); ?></span></button>
+			</div>
+			<div class="road-camera-dialog__player" data-road-camera-player></div>
+			<p class="road-camera-dialog__note" role="status" data-road-camera-dialog-status
+				data-loading-message="<?php echo esc_attr__( 'Loading live video.', 'ltt-dive-in' ); ?>"
+				data-error-message="<?php echo esc_attr__( 'The live video is not available right now. Please try again later.', 'ltt-dive-in' ); ?>"
+				data-source-message="<?php echo esc_attr__( 'Live video from Caltrans. There is no sound.', 'ltt-dive-in' ); ?>"
+				data-photo-message="<?php /* translators: %s: camera provider, such as Caltrans. */ echo esc_attr__( 'Latest photo from %s.', 'ltt-dive-in' ); ?>"></p>
+		</div>
+	</dialog>
 </section>

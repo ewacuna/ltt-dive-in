@@ -672,7 +672,13 @@ function ltt_dive_in_normalize_caltrans_camera( $record ) {
 	$cctv     = $record['cctv'] ?? array();
 	$location = $cctv['location'] ?? array();
 	$image    = esc_url_raw( $cctv['imageData']['static']['currentImageURL'] ?? '' );
+	$stream   = esc_url_raw( $cctv['imageData']['streamingVideoURL'] ?? '' );
 	$point    = ltt_dive_in_road_point( $location['latitude'] ?? null, $location['longitude'] ?? null );
+
+	// Only HTTPS HLS playlists can play on the page; anything else keeps the still only.
+	if ( $stream && ( 0 !== strpos( $stream, 'https://' ) || '.m3u8' !== substr( (string) wp_parse_url( $stream, PHP_URL_PATH ), -5 ) ) ) {
+		$stream = '';
+	}
 
 	if ( ! isset( $cctv['index'] ) || '' === (string) $cctv['index'] || ! $point || ! $image || 'true' !== ( $cctv['inService'] ?? '' ) ) {
 		return null;
@@ -685,6 +691,7 @@ function ltt_dive_in_normalize_caltrans_camera( $record ) {
 		'name'      => sanitize_text_field( $location['locationName'] ?? '' ),
 		'nearby'    => sanitize_text_field( $location['nearbyPlace'] ?? '' ),
 		'image'     => $image,
+		'stream'    => $stream,
 		'points'    => array( $point ),
 	);
 }
@@ -984,6 +991,7 @@ function ltt_dive_in_normalize_nv511_camera( $record ) {
 		'name'      => sanitize_text_field( $record['Location'] ?? '' ),
 		'nearby'    => '',
 		'image'     => $image,
+		'stream'    => '',
 		'points'    => array( $point ),
 	);
 }

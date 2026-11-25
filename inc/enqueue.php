@@ -87,6 +87,17 @@ function ltt_dive_in_enqueue_assets() {
 				)
 			);
 
+			// Registered only: road-conditions.js loads it from this handle's URL when a visitor opens a live camera.
+			$hls_script_path = LTT_DIVE_IN_DIR . '/assets/js/vendor/hls.light.min.js';
+
+			wp_register_script(
+				'ltt-dive-in-hls',
+				LTT_DIVE_IN_URI . '/assets/js/vendor/hls.light.min.js',
+				array(),
+				file_exists( $hls_script_path ) ? (string) filemtime( $hls_script_path ) : LTT_DIVE_IN_VERSION,
+				true
+			);
+
 			// Loaded on every tab: seamless navigation can swap the roads module in from another tab.
 			$road_conditions_script_path = LTT_DIVE_IN_DIR . '/assets/js/components/road-conditions.js';
 

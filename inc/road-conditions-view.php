@@ -737,14 +737,19 @@ function ltt_dive_in_attach_road_cameras( $card, $highway, $cameras ) {
 		}
 
 		if ( $best ) {
+			$label = $best['nearby']
+				/* translators: 1: camera location, 2: nearby town. */
+				? sprintf( __( '%1$s, near %2$s', 'ltt-dive-in' ), $best['name'], $best['nearby'] )
+				: $best['name'];
+
 			$used[ $best['id'] ]                = true;
 			$card['entries'][ $index ]['camera'] = array(
-				'image' => $best['image'],
-				'alt'   => $best['nearby']
-					/* translators: 1: camera location, 2: nearby town. */
-					? sprintf( __( 'Live traffic camera: %1$s, near %2$s', 'ltt-dive-in' ), $best['name'], $best['nearby'] )
-					/* translators: %s: camera location. */
-					: sprintf( __( 'Live traffic camera: %s', 'ltt-dive-in' ), $best['name'] ),
+				'image'  => $best['image'],
+				'stream' => (string) ( $best['stream'] ?? '' ),
+				'label'  => $label,
+				'source' => 0 === strpos( $best['id'], 'nv-' ) ? __( 'Nevada 511', 'ltt-dive-in' ) : __( 'Caltrans', 'ltt-dive-in' ),
+				/* translators: %s: camera location. */
+				'alt'    => sprintf( __( 'Traffic camera: %s', 'ltt-dive-in' ), $label ),
 			);
 		}
 	}
