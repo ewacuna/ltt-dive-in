@@ -142,7 +142,6 @@
     width: 0.6875rem;
     height: 0.625rem;
     transform: rotate(-90deg);
-    transition: transform 200ms ease-out;
 }
 
 .ltt-event-card--card .ltt-event-card__media img {
@@ -155,12 +154,10 @@
 
 .ltt-event-card:has(.ltt-event-card__link:is(:hover, :focus-visible)) .ltt-event-card__read-more {
     color: #ffffff;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
 }
 
 .ltt-event-card:has(.ltt-event-card__link:is(:hover, :focus-visible)) .ltt-event-card__read-more img {
-    transform: translateX(0.25rem) rotate(-90deg);
+    filter: brightness(0) invert(1);
 }
 
 .ltt-event-card__reminder {
