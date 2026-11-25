@@ -340,6 +340,19 @@
 	font-size: 12px;
 }
 
+.ltt-block-guide__shortcut {
+	max-width: 70ch;
+	margin: 16px 0 0;
+}
+
+.ltt-block-guide__shortcut p {
+	margin: 0;
+}
+
+.ltt-block-guide__item-actions {
+	margin: 8px 0 4px;
+}
+
 @media (max-width: 767.98px) {
 	.ltt-block-guide__fields th[scope="row"] {
 		width: auto;

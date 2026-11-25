@@ -274,6 +274,8 @@ function ltt_dive_in_render_settings_guide_index( $guides ) {
 		<?php esc_html_e( 'These screens control parts of the site that are not edited page by page, like the header, the footer, alerts, and connections to outside services. Open one to see what it controls and what each setting does.', 'ltt-dive-in' ); ?>
 	</p>
 
+	<?php ltt_dive_in_render_blog_templates_shortcut(); ?>
+
 	<?php if ( ! $guides ) : ?>
 		<p><?php esc_html_e( 'No settings guides have been written yet.', 'ltt-dive-in' ); ?></p>
 		<?php

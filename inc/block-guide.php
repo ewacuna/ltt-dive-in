@@ -299,6 +299,8 @@ function ltt_dive_in_render_block_guide_index( $entries ) {
 		<?php esc_html_e( 'These are the custom blocks built for this site. You can find all of them in the block inserter under "LTT Blocks". Open any block below to see what it is for, which layouts it has, and what each field does.', 'ltt-dive-in' ); ?>
 	</p>
 
+	<?php ltt_dive_in_render_blog_templates_shortcut(); ?>
+
 	<?php
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only status after a redirect.
 	if ( isset( $_GET['practice_trashed'] ) ) :
@@ -320,7 +322,7 @@ function ltt_dive_in_render_block_guide_index( $entries ) {
 			<p>
 				<?php
 				/* translators: %d: number of drafts. */
-				echo esc_html( sprintf( _n( 'You have %d practice draft from "Try this block".', 'You have %d practice drafts from "Try this block".', $practice_count, 'ltt-dive-in' ), $practice_count ) );
+				echo esc_html( sprintf( _n( 'You have %d practice draft from "Try this block" or "Try this template".', 'You have %d practice drafts from "Try this block" or "Try this template".', $practice_count, 'ltt-dive-in' ), $practice_count ) );
 				echo ' ';
 				/* translators: %d: number of days. */
 				echo esc_html( sprintf( __( 'They move to the trash on their own %d days after the last edit.', 'ltt-dive-in' ), ltt_dive_in_block_guide_practice_lifetime_days() ) );

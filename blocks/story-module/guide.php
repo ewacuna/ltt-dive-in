@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'updated'         => '2026-11-23',
+	'updated'         => '2026-11-24',
 	'summary'         => __( 'The building blocks for blog articles: numbered list items, travel tips, itineraries, guides, Q&As, comparison tables, and more. Each Story Module is one piece of an article. You stack several of them, mixed with normal paragraphs and headings, to build the post.', 'ltt-dive-in' ),
 	'where'           => __( 'Blog posts only. It does not appear in the inserter on pages.', 'ltt-dive-in' ),
 	'steps'           => array(
@@ -170,6 +170,7 @@ return array(
 		),
 	),
 	'tips'            => array(
+		__( 'The quickest way to write a full article is to start from a blog template, which already stacks the right Story Modules for each type of article. See <strong>Site Guide → Page options → Blog templates</strong>.', 'ltt-dive-in' ),
 		__( 'Each article type has its own set of pieces. A round-up uses Numbered Heading or Listicle. An itinerary uses Itinerary Day followed by Itinerary Items. A guide uses Numbers Guide, Bullet Guide, or Guide 1-Up. Most articles end with an Article Conclusion.', 'ltt-dive-in' ),
 		__( 'You can copy a Story Module with Ctrl+Shift+D (Cmd+Shift+D on Mac) and then change the content. It is faster than starting each item from scratch.', 'ltt-dive-in' ),
 		__( 'Number your Listicles, Numbered Headings, and Itinerary Days by hand, and check them again if you reorder the items.', 'ltt-dive-in' ),

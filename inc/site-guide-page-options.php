@@ -136,9 +136,15 @@ function ltt_dive_in_render_site_guide_sections( $guide, $prefix, $labels = arra
 			<?php endif; ?>
 			<?php if ( ! empty( $guide['items'] ) ) : ?>
 				<dl class="ltt-block-guide__faq">
-					<?php foreach ( (array) $guide['items'] as $item_name => $item_text ) : ?>
+					<?php foreach ( (array) $guide['items'] as $item_name => $item ) : ?>
+						<?php $item = is_array( $item ) ? $item : array( 'text' => $item ); ?>
 						<dt><?php echo esc_html( $item_name ); ?></dt>
-						<dd><?php echo wp_kses_post( $item_text ); ?></dd>
+						<dd>
+							<?php echo wp_kses_post( $item['text'] ?? '' ); ?>
+							<?php if ( ! empty( $item['pattern'] ) ) : ?>
+								<?php ltt_dive_in_render_blog_template_actions( (int) $item['pattern'], (string) $item_name ); ?>
+							<?php endif; ?>
+						</dd>
 					<?php endforeach; ?>
 				</dl>
 			<?php endif; ?>
@@ -314,4 +320,182 @@ function ltt_dive_in_render_page_options_guide_detail( $guide ) {
 	<?php endif; ?>
 	<?php
 	ltt_dive_in_render_site_guide_sections( $guide, 'ltt-page-option' );
+}
+
+/**
+ * Get the published blog template patterns ("Blog Templates" pattern category).
+ *
+ * @return WP_Post[]
+ */
+function ltt_dive_in_get_blog_templates() {
+	static $templates = null;
+
+	if ( null !== $templates ) {
+		return $templates;
+	}
+
+	$templates = array();
+	$term      = get_term_by( 'name', 'Blog Templates', 'wp_pattern_category' );
+
+	if ( ! $term || is_wp_error( $term ) ) {
+		return $templates;
+	}
+
+	$templates = get_posts(
+		array(
+			'post_type'      => 'wp_block',
+			'post_status'    => 'publish',
+			'posts_per_page' => 50,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => 'wp_pattern_category',
+					'field'    => 'term_id',
+					'terms'    => $term->term_id,
+				),
+			),
+		)
+	);
+
+	return $templates;
+}
+
+/**
+ * Get a blog template's short name, without the "Blog Template: 1." prefix.
+ *
+ * @param WP_Post $pattern Pattern post.
+ * @return string
+ */
+function ltt_dive_in_blog_template_name( $pattern ) {
+	return (string) preg_replace( '/^Blog Template:\s*\d+\.\s*/', '', get_the_title( $pattern ) );
+}
+
+/**
+ * Find a published blog template by ID.
+ *
+ * @param int $pattern_id Pattern post ID.
+ * @return WP_Post|null
+ */
+function ltt_dive_in_find_blog_template( $pattern_id ) {
+	foreach ( ltt_dive_in_get_blog_templates() as $pattern ) {
+		if ( (int) $pattern->ID === (int) $pattern_id ) {
+			return $pattern;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Render the buttons under one blog template in the Site Guide.
+ *
+ * @param int    $pattern_id Pattern post ID.
+ * @param string $name       Template name, for accessible button names.
+ */
+function ltt_dive_in_render_blog_template_actions( $pattern_id, $name ) {
+	$post_type = get_post_type_object( 'post' );
+
+	if ( ! $post_type || ! current_user_can( $post_type->cap->create_posts ) ) {
+		return;
+	}
+
+	$nonce = wp_create_nonce( 'ltt_dive_in_blog_template_draft' );
+	$modes = array(
+		'post'     => array(
+			'label' => __( 'Start a post with this template', 'ltt-dive-in' ),
+			'class' => 'button button-primary',
+		),
+		'practice' => array(
+			'label' => __( 'Try this template', 'ltt-dive-in' ),
+			'class' => 'button',
+		),
+	);
+	?>
+	<div class="ltt-block-guide__preview-actions ltt-block-guide__item-actions">
+		<?php foreach ( $modes as $mode => $button ) : ?>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="ltt_dive_in_blog_template_draft">
+				<input type="hidden" name="pattern" value="<?php echo esc_attr( (string) $pattern_id ); ?>">
+				<input type="hidden" name="mode" value="<?php echo esc_attr( $mode ); ?>">
+				<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( $nonce ); ?>">
+				<button type="submit" class="<?php echo esc_attr( $button['class'] ); ?>">
+					<?php echo esc_html( $button['label'] ); ?>
+					<span class="screen-reader-text"><?php echo esc_html( sprintf( '(%s)', $name ) ); ?></span>
+				</button>
+			</form>
+		<?php endforeach; ?>
+		<?php if ( current_user_can( 'edit_post', $pattern_id ) ) : ?>
+			<a class="button-link" href="<?php echo esc_url( (string) get_edit_post_link( $pattern_id ) ); ?>">
+				<?php esc_html_e( 'Edit the template', 'ltt-dive-in' ); ?>
+				<span class="screen-reader-text"><?php echo esc_html( sprintf( '(%s)', $name ) ); ?></span>
+			</a>
+		<?php endif; ?>
+	</div>
+	<?php
+}
+
+/**
+ * Create a post from a blog template and open it in the editor.
+ *
+ * "post" creates a normal draft. "practice" creates a practice draft that is
+ * trashed on its own like the ones from "Try this block".
+ */
+function ltt_dive_in_create_blog_template_draft() {
+	check_admin_referer( 'ltt_dive_in_blog_template_draft' );
+
+	$post_type = get_post_type_object( 'post' );
+
+	if ( ! $post_type || ! current_user_can( ltt_dive_in_block_guide_capability() ) || ! current_user_can( $post_type->cap->create_posts ) ) {
+		wp_die( esc_html__( 'Sorry, you are not allowed to create posts.', 'ltt-dive-in' ), '', array( 'response' => 403 ) );
+	}
+
+	$pattern  = ltt_dive_in_find_blog_template( isset( $_POST['pattern'] ) ? absint( $_POST['pattern'] ) : 0 );
+	$practice = isset( $_POST['mode'] ) && 'practice' === sanitize_key( wp_unslash( $_POST['mode'] ) );
+
+	if ( ! $pattern ) {
+		wp_die( esc_html__( 'That blog template no longer exists.', 'ltt-dive-in' ), '', array( 'response' => 404 ) );
+	}
+
+	$post = array(
+		'post_type'    => 'post',
+		'post_status'  => 'draft',
+		'post_title'   => '',
+		'post_content' => $pattern->post_content,
+	);
+
+	if ( $practice ) {
+		/* translators: %s: blog template name. */
+		$post['post_title'] = sprintf( __( 'Practice: %s (blog template)', 'ltt-dive-in' ), ltt_dive_in_blog_template_name( $pattern ) );
+		$post['meta_input'] = array( LTT_DIVE_IN_BLOCK_GUIDE_PRACTICE_META => 1 );
+	}
+
+	$post_id = wp_insert_post( wp_slash( $post ), true );
+
+	if ( is_wp_error( $post_id ) ) {
+		wp_die( esc_html( $post_id->get_error_message() ) );
+	}
+
+	wp_safe_redirect( get_edit_post_link( $post_id, 'url' ) );
+	exit;
+}
+add_action( 'admin_post_ltt_dive_in_blog_template_draft', 'ltt_dive_in_create_blog_template_draft' );
+
+/**
+ * Render a shortcut to the blog templates guide on the other Site Guide screens.
+ */
+function ltt_dive_in_render_blog_templates_shortcut() {
+	if ( ! ltt_dive_in_get_blog_templates() ) {
+		return;
+	}
+	?>
+	<div class="ltt-block-guide__where ltt-block-guide__shortcut">
+		<p>
+			<strong><?php esc_html_e( 'Writing a blog post?', 'ltt-dive-in' ); ?></strong>
+			<?php esc_html_e( 'Start from one of the ready-made blog templates.', 'ltt-dive-in' ); ?>
+			<a href="<?php echo esc_url( ltt_dive_in_page_options_guide_url( 'blog-templates' ) ); ?>"><?php esc_html_e( 'See the blog templates', 'ltt-dive-in' ); ?></a>
+		</p>
+	</div>
+	<?php
 }

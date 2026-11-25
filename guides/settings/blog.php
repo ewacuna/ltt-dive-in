@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'updated'         => '2026-11-23',
+	'updated'         => '2026-11-24',
 	'title'           => __( 'Blog Settings', 'ltt-dive-in' ),
 	'group'           => 'posts',
 	'icon'            => 'admin-post',
@@ -64,6 +64,7 @@ return array(
 	'tips'            => array(
 		__( 'Each post can change its own end section in the <strong>End-of-Post Page Driver</strong> box of the post editor: pick up to three posts by hand, write custom cards, or hide the section on that post.', 'ltt-dive-in' ),
 		__( 'Only published posts with a featured image are used as cards, so keep featured images on all posts.', 'ltt-dive-in' ),
+		__( 'Looking for the ready-made article layouts? They are in <strong>Site Guide → Page options → Blog templates</strong>, with buttons to start a post from each one.', 'ltt-dive-in' ),
 	),
 	'troubleshooting' => array(),
 );

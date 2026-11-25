@@ -21,33 +21,14 @@ $descriptions = array(
 );
 
 $templates = array();
-$term      = get_term_by( 'name', 'Blog Templates', 'wp_pattern_category' );
 
-if ( $term && ! is_wp_error( $term ) ) {
-	$patterns = get_posts(
-		array(
-			'post_type'      => 'wp_block',
-			'post_status'    => 'publish',
-			'posts_per_page' => 50,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'no_found_rows'  => true,
-			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
-					'taxonomy' => 'wp_pattern_category',
-					'field'    => 'term_id',
-					'terms'    => $term->term_id,
-				),
-			),
-		)
+foreach ( ltt_dive_in_get_blog_templates() as $pattern ) {
+	$number = preg_match( '/(\d+)\./', get_the_title( $pattern ), $match ) ? (int) $match[1] : 0;
+
+	$templates[ ltt_dive_in_blog_template_name( $pattern ) ] = array(
+		'text'    => $descriptions[ $number ] ?? __( 'A starter layout for a blog post.', 'ltt-dive-in' ),
+		'pattern' => (int) $pattern->ID,
 	);
-
-	foreach ( $patterns as $pattern ) {
-		$title  = get_the_title( $pattern );
-		$number = preg_match( '/(\d+)\./', $title, $match ) ? (int) $match[1] : 0;
-
-		$templates[ preg_replace( '/^Blog Template:\s*\d+\.\s*/', '', $title ) ] = $descriptions[ $number ] ?? __( 'A starter layout for a blog post.', 'ltt-dive-in' );
-	}
 }
 
 return array(
@@ -59,25 +40,30 @@ return array(
 	'where'           => __( 'Post editor, block inserter (the + button), Patterns tab, "Blog Templates"', 'ltt-dive-in' ),
 	'applies'         => __( 'Blog posts.', 'ltt-dive-in' ),
 	'short'           => __( 'Ready-made article layouts to start a new blog post.', 'ltt-dive-in' ),
-	'summary'         => __( 'Blog templates are complete articles you can drop into a new post as a starting point. Each one already has the right sections, Story Modules, and spacing for a type of article, filled with example text and photos. You replace the example content with your own, and delete the parts you do not need.', 'ltt-dive-in' ),
+	'summary'         => __( 'Blog templates are complete example articles. Each one already has the right sections, Story Modules, and spacing for one type of article, filled with example text and photos. Start a post from a template, replace the example content with your own, and delete the parts you do not need.', 'ltt-dive-in' ),
 	'steps'           => array(
-		__( 'Create a new post and give it a title.', 'ltt-dive-in' ),
-		__( 'Click the <strong>+</strong> button at the top left of the editor and open the <strong>Patterns</strong> tab.', 'ltt-dive-in' ),
-		__( 'Choose the <strong>Blog Templates</strong> category and click the template that matches your article.', 'ltt-dive-in' ),
-		__( 'Replace the example text and photos with your own. Delete sections you do not need, or copy one (Ctrl+Shift+D, or Cmd+Shift+D on Mac) to add more.', 'ltt-dive-in' ),
-		__( 'Set the featured image, categories, and excerpt as usual, then publish.', 'ltt-dive-in' ),
+		__( 'Find the template that matches your article in <strong>Available templates</strong> below.', 'ltt-dive-in' ),
+		__( 'Click <strong>Start a post with this template</strong>. A new draft opens in the editor with the whole template already in it.', 'ltt-dive-in' ),
+		__( 'Add a title, then replace the example text and photos with your own. Delete sections you do not need, or copy one (Ctrl+Shift+D, or Cmd+Shift+D on Mac) to add more.', 'ltt-dive-in' ),
+		__( 'Set the featured image, categories, and excerpt as usual, then click <strong>Preview</strong> to check it and <strong>Publish</strong> when it is ready.', 'ltt-dive-in' ),
 	),
 	'items_heading'   => __( 'Available templates', 'ltt-dive-in' ),
-	'items_intro'     => $templates ? __( 'These are the templates on this site right now. Pick the one closest to the article you want to write.', 'ltt-dive-in' ) : __( 'There are no blog templates on this site yet.', 'ltt-dive-in' ),
+	'items_intro'     => $templates ? sprintf(
+		/* translators: %d: number of days. */
+		__( 'These are the templates on this site right now. <strong>Start a post with this template</strong> creates a real draft that stays until you delete it. <strong>Try this template</strong> creates a practice draft to look around and experiment. It moves to the trash on its own %d days after your last edit, so do not write a real article in it.', 'ltt-dive-in' ),
+		ltt_dive_in_block_guide_practice_lifetime_days()
+	) : __( 'There are no blog templates on this site yet.', 'ltt-dive-in' ),
 	'items'           => $templates,
 	'tips'            => array(
-		__( 'Inserting a template copies it into your post. Your changes only affect that post, never the template or other posts that used it.', 'ltt-dive-in' ),
+		__( 'Already started a post? You can add a template from inside the editor too: click the <strong>+</strong> button at the top left, open the <strong>Patterns</strong> tab, choose <strong>Blog Templates</strong>, and click a template. It is added where your cursor is, so use an empty post or delete what is there first.', 'ltt-dive-in' ),
+		__( 'A post made from a template is a copy. Your changes only affect that post, never the template or other posts that used it.', 'ltt-dive-in' ),
 		__( 'Replace every example photo, so the same image does not end up in many articles.', 'ltt-dive-in' ),
-		__( 'Insert the template into an empty post. Inserting it into a post that already has content adds the whole article below what is there.', 'ltt-dive-in' ),
-		__( 'Each section of a template is explained in the Story Module guide under Site Guide → Blocks.', 'ltt-dive-in' ),
-		__( 'Administrators can change a template for everyone in <strong>Appearance → Design → Patterns</strong>, under Blog Templates. Posts that already used it do not change.', 'ltt-dive-in' ),
+		__( 'Each section of a template is a Story Module, a Content Module, or another theme block. Open its guide in <strong>Site Guide → Blocks</strong> to see what each field does.', 'ltt-dive-in' ),
+		__( 'Administrators can change a template for everyone with <strong>Edit the template</strong>, or in <strong>Appearance → Design → Patterns</strong> under Blog Templates. Posts that already used it do not change.', 'ltt-dive-in' ),
+		__( 'Practice drafts from this page also show up in <strong>Site Guide → Blocks</strong>, where you can move them all to the trash at once.', 'ltt-dive-in' ),
 	),
 	'troubleshooting' => array(
+		__( 'The new post has no title.', 'ltt-dive-in' ) => __( 'That is expected. Type your article title at the top of the editor before you save.', 'ltt-dive-in' ),
 		__( 'I do not see Blog Templates in the Patterns tab.', 'ltt-dive-in' ) => __( 'Make sure you are editing a blog post, not a page. If it is still missing, ask an administrator to check that the templates are in the "Blog Templates" category in Appearance → Design → Patterns.', 'ltt-dive-in' ),
 	),
 );
