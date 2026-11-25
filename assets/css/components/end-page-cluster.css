@@ -488,16 +488,6 @@
         margin-top: 1.5rem;
     }
 
-    /* On white, the copy is left-aligned and the buttons centered. */
-    .end-page-cluster--bg-white .end-page-cluster__callout {
-        align-items: stretch;
-        text-align: left;
-    }
-
-    .end-page-cluster--bg-white .end-page-cluster__tag {
-        align-self: flex-start;
-    }
-
     .end-page-cluster--page-driver {
         padding-bottom: 4rem;
     }
