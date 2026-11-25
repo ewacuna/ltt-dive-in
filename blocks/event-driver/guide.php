@@ -29,7 +29,7 @@ return array(
 	'variants'        => array(
 		'hero'     => array(
 			'name'        => __( 'Hero Featured Events', 'ltt-dive-in' ),
-			'description' => __( 'A full-width slideshow, one event per slide, with the photo (softly blurred behind the text so posters do not compete with it), date, venue, organizer, and up to two buttons. Visitors move through it with arrows or dots. It does not move on its own.', 'ltt-dive-in' ),
+			'description' => __( 'A full-width slideshow, one event per slide, with the photo (blurred behind the text so only its colors show and posters do not compete with it), date, venue, organizer, and up to two buttons. Visitors move through it with arrows or dots. It does not move on its own.', 'ltt-dive-in' ),
 			'best_for'    => __( 'The top of the Events page, or any page where a few big events deserve attention.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(

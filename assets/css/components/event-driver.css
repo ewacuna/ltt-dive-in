@@ -48,16 +48,16 @@
 
 /*
  * Event photos are often posters full of text, so the background is blurred
- * (client request) to keep the hero copy readable. The scale hides the light
- * edges the blur would otherwise leave.
+ * until only its colors remain (client request) to keep the hero copy
+ * readable. The scale hides the light edges the blur would otherwise leave.
  */
 .event-driver__hero-media img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: blur(0.75rem);
-    transform: scale(1.1);
+    filter: blur(3rem);
+    transform: scale(1.25);
 }
 
 .event-driver__hero-media::after {
