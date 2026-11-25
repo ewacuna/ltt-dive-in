@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'updated'         => '2026-11-24',
+	'updated'         => '2026-11-25',
 	'title'           => __( 'Current Conditions pages', 'ltt-dive-in' ),
 	'group'           => 'templates',
 	'order'           => 10,
@@ -61,6 +61,10 @@ return array(
 				array(
 					'label'       => __( 'Area radius (miles)', 'ltt-dive-in' ),
 					'description' => __( 'How far from the center to include reports and cameras, from 5 to 150 miles. It starts at 40.', 'ltt-dive-in' ),
+				),
+				array(
+					'label'       => __( 'Nevada background', 'ltt-dive-in' ),
+					'description' => __( 'Optional. The photo behind the section while visitors view Nevada. California uses the page\'s featured image. Leave it blank to use the featured image for both states.', 'ltt-dive-in' ),
 				),
 				array(
 					'label'       => __( 'Highways', 'ltt-dive-in' ),

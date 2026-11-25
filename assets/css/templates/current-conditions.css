@@ -23,6 +23,10 @@
 	object-fit: cover;
 }
 
+.current-conditions-feature__background[hidden] {
+	display: none;
+}
+
 .current-conditions-intro {
 	padding-inline: 4rem;
 	background: linear-gradient(180deg, rgba(2, 22, 43, 0.6) 0%, rgba(2, 22, 43, 0.3) 72.115%, rgba(2, 22, 43, 0) 100%);

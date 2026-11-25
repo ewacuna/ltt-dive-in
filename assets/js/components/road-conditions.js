@@ -105,6 +105,16 @@
 				form.hidden = form.dataset.roadHighwayForm !== state;
 			} );
 
+			const feature = root.closest( '.current-conditions-feature' );
+			const backgrounds = feature ? Array.from( feature.querySelectorAll( '[data-road-background]' ) ) : [];
+			const hasOwn = backgrounds.some( function ( image ) {
+				return image.dataset.roadBackground === state;
+			} );
+
+			backgrounds.forEach( function ( image ) {
+				image.hidden = image.dataset.roadBackground !== ( hasOwn ? state : '' );
+			} );
+
 			updateUrl( state, filterCards( state ) );
 		};
 

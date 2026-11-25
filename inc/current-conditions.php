@@ -244,6 +244,18 @@ function ltt_dive_in_register_current_conditions_tab_fields() {
 					'conditional_logic' => $roads_only,
 				),
 				array(
+					'key'               => 'field_ltt_dive_in_roads_nevada_background',
+					'label'             => __( 'Nevada background', 'ltt-dive-in' ),
+					'name'              => 'ltt_dive_in_roads_nevada_background',
+					'type'              => 'image',
+					'instructions'      => __( 'Optional. Shown while Nevada is selected. Leave blank to use the featured image.', 'ltt-dive-in' ),
+					'return_format'     => 'id',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+					'mime_types'        => 'jpg,jpeg,png,webp',
+					'conditional_logic' => $roads_only,
+				),
+				array(
 					'key'               => 'field_ltt_dive_in_roads_highways',
 					'label'             => __( 'Highways', 'ltt-dive-in' ),
 					'name'              => 'ltt_dive_in_roads_highways',

@@ -15,19 +15,35 @@ $module   = ltt_dive_in_get_current_conditions_tab_module( $post_id );
 ?>
 <div class="current-conditions-feature<?php echo $module['module'] ? ' current-conditions-feature--has-module current-conditions-feature--' . esc_attr( $module['module'] ) : ''; ?>">
 	<?php
+	$backgrounds  = ! empty( $module['backgrounds'] ) ? $module['backgrounds'] : array();
+	$active_state = $module['state'] ?? '';
+
 	if ( $image_id ) {
-		echo wp_get_attachment_image(
-			$image_id,
-			'full',
-			false,
-			array(
-				'class'         => 'current-conditions-feature__background',
-				'alt'           => '',
-				'sizes'         => '100vw',
-				'loading'       => 'eager',
-				'fetchpriority' => 'high',
-			)
+		$backgrounds = array( '' => $image_id ) + $backgrounds;
+	}
+
+	foreach ( $backgrounds as $background_state => $background_id ) {
+		$background_state = (string) $background_state;
+		$is_active        = isset( $backgrounds[ $active_state ] ) ? $background_state === $active_state : '' === $background_state;
+		$attributes       = array(
+			'class'   => 'current-conditions-feature__background',
+			'alt'     => '',
+			'sizes'   => '100vw',
+			'loading' => $is_active ? 'eager' : 'lazy',
 		);
+
+		if ( $is_active ) {
+			$attributes['fetchpriority'] = 'high';
+		}
+
+		$image = wp_get_attachment_image( $background_id, 'full', false, $attributes );
+
+		// Road states with their own photo swap backgrounds when visitors switch state.
+		if ( 1 < count( $backgrounds ) ) {
+			$image = str_replace( '<img ', '<img data-road-background="' . esc_attr( $background_state ) . '"' . ( $is_active ? '' : ' hidden' ) . ' ', $image );
+		}
+
+		echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core image markup.
 	}
 
 	get_template_part(

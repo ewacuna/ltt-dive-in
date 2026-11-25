@@ -105,7 +105,7 @@ function ltt_dive_in_get_road_highways( $post_id ) {
  * Resolve the roads module for a tab, including the visitor's filter choices.
  *
  * @param int $post_id Tab page ID.
- * @return array{module: string, post_id?: int, area?: array, highways?: array, state?: string, highway?: string}
+ * @return array{module: string, post_id?: int, area?: array, highways?: array, state?: string, highway?: string, backgrounds?: array<string, int>}
  */
 function ltt_dive_in_get_road_conditions_module( $post_id ) {
 	$highways = ltt_dive_in_get_road_highways( $post_id );
@@ -127,13 +127,22 @@ function ltt_dive_in_get_road_conditions_module( $post_id ) {
 		$highway = '';
 	}
 
+	// The featured image is the default background; a state may replace it.
+	$backgrounds = array();
+	$nevada      = function_exists( 'get_field' ) ? absint( get_field( 'ltt_dive_in_roads_nevada_background', $post_id ) ) : 0;
+
+	if ( $nevada && wp_attachment_is_image( $nevada ) && in_array( 'nevada', $states, true ) ) {
+		$backgrounds['nevada'] = $nevada;
+	}
+
 	return array(
-		'module'   => 'roads',
-		'post_id'  => (int) $post_id,
-		'area'     => ltt_dive_in_get_road_conditions_area( $post_id ),
-		'highways' => $highways,
-		'state'    => $state,
-		'highway'  => $highway,
+		'module'      => 'roads',
+		'post_id'     => (int) $post_id,
+		'area'        => ltt_dive_in_get_road_conditions_area( $post_id ),
+		'highways'    => $highways,
+		'state'       => $state,
+		'highway'     => $highway,
+		'backgrounds' => $backgrounds,
 	);
 }
 
