@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'updated'         => '2026-11-23',
+	'updated'         => '2026-11-24',
 	'summary'         => __( 'Shows upcoming events from the Seeker event calendar. You never type event details here: names, dates, photos, venues, and ticket links all come from Seeker and update on their own. This block only decides which events to show and how. It has three layouts: a big rotating feature, a filterable list, and a carousel.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(
@@ -29,7 +29,7 @@ return array(
 	'variants'        => array(
 		'hero'     => array(
 			'name'        => __( 'Hero Featured Events', 'ltt-dive-in' ),
-			'description' => __( 'A full-width slideshow, one event per slide, with the photo, date, venue, organizer, and up to two buttons. Visitors move through it with arrows or dots. It does not move on its own.', 'ltt-dive-in' ),
+			'description' => __( 'A full-width slideshow, one event per slide, with the photo (softly blurred behind the text so posters do not compete with it), date, venue, organizer, and up to two buttons. Visitors move through it with arrows or dots. It does not move on its own.', 'ltt-dive-in' ),
 			'best_for'    => __( 'The top of the Events page, or any page where a few big events deserve attention.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(
