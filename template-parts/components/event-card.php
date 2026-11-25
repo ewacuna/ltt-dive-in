@@ -12,8 +12,6 @@
  * Optional arguments:
  * - `flags`: show the Featured and Recurring badges.
  * - `compact_mobile`: use the compact row below 768px instead of the card.
- * - `reminder_label`: visible label of the calendar link.
- * - `reminder_icon`: `remind` (alarm clock, default) or `add` (calendar).
  * - `quick_view`: add a Quick View button and its panel template.
  *
  * @package LTT_Dive_In
@@ -29,8 +27,6 @@ $wrapper        = isset( $args['wrapper'] ) && is_string( $args['wrapper'] ) ? $
 $sizes          = isset( $args['sizes'] ) && is_string( $args['sizes'] ) ? $args['sizes'] : '(max-width: 767.98px) 305px, (max-width: 991.98px) 50vw, 427px';
 $show_flags     = ! empty( $args['flags'] );
 $quick_view     = 'card' !== $style && ! empty( $args['quick_view'] );
-$reminder_icon  = isset( $args['reminder_icon'] ) && 'add' === $args['reminder_icon'] ? array( 'event-add-to-calendar.svg', 30, 24 ) : array( 'event-reminder.svg', 18, 20 );
-$reminder_label = isset( $args['reminder_label'] ) && is_string( $args['reminder_label'] ) && '' !== $args['reminder_label'] ? $args['reminder_label'] : __( 'Remind Me', 'ltt-dive-in' );
 
 if ( empty( $event['title'] ) || empty( $event['start'] ) || ! $event['start'] instanceof DateTimeImmutable ) {
 	return;
@@ -158,14 +154,14 @@ $render_flags = static function ( $modifier ) use ( $flags ) {
 		<div class="ltt-event-card__actions">
 			<?php if ( 'card' !== $style && ! ltt_dive_in_event_has_ended( $event ) ) : ?>
 				<a class="ltt-event-card__reminder" href="<?php echo esc_url( ltt_dive_in_get_event_reminder_url( $event ) ); ?>" download>
-					<?php echo esc_html( $reminder_label ); ?>
+					<?php esc_html_e( 'Add to Calendar', 'ltt-dive-in' ); ?>
 					<span class="screen-reader-text">
 						<?php
 						/* translators: %s: event name. */
 						echo esc_html( sprintf( __( ', add %s to your calendar', 'ltt-dive-in' ), $event['title'] ) );
 						?>
 					</span>
-					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/' . $reminder_icon[0] ) ); ?>" alt="" width="<?php echo esc_attr( (string) $reminder_icon[1] ); ?>" height="<?php echo esc_attr( (string) $reminder_icon[2] ); ?>" />
+					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar.svg' ) ); ?>" alt="" width="30" height="24" />
 				</a>
 			<?php endif; ?>
 			<?php if ( 'row' !== $style && $link ) : ?>

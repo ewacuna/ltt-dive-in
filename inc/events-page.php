@@ -317,8 +317,6 @@ function ltt_dive_in_render_events_page_cards( $events, $view ) {
 				'style'          => 'list' === $view ? 'row' : 'tile',
 				'compact_mobile' => true,
 				'flags'          => true,
-				'reminder_label' => __( 'Add to Calendar', 'ltt-dive-in' ),
-				'reminder_icon'  => 'add',
 				'quick_view'     => true,
 				'sizes'          => 'list' === $view ? '(max-width: 767.98px) 120px, 307px' : '(max-width: 767.98px) 120px, (max-width: 1199.98px) 50vw, 458px',
 				'wrapper'        => 'events-browser__item',
