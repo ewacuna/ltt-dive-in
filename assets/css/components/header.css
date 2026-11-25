@@ -490,6 +490,7 @@
     height: 1.75rem;
     margin-inline: -0.3125rem;
     object-fit: contain;
+    filter: brightness(0) invert(1);
 }
 
 .site-header__search {
