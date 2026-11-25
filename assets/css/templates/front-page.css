@@ -41,18 +41,28 @@
 		rgba(0, 0, 0, 0.18);
 }
 
+/* Centered without transform or z-index: either would isolate the content in
+ * its own stacking context, and the title's color-dodge blend and the glass
+ * backdrop filter both need to see the video behind it. DOM order keeps the
+ * content above the media layer.
+ */
 .home-hero__content {
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	z-index: 2;
+	inset: 0;
 	width: min(calc(100% - 2.5rem), 40.8125rem);
-	transform: translate(-50%, -50%);
+	height: fit-content;
+	margin: auto;
 	text-align: center;
 }
 
+.home-hero__heading {
+	position: relative;
+}
+
 .home-hero__title {
+	position: relative;
 	margin: 0;
+	mix-blend-mode: color-dodge;
 	/* Map the gradient to Big Caslon's visible capitals, not its line box.
 	 * At line-height: 1, capitals start at ~0.117em and end at ~0.845em.
 	 * The two inner stops preserve the source's 32.6923% and 66.3462% positions.
@@ -79,6 +89,89 @@
 	text-transform: uppercase;
 	-webkit-text-stroke-color: rgba(138, 181, 197, 0.2);
 	-webkit-text-stroke-width: 1px;
+}
+
+/* Glass title layers. home-hero-glass.js draws the rendered title into masks:
+ * the refraction layer bends a copy of the current video frame through the
+ * letters, and the light layer paints a specular rim on the letter bevels.
+ * Both extend past the title by the refraction distance so edge pixels can
+ * sample the video around the letters.
+ */
+@property --ltt-home-hero-light {
+	syntax: "<angle>";
+	inherits: false;
+	initial-value: 315deg;
+}
+
+.home-hero__glass {
+	position: absolute;
+	inset: calc(var(--ltt-home-hero-glass-pad, 0px) * -1);
+	overflow: hidden;
+	visibility: hidden;
+	pointer-events: none;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+}
+
+.home-hero__heading.is-glass-ready .home-hero__glass--light,
+.home-hero__heading.is-glass-ready.is-glass-video-ready .home-hero__glass--refraction {
+	visibility: visible;
+}
+
+.home-hero__glass-frame {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* Positioned by script to match the hero overlay underneath. */
+.home-hero__glass-tint {
+	inset: auto;
+}
+
+.home-hero__glass--light {
+	/* The light angle sweeps across the bevels; 0deg light comes from the top.
+	 * Peak opacities are kept low to match the source's subtle 0.15 light intensity.
+	 */
+	background: linear-gradient(
+		calc(var(--ltt-home-hero-light) - 180deg),
+		rgba(255, 255, 255, 0.36) 0%,
+		rgba(255, 255, 255, 0) 45%,
+		rgba(255, 255, 255, 0) 60%,
+		rgba(255, 255, 255, 0.14) 100%
+	);
+	animation: ltt-home-hero-light 4.94s cubic-bezier(0.5, 0, 0.5, 1) infinite alternate;
+}
+
+@keyframes ltt-home-hero-light {
+	0% {
+		--ltt-home-hero-light: 315deg;
+	}
+
+	16.72% {
+		--ltt-home-hero-light: 283.7deg;
+	}
+
+	50.81% {
+		--ltt-home-hero-light: 127deg;
+	}
+
+	60.82% {
+		--ltt-home-hero-light: 133.75deg;
+	}
+
+	100% {
+		--ltt-home-hero-light: 261deg;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.home-hero__glass--light {
+		animation: none;
+	}
 }
 
 .home-hero__description {
@@ -240,6 +333,11 @@
 	.home-hero__title {
 		background: none;
 		color: CanvasText;
+		mix-blend-mode: normal;
 		-webkit-text-stroke: 0;
+	}
+
+	.home-hero__glass {
+		display: none;
 	}
 }

@@ -72,7 +72,11 @@ $hero_links = array_filter(
 	</div>
 
 	<div class="home-hero__content">
-		<h1 id="home-hero-title" class="home-hero__title"><?php echo esc_html( $title ); ?></h1>
+		<div class="home-hero__heading" data-home-hero-glass>
+			<span class="home-hero__glass home-hero__glass--refraction" aria-hidden="true"></span>
+			<h1 id="home-hero-title" class="home-hero__title"><?php echo esc_html( $title ); ?></h1>
+			<span class="home-hero__glass home-hero__glass--light" aria-hidden="true"></span>
+		</div>
 
 		<?php if ( $description ) : ?>
 			<p class="home-hero__description"><?php echo esc_html( $description ); ?></p>

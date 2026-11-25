@@ -249,6 +249,19 @@ function ltt_dive_in_enqueue_assets() {
 			file_exists( $front_page_style_path ) ? (string) filemtime( $front_page_style_path ) : LTT_DIVE_IN_VERSION
 		);
 
+		$home_hero_glass_path = LTT_DIVE_IN_DIR . '/assets/js/components/home-hero-glass.js';
+
+		wp_enqueue_script(
+			'ltt-dive-in-home-hero-glass',
+			LTT_DIVE_IN_URI . '/assets/js/components/home-hero-glass.js',
+			array(),
+			file_exists( $home_hero_glass_path ) ? (string) filemtime( $home_hero_glass_path ) : LTT_DIVE_IN_VERSION,
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
+
 		wp_enqueue_style(
 			'ltt-dive-in-home-activities',
 			LTT_DIVE_IN_URI . '/assets/css/components/home-activities.css',
