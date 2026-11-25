@@ -1,7 +1,8 @@
-/* 40px desktop bar, 16px Link 1. */
+/* 40px desktop bar, 16px Link 1. A template may change the bar color through the custom property. */
 .ltt-section-navigation {
+	--ltt-section-navigation-bg: #042742;
 	padding-inline: 4rem;
-	background: #042742;
+	background: var(--ltt-section-navigation-bg);
 	color: #ffffff;
 }
 
@@ -106,12 +107,12 @@
 
 	.ltt-section-navigation.is-swiper::before {
 		left: 0;
-		background: linear-gradient(to right, #042742, rgba(4, 39, 66, 0));
+		background: linear-gradient(to right, var(--ltt-section-navigation-bg), transparent);
 	}
 
 	.ltt-section-navigation.is-swiper::after {
 		right: 0;
-		background: linear-gradient(to left, #042742, rgba(4, 39, 66, 0));
+		background: linear-gradient(to left, var(--ltt-section-navigation-bg), transparent);
 	}
 
 	.ltt-section-navigation.is-swiper.has-previous::before,

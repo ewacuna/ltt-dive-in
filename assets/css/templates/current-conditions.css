@@ -1,3 +1,8 @@
+/* The tab bar uses primary shade 300 here, darker than the shared bar, to set it apart from the navy hero. */
+.page-template-templatescurrent-conditions-php .ltt-section-navigation {
+	--ltt-section-navigation-bg: #02162b;
+}
+
 .current-conditions-feature {
 	position: relative;
 	isolation: isolate;
