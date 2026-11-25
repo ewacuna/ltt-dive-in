@@ -23,14 +23,7 @@
             "type": "select",
             "instructions": "Leave empty for a white background.",
             "choices": {
-                "navy": "Deep Navy",
-                "gold": "Peak Gold",
-                "burgundy": "Burgundy",
-                "red": "Red",
-                "forest": "Forest Green",
-                "green": "Green",
-                "blue": "Blue",
-                "cyan": "Crystal Clear Cyan"
+                "navy": "Navy"
             },
             "default_value": "",
             "return_format": "value",
@@ -429,5 +422,5 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "show_in_rest": 0,
-    "modified": 1795183890
+    "modified": 1795618298
 }

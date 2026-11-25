@@ -44,17 +44,11 @@ if ( 'copy_cta' === $variant ) {
 		return;
 	}
 
-	// Stats module swatches; an empty selection keeps the white background.
-	$color       = (string) get_field( 'ltt_dive_in_end_page_cluster_background_color' );
-	$color       = in_array( $color, array( 'navy', 'gold', 'burgundy', 'red', 'forest', 'green', 'blue', 'cyan' ), true ) ? $color : '';
-	$is_dark     = in_array( $color, array( 'navy', 'burgundy', 'red', 'forest', 'blue' ), true );
-	$dark_tag    = $is_dark || 'green' === $color;
-	$cta_style   = 'primary-outline';
-	if ( $is_dark ) {
-		$cta_style = 'dark-standard';
-	} elseif ( in_array( $color, array( 'gold', 'green', 'cyan' ), true ) ) {
-		$cta_style = 'primary-fill';
-	}
+	// White or navy. Retired color choices render navy so saved blocks keep a dark background.
+	$color     = (string) get_field( 'ltt_dive_in_end_page_cluster_background_color' );
+	$color     = '' === $color ? '' : 'navy';
+	$dark_tag  = 'navy' === $color;
+	$cta_style = $dark_tag ? 'dark-standard' : 'primary-outline';
 	// Only the 3 up white layout gives the second CTA the secondary outline.
 	$secondary_style = ( '' === $color && 3 === count( $callouts ) ) ? 'secondary-outline' : $cta_style;
 	$classes = array( 'end-page-cluster', 'end-page-cluster--copy-cta', 'end-page-cluster--count-' . count( $callouts ) );
