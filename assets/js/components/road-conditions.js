@@ -76,6 +76,11 @@
 			if ( panel ) {
 				panel.querySelectorAll( '[data-road-highway]' ).forEach( function ( card ) {
 					card.hidden = Boolean( highway ) && card.dataset.roadHighway !== highway;
+
+					// The full list starts collapsed; a single chosen highway opens.
+					if ( card.roadCardSetExpanded ) {
+						card.roadCardSetExpanded( Boolean( highway ) && ! card.hidden );
+					}
 				} );
 			}
 
@@ -169,11 +174,18 @@
 			};
 			const card = toggle.closest( '[data-road-highway]' );
 
-			setExpanded( ! ( card && card.hasAttribute( 'data-road-card-collapsed' ) ) );
+			if ( card ) {
+				card.roadCardSetExpanded = setExpanded;
+			}
+
 			toggle.hidden = false;
 			toggle.addEventListener( 'click', function () {
 				setExpanded( 'true' !== toggle.getAttribute( 'aria-expanded' ) );
 			} );
+		} );
+
+		panels.forEach( function ( panel ) {
+			filterCards( panel.dataset.roadStatePanel );
 		} );
 	};
 
