@@ -1020,6 +1020,11 @@ html.has-events-sheet {
 
     .events-browser.is-enhanced .events-filters__actions:has(.events-filters__clear[hidden]) {
         display: flex;
+        justify-content: center;
+    }
+
+    .events-filters__submit {
+        display: none;
     }
 
     .events-browser.is-sheet-open .events-browser__backdrop {
