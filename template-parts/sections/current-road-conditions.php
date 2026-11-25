@@ -53,7 +53,8 @@ $hls_url   = $hls ? add_query_arg( 'ver', $hls->ver, $hls->src ) : '';
 							/* translators: %s: state name. */
 							'label'             => sprintf( __( 'Filter %s highways', 'ltt-dive-in' ), $state_data['label'] ),
 							'name'              => 'highway',
-							'placeholder'       => __( 'Filter Highway', 'ltt-dive-in' ),
+							'placeholder'       => __( 'Select Route', 'ltt-dive-in' ),
+							'reset_label'       => __( 'Clear Filters', 'ltt-dive-in' ),
 							'selected_value'    => $state === $active ? $selected : '',
 							'surface'           => 'light',
 							'class_name'        => 'road-conditions__highway',

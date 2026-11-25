@@ -5,6 +5,7 @@
  * Set multiple and selected_values to opt into the shared checkbox menu.
  * The name argument stays unsuffixed; multiple mode adds [] for form submission.
  * Multiple options may include count (int|null) and count_label (accessible text).
+ * Set reset_label to name the placeholder differently in the menu, where it clears the choice.
  *
  * @package LTT_Dive_In
  */
@@ -17,6 +18,7 @@ $id                 = isset( $args['id'] ) ? sanitize_html_class( $args['id'] ) 
 $label              = isset( $args['label'] ) && is_string( $args['label'] ) ? $args['label'] : __( 'Choose an option', 'ltt-dive-in' );
 $options            = isset( $args['options'] ) && is_array( $args['options'] ) ? $args['options'] : array();
 $placeholder        = isset( $args['placeholder'] ) && is_string( $args['placeholder'] ) ? $args['placeholder'] : '';
+$reset_label        = isset( $args['reset_label'] ) && is_string( $args['reset_label'] ) ? $args['reset_label'] : '';
 $selected_value     = isset( $args['selected_value'] ) && is_scalar( $args['selected_value'] ) ? (string) $args['selected_value'] : '';
 $multiple           = ! empty( $args['multiple'] );
 $selected_values    = array_map( 'strval', array_filter( (array) ( $args['selected_values'] ?? array() ), 'is_scalar' ) );
@@ -76,6 +78,7 @@ if ( $placeholder ) {
 			<?php $option_value = isset( $option['value'] ) && is_scalar( $option['value'] ) ? (string) $option['value'] : ''; ?>
 			<?php $option_label = isset( $option['label'] ) && is_string( $option['label'] ) ? $option['label'] : ''; ?>
 			<?php if ( ! $option_label ) { continue; } ?>
+			<?php $option_label = ! empty( $option['placeholder'] ) && $reset_label ? $reset_label : $option_label; ?>
 			<button class="ltt-select__option" type="button" data-ltt-select-value="<?php echo esc_attr( $option_value ); ?>" x-bind:aria-pressed="isSelected($el.dataset.lttSelectValue)" x-on:click="choose"<?php echo ! empty( $option['placeholder'] ) ? ' x-show="! isSelected($el.dataset.lttSelectValue)"' : ''; ?>><?php echo esc_html( $option_label ); ?></button>
 		<?php endforeach; ?>
 	</div>
