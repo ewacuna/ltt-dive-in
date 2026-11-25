@@ -117,7 +117,7 @@ $flags    = array_filter(
 				echo esc_html( sprintf( __( ', add %s to your calendar', 'ltt-dive-in' ), $event['title'] ) );
 				?>
 			</span>
-			<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar-navy.svg' ) ); ?>" alt="" width="30" height="24" />
+			<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar-teal.svg' ) ); ?>" alt="" width="30" height="24" />
 		</a>
 	</div>
 </section>

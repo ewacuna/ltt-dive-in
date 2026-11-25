@@ -131,7 +131,7 @@ if ( $details['website'] ) {
 				<?php if ( ! $has_ended ) : ?>
 					<a class="event-detail__calendar" href="<?php echo esc_url( ltt_dive_in_get_event_reminder_url( $event ) ); ?>" download>
 						<?php esc_html_e( 'Add to Calendar', 'ltt-dive-in' ); ?>
-						<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar-navy.svg' ) ); ?>" alt="" width="30" height="24" />
+						<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/icons/event-add-to-calendar-teal.svg' ) ); ?>" alt="" width="30" height="24" />
 					</a>
 				<?php endif; ?>
 
