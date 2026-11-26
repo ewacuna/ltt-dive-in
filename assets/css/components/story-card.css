@@ -10,7 +10,6 @@
     min-width: 0;
     min-height: var(--story-card-height, 43.125rem);
     overflow: hidden;
-    border: 1px solid #000000;
     background: #073959;
     color: #ffffff;
     font-family: "Gotham HTF", Arial, sans-serif;
@@ -227,7 +226,6 @@
 
     .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__media {
         aspect-ratio: 371 / 198;
-        border: 1px solid #000000;
     }
 
     .ltt-story-card:not(.ltt-story-card--tile) .ltt-story-card__media::after,

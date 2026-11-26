@@ -402,6 +402,7 @@ Implementation rules:
 - Inspiration panels use destination imagery and can reveal descriptive copy and location. Mobile examples include explicit close controls.
 - The middle inspiration panel example represents a hover/revealed state with a top CTA.
 - Revealed panel copy must work on click/tap and keyboard activation, not hover alone.
+- **No frame stroke (client feedback, 2026-11-26):** the 1px black stroke on card frames in Figma is a design mistake. Story tiles, event tiles, place tiles, and the mobile story-card image have no border. Only forced-colors mode keeps a system-color border so card edges stay visible.
 
 ### Accordions
 

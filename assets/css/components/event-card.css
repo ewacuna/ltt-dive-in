@@ -193,7 +193,6 @@
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
     min-height: 33.6875rem;
-    border: 1px solid #000000;
 }
 
 .ltt-event-card--tile > * {
