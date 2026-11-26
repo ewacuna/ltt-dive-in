@@ -1728,6 +1728,26 @@
 		margin-bottom: 1rem;
 	}
 
+	/*
+	 * Resort filters scroll sideways in one row instead of wrapping, like the
+	 * Video Module filters. The row bleeds to the screen edges so a cut-off
+	 * filter reads as "more to scroll", while the inline padding keeps the
+	 * first filter aligned with the heading. overflow-x also makes overflow-y
+	 * `auto`, so the block padding leaves room for the focus ring; the negative
+	 * margins keep the surrounding spacing unchanged.
+	 */
+	.ski-cams__filter-list {
+		flex-wrap: nowrap;
+		margin: -0.5rem -1.25rem;
+		padding: 0.5rem 1.25rem;
+		overflow-x: auto;
+		scroll-padding-inline: 1.25rem;
+	}
+
+	.ski-cams__filter-list > li {
+		flex: 0 0 auto;
+	}
+
 	.ski-cams__item {
 		flex-direction: column;
 		align-items: flex-start;
