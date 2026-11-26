@@ -167,7 +167,7 @@
     margin-top: 1.5rem;
 }
 
-/* Navy background (Current Conditions "3 up Page driver with one CTA", 2963:65395 / 2963:65499). */
+/* Navy background, used on the Current Conditions pages. */
 .end-page-cluster--page-driver-navy {
     padding-top: 4rem;
     background: #073959;

@@ -28,7 +28,7 @@ $selected = $current ? ltt_dive_in_get_weather_icon( $current['condition_id'], $
 	<?php if ( $current ) : ?>
 		<span class="current-weather-tile__reading">
 			<span class="current-weather-tile__icon">
-				<?php if ( $icon && 'figma' === $icon['source'] ) : ?>
+				<?php if ( $icon && 'theme' === $icon['source'] ) : ?>
 					<img class="current-weather-tile__icon-default" src="<?php echo esc_url( $icon['src'] ); ?>" alt="" width="<?php echo esc_attr( $icon['width'] ); ?>" height="<?php echo esc_attr( $icon['height'] ); ?>" loading="lazy">
 					<img class="current-weather-tile__icon-selected" src="<?php echo esc_url( $selected['src'] ); ?>" alt="" width="<?php echo esc_attr( $selected['width'] ); ?>" height="<?php echo esc_attr( $selected['height'] ); ?>" loading="lazy">
 				<?php elseif ( $icon ) : ?>

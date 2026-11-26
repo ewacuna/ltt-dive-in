@@ -102,9 +102,8 @@
 }
 
 /*
- * Light italic quote style (Blog Templates “Testimonial Block”, desktop
- * 2991:82029, mobile 2991:82929): a smaller centered quote in Gotham HTF
- * Light Italic, 32px above and below on desktop and 12px on mobile.
+ * Light italic quote style: a smaller centered quote in Gotham HTF Light
+ * Italic, 32px above and below on desktop and 12px on mobile.
  */
 .testimonials--italic {
     padding-block: 2rem;

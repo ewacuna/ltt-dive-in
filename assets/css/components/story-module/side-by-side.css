@@ -2,7 +2,7 @@
  * Story Module — Side by Side.
  *
  * Desktop: the text keeps a 64px gutter on its outer side and the 616 × 514
- * image runs to the edge of the 1440px frame (42.78%), with a 48px gap and
+ * image runs to the edge of a 1440px layout (42.78%), with a 48px gap and
  * 19px above and below. Mobile stacks the text, CTA, and a full-width
  * 335 × 348 image inside 20px gutters.
  *

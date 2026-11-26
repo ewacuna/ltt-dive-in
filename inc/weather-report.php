@@ -348,7 +348,7 @@ function ltt_dive_in_get_weather_icon( $condition_id, $icon, $variant = 'full-co
 			'src'    => LTT_DIVE_IN_URI . '/assets/images/icons/weather/' . ( in_array( $variant, array( 'light-mode', 'dark-mode' ), true ) ? $variant : 'full-color' ) . '/' . $file . '.svg',
 			'width'  => $sizes[ $file ][0],
 			'height' => $sizes[ $file ][1],
-			'source' => 'figma',
+			'source' => 'theme',
 		);
 	}
 
