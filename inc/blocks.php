@@ -410,6 +410,7 @@ function ltt_dive_in_register_blocks() {
 			/* translators: Swiper replaces {{index}}; keep the placeholder. */
 			'goToFeatured' => __( 'Go to featured event {{index}}', 'ltt-dive-in' ),
 			'loading'      => __( 'Loading events…', 'ltt-dive-in' ),
+			'loadingMore'  => __( 'Loading more events…', 'ltt-dive-in' ),
 			/* translators: 1: number of events shown, 2: total matching events. */
 			'showing'      => __( 'Showing %1$d of %2$d events.', 'ltt-dive-in' ),
 			/* translators: %d: number of events added. */

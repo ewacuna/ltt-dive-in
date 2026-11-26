@@ -4,7 +4,9 @@
  * - Hero Featured Events: one-slide Swiper with arrows and dots.
  * - Events Carousel: free-width card carousel with arrows and dots.
  * - Listed Events: filters and Load More without page reloads, and a card
- *   carousel below 768px. The server-rendered GET form remains the fallback.
+ *   carousel below 768px. In the carousel, Load More is hidden: the next batch
+ *   loads near the last cards, and Next (or a swipe) at the end loads and
+ *   advances. The server-rendered GET form remains the fallback.
  *
  * @package LTT_Dive_In
  */
@@ -71,6 +73,27 @@
 		} );
 	};
 
+	/**
+	 * Show at most `max` dots: a window that follows the active dot, with the
+	 * edge dots smaller when more dots are hidden beyond them.
+	 *
+	 * @param {Object} instance Swiper instance.
+	 * @param {number} max      Visible dots.
+	 */
+	const limitBullets = function ( instance, max ) {
+		const bullets = instance.pagination && instance.pagination.bullets ? Array.from( instance.pagination.bullets ) : [];
+		const active = Math.max( 0, bullets.findIndex( function ( bullet ) {
+			return bullet.classList.contains( 'is-active' );
+		} ) );
+		const first = Math.max( 0, Math.min( active - Math.floor( max / 2 ), bullets.length - max ) );
+		const last = first + max - 1;
+
+		bullets.forEach( function ( bullet, index ) {
+			bullet.hidden = index < first || index > last;
+			bullet.classList.toggle( 'is-edge', ( index === first && first > 0 ) || ( index === last && last < bullets.length - 1 ) );
+		} );
+	};
+
 	const a11yOptions = function ( previousLabel, nextLabel, bulletLabel ) {
 		return {
 			enabled: true,
@@ -86,10 +109,11 @@
 	/**
 	 * Create a card carousel for a viewport with `.swiper-slide` cards.
 	 *
-	 * @param {HTMLElement} root Section containing the carousel controls.
+	 * @param {HTMLElement} root       Section containing the carousel controls.
+	 * @param {number}      maxBullets Optional maximum number of visible dots.
 	 * @return {Object|null} Swiper instance.
 	 */
-	const createCardCarousel = function ( root ) {
+	const createCardCarousel = function ( root, maxBullets ) {
 		const viewport = root.querySelector( '[data-event-driver-viewport]' );
 		const controls = root.querySelector( '[data-event-driver-controls]' );
 		const previous = root.querySelector( '[data-event-driver-previous]' );
@@ -160,8 +184,20 @@
 				slideChangeTransitionStart: setSlidesInert,
 				lock: toggleControls,
 				unlock: toggleControls,
-				paginationUpdate: updatePaginationState,
-				paginationRender: updatePaginationState,
+				paginationUpdate: function ( instance ) {
+					updatePaginationState( instance );
+
+					if ( maxBullets ) {
+						limitBullets( instance, maxBullets );
+					}
+				},
+				paginationRender: function ( instance ) {
+					updatePaginationState( instance );
+
+					if ( maxBullets ) {
+						limitBullets( instance, maxBullets );
+					}
+				},
 			},
 		} );
 
@@ -253,9 +289,16 @@
 		const empty = section.querySelector( '[data-event-driver-empty]' );
 		const loadMore = section.querySelector( '[data-event-driver-load-more]' );
 		const search = section.querySelector( '[data-event-driver-filter="search"]' );
+		const next = section.querySelector( '[data-event-driver-next]' );
+		const nextLabel = next ? next.getAttribute( 'aria-label' ) : '';
 		let offset = loadMore ? parseInt( loadMore.dataset.offset, 10 ) || 0 : 0;
 		let carousel = null;
 		let controller = null;
+		let filtering = false;
+		let loadingMore = false;
+		let prefetchPaused = false;
+		let pendingAdvance = -1;
+		let touchStartedAtEnd = false;
 		let requestSequence = 0;
 		let searchTimer = 0;
 		let lastSearch = search ? search.value.trim() : '';
@@ -279,19 +322,76 @@
 			return count;
 		};
 
+		const hasMore = function () {
+			return !! loadMore && ! loadMore.hidden;
+		};
+
+		/* Busy state on Next while a visitor waits at the last card for the next batch. */
+		const syncNextState = function () {
+			if ( ! next ) {
+				return;
+			}
+
+			const waiting = !! carousel && loadingMore && -1 !== pendingAdvance;
+
+			next.classList.toggle( 'is-loading', waiting );
+			next.setAttribute( 'aria-busy', waiting ? 'true' : 'false' );
+			next.setAttribute( 'aria-label', waiting ? strings.loadingMore || nextLabel : nextLabel );
+		};
+
+		const prefetch = function () {
+			if ( ! carousel || prefetchPaused || loadingMore || filtering || ! hasMore() || document.hidden ) {
+				return;
+			}
+
+			if ( carousel.isEnd || carousel.activeIndex >= carousel.slides.length - 2 ) {
+				appendEvents( 'prefetch' );
+			}
+		};
+
+		/* Next at the last card: load the next batch and move to it. */
+		const advancePastEnd = function () {
+			if ( loadingMore ) {
+				pendingAdvance = grid.children.length;
+				syncNextState();
+				return;
+			}
+
+			appendEvents( 'advance' );
+		};
+
 		const syncCarousel = function () {
 			const shouldRun = !! ( mobileQuery && mobileQuery.matches && grid.children.length );
 
 			if ( shouldRun && ! carousel ) {
-				carousel = createCardCarousel( section );
+				carousel = createCardCarousel( section, 5 );
+
+				if ( carousel ) {
+					carousel.on( 'slideChange', prefetch );
+					carousel.on( 'reachEnd', prefetch );
+					carousel.on( 'touchStart', function ( instance ) {
+						touchStartedAtEnd = instance.isEnd;
+					} );
+					carousel.on( 'touchEnd', function ( instance ) {
+						if ( touchStartedAtEnd && instance.isEnd && instance.touches.diff < -40 && ( hasMore() || loadingMore ) && ! filtering ) {
+							advancePastEnd();
+						}
+
+						touchStartedAtEnd = false;
+					} );
+				}
 			} else if ( ! shouldRun && carousel ) {
 				carousel.destroy( true, true );
 				carousel = null;
+				pendingAdvance = -1;
 				clearSlidesInert( section );
 				section.querySelector( '[data-event-driver-controls]' ).hidden = true;
 			} else if ( carousel ) {
 				carousel.update();
 			}
+
+			section.classList.toggle( 'event-driver--paged-carousel', !! carousel );
+			syncNextState();
 		};
 
 		const announce = function ( message ) {
@@ -352,6 +452,11 @@
 		};
 
 		const applyFilters = function () {
+			filtering = true;
+			loadingMore = false;
+			prefetchPaused = false;
+			pendingAdvance = -1;
+			syncNextState();
 			grid.classList.add( 'is-loading' );
 			grid.setAttribute( 'aria-busy', 'true' );
 			announce( strings.loading || '' );
@@ -382,28 +487,55 @@
 				announce( strings.error || '' );
 			} ).finally( function () {
 				if ( sequence !== requestSequence ) { return; }
+				filtering = false;
 				grid.classList.remove( 'is-loading' );
 				grid.removeAttribute( 'aria-busy' );
 			} );
 		};
 
-		const appendEvents = function () {
+		/**
+		 * Append the next batch.
+		 *
+		 * @param {string} mode `button` (Load More), `advance` (Next or a swipe at
+		 *                      the last card) or `prefetch` (silent, near the end).
+		 */
+		const appendEvents = function ( mode ) {
+			if ( loadingMore || filtering || ! hasMore() ) {
+				return;
+			}
+
+			loadingMore = true;
 			loadMore.disabled = true;
-			announce( strings.loading || '' );
+
+			if ( 'advance' === mode ) {
+				pendingAdvance = grid.children.length;
+			}
+
+			if ( 'prefetch' !== mode ) {
+				announce( strings.loading || '' );
+			}
+
+			syncNextState();
 
 			const pending = request( offset );
 			const sequence = requestSequence;
 			pending.then( function ( response ) {
 				const firstIndex = grid.children.length;
+				const advance = pendingAdvance === firstIndex;
 
 				grid.insertAdjacentHTML( 'beforeend', response.html || '' );
 				const eventCount = syncEmptyState();
 				setHasMore( response.hasMore, response.nextOffset );
+				prefetchPaused = false;
 				syncCarousel();
 
 				const firstNew = grid.children[ firstIndex ];
 
-				if ( firstNew ) {
+				if ( carousel ) {
+					if ( advance && firstNew ) {
+						carousel.slideTo( firstIndex );
+					}
+				} else if ( firstNew ) {
 					const link = firstNew.querySelector( '.ltt-event-card__link' );
 
 					if ( link ) {
@@ -414,7 +546,9 @@
 					}
 				}
 
-				announce( eventCount ? format( strings.loaded, [ response.count ] ) : empty.textContent );
+				if ( 'prefetch' !== mode || advance ) {
+					announce( eventCount ? format( strings.loaded, [ response.count ] ) : empty.textContent );
+				}
 			} ).catch( function ( error ) {
 				if ( sequence !== requestSequence ) { return; }
 				loadMore.disabled = false;
@@ -423,15 +557,46 @@
 					return;
 				}
 
-				announce( strings.error || '' );
+				// Stop prefetching after a failure; Next at the end retries.
+				prefetchPaused = true;
+
+				if ( 'prefetch' !== mode || -1 !== pendingAdvance ) {
+					announce( strings.error || '' );
+				}
+			} ).finally( function () {
+				if ( sequence !== requestSequence ) { return; }
+				loadingMore = false;
+				pendingAdvance = -1;
+				syncNextState();
 			} );
 		};
+
+		/* Runs before Swiper's own handler, which would rewind to the first card. */
+		section.addEventListener( 'click', function ( event ) {
+			if ( ! carousel || filtering || ! next || ! event.target.closest( '[data-event-driver-next]' ) ) {
+				return;
+			}
+
+			if ( ! carousel.isEnd || ! ( hasMore() || loadingMore ) ) {
+				return;
+			}
+
+			event.preventDefault();
+			event.stopPropagation();
+			advancePastEnd();
+		}, true );
+
+		document.addEventListener( 'visibilitychange', function () {
+			if ( ! document.hidden ) {
+				prefetch();
+			}
+		} );
 
 		form.addEventListener( 'submit', function ( event ) {
 			event.preventDefault();
 
 			if ( event.submitter && event.submitter === loadMore ) {
-				appendEvents();
+				appendEvents( 'button' );
 				return;
 			}
 
@@ -468,7 +633,7 @@
 				event.preventDefault();
 
 				if ( ! loadMore.disabled ) {
-					appendEvents();
+					appendEvents( 'button' );
 				}
 			} );
 		}

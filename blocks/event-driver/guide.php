@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'updated'         => '2026-11-24',
+	'updated'         => '2026-11-26',
 	'summary'         => __( 'Shows upcoming events from the Seeker event calendar. You never type event details here: names, dates, photos, venues, and ticket links all come from Seeker and update on their own. This block only decides which events to show and how. It has three layouts: a big rotating feature, a filterable list, and a carousel.', 'ltt-dive-in' ),
 	'where'           => __( 'Pages and blog posts.', 'ltt-dive-in' ),
 	'steps'           => array(
@@ -58,7 +58,7 @@ return array(
 		),
 		'listed'   => array(
 			'name'        => __( 'Listed Events', 'ltt-dive-in' ),
-			'description' => __( 'A heading and a grid of event cards with filters on top: categories, dates (Upcoming, Today, This weekend, and so on), and a keyword search. A Load More button adds more cards. On phones the cards turn into a swipeable row.', 'ltt-dive-in' ),
+			'description' => __( 'A heading and a grid of event cards with filters on top: categories, dates (Upcoming, Today, This weekend, and so on), and a keyword search. A Load More button adds more cards. On phones the cards turn into a swipeable row without the Load More button: more cards load on their own as visitors reach the end of the row.', 'ltt-dive-in' ),
 			'best_for'    => __( 'A page where people browse and search events.', 'ltt-dive-in' ),
 			'fields'      => array(
 				array(

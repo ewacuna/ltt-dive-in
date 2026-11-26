@@ -359,6 +359,11 @@
     cursor: progress;
 }
 
+/* The mobile Listed carousel loads more from its last card instead. */
+.event-driver--paged-carousel .event-driver__load-more {
+    display: none;
+}
+
 .event-driver--carousel .event-driver__header {
     margin-bottom: 2.5rem;
 }
@@ -429,6 +434,27 @@
     width: 2.8125rem;
 }
 
+.event-driver__carousel-controls .ltt-slider-navigation.is-loading {
+    cursor: progress;
+}
+
+.event-driver__carousel-controls .ltt-slider-navigation.is-loading .ltt-slider-navigation__icon {
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    background: none;
+    -webkit-mask: none;
+    mask: none;
+    translate: 0;
+    animation: ltt-event-driver-loading 0.8s linear infinite;
+}
+
+@keyframes ltt-event-driver-loading {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .event-driver .event-driver__pagination.swiper-pagination-horizontal {
     position: static;
     flex: 0 1 auto;
@@ -453,6 +479,19 @@
 
 .event-driver__pagination .ltt-carousel-indicator:is(.is-active, [aria-current="true"]) {
     background-color: #073959;
+}
+
+/* Listed Events on mobile caps the dots at five; edge dots hint at more. */
+.event-driver__pagination .ltt-carousel-indicator {
+    transition: transform 200ms ease-out;
+}
+
+.event-driver__pagination .ltt-carousel-indicator[hidden] {
+    display: none;
+}
+
+.event-driver__pagination .ltt-carousel-indicator.is-edge {
+    transform: scale(0.6);
 }
 
 .event-driver--preview .event-driver__carousel-footer {
@@ -691,6 +730,10 @@
     .event-driver *::after {
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+
+    .event-driver__carousel-controls .ltt-slider-navigation.is-loading .ltt-slider-navigation__icon {
+        animation: none;
     }
 }
 
