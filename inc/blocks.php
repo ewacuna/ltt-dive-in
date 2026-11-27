@@ -480,16 +480,16 @@ function ltt_dive_in_register_blocks() {
 	$map_path        = LTT_DIVE_IN_DIR . '/blocks/map';
 	$mapbox_gl_url   = 'https://api.mapbox.com/mapbox-gl-js/v' . LTT_DIVE_IN_MAPBOX_GL_VERSION;
 
-	// Mapbox GL JS is loaded from Mapbox's CDN, and only on pages with a Map block.
-	// map.js fetches the script when a map nears the viewport, so it stays off the initial load.
-	wp_register_style( 'ltt-dive-in-mapbox-gl', $mapbox_gl_url . '/mapbox-gl.css', array(), null );
-	wp_register_style( 'ltt-dive-in-map', LTT_DIVE_IN_URI . '/assets/css/components/map.css', array( 'ltt-dive-in-mapbox-gl', 'ltt-dive-in-buttons' ), file_exists( $map_style_path ) ? (string) filemtime( $map_style_path ) : LTT_DIVE_IN_VERSION );
+	// Mapbox GL JS and its stylesheet are loaded from Mapbox's CDN, and only on pages with a Map block.
+	// map.js fetches both when a map nears the viewport, so they stay off the initial load.
+	wp_register_style( 'ltt-dive-in-map', LTT_DIVE_IN_URI . '/assets/css/components/map.css', array( 'ltt-dive-in-buttons' ), file_exists( $map_style_path ) ? (string) filemtime( $map_style_path ) : LTT_DIVE_IN_VERSION );
 	wp_register_script( 'ltt-dive-in-map', LTT_DIVE_IN_URI . '/assets/js/components/map.js', array(), file_exists( $map_script_path ) ? (string) filemtime( $map_script_path ) : LTT_DIVE_IN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_localize_script(
 		'ltt-dive-in-map',
 		'ltt_dive_in_map',
 		array(
 			'mapboxScript' => $mapbox_gl_url . '/mapbox-gl.js',
+			'mapboxStyle'  => $mapbox_gl_url . '/mapbox-gl.css',
 			'canvas'       => __( 'Lake Tahoe map. Use the arrow keys to pan and plus or minus to zoom.', 'ltt-dive-in' ),
 			/* translators: %s: destination name. */
 			'opened'       => __( '%s details opened.', 'ltt-dive-in' ),

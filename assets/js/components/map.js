@@ -735,31 +735,55 @@
 	}
 
 	/*
-	 * Mapbox GL JS is heavy, so it is fetched only when a map comes within
-	 * reach of the viewport. A failed load leaves window.mapboxgl unset and
-	 * initMap shows the text fallback.
+	 * Mapbox GL JS and its stylesheet are heavy, so they are fetched only when
+	 * a map comes within reach of the viewport. A failed script load leaves
+	 * window.mapboxgl unset and initMap shows the text fallback.
 	 */
 	let mapboxLoader = null;
 
+	function loadMapboxStyle() {
+		if ( ! strings.mapboxStyle || document.querySelector( 'link[data-ltt-mapbox-style]' ) ) {
+			return Promise.resolve();
+		}
+
+		return new Promise( function ( resolve ) {
+			const link = document.createElement( 'link' );
+			// Insert before the theme map styles so their overrides keep winning.
+			const themeStyle = document.getElementById( 'ltt-dive-in-map-css' );
+
+			link.rel = 'stylesheet';
+			link.href = strings.mapboxStyle;
+			link.setAttribute( 'data-ltt-mapbox-style', '' );
+			link.onload = resolve;
+			link.onerror = resolve;
+
+			if ( themeStyle && themeStyle.parentNode ) {
+				themeStyle.parentNode.insertBefore( link, themeStyle );
+			} else {
+				document.head.insertBefore( link, document.head.firstChild );
+			}
+		} );
+	}
+
+	function loadMapboxScript() {
+		if ( window.mapboxgl || ! strings.mapboxScript ) {
+			return Promise.resolve();
+		}
+
+		return new Promise( function ( resolve ) {
+			const script = document.createElement( 'script' );
+
+			script.src = strings.mapboxScript;
+			script.async = true;
+			script.onload = resolve;
+			script.onerror = resolve;
+			document.head.appendChild( script );
+		} );
+	}
+
 	function loadMapbox() {
-		if ( window.mapboxgl ) {
-			return Promise.resolve();
-		}
-
-		if ( ! strings.mapboxScript ) {
-			return Promise.resolve();
-		}
-
 		if ( ! mapboxLoader ) {
-			mapboxLoader = new Promise( function ( resolve ) {
-				const script = document.createElement( 'script' );
-
-				script.src = strings.mapboxScript;
-				script.async = true;
-				script.onload = resolve;
-				script.onerror = resolve;
-				document.head.appendChild( script );
-			} );
+			mapboxLoader = Promise.all( [ loadMapboxStyle(), loadMapboxScript() ] );
 		}
 
 		return mapboxLoader;

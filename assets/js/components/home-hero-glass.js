@@ -599,9 +599,24 @@
 		}
 	}
 
-	const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+	// Wait only for the title's face, not every font on the page.
+	function titleFontReady() {
+		if ( ! document.fonts ) {
+			return Promise.resolve();
+		}
 
-	fontsReady.then( function () {
+		const style = window.getComputedStyle( title );
+
+		if ( ! document.fonts.load ) {
+			return document.fonts.ready;
+		}
+
+		return document.fonts.load( style.fontStyle + ' ' + style.fontWeight + ' 1em ' + style.fontFamily ).catch( function () {
+			return document.fonts.ready;
+		} );
+	}
+
+	titleFontReady().then( function () {
 		scheduleLayout();
 
 		if ( 'ResizeObserver' in window ) {
