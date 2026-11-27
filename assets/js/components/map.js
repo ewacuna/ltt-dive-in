@@ -734,5 +734,60 @@
 		} );
 	}
 
-	document.querySelectorAll( '[data-ltt-map]' ).forEach( initMap );
+	/*
+	 * Mapbox GL JS is heavy, so it is fetched only when a map comes within
+	 * reach of the viewport. A failed load leaves window.mapboxgl unset and
+	 * initMap shows the text fallback.
+	 */
+	let mapboxLoader = null;
+
+	function loadMapbox() {
+		if ( window.mapboxgl ) {
+			return Promise.resolve();
+		}
+
+		if ( ! strings.mapboxScript ) {
+			return Promise.resolve();
+		}
+
+		if ( ! mapboxLoader ) {
+			mapboxLoader = new Promise( function ( resolve ) {
+				const script = document.createElement( 'script' );
+
+				script.src = strings.mapboxScript;
+				script.async = true;
+				script.onload = resolve;
+				script.onerror = resolve;
+				document.head.appendChild( script );
+			} );
+		}
+
+		return mapboxLoader;
+	}
+
+	function start( root ) {
+		loadMapbox().then( function () {
+			initMap( root );
+		} );
+	}
+
+	const roots = document.querySelectorAll( '[data-ltt-map]' );
+
+	if ( ! ( 'IntersectionObserver' in window ) ) {
+		roots.forEach( start );
+		return;
+	}
+
+	const observer = new window.IntersectionObserver( function ( entries ) {
+		entries.forEach( function ( entry ) {
+			if ( entry.isIntersecting ) {
+				observer.unobserve( entry.target );
+				start( entry.target );
+			}
+		} );
+	}, { rootMargin: '600px 0px' } );
+
+	roots.forEach( function ( root ) {
+		observer.observe( root );
+	} );
 }() );
